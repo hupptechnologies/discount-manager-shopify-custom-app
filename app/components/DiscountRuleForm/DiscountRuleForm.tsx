@@ -1,10 +1,12 @@
 import { useCallback, useState } from 'react';
+import { Modal, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
 import { Layout } from '@shopify/polaris';
-import Summary from './Summary';
-import ActiveDates from './ActiveDates';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
-import DiscountValue from './DiscountValue';
 import DiscountCodeGen from './DiscountCodeGen';
+import DiscountValue from './DiscountValue';
+import ActiveDates from './ActiveDates';
+import Summary from './Summary';
+import CollectionList from './CollectionList';
 
 interface DiscountRule {
 	condition: string;
@@ -30,6 +32,7 @@ type DiscountRuleFormProps = {
 }
 
 export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType }) => {
+	const shopify = useAppBridge();
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
 	const [newRule, setNewRule] = useState<DiscountRule>({
@@ -81,35 +84,51 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 		});
 	};
 
+	const handleOpen = () => {
+		shopify.modal.show('product-collection-modal');
+	};
+
+	const handleClose = () => {
+		shopify.modal.hide('product-collection-modal');
+	};
+
 	return	(
-	<>
-		<Layout.Section>
-			<DiscountCodeGen
-				title={['shipping'].includes(queryType as string) ? 'Free shipping' : `Amount off ${['products'].includes(queryType as string) ? 'products' : 'orders'}`}
-				newRule={newRule}
-				setNewRule={setNewRule}
-				activeButtonIndex={activeButtonIndex}
-				handleButtonClick={handleButtonClick}
-			/>
-			<br />
-			<DiscountValue
-				newRule={newRule}
-				setNewRule={setNewRule}
-			/>
-			<br />
-			<AdvanceDiscountRules
-				newRule={newRule}
-				setNewRule={setNewRule}
-			/>
-			<br />
-			<ActiveDates
-				newRule={newRule}
-				setNewRule={setNewRule}
-			/>
-		</Layout.Section>
-		<Layout.Section variant="oneThird">
-			<Summary />
-		</Layout.Section>
-	</>
+		<Layout>
+			<Layout.Section>
+				<DiscountCodeGen
+					title={['shipping'].includes(queryType as string) ? 'Free shipping' : `Amount off ${['products'].includes(queryType as string) ? 'products' : 'orders'}`}
+					newRule={newRule}
+					setNewRule={setNewRule}
+					activeButtonIndex={activeButtonIndex}
+					handleButtonClick={handleButtonClick}
+				/>
+				<br />
+				<DiscountValue
+					handleOpen={handleOpen}
+					newRule={newRule}
+					setNewRule={setNewRule}
+				/>
+				<br />
+				<AdvanceDiscountRules
+					newRule={newRule}
+					setNewRule={setNewRule}
+				/>
+				<br />
+				<ActiveDates
+					newRule={newRule}
+					setNewRule={setNewRule}
+				/>
+			</Layout.Section>
+			<Layout.Section variant="oneThird">
+				<Summary />
+			</Layout.Section>
+			<Modal id='product-collection-modal'>
+				{newRule?.appliesTo === 'collection' && <CollectionList />}
+				<TitleBar title={`Add ${newRule?.appliesTo === 'product' ? 'products' : 'collections'}`}>
+					<button variant='primary'>Add</button>
+					<button onClick={handleClose}>Cancel</button>
+				</TitleBar>
+			</Modal>
+		</Layout>
 	);
 }

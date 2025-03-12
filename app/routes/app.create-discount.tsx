@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Layout, Page } from '@shopify/polaris';
+import { Page } from '@shopify/polaris';
 import { DiscountRuleForm } from 'app/components/DiscountRuleForm/DiscountRuleForm';
 
 type QueryType = 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
@@ -18,9 +18,7 @@ export default function CreateDiscountPage () {
 			backAction={{ content: '', url: '/app/manage-discount' }}
 			title="Create discount"
 		>
-			<Layout>
-				<DiscountRuleForm queryType={queryType} />
-			</Layout>
+			<DiscountRuleForm queryType={queryType} />
 			<br />
 		</Page>
 	);

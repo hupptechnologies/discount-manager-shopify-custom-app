@@ -12,6 +12,7 @@ import { SearchIcon } from '@shopify/polaris-icons';
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
+	handleOpen: any;
 	newRule: {
 		discount: string;
 		discountType: 'per' | 'fixed';
@@ -21,7 +22,7 @@ interface DiscountValueProps {
 	};
 }
 
-const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule }) => {
+const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule, handleOpen }) => {
 	return	(
 		<Card>
 			<BlockStack>
@@ -98,7 +99,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule }) =>
 							prefix={<Icon source={SearchIcon} />}
 							placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
 						/>
-						<Button variant='secondary'>Browse</Button>
+						<Button onClick={handleOpen} variant='secondary'>Browse</Button>
 					</FormLayout.Group>
 				</FormLayout>
 			</BlockStack>
