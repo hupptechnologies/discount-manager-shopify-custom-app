@@ -10,24 +10,25 @@ import {
 
 interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
+	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
 	newRule: {
 		quantity: string;
 		type: 'stackable' | 'exclusive';
 		region: string;
 		condition: string;
 		customerType: 'all' | 'vip' | 'first-time';
-		category: string;
+		categoryType: string;
 		isAI: boolean;
 		isStockBased: boolean;
 	};
 }
 
-const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, setNewRule }) => {
+const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, setNewRule, queryType }) => {
 	return	(
 		<Card>
 			<BlockStack gap="500">
 				<FormLayout>
-					<Text variant="bodyLg" fontWeight="medium" as="h3">
+					<Text variant="headingMd" fontWeight="semibold" as="h6">
 						Advance discount rules
 					</Text>
 					<FormLayout.Group condensed>
@@ -40,31 +41,37 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 							placeholder="e.g. Buy 2, Get 1 Free"
 							autoComplete="off"
 						/>
-						<TextField
-							label="Quantity-Based Discount"
-							value={newRule.quantity}
-							onChange={(value) =>
-								setNewRule({ ...newRule, quantity: value })
-							}
-							placeholder="e.g. Buy 3+ items"
-							autoComplete="off"
-						/>
+						{['product', 'buyXgetY'].includes(queryType as string) &&
+							<TextField
+								label="Quantity-Based Discount"
+								type="integer"
+								min={0}
+								value={newRule.quantity}
+								onChange={(value) =>
+									setNewRule({ ...newRule, quantity: value })
+								}
+								placeholder="e.g. Buy 3+ items"
+								autoComplete="off"
+							/>
+						}
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
-						<Select
-							label="Customer Segment"
-							options={[
-								{ label: 'All Customers', value: 'all' },
-								{ label: 'VIP', value: 'vip' },
-								{ label: 'First-Time Buyers', value: 'first-time' },
-							]}
-							value={newRule.customerType}
-							onChange={(value) =>
-								setNewRule({
-									...newRule,
-									customerType: value as 'all' | 'vip' | 'first-time',
-							})}
-						/>
+						{['order', 'shipping'].includes(queryType as string) &&
+							<Select
+								label="Customer Segment"
+								options={[
+									{ label: 'All Customers', value: 'all' },
+									{ label: 'VIP', value: 'vip' },
+									{ label: 'First-Time Buyers', value: 'first-time' },
+								]}
+								value={newRule.customerType}
+								onChange={(value) =>
+									setNewRule({
+										...newRule,
+										customerType: value as 'all' | 'vip' | 'first-time',
+								})}
+							/>
+						}
 						<Select
 							label="Discount Type"
 							options={[
@@ -81,33 +88,45 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
-						<TextField
-							label="Discount by Product Category"
-							value={newRule.category}
-							onChange={(value) =>
-								setNewRule({ ...newRule, category: value })
-							}
-							placeholder="e.g. 20% off all shoes"
-							autoComplete="off"
-						/>
-						<TextField
-							label="Geo-Based Discount"
-							value={newRule.region}
-							onChange={(value) => setNewRule({ ...newRule, region: value })}
-							placeholder="e.g. Black Friday discount in the US"
-							autoComplete="off"
-						/>
-					</FormLayout.Group>
-					<Checkbox
-						label="Stock-Based Discount"
-						checked={newRule.isStockBased}
-						onChange={() =>
-							setNewRule({
-								...newRule,
-								isStockBased: !newRule.isStockBased,
-							})
+						{['product', 'buyXgetY'].includes(queryType as string) &&
+							<Select
+								label="Discount by Product Category"
+								options={[
+									{ label: 'Shoes', value: 'shoes' },
+									{ label: 'Electronic', value: 'electronic' },
+								]}
+								value={newRule.categoryType}
+								onChange={(value) =>
+									setNewRule({
+										...newRule,
+										categoryType: value,
+									})
+								}
+							/>
 						}
-					/>
+						{['order', 'shipping'].includes(queryType as string) &&
+							<TextField
+								label="Geo-Based Discount"
+								value={newRule.region}
+								onChange={(value) => setNewRule({ ...newRule, region: value })}
+								placeholder="e.g. Black Friday discount in the US"
+								autoComplete="off"
+							/>
+						}
+					</FormLayout.Group>
+					{['product'].includes(queryType as string) &&
+						<Checkbox
+							label="Stock-Based Discount"
+							checked={newRule.isStockBased}
+							onChange={() =>
+								setNewRule({
+									...newRule,
+									isStockBased: !newRule.isStockBased,
+								})
+							}
+							helpText='Auto-apply 25% discount when stock is below 10 units'
+						/>
+					}
 					<Checkbox
 						label="Enable AI Discounts"
 						checked={newRule.isAI}

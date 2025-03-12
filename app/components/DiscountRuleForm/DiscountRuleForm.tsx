@@ -8,13 +8,14 @@ import ActiveDates from './ActiveDates';
 import Summary from './Summary';
 import CollectionList from './CollectionList';
 import ProductsList from './ProductsList';
+import DiscountBuyXGetY from './DiscountBuyXGetY';
 
 interface DiscountRule {
 	condition: string;
 	discount: string;
 	type: 'stackable' | 'exclusive';
 	quantity: string;
-	category: string;
+	categoryType: string;
 	region: string;
 	search: string;
 	customerType: 'all' | 'vip' | 'first-time';
@@ -26,6 +27,12 @@ interface DiscountRule {
 	isEndDate: boolean;
 	isCustom: boolean;
 	isRandom: boolean;
+	isMinQuantityItem: boolean;
+	isMinPurchaseAmount: boolean;
+	minQuantity: string;
+	isPercentage: boolean;
+	isAmountOfEach: boolean;
+	isFree: boolean;
 }
 
 type DiscountRuleFormProps = {
@@ -41,7 +48,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 		discount: '',
 		type: 'stackable',
 		quantity: '',
-		category: '',
+		categoryType: '',
 		region: '',
 		customerType: 'vip',
 		isStockBased: false,
@@ -52,7 +59,13 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 		discountType: 'per',
 		appliesTo: 'collection',
 		purchaseType: 'one-time',
-		search: ''
+		search: '',
+		isMinPurchaseAmount: false,
+		isMinQuantityItem: true,
+		minQuantity: '',
+		isPercentage: true,
+		isAmountOfEach: false,
+		isFree: false
 	});
 
 	const handleButtonClick = useCallback(
@@ -70,7 +83,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 			discount: '',
 			type: 'stackable',
 			quantity: '',
-			category: '',
+			categoryType: '',
 			region: '',
 			customerType: 'vip',
 			isStockBased: false,
@@ -81,7 +94,13 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 			discountType: 'per',
 			appliesTo: 'collection',
 			purchaseType: 'one-time',
-			search: ''
+			search: '',
+			isMinPurchaseAmount: false,
+			isMinQuantityItem: false,
+			minQuantity: '',
+			isPercentage: true,
+			isAmountOfEach: false,
+			isFree: false
 		});
 	};
 
@@ -97,20 +116,30 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 		<Layout>
 			<Layout.Section>
 				<DiscountCodeGen
-					title={['shipping'].includes(queryType as string) ? 'Free shipping' : `Amount off ${['products'].includes(queryType as string) ? 'products' : 'orders'}`}
+					title={['buyXgetY'].includes(queryType as string) ? 'Buy X Get Y' : ['shipping'].includes(queryType as string) ? 'Free shipping' : `Amount off ${['products'].includes(queryType as string) ? 'products' : 'orders'}`}
 					newRule={newRule}
 					setNewRule={setNewRule}
 					activeButtonIndex={activeButtonIndex}
 					handleButtonClick={handleButtonClick}
+					queryType={queryType}
 				/>
 				<br />
-				<DiscountValue
-					handleOpen={handleOpen}
-					newRule={newRule}
-					setNewRule={setNewRule}
-				/>
+				{['buyXgetY'].includes(queryType as string) ? 
+					<DiscountBuyXGetY
+						handleOpen={handleOpen}
+						newRule={newRule}
+						setNewRule={setNewRule}
+					/>
+					:
+					<DiscountValue
+						handleOpen={handleOpen}
+						newRule={newRule}
+						setNewRule={setNewRule}
+					/>
+				}
 				<br />
 				<AdvanceDiscountRules
+					queryType={queryType}
 					newRule={newRule}
 					setNewRule={setNewRule}
 				/>

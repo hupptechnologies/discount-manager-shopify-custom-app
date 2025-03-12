@@ -27,12 +27,12 @@ const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule, hand
 		<Card>
 			<BlockStack>
 				<FormLayout>
-					<Text variant="bodyLg" fontWeight="medium" as="h3">
+					<Text variant="headingMd" fontWeight="semibold" as="h6">
 						Discount value
 					</Text>
 					<FormLayout.Group condensed>
 						<Select
-							label=""
+							label=''
 							options={[
 								{ label: 'Percentage', value: 'per' },
 								{ label: 'Fixed amount', value: 'fixed' },
@@ -46,13 +46,13 @@ const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule, hand
 							}
 						/>
 						<TextField
-							label=""
+							label=''
 							value={newRule.discount}
 							onChange={(value) =>
 								setNewRule({ ...newRule, discount: value })
 							}
 							autoComplete="off"
-							prefix={newRule.discountType === 'fixed' ? 'INR' : ''}
+							prefix={newRule.discountType === 'fixed' ? '$' : ''}
 							suffix={newRule.discountType === 'per' ? '%' : ''}
 							placeholder='10'
 						/>

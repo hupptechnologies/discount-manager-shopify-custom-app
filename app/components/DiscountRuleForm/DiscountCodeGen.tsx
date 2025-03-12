@@ -16,6 +16,7 @@ interface DiscountCodeGenProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	handleButtonClick: React.Dispatch<React.SetStateAction<any>>;
 	activeButtonIndex: number;
+	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
 	title: string;
 	newRule: {
 		isCustom: boolean;
@@ -24,14 +25,14 @@ interface DiscountCodeGenProps {
 	};
 }
 
-const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({ title, activeButtonIndex, handleButtonClick, newRule, setNewRule }) => {
+const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({ title, activeButtonIndex, handleButtonClick, newRule, setNewRule, queryType }) => {
 	return	(
 		<Card>
 			<InlineStack align="space-between" gap="200" blockAlign="center">
-				<Text variant="bodyLg" fontWeight="medium" as="h3">
+				<Text variant="headingMd" fontWeight="semibold" as="h6">
 					{title}
 				</Text>
-				<Text as="p">Product discount</Text>
+				<Text as="p">{queryType} discount</Text>
 			</InlineStack>
 			<br />
 			<BlockStack gap='200'>
