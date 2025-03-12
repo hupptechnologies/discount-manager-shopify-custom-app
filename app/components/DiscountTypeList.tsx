@@ -20,14 +20,14 @@ export default function DiscountTypeList () {
 	const discountTypes = [
 		{
 			id: '1',
-			url: '/app/create-discount',
+			url: '/app/create-discount?type=product',
 			title: 'Amount off products',
 			description: 'Discount specific products or collections of products',
 			badge: <Badge icon={ProductIcon}>Product discount</Badge>,
 		},
 		{
 			id: '2',
-			url: '/app/create-discount',
+			url: '/app/create-discount?type=buyXgetY',
 			title: 'Buy X get Y',
 			description: 'Discount products based on a customer’s purchase',
 			badge: <Badge icon={ProductIcon}>Product discount</Badge>,
@@ -35,14 +35,14 @@ export default function DiscountTypeList () {
 		{
 			id: '3',
 			url: '/app/create-discount',
-			title: 'Amount off orders',
+			title: 'Amount off orders?type=order',
 			description: 'Discount the total order amount',
 			badge: <Badge icon={OrderIcon}>Order discount</Badge>,
 		},
 		{
 			id: '4',
 			url: '/app/create-discount',
-			title: 'Free Shipping',
+			title: 'Free Shipping?type=shipping',
 			description: 'Offer free shipping on an order',
 			badge: <Badge icon={DeliveryIcon}>Shipping discount</Badge>,
 		},
