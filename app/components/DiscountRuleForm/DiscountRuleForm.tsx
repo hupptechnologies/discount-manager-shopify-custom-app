@@ -7,6 +7,7 @@ import DiscountValue from './DiscountValue';
 import ActiveDates from './ActiveDates';
 import Summary from './Summary';
 import CollectionList from './CollectionList';
+import ProductsList from './ProductsList';
 
 interface DiscountRule {
 	condition: string;
@@ -124,6 +125,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 			</Layout.Section>
 			<Modal id='product-collection-modal'>
 				{newRule?.appliesTo === 'collection' && <CollectionList />}
+				{newRule?.appliesTo === 'product' && <ProductsList />}
 				<TitleBar title={`Add ${newRule?.appliesTo === 'product' ? 'products' : 'collections'}`}>
 					<button variant='primary'>Add</button>
 					<button onClick={handleClose}>Cancel</button>

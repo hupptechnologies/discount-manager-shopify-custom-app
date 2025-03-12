@@ -9,7 +9,6 @@ import {
 	Thumbnail,
 } from '@shopify/polaris';
 import type { ResourceListProps } from '@shopify/polaris';
-import { DeleteIcon } from '@shopify/polaris-icons';
 import { collectionData } from 'app/utils/json';
 
 interface Collection {
@@ -31,37 +30,12 @@ const CollectionList = () => {
 
 	const rowsCollection: Collection[] = collectionData;
 
-	const promotedBulkActions = [
-		{
-			content: 'Edit customers',
-			onAction: () => console.log('Todo: implement bulk edit'),
-		},
-	];
-
-	const bulkActions = [
-		{
-			content: 'Add tags',
-			onAction: () => console.log('Todo: implement bulk add tags'),
-		},
-		{
-			content: 'Remove tags',
-			onAction: () => console.log('Todo: implement bulk remove tags'),
-		},
-		{
-			icon: DeleteIcon,
-			destructive: true,
-			content: 'Delete customers',
-			onAction: () => console.log('Todo: implement bulk delete'),
-		},
-	];
-
 	return (
-		<Scrollable shadow style={{ height: '400px' }}>
+		<Scrollable style={{ height: '400px' }}>
 			<ResourceList
 				resourceName={resourceName}
 				items={rowsCollection}
-				bulkActions={bulkActions}
-				promotedBulkActions={promotedBulkActions}
+				selectable
 				selectedItems={selectedItems}
 				onSelectionChange={setSelectedItems}
 				renderItem={(item) => {

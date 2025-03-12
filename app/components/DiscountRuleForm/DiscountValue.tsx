@@ -59,7 +59,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule, hand
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
 						<Select
-							label=""
+							label="Applies to"
 							options={[
 								{ label: 'Specific collections', value: 'collection' },
 								{ label: 'Specific products', value: 'product' },
@@ -73,7 +73,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule, hand
 							}
 						/>
 						<Select
-							label=""
+							label="Purchase type"
 							options={[
 								{ label: 'One-time purchase', value: 'one-time' },
 								{ label: 'Subscription', value: 'subscription' },
