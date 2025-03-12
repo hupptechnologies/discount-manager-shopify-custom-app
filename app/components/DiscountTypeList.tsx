@@ -23,28 +23,28 @@ export default function DiscountTypeList () {
 			url: '/app/create-discount',
 			title: 'Amount off products',
 			description: 'Discount specific products or collections of products',
-			badge: <Badge icon={ProductIcon}>Fulfilled</Badge>,
+			badge: <Badge icon={ProductIcon}>Product discount</Badge>,
 		},
 		{
 			id: '2',
 			url: '/app/create-discount',
 			title: 'Buy X get Y',
 			description: 'Discount products based on a customer’s purchase',
-			badge: <Badge icon={ProductIcon}>Fulfilled</Badge>,
+			badge: <Badge icon={ProductIcon}>Product discount</Badge>,
 		},
 		{
 			id: '3',
 			url: '/app/create-discount',
 			title: 'Amount off orders',
 			description: 'Discount the total order amount',
-			badge: <Badge icon={OrderIcon}>Fulfilled</Badge>,
+			badge: <Badge icon={OrderIcon}>Order discount</Badge>,
 		},
 		{
 			id: '4',
 			url: '/app/create-discount',
 			title: 'Free Shipping',
 			description: 'Offer free shipping on an order',
-			badge: <Badge icon={DeliveryIcon}>Fulfilled</Badge>,
+			badge: <Badge icon={DeliveryIcon}>Shipping discount</Badge>,
 		},
 	];
 

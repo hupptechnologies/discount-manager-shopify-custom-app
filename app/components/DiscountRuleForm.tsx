@@ -15,7 +15,9 @@ import {
 	Button,
 	Link,
 	RadioButton,
+	Icon,
 } from '@shopify/polaris';
+import { SearchIcon } from '@shopify/polaris-icons';
 
 interface DiscountRule {
 	condition: string;
@@ -25,6 +27,9 @@ interface DiscountRule {
 	category: string;
 	region: string;
 	customerType: 'all' | 'vip' | 'first-time';
+	discountType: 'per' | 'fixed';
+	appliesTo: 'collection' | 'product';
+	purchaseType: 'one-time' | 'subscription' | 'both';
 	isStockBased: boolean;
 	isAI: boolean;
 	isEndDate: boolean;
@@ -47,7 +52,10 @@ export default function DiscountRuleForm() {
 		isAI: false,
 		isEndDate: false,
 		isRandom: false,
-		isCustom: true
+		isCustom: true,
+		discountType: 'per',
+		appliesTo: 'collection',
+		purchaseType: 'one-time'
 	});
 
 	const handleButtonClick = useCallback(
@@ -72,7 +80,10 @@ export default function DiscountRuleForm() {
 			isAI: false,
 			isEndDate: false,
 			isRandom: false,
-			isCustom: false
+			isCustom: false,
+			discountType: 'per',
+			appliesTo: 'collection',
+			purchaseType: 'one-time'
 		});
 	};
 
@@ -165,12 +176,93 @@ export default function DiscountRuleForm() {
 			</Card>
 			<br />
 			<Card>
+				<BlockStack>
+					<FormLayout>
+						<Text variant="bodyLg" fontWeight="medium" as="h3">
+							Discount value
+						</Text>
+						<FormLayout.Group condensed>
+							<Select
+								label=""
+								options={[
+									{ label: 'Percentage', value: 'per' },
+									{ label: 'Fixed amount', value: 'fixed' },
+								]}
+								value={newRule.discountType}
+								onChange={(value) =>
+									setNewRule({
+										...newRule,
+										discountType: value as 'per' | 'fixed',
+									})
+								}
+							/>
+							<TextField
+								label=""
+								value={newRule.discount}
+								onChange={(value) =>
+									setNewRule({ ...newRule, discount: value })
+								}
+								autoComplete="off"
+								prefix={newRule.discountType === 'fixed' ? 'INR' : ''}
+								suffix={newRule.discountType === 'per' ? '%' : ''}
+								placeholder='10'
+							/>
+						</FormLayout.Group>
+						<FormLayout.Group condensed>
+							<Select
+								label=""
+								options={[
+									{ label: 'Specific collections', value: 'collection' },
+									{ label: 'Specific products', value: 'product' },
+								]}
+								value={newRule.appliesTo}
+								onChange={(value) =>
+									setNewRule({
+										...newRule,
+										appliesTo: value as 'collection' | 'product',
+									})
+								}
+							/>
+							<Select
+								label=""
+								options={[
+									{ label: 'One-time purchase', value: 'one-time' },
+									{ label: 'Subscription', value: 'subscription' },
+									{ label: 'Both', value: 'both' },
+								]}
+								value={newRule.purchaseType}
+								onChange={(value) =>
+									setNewRule({
+										...newRule,
+										purchaseType: value as 'one-time' | 'subscription',
+									})
+								}
+							/>
+						</FormLayout.Group>
+						<FormLayout.Group>
+							<TextField
+								label=""
+								value={newRule.discount}
+								onChange={(value) =>
+									setNewRule({ ...newRule, discount: value })
+								}
+								autoComplete="off"
+								prefix={<Icon source={SearchIcon} />}
+								placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
+							/>
+							<Button variant='secondary'>Browse</Button>
+						</FormLayout.Group>
+					</FormLayout>
+				</BlockStack>
+			</Card>
+			<br />
+			<Card>
 				<BlockStack gap="500">
 					<FormLayout>
 						<Text variant="bodyLg" fontWeight="medium" as="h3">
-							Discount rules
+							Advance discount rules
 						</Text>
-						<FormLayout.Group>
+						<FormLayout.Group condensed>
 							<TextField
 								label="Discount Condition"
 								value={newRule.condition}
@@ -178,15 +270,6 @@ export default function DiscountRuleForm() {
 									setNewRule({ ...newRule, condition: value })
 								}
 								placeholder="e.g. Buy 2, Get 1 Free"
-								autoComplete="off"
-							/>
-							<TextField
-								label="Discount Value"
-								value={newRule.discount}
-								onChange={(value) =>
-									setNewRule({ ...newRule, discount: value })
-								}
-								placeholder="e.g. 10% off"
 								autoComplete="off"
 							/>
 							<TextField
@@ -198,15 +281,8 @@ export default function DiscountRuleForm() {
 								placeholder="e.g. Buy 3+ items"
 								autoComplete="off"
 							/>
-							<TextField
-								label="Discount by Product Category"
-								value={newRule.category}
-								onChange={(value) =>
-									setNewRule({ ...newRule, category: value })
-								}
-								placeholder="e.g. 20% off all shoes"
-								autoComplete="off"
-							/>
+						</FormLayout.Group>
+						<FormLayout.Group condensed>
 							<Select
 								label="Customer Segment"
 								options={[
@@ -237,13 +313,24 @@ export default function DiscountRuleForm() {
 								}
 							/>
 						</FormLayout.Group>
-						<TextField
-							label="Geo-Based Discount"
-							value={newRule.region}
-							onChange={(value) => setNewRule({ ...newRule, region: value })}
-							placeholder="e.g. Black Friday discount in the US"
-							autoComplete="off"
-						/>
+						<FormLayout.Group condensed>
+							<TextField
+								label="Discount by Product Category"
+								value={newRule.category}
+								onChange={(value) =>
+									setNewRule({ ...newRule, category: value })
+								}
+								placeholder="e.g. 20% off all shoes"
+								autoComplete="off"
+							/>
+							<TextField
+								label="Geo-Based Discount"
+								value={newRule.region}
+								onChange={(value) => setNewRule({ ...newRule, region: value })}
+								placeholder="e.g. Black Friday discount in the US"
+								autoComplete="off"
+							/>
+						</FormLayout.Group>
 						<Checkbox
 							label="Stock-Based Discount"
 							checked={newRule.isStockBased}
