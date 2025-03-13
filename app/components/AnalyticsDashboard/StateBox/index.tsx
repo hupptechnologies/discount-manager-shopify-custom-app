@@ -27,7 +27,7 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 	};
 
 	return (
-		<Layout>
+		<>
 			<Layout.Section>
 				<Box padding="200">
 					<BlockStack gap="100">
@@ -36,7 +36,7 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 								Analytics Overview
 							</Text>
 							<Button variant="primary" onClick={handleOpen}>
-								Create discount rules
+								Create discount
 							</Button>
 						</InlineStack>
 						<Text as="p" variant="bodySm" tone="subdued">
@@ -70,7 +70,7 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 					</Grid.Cell>
 				</Grid>
 			</Layout.Section>
-		</Layout>
+		</>
 	);
 };
 
