@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
 	BlockStack,
 	Card,
@@ -5,7 +6,13 @@ import {
 	FormLayout,
 	Text,
 	TextField,
+	Icon,
 } from '@shopify/polaris';
+import {
+	CalendarIcon,
+	ClockIcon
+} from '@shopify/polaris-icons';
+import PopoverDatePicker from './PopoverDatePicker';
 
 interface ActiveDatesProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -17,6 +24,9 @@ interface ActiveDatesProps {
 }
 
 const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
+	const [popoverStartDateActive, setPopoverStartDateActive] = useState(true);
+	const [popoverEndDateActive, setPopoverEndDateActive] = useState(true);
+
 	return (
 		<Card>
 			<BlockStack gap="300">
@@ -24,17 +34,26 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 					Active dates
 				</Text>
 				<FormLayout.Group>
-					<TextField
-						label="Start date"
-						value="2025-03-31"
-						onChange={(value) => setNewRule({ ...newRule, condition: value })}
-						autoComplete="off"
+					<PopoverDatePicker
+						activator={
+							<TextField
+								label="Start date"
+								value="2025-03-31"
+								onChange={(value) => setNewRule({ ...newRule, condition: value })}
+								autoComplete="off"
+								prefix={<Icon source={CalendarIcon} tone="base" />}
+								onFocus={() => setPopoverStartDateActive(true)}
+							/>
+						}
+						popoverActive={popoverStartDateActive}
+						setPopoverActive={setPopoverStartDateActive}
 					/>
 					<TextField
 						label="Start time (EDT)"
 						value="7:00 am"
 						onChange={(value) => setNewRule({ ...newRule, discount: value })}
 						autoComplete="off"
+						prefix={<Icon source={ClockIcon} tone="base" />}
 					/>
 				</FormLayout.Group>
 				<Checkbox
@@ -49,17 +68,27 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 				/>
 				{newRule.isEndDate && (
 					<FormLayout.Group>
-						<TextField
-							label="End date"
-							value="2025-03-31"
-							onChange={(value) => setNewRule({ ...newRule, condition: value })}
-							autoComplete="off"
+						<PopoverDatePicker
+							activator={
+								<TextField
+									label="End date"
+									value="2025-03-31"
+									onChange={(value) => setNewRule({ ...newRule, condition: value })}
+									autoComplete="off"
+									prefix={<Icon source={CalendarIcon} tone="base" />}
+									onFocus={() => setPopoverEndDateActive(true)}
+								/>
+							}
+							popoverActive={popoverEndDateActive}
+							setPopoverActive={setPopoverEndDateActive}
 						/>
 						<TextField
 							label="End time (EDT)"
 							value="7:00 am"
 							onChange={(value) => setNewRule({ ...newRule, discount: value })}
 							autoComplete="off"
+							type='text'
+							prefix={<Icon source={ClockIcon} tone="base" />}
 						/>
 					</FormLayout.Group>
 				)}
