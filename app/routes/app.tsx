@@ -1,8 +1,8 @@
+import { NavMenu } from '@shopify/app-bridge-react';
 import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { Link, Outlet, useLoaderData, useRouteError } from '@remix-run/react';
+import { NavLink, Outlet, useLoaderData, useRouteError } from '@remix-run/react';
 import { boundary } from '@shopify/shopify-app-remix/server';
 import { AppProvider } from '@shopify/shopify-app-remix/react';
-import { NavMenu } from '@shopify/app-bridge-react';
 import polarisStyles from '@shopify/polaris/build/esm/styles.css?url';
 
 import { authenticate } from '../shopify.server';
@@ -21,10 +21,10 @@ export default function App () {
 	return (
 		<AppProvider isEmbeddedApp apiKey={apiKey}>
 			<NavMenu>
-				<Link to="/app" rel="home">
+				<NavLink to="/app" rel="home">
 					Home
-				</Link>
-				<Link to="/app/manage-discount">Manage Discounts</Link>
+				</NavLink>
+				<NavLink to="/app/manage-discount">Manage Discounts</NavLink>
 			</NavMenu>
 			<Outlet />
 		</AppProvider>
