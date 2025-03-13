@@ -122,8 +122,6 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({ newRule, setNewRule
 							setNewRule({ ...newRule, minQuantity: value })
 						}
 						autoComplete="off"
-						placeholder={newRule?.isMinPurchaseAmount ? '0.00' : ''}
-						prefix={newRule?.isMinPurchaseAmount ? '$' : ''}
 					/>
 					<Select
 						label="Any items from"

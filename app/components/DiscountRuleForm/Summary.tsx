@@ -1,4 +1,11 @@
-import { BlockStack, Box, Card, InlineStack, List, Text } from "@shopify/polaris";
+import {
+	BlockStack,
+	Box,
+	Card,
+	InlineStack,
+	List,
+	Text
+} from "@shopify/polaris";
 
 export default function Summary () {
 	return	(
