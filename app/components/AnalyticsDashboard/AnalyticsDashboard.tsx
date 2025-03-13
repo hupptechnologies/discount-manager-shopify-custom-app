@@ -8,15 +8,15 @@ interface AnalyticsDashboardProps {
 
 const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 	handleOpen,
-}) =>	{
-	return	(
+}) => {
+	return (
 		<Layout>
 			<IndexStateBox handleOpen={handleOpen} />
 			<Layout.Section>
 				<AnalyticsTable />
 			</Layout.Section>
 		</Layout>
-	)
+	);
 };
 
 export default AnalyticsDashboard;
