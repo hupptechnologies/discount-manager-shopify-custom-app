@@ -1,5 +1,6 @@
 import { Modal, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
 import { Page } from '@shopify/polaris';
+import AnalyticsDashboard from 'app/components/AnalyticsDashboard/AnalyticsDashboard';
 import DiscountTypeList from 'app/components/DiscountTypeList';
 
 export default function ManageDiscountPage () {
@@ -15,11 +16,7 @@ export default function ManageDiscountPage () {
 
 	return (
 		<Page>
-			<TitleBar title="Rule-Based Discounts">
-				<button variant="primary" onClick={handleOpen}>
-					Create discount rules
-				</button>
-			</TitleBar>
+			<AnalyticsDashboard handleOpen={handleOpen} />
 			<Modal id="select-discount-type">
 				<DiscountTypeList />
 				<TitleBar title="Select discount type">
