@@ -1,3 +1,4 @@
+import { TitleBar } from '@shopify/app-bridge-react';
 import {
 	BlockStack,
 	Card,
@@ -6,13 +7,11 @@ import {
 	Page,
 	Text
 } from '@shopify/polaris';
-import { TitleBar } from '@shopify/app-bridge-react';
 
 export default function Index () {
 	return (
 		<Page>
-			<TitleBar title="Smart Discount Manager – AI-Powered Discount Rules">
-			</TitleBar>
+			<TitleBar title="Smart Discount Manager – AI-Powered Discount Rules"></TitleBar>
 			<BlockStack gap="500">
 				<Layout>
 					<Layout.Section>
@@ -23,10 +22,10 @@ export default function Index () {
 										Welcome to Smart Discount Manager 🎉
 									</Text>
 									<Text variant="bodyMd" as="p">
-										The Smart Discount Manager Shopify app helps merchants automate
-										discounts using AI-driven insights. It dynamically applies discount
-										rules based on customer behavior, order history, stock levels, and
-										real-time analytics.
+										The Smart Discount Manager Shopify app helps merchants
+										automate discounts using AI-driven insights. It dynamically
+										applies discount rules based on customer behavior, order
+										history, stock levels, and real-time analytics.
 									</Text>
 								</BlockStack>
 
@@ -35,11 +34,13 @@ export default function Index () {
 										App Features
 									</Text>
 									<Text as="p" variant="bodyMd">
-										This Shopify app provides the following features for merchants:
+										This Shopify app provides the following features for
+										merchants:
 									</Text>
 									<List>
 										<List.Item>
-											Create advanced discount rules based on real-time conditions.
+											Create advanced discount rules based on real-time
+											conditions.
 										</List.Item>
 										<List.Item>
 											Personalize discounts using AI to optimize revenue.

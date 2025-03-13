@@ -9,8 +9,8 @@ import {
 	RadioButton,
 	Select,
 	Text,
-	TextField
-} from "@shopify/polaris";
+	TextField,
+} from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
 
 interface DiscountBuyXGetYProps {
@@ -30,23 +30,39 @@ interface DiscountBuyXGetYProps {
 	};
 }
 
-const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({ newRule, setNewRule, handleOpen }) => {
-	return	(
+const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
+	newRule,
+	setNewRule,
+	handleOpen,
+}) => {
+	return (
 		<Card>
 			<FormLayout>
 				<Text variant="headingMd" fontWeight="semibold" as="h6">
 					Customer {newRule?.isMinPurchaseAmount ? 'spends' : 'buys'}
 				</Text>
-				<BlockStack gap='100'>
+				<BlockStack gap="100">
 					<RadioButton
 						label="Minimum quantity of items"
 						checked={newRule.isMinQuantityItem}
-						onChange={() => setNewRule({ ...newRule, isMinQuantityItem: !newRule.isMinQuantityItem, isMinPurchaseAmount: false })}
+						onChange={() =>
+							setNewRule({
+								...newRule,
+								isMinQuantityItem: !newRule.isMinQuantityItem,
+								isMinPurchaseAmount: false,
+							})
+						}
 					/>
 					<RadioButton
 						label="Minimum purchase amount"
 						checked={newRule.isMinPurchaseAmount}
-						onChange={() => setNewRule({ ...newRule, isMinPurchaseAmount: !newRule.isMinPurchaseAmount, isMinQuantityItem: false })}
+						onChange={() =>
+							setNewRule({
+								...newRule,
+								isMinPurchaseAmount: !newRule.isMinPurchaseAmount,
+								isMinQuantityItem: false,
+							})
+						}
 					/>
 				</BlockStack>
 				<FormLayout.Group condensed>
@@ -55,9 +71,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({ newRule, setNewRule
 						type="text"
 						min={0}
 						value={newRule.minQuantity}
-						onChange={(value) =>
-							setNewRule({ ...newRule, minQuantity: value })
-						}
+						onChange={(value) => setNewRule({ ...newRule, minQuantity: value })}
 						autoComplete="off"
 						placeholder={newRule?.isMinPurchaseAmount ? '0.00' : ''}
 						prefix={newRule?.isMinPurchaseAmount ? '$' : ''}
@@ -96,31 +110,32 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({ newRule, setNewRule
 					<TextField
 						label=""
 						value={newRule.search}
-						onChange={(value) =>
-							setNewRule({ ...newRule, search: value })
-						}
+						onChange={(value) => setNewRule({ ...newRule, search: value })}
 						autoComplete="off"
 						prefix={<Icon source={SearchIcon} />}
 						placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
 					/>
-					<Button onClick={handleOpen} variant='secondary'>Browse</Button>
+					<Button onClick={handleOpen} variant="secondary">
+						Browse
+					</Button>
 				</FormLayout.Group>
 				<Divider borderColor="border" />
-				<BlockStack gap='300'>
+				<BlockStack gap="300">
 					<Text variant="headingMd" fontWeight="semibold" as="h6">
 						Customer gets
 					</Text>
-					<Text as='p' tone="subdued">Customers must add the quantity of items specified below to their cart.</Text>
+					<Text as="p" tone="subdued">
+						Customers must add the quantity of items specified below to their
+						cart.
+					</Text>
 				</BlockStack>
 				<FormLayout.Group condensed>
 					<TextField
-						label='Quantity'
+						label="Quantity"
 						type="text"
 						min={0}
 						value={newRule.minQuantity}
-						onChange={(value) =>
-							setNewRule({ ...newRule, minQuantity: value })
-						}
+						onChange={(value) => setNewRule({ ...newRule, minQuantity: value })}
 						autoComplete="off"
 					/>
 					<Select
@@ -142,48 +157,35 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({ newRule, setNewRule
 					<TextField
 						label=""
 						value={newRule.search}
-						onChange={(value) =>
-							setNewRule({ ...newRule, search: value })
-						}
+						onChange={(value) => setNewRule({ ...newRule, search: value })}
 						autoComplete="off"
 						prefix={<Icon source={SearchIcon} />}
 						placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
 					/>
-					<Button onClick={handleOpen} variant='secondary'>Browse</Button>
+					<Button onClick={handleOpen} variant="secondary">
+						Browse
+					</Button>
 				</FormLayout.Group>
 				<Text variant="bodyMd" fontWeight="bold" as="h4">
 					At a discounted value
 				</Text>
-				<BlockStack gap='100'>
+				<BlockStack gap="100">
 					<RadioButton
 						label="Percentage"
 						checked={newRule.isPercentage}
-						onChange={() => setNewRule({ ...newRule, isPercentage: !newRule.isPercentage, isAmountOfEach: false, isFree: false })}
-						helpText={newRule.isPercentage &&
-							<Box width='30%'>
-								<TextField
-									label=''
-									type="text"
-									min={0}
-									value={newRule.discount}
-									onChange={(value) =>
-										setNewRule({ ...newRule, discount: value })
-									}
-									autoComplete="off"
-									suffix='%'
-								/>
-							</Box>
+						onChange={() =>
+							setNewRule({
+								...newRule,
+								isPercentage: !newRule.isPercentage,
+								isAmountOfEach: false,
+								isFree: false,
+							})
 						}
-					/>
-					<RadioButton
-						label="Amount off each"
-						checked={newRule.isAmountOfEach}
-						onChange={() => setNewRule({ ...newRule, isAmountOfEach: !newRule.isAmountOfEach, isPercentage: false, isFree: false})}
-						helpText={newRule.isAmountOfEach &&
-							<BlockStack gap='100'>
-								<Box width='30%'>
+						helpText={
+							newRule.isPercentage && (
+								<Box width="30%">
 									<TextField
-										label=''
+										label=""
 										type="text"
 										min={0}
 										value={newRule.discount}
@@ -191,23 +193,64 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({ newRule, setNewRule
 											setNewRule({ ...newRule, discount: value })
 										}
 										autoComplete="off"
-										placeholder='0.00'
-										prefix='$'
+										suffix="%"
 									/>
 								</Box>
-								<Text as='p' tone="subdued">For multiple quantities, the discount amount will be taken off each Y item.</Text>
-							</BlockStack>
+							)
+						}
+					/>
+					<RadioButton
+						label="Amount off each"
+						checked={newRule.isAmountOfEach}
+						onChange={() =>
+							setNewRule({
+								...newRule,
+								isAmountOfEach: !newRule.isAmountOfEach,
+								isPercentage: false,
+								isFree: false,
+							})
+						}
+						helpText={
+							newRule.isAmountOfEach && (
+								<BlockStack gap="100">
+									<Box width="30%">
+										<TextField
+											label=""
+											type="text"
+											min={0}
+											value={newRule.discount}
+											onChange={(value) =>
+												setNewRule({ ...newRule, discount: value })
+											}
+											autoComplete="off"
+											placeholder="0.00"
+											prefix="$"
+										/>
+									</Box>
+									<Text as="p" tone="subdued">
+										For multiple quantities, the discount amount will be taken
+										off each Y item.
+									</Text>
+								</BlockStack>
+							)
 						}
 					/>
 					<RadioButton
 						label="Free"
 						checked={newRule.isFree}
-						onChange={() => setNewRule({ ...newRule, isFree: !newRule.isFree, isPercentage: false, isAmountOfEach: false })}
+						onChange={() =>
+							setNewRule({
+								...newRule,
+								isFree: !newRule.isFree,
+								isPercentage: false,
+								isAmountOfEach: false,
+							})
+						}
 					/>
 				</BlockStack>
 			</FormLayout>
 		</Card>
-	)
+	);
 };
 
 export default DiscountBuyXGetY;

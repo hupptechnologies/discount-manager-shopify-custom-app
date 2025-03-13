@@ -7,8 +7,9 @@ import {
 	Thumbnail,
 	InlineStack,
 	Scrollable,
+	type IndexTableRowProps,
+	type IndexTableProps
 } from '@shopify/polaris';
-import type { IndexTableRowProps, IndexTableProps } from '@shopify/polaris';
 import { productData } from 'app/utils/json';
 
 interface Product {

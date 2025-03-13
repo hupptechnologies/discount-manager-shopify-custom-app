@@ -37,9 +37,11 @@ interface DiscountRule {
 
 type DiscountRuleFormProps = {
 	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
-}
+};
 
-export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType }) => {
+export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
+	queryType,
+}) => {
 	const shopify = useAppBridge();
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
@@ -65,14 +67,14 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 		minQuantity: '',
 		isPercentage: true,
 		isAmountOfEach: false,
-		isFree: false
+		isFree: false,
 	});
 
 	const handleButtonClick = useCallback(
 		(index: number) => {
-			if (activeButtonIndex === index) return;
-				setActiveButtonIndex(index);
-			},
+			if (activeButtonIndex === index) {return;}
+			setActiveButtonIndex(index);
+		},
 		[activeButtonIndex],
 	);
 
@@ -100,7 +102,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 			minQuantity: '',
 			isPercentage: true,
 			isAmountOfEach: false,
-			isFree: false
+			isFree: false,
 		});
 	};
 
@@ -112,11 +114,17 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 		shopify.modal.hide('product-collection-modal');
 	};
 
-	return	(
+	return (
 		<Layout>
 			<Layout.Section>
 				<DiscountCodeGen
-					title={['buyXgetY'].includes(queryType as string) ? 'Buy X Get Y' : ['shipping'].includes(queryType as string) ? 'Free shipping' : `Amount off ${['products'].includes(queryType as string) ? 'products' : 'orders'}`}
+					title={
+						['buyXgetY'].includes(queryType as string)
+							? 'Buy X Get Y'
+							: ['shipping'].includes(queryType as string)
+								? 'Free shipping'
+								: `Amount off ${['products'].includes(queryType as string) ? 'products' : 'orders'}`
+					}
 					newRule={newRule}
 					setNewRule={setNewRule}
 					activeButtonIndex={activeButtonIndex}
@@ -124,13 +132,13 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 					queryType={queryType}
 				/>
 				<br />
-				{['buyXgetY'].includes(queryType as string) ? 
+				{['buyXgetY'].includes(queryType as string) ?
 					<DiscountBuyXGetY
 						handleOpen={handleOpen}
 						newRule={newRule}
 						setNewRule={setNewRule}
 					/>
-					:
+					: 
 					<DiscountValue
 						handleOpen={handleOpen}
 						newRule={newRule}
@@ -144,22 +152,21 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 					setNewRule={setNewRule}
 				/>
 				<br />
-				<ActiveDates
-					newRule={newRule}
-					setNewRule={setNewRule}
-				/>
+				<ActiveDates newRule={newRule} setNewRule={setNewRule} />
 			</Layout.Section>
 			<Layout.Section variant="oneThird">
 				<Summary />
 			</Layout.Section>
-			<Modal id='product-collection-modal'>
+			<Modal id="product-collection-modal">
 				{newRule?.appliesTo === 'collection' && <CollectionList />}
 				{newRule?.appliesTo === 'product' && <ProductsList />}
-				<TitleBar title={`Add ${newRule?.appliesTo === 'product' ? 'products' : 'collections'}`}>
-					<button variant='primary'>Add</button>
+				<TitleBar
+					title={`Add ${newRule?.appliesTo === 'product' ? 'products' : 'collections'}`}
+				>
+					<button variant="primary">Add</button>
 					<button onClick={handleClose}>Cancel</button>
 				</TitleBar>
 			</Modal>
 		</Layout>
 	);
-}
+};

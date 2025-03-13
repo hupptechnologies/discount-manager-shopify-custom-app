@@ -5,8 +5,8 @@ import {
 	FormLayout,
 	Select,
 	Text,
-	TextField
-} from "@shopify/polaris";
+	TextField,
+} from '@shopify/polaris';
 
 interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -23,8 +23,12 @@ interface AdvanceDiscountRuleProps {
 	};
 }
 
-const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, setNewRule, queryType }) => {
-	return	(
+const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
+	newRule,
+	setNewRule,
+	queryType,
+}) => {
+	return (
 		<Card>
 			<BlockStack gap="500">
 				<FormLayout>
@@ -35,13 +39,11 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 						<TextField
 							label="Discount Condition"
 							value={newRule.condition}
-							onChange={(value) =>
-								setNewRule({ ...newRule, condition: value })
-							}
+							onChange={(value) => setNewRule({ ...newRule, condition: value })}
 							placeholder="e.g. Buy 2, Get 1 Free"
 							autoComplete="off"
 						/>
-						{['product', 'buyXgetY'].includes(queryType as string) &&
+						{['product', 'buyXgetY'].includes(queryType as string) && (
 							<TextField
 								label="Quantity-Based Discount"
 								type="integer"
@@ -53,10 +55,10 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 								placeholder="e.g. Buy 3+ items"
 								autoComplete="off"
 							/>
-						}
+						)}
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
-						{['order', 'shipping'].includes(queryType as string) &&
+						{['order', 'shipping'].includes(queryType as string) && (
 							<Select
 								label="Customer Segment"
 								options={[
@@ -69,9 +71,10 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 									setNewRule({
 										...newRule,
 										customerType: value as 'all' | 'vip' | 'first-time',
-								})}
+									})
+								}
 							/>
-						}
+						)}
 						<Select
 							label="Discount Type"
 							options={[
@@ -88,7 +91,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
-						{['product', 'buyXgetY'].includes(queryType as string) &&
+						{['product', 'buyXgetY'].includes(queryType as string) && (
 							<Select
 								label="Discount by Product Category"
 								options={[
@@ -103,8 +106,8 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 									})
 								}
 							/>
-						}
-						{['order', 'shipping'].includes(queryType as string) &&
+						)}
+						{['order', 'shipping'].includes(queryType as string) && (
 							<TextField
 								label="Geo-Based Discount"
 								value={newRule.region}
@@ -112,9 +115,9 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 								placeholder="e.g. Black Friday discount in the US"
 								autoComplete="off"
 							/>
-						}
+						)}
 					</FormLayout.Group>
-					{['product'].includes(queryType as string) &&
+					{['product'].includes(queryType as string) && (
 						<Checkbox
 							label="Stock-Based Discount"
 							checked={newRule.isStockBased}
@@ -124,9 +127,9 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 									isStockBased: !newRule.isStockBased,
 								})
 							}
-							helpText='Auto-apply 25% discount when stock is below 10 units'
+							helpText="Auto-apply 25% discount when stock is below 10 units"
 						/>
-					}
+					)}
 					<Checkbox
 						label="Enable AI Discounts"
 						checked={newRule.isAI}
@@ -135,7 +138,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({ newRule, set
 				</FormLayout>
 			</BlockStack>
 		</Card>
-	)
+	);
 };
 
 export default AdvanceDiscountRules;

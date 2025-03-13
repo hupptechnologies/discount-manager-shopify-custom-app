@@ -39,7 +39,7 @@ if (host === 'localhost') {
 
 export default defineConfig({
 	ssr: {
-		noExternal: ["@shopify/polaris-viz", "@shopify/polaris-viz-core"],
+		noExternal: ['@shopify/polaris-viz', '@shopify/polaris-viz-core'],
 	},
 	server: {
 		allowedHosts: [host],

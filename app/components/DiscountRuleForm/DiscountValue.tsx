@@ -6,8 +6,8 @@ import {
 	Icon,
 	Select,
 	Text,
-	TextField
-} from "@shopify/polaris";
+	TextField,
+} from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
 
 interface DiscountValueProps {
@@ -22,8 +22,12 @@ interface DiscountValueProps {
 	};
 }
 
-const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule, handleOpen }) => {
-	return	(
+const DiscountValue: React.FC<DiscountValueProps> = ({
+	newRule,
+	setNewRule,
+	handleOpen,
+}) => {
+	return (
 		<Card>
 			<BlockStack>
 				<FormLayout>
@@ -32,7 +36,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule, hand
 					</Text>
 					<FormLayout.Group condensed>
 						<Select
-							label=''
+							label=""
 							options={[
 								{ label: 'Percentage', value: 'per' },
 								{ label: 'Fixed amount', value: 'fixed' },
@@ -46,15 +50,13 @@ const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule, hand
 							}
 						/>
 						<TextField
-							label=''
+							label=""
 							value={newRule.discount}
-							onChange={(value) =>
-								setNewRule({ ...newRule, discount: value })
-							}
+							onChange={(value) => setNewRule({ ...newRule, discount: value })}
 							autoComplete="off"
 							prefix={newRule.discountType === 'fixed' ? '$' : ''}
 							suffix={newRule.discountType === 'per' ? '%' : ''}
-							placeholder='10'
+							placeholder="10"
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
@@ -92,18 +94,18 @@ const DiscountValue: React.FC<DiscountValueProps> = ({ newRule, setNewRule, hand
 						<TextField
 							label=""
 							value={newRule.search}
-							onChange={(value) =>
-								setNewRule({ ...newRule, search: value })
-							}
+							onChange={(value) => setNewRule({ ...newRule, search: value })}
 							autoComplete="off"
 							prefix={<Icon source={SearchIcon} />}
 							placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
 						/>
-						<Button onClick={handleOpen} variant='secondary'>Browse</Button>
+						<Button onClick={handleOpen} variant="secondary">
+							Browse
+						</Button>
 					</FormLayout.Group>
 				</FormLayout>
 			</BlockStack>
 		</Card>
-	)
-}
+	);
+};
 export default DiscountValue;

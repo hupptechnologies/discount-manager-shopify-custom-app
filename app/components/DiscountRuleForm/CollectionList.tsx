@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {  
+import {
 	Box,
 	InlineStack,
 	ResourceItem,
@@ -7,8 +7,8 @@ import {
 	Scrollable,
 	Text,
 	Thumbnail,
+	type ResourceListProps
 } from '@shopify/polaris';
-import type { ResourceListProps } from '@shopify/polaris';
 import { collectionData } from 'app/utils/json';
 
 interface Collection {

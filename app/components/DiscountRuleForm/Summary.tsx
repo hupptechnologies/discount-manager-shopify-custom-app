@@ -4,11 +4,11 @@ import {
 	Card,
 	InlineStack,
 	List,
-	Text
-} from "@shopify/polaris";
+	Text,
+} from '@shopify/polaris';
 
 export default function Summary () {
-	return	(
+	return (
 		<Card>
 			<InlineStack gap="400">
 				<Text variant="bodyMd" as="h6">
@@ -43,5 +43,5 @@ export default function Summary () {
 				</Box>
 			</BlockStack>
 		</Card>
-	)
+	);
 }
