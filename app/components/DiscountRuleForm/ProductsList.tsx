@@ -1,4 +1,5 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { useAppBridge } from '@shopify/app-bridge-react';
 import {
 	Text,
 	useIndexResourceState,
@@ -10,6 +11,10 @@ import {
 	type IndexTableRowProps,
 	type IndexTableProps,
 } from '@shopify/polaris';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'app/redux/store';
+import { fetchAllProductsAsync } from 'app/redux/create-discount';
+import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 import { productData } from 'app/utils/json';
 
 interface Product {
@@ -37,7 +42,11 @@ interface Groups {
 }
 
 const ProductsList = () => {
-	const rowsProduct: Product[] = productData;
+	const shopify = useAppBridge();
+	const dispatch = useDispatch<AppDispatch>();
+	const { products, pageInfo, totalProductCount } = useSelector((state: RootState) => getCreateDiscountDetail(state));
+	const [currentPage, setCurrentPage] = useState(1);
+	const rowsProduct: Product[] = products?.length > 0 ? products : productData;
 
 	const columnHeadings = [
 		{ title: 'Products' },
@@ -50,6 +59,12 @@ const ProductsList = () => {
 		},
 		{},
 	];
+
+	useEffect(() => {
+		dispatch(fetchAllProductsAsync({
+			shopName: shopify.config.shop || ''
+		}));
+	}, []);
 
 	const groupRowsByGroupKey = (
 		groupKey: keyof Product,
@@ -198,6 +213,11 @@ const ProductsList = () => {
 				resourceName={resourceName}
 				itemCount={rowsProduct.length}
 				headings={columnHeadings as IndexTableProps['headings']}
+				pagination={{
+					hasPrevious: pageInfo?.hasPreviousPage,
+					hasNext: pageInfo?.hasNextPage,
+					label: `Showing ${products?.length} to ${currentPage} of ${totalProductCount} products`,
+				}}		  
 			>
 				{rowMarkup}
 			</IndexTable>

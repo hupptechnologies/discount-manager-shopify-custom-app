@@ -15,6 +15,8 @@ interface CreateDiscountState {
 	collections: any[];
 	isCollectionLoading: boolean;
 	collectionPageInfo: PageInfo | null;
+	totalProductCount: number;
+	totalCollectionCount: number;
 }
 
 const initialState: CreateDiscountState = {
@@ -23,7 +25,9 @@ const initialState: CreateDiscountState = {
 	pageInfo: null,
 	collections: [],
 	isCollectionLoading: false,
-	collectionPageInfo: null
+	collectionPageInfo: null,
+	totalProductCount: 0,
+	totalCollectionCount: 0,
 };
 
 const createDiscountSlice = createSlice({
@@ -38,11 +42,13 @@ const createDiscountSlice = createSlice({
 			state.isLoading = false;
 			state.products = payload.products;
 			state.pageInfo = payload.pageInfo;
+			state.totalProductCount = payload.totalCount;
 		});
 		builder.addCase(fetchAllProductsAsync.rejected, (state) => {
 			state.isLoading = false;
 			state.products = [];
 			state.pageInfo = null;
+			state.totalProductCount = 0;
 		});
 		builder.addCase(fetchAllCollectionsAsync.pending, (state) => {
 			state.isCollectionLoading = true;
@@ -51,11 +57,13 @@ const createDiscountSlice = createSlice({
 			state.isCollectionLoading = false;
 			state.collections = payload.collections;
 			state.collectionPageInfo = payload.pageInfo;
+			state.totalCollectionCount = payload.totalCount;
 		});
 		builder.addCase(fetchAllCollectionsAsync.rejected, (state) => {
 			state.isCollectionLoading = false;
 			state.collections = [];
 			state.collectionPageInfo = null;
+			state.totalCollectionCount = 0;
 		});
 	},
 });
