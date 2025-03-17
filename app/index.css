@@ -2,3 +2,10 @@
 	width: fit-content;
 	padding: 5px;
 }
+
+.Polaris-Scrollable .Polaris-IndexTable .Polaris-IndexTable__PaginationWrapper {
+	position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 610px;
+}

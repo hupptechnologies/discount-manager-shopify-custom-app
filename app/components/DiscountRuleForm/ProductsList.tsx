@@ -10,12 +10,12 @@ import {
 	Scrollable,
 	type IndexTableRowProps,
 	type IndexTableProps,
+	Filters,
 } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { fetchAllProductsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
-import { productData } from 'app/utils/json';
 
 interface Product {
 	id: string;
@@ -44,9 +44,12 @@ interface Groups {
 const ProductsList = () => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { products, pageInfo, totalProductCount } = useSelector((state: RootState) => getCreateDiscountDetail(state));
-	const [currentPage, setCurrentPage] = useState(1);
-	const rowsProduct: Product[] = products?.length > 0 ? products : productData;
+	const { products, pageInfo, totalProductCount, isLoading } = useSelector((state: RootState) => getCreateDiscountDetail(state));
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [queryValue, setQueryValue] = useState<string>('');
+	const [cursor, setCursor] = useState<string | undefined>(undefined);
+	const [prevCursor, setPrevCursor] = useState<string | undefined>(undefined);
+	const rowsProduct: Product[] = products?.length > 0 ? products : [];
 
 	const columnHeadings = [
 		{ title: 'Products' },
@@ -62,9 +65,31 @@ const ProductsList = () => {
 
 	useEffect(() => {
 		dispatch(fetchAllProductsAsync({
-			shopName: shopify.config.shop || ''
+			shopName: shopify.config.shop || '',
+			query: queryValue
 		}));
-	}, []);
+	}, [queryValue]);
+
+	useEffect(() => {
+		if (pageInfo) {
+			setCursor(pageInfo.endCursor);
+			setPrevCursor(pageInfo.startCursor);
+		}
+	}, [pageInfo]);
+	
+	const loadMoreNext = () => {
+		if (pageInfo?.hasNextPage) {
+			dispatch(fetchAllProductsAsync({ shopName: shopify.config.shop || '', query: queryValue, after: cursor }));
+			setCurrentPage((prevPage) => prevPage + 1);
+		}
+	}
+
+	const loadMorePrevious = () => {
+		if (pageInfo?.hasPreviousPage) {
+			dispatch(fetchAllProductsAsync({ shopName: shopify.config.shop || '', query: queryValue, before: prevCursor }));
+			setCurrentPage((prevPage) => prevPage - 1);
+		}
+	};	
 
 	const groupRowsByGroupKey = (
 		groupKey: keyof Product,
@@ -202,8 +227,30 @@ const ProductsList = () => {
 		);
 	});
 
+	const handleQueryChange = (value: string) => {
+		setQueryValue(value);
+	};
+	
+	const handleQueryClear = () => {
+		setQueryValue('');
+	};
+	
+	const handleClearAll = () => {
+		setQueryValue('');
+	};
+
 	return (
 		<Scrollable style={{ height: '400px' }}>
+			<Filters
+				queryValue={queryValue}
+				filters={[]}
+				appliedFilters={[]}
+				queryPlaceholder="Filter product variants"
+				onQueryChange={handleQueryChange}
+				onQueryClear={handleQueryClear}
+				onClearAll={handleClearAll}
+				loading={isLoading}
+			/>
 			<IndexTable
 				condensed={useBreakpoints().smDown}
 				onSelectionChange={handleSelectionChange}
@@ -216,8 +263,10 @@ const ProductsList = () => {
 				pagination={{
 					hasPrevious: pageInfo?.hasPreviousPage,
 					hasNext: pageInfo?.hasNextPage,
+					onPrevious: () => loadMorePrevious(),
+					onNext: () => loadMoreNext(),
 					label: `Showing ${products?.length} to ${currentPage} of ${totalProductCount} products`,
-				}}		  
+				}}
 			>
 				{rowMarkup}
 			</IndexTable>
