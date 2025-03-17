@@ -1,11 +1,17 @@
 import { NavMenu } from '@shopify/app-bridge-react';
-import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { NavLink, Outlet, useLoaderData, useRouteError } from '@remix-run/react';
-import { boundary } from '@shopify/shopify-app-remix/server';
+import {
+	NavLink,
+	Outlet,
+	useLoaderData,
+	useRouteError,
+} from '@remix-run/react';
 import { AppProvider } from '@shopify/shopify-app-remix/react';
-import polarisStyles from '@shopify/polaris/build/esm/styles.css?url';
-
+import { Provider } from 'react-redux';
+import store from 'app/redux/store';
+import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { authenticate } from '../shopify.server';
+import { boundary } from '@shopify/shopify-app-remix/server';
+import polarisStyles from '@shopify/polaris/build/esm/styles.css?url';
 
 export const links = () => [{ rel: 'stylesheet', href: polarisStyles }];
 
@@ -20,13 +26,15 @@ export default function App () {
 
 	return (
 		<AppProvider isEmbeddedApp apiKey={apiKey}>
-			<NavMenu>
-				<NavLink to="/app" rel="home">
-					Home
-				</NavLink>
-				<NavLink to="/app/manage-discount">Manage Discounts</NavLink>
-			</NavMenu>
-			<Outlet />
+			<Provider store={store}>
+				<NavMenu>
+					<NavLink to="/app" rel="home">
+						Home
+					</NavLink>
+					<NavLink to="/app/manage-discount">Manage Discounts</NavLink>
+				</NavMenu>
+				<Outlet />
+			</Provider>
 		</AppProvider>
 	);
 }

@@ -1,4 +1,5 @@
-import axios, { AxiosInstance } from 'axios';
+import type { AxiosInstance } from 'axios';
+import axios from 'axios';
 
 interface ShopifyAPIInstanceProps {
 	shop: string;
@@ -15,3 +16,9 @@ export const ShopifyAPIInstance = ({
 			'X-Shopify-Access-Token': accessToken,
 		},
 	});
+
+export const backendAPI = (): AxiosInstance => {
+	return axios.create({
+		baseURL: '/api/',
+	});
+};

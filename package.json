@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",
+    "@reduxjs/toolkit": "^2.6.1",
     "@remix-run/dev": "^2.15.0",
     "@remix-run/fs-routes": "^2.15.0",
     "@remix-run/node": "^2.15.0",
@@ -41,6 +42,7 @@
     "prisma": "^6.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.2.0",
     "vite-tsconfig-paths": "^5.0.1"
   },
   "devDependencies": {
