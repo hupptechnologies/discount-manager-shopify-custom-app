@@ -72,7 +72,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 
 	const handleButtonClick = useCallback(
 		(index: number) => {
-			if (activeButtonIndex === index) {return;}
+			if (activeButtonIndex === index) {
+				return;
+			}
 			setActiveButtonIndex(index);
 		},
 		[activeButtonIndex],
@@ -132,19 +134,19 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					queryType={queryType}
 				/>
 				<br />
-				{['buyXgetY'].includes(queryType as string) ?
+				{['buyXgetY'].includes(queryType as string) ? (
 					<DiscountBuyXGetY
 						handleOpen={handleOpen}
 						newRule={newRule}
 						setNewRule={setNewRule}
 					/>
-					: 
+				) : (
 					<DiscountValue
 						handleOpen={handleOpen}
 						newRule={newRule}
 						setNewRule={setNewRule}
 					/>
-				}
+				)}
 				<br />
 				<AdvanceDiscountRules
 					queryType={queryType}

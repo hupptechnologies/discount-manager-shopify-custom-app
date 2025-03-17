@@ -8,7 +8,7 @@ import {
 	InlineStack,
 	Scrollable,
 	type IndexTableRowProps,
-	type IndexTableProps
+	type IndexTableProps,
 } from '@shopify/polaris';
 import { productData } from 'app/utils/json';
 
@@ -16,7 +16,7 @@ interface Product {
 	id: string;
 	quantity: number;
 	price: string;
-	size: string;
+	variant: string;
 	title: string;
 	image?: string;
 	disabled?: boolean;
@@ -156,7 +156,7 @@ const ProductsList = () => {
 					<IndexTable.Cell />
 				</IndexTable.Row>
 				{products.map(
-					({ id, size, quantity, price, position, disabled }, rowIndex) => (
+					({ id, variant, quantity, price, position, disabled }, rowIndex) => (
 						<IndexTable.Row
 							rowType="child"
 							key={rowIndex}
@@ -167,7 +167,7 @@ const ProductsList = () => {
 						>
 							<IndexTable.Cell scope="row">
 								<Text variant="bodyMd" as="span">
-									{size}
+									{variant}
 								</Text>
 							</IndexTable.Cell>
 							<IndexTable.Cell>
