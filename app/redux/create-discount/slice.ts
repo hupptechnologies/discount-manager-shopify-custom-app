@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchAllProductsAsync } from './index';
+import { fetchAllCollectionsAsync, fetchAllProductsAsync } from './index';
 
 interface PageInfo {
 	endCursor: string;
@@ -12,12 +12,18 @@ interface CreateDiscountState {
 	products: any[];
 	isLoading: boolean;
 	pageInfo: PageInfo | null;
+	collections: any[];
+	isCollectionLoading: boolean;
+	collectionPageInfo: PageInfo | null;
 }
 
 const initialState: CreateDiscountState = {
 	products: [],
 	isLoading: false,
 	pageInfo: null,
+	collections: [],
+	isCollectionLoading: false,
+	collectionPageInfo: null
 };
 
 const createDiscountSlice = createSlice({
@@ -37,6 +43,19 @@ const createDiscountSlice = createSlice({
 			state.isLoading = false;
 			state.products = [];
 			state.pageInfo = null;
+		});
+		builder.addCase(fetchAllCollectionsAsync.pending, (state) => {
+			state.isCollectionLoading = true;
+		});
+		builder.addCase(fetchAllCollectionsAsync.fulfilled, (state, { payload }) => {
+			state.isCollectionLoading = false;
+			state.collections = payload.collections;
+			state.collectionPageInfo = payload.pageInfo;
+		});
+		builder.addCase(fetchAllCollectionsAsync.rejected, (state) => {
+			state.isCollectionLoading = false;
+			state.collections = [];
+			state.collectionPageInfo = null;
 		});
 	},
 });
