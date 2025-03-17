@@ -132,3 +132,19 @@ export const discountCodeData = [
 		endDate: '2025-11-30',
 	},
 ];
+
+export const generateTimeList = () => {
+	const timeList = [];
+	let hour = 1;
+	let isAM = true;
+
+	while (hour <= 12) {
+		timeList.push(`${hour}:00 ${isAM ? 'AM' : 'PM'}`);
+		timeList.push(`${hour}:30 ${isAM ? 'AM' : 'PM'}`);
+		hour++;
+		if (hour === 12) {
+			isAM = false;
+		}
+	}
+	return timeList;
+};

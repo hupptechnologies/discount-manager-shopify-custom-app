@@ -12,7 +12,7 @@ import {
 	CalendarIcon,
 	ClockIcon
 } from '@shopify/polaris-icons';
-import PopoverDatePicker from './PopoverDatePicker';
+import PopoverPicker from './PopoverPicker';
 
 interface ActiveDatesProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -26,6 +26,18 @@ interface ActiveDatesProps {
 const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 	const [popoverStartDateActive, setPopoverStartDateActive] = useState(true);
 	const [popoverEndDateActive, setPopoverEndDateActive] = useState(true);
+	const [popoverStartTimeActive, setPopoverStartTimeActive] = useState(true);
+	const [popoverEndTimeActive, setPopoverEndTimeActive] = useState(true);
+	const [selectedStartTime, setSelectedStartTime] = useState<string | null>('4:30 AM');
+	const [selectedEndTime, setSelectedEndTime] = useState<string | null>('4:30 AM');
+	const [selectedStartDates, setSelectedStartDates] = useState({
+		start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+		end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+	});
+	const [selectedEndDates, setSelectedEndDates] = useState({
+		start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+		end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+	});
 
 	return (
 		<Card>
@@ -34,7 +46,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 					Active dates
 				</Text>
 				<FormLayout.Group>
-					<PopoverDatePicker
+					<PopoverPicker
 						activator={
 							<TextField
 								label="Start date"
@@ -47,13 +59,29 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 						}
 						popoverActive={popoverStartDateActive}
 						setPopoverActive={setPopoverStartDateActive}
+						mode='date'
+						setSelectedDates={setSelectedEndDates}
+						selectedDates={selectedStartDates}
+						setSelectedTime={setSelectedStartTime}
 					/>
-					<TextField
-						label="Start time (EDT)"
-						value="7:00 am"
-						onChange={(value) => setNewRule({ ...newRule, discount: value })}
-						autoComplete="off"
-						prefix={<Icon source={ClockIcon} tone="base" />}
+					<PopoverPicker
+						activator={
+							<TextField
+								label="Start time (EDT)"
+								value="7:00 am"
+								onChange={(value) => setNewRule({ ...newRule, discount: value })}
+								autoComplete="off"
+								prefix={<Icon source={ClockIcon} tone="base" />}
+								onFocus={() => setPopoverStartTimeActive(true)}
+							/>
+						}
+						popoverActive={popoverStartTimeActive}
+						setPopoverActive={setPopoverStartTimeActive}
+						mode='time'
+						setSelectedTime={setSelectedEndTime}
+						selectedDates={setSelectedStartTime}
+						setSelectedDates={setSelectedStartDates}
+
 					/>
 				</FormLayout.Group>
 				<Checkbox
@@ -68,7 +96,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 				/>
 				{newRule.isEndDate && (
 					<FormLayout.Group>
-						<PopoverDatePicker
+						<PopoverPicker
 							activator={
 								<TextField
 									label="End date"
@@ -81,14 +109,29 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 							}
 							popoverActive={popoverEndDateActive}
 							setPopoverActive={setPopoverEndDateActive}
+							mode='date'
+							setSelectedDates={setSelectedEndDates}
+							selectedDates={selectedEndDates}
+							setSelectedTime={setSelectedEndTime}
 						/>
-						<TextField
-							label="End time (EDT)"
-							value="7:00 am"
-							onChange={(value) => setNewRule({ ...newRule, discount: value })}
-							autoComplete="off"
-							type='text'
-							prefix={<Icon source={ClockIcon} tone="base" />}
+						<PopoverPicker
+							activator={
+								<TextField
+									label="End time (EDT)"
+									value="7:00 am"
+									onChange={(value) => setNewRule({ ...newRule, discount: value })}
+									autoComplete="off"
+									type='text'
+									prefix={<Icon source={ClockIcon} tone="base" />}
+									onFocus={() => setPopoverEndTimeActive(true)}
+								/>
+							}
+							popoverActive={popoverEndTimeActive}
+							setPopoverActive={setPopoverEndTimeActive}
+							mode='time'
+							setSelectedTime={setSelectedEndTime}
+							setSelectedDates={setSelectedEndDates}
+							selectedDates={selectedEndDates}
 						/>
 					</FormLayout.Group>
 				)}
