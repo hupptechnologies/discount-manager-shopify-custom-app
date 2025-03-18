@@ -59,6 +59,7 @@ interface DiscountRule {
 	totalUsageLimit: boolean,
 	onePerCustomer: boolean
 	totalLimitValue: string;
+	dicountCodePrefix: string;
 }
 
 type DiscountRuleFormProps = {
@@ -118,7 +119,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		searchType: 'one',
 		totalUsageLimit: false,
 		onePerCustomer: false,
-		totalLimitValue: ''
+		totalLimitValue: '',
+		dicountCodePrefix: ''
 	});
 
 	const handleSearchTypeChange = (type: string) => {
@@ -203,7 +205,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			searchType: 'one',
 			totalUsageLimit: false,
 			onePerCustomer: false,
-			totalLimitValue: ''
+			totalLimitValue: '',
+			dicountCodePrefix: ''
 		});
 	};
 

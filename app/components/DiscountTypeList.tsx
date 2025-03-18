@@ -15,7 +15,7 @@ import {
 	DeliveryIcon,
 } from '@shopify/polaris-icons';
 
-export default function DiscountTypeList () {
+const DiscountTypeList = () => {
 	const navigate = useNavigate();
 	const discountTypes = [
 		{
@@ -80,4 +80,6 @@ export default function DiscountTypeList () {
 			}}
 		/>
 	);
-}
+};
+
+export default DiscountTypeList;

@@ -41,8 +41,8 @@ export const discountCodeData = [
 	},
 ];
 
-export const generateTimeList = () => {
-	const timeList = [];
+export const generateTimeList = (): string[] => {
+	const timeList: string[] = [];
 	let hour = 1;
 	let isAM = true;
 
@@ -57,7 +57,7 @@ export const generateTimeList = () => {
 	return timeList;
 };
 
-export const getYearMonthDay = (date: any) => {
+export const getYearMonthDay = (date: any): string => {
 	const year = date.getFullYear();
 	const month = (date.getMonth() + 1).toString().padStart(2, '0');
 	const day = date.getDate().toString().padStart(2, '0');

@@ -25,6 +25,7 @@ interface DiscountCodeGenProps {
 		title: string;
 		noOfCodeCount: string;
 		codeLength: string;
+		dicountCodePrefix: string;
 	};
 }
 
@@ -120,7 +121,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 				</Box>
 			)}
 			{newRule.isRandom && (
-				<FormLayout.Group>
+				<FormLayout.Group condensed>
 					<TextField
 						label="Number of codes to generate"
 						type="integer"
@@ -133,6 +134,13 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						type="integer"
 						value={newRule.codeLength}
 						onChange={(value) => setNewRule({ ...newRule, codeLength: value })}
+						autoComplete="off"
+					/>
+					<TextField
+						label="Dicount prefix"
+						type="text"
+						value={newRule?.dicountCodePrefix}
+						onChange={(value) => setNewRule({ ...newRule, dicountCodePrefix: value })}
 						autoComplete="off"
 					/>
 				</FormLayout.Group>
