@@ -11,6 +11,7 @@ import {
 	type IndexTableRowProps,
 	type IndexTableProps,
 	Filters,
+	Spinner,
 } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'app/redux/store';
@@ -257,7 +258,7 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 				onQueryChange={(value) => handleQueryChange(value, newRule?.searchType)}
 				onQueryClear={handleQueryClear}
 				onClearAll={handleClearAll}
-				loading={isLoading}
+				loading={(newRule?.searchOne || newRule?.searchTwo) ? isLoading : false }
 			/>
 			<IndexTable
 				condensed={useBreakpoints().smDown}
@@ -278,6 +279,9 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 			>
 				{rowMarkup}
 			</IndexTable>
+			{newRule?.searchOne == '' && newRule?.searchTwo === '' && isLoading && <div className='spinner-container'>
+				<Spinner size="large" />
+			</div>}
 		</Scrollable>
 	);
 };
