@@ -18,7 +18,7 @@ export default function CreateDiscountPage () {
 			backAction={{ content: '', url: '/app/manage-discount' }}
 			title="Create discount"
 		>
-			<DiscountRuleForm queryType={queryType} />
+			{queryType && <DiscountRuleForm queryType={queryType} />}
 			<br />
 		</Page>
 	);

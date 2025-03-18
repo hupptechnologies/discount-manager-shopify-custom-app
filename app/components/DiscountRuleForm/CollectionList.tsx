@@ -23,7 +23,16 @@ interface Collection {
 	image: string;
 }
 
-const CollectionList = () => {
+interface CollectionProps {
+	newRule: {
+		searchOne: string;
+		searchTwo: string;
+		searchType: string;
+	},
+	setNewRule: React.Dispatch<React.SetStateAction<any>>;
+}
+
+const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
 	const { collections, collectionPageInfo, totalCollectionCount, isCollectionLoading } = useSelector((state: RootState) => getCreateDiscountDetail(state));
@@ -31,7 +40,6 @@ const CollectionList = () => {
 		ResourceListProps['selectedItems']
 	>([]);
 	const [currentPage, setCurrentPage] = useState<number>(1);
-	const [queryValue, setQueryValue] = useState<string>('');
 	const [cursor, setCursor] = useState<string | undefined>(undefined);
 	const [prevCursor, setPrevCursor] = useState<string | undefined>(undefined);
 
@@ -45,9 +53,9 @@ const CollectionList = () => {
 	useEffect(() => {
 		dispatch(fetchAllCollectionsAsync({
 			shopName: shopify.config.shop || '',
-			query: queryValue
+			query: newRule?.searchOne === '' ?  newRule?.searchTwo : newRule?.searchOne
 		}))
-	}, [queryValue]);
+	}, [newRule]);
 
 	useEffect(() => {
 		if (collectionPageInfo) {
@@ -58,37 +66,37 @@ const CollectionList = () => {
 	
 	const loadMoreNext = () => {
 		if (collectionPageInfo?.hasNextPage) {
-			dispatch(fetchAllCollectionsAsync({ shopName: shopify.config.shop || '', query: queryValue, after: cursor }));
+			dispatch(fetchAllCollectionsAsync({ shopName: shopify.config.shop || '', query: newRule?.searchOne, after: cursor }));
 			setCurrentPage((prevPage) => prevPage + 1);
 		}
 	}
 
 	const loadMorePrevious = () => {
 		if (collectionPageInfo?.hasPreviousPage) {
-			dispatch(fetchAllCollectionsAsync({ shopName: shopify.config.shop || '', query: queryValue, before: prevCursor }));
+			dispatch(fetchAllCollectionsAsync({ shopName: shopify.config.shop || '', query: newRule?.searchOne, before: prevCursor }));
 			setCurrentPage((prevPage) => prevPage - 1);
 		}
 	};
 
-	const handleQueryChange = (value: string) => {
-		setQueryValue(value);
+	const handleQueryChange = (value: string, type: string) => {
+		setNewRule({ ...newRule, searchOne: type === 'one' ? value : '', searchTwo: type === 'two' ? value : '' });
 	};
-	
+
 	const handleQueryClear = () => {
-		setQueryValue('');
+		setNewRule({ ...newRule, searchOne: '', searchTwo: '' });
 	};
-	
+
 	const handleClearAll = () => {
-		setQueryValue('');
+		setNewRule({ ...newRule, searchOne: '', searchTwo: '' });
 	};
 
 	const filterControl = (
 		<Filters
-			queryValue={queryValue}
+			queryValue={newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo}
 			filters={[]}
 			appliedFilters={[]}
 			queryPlaceholder="Filter collection"
-			onQueryChange={handleQueryChange}
+			onQueryChange={(value) => handleQueryChange(value, newRule?.searchType)}
 			onQueryClear={handleQueryClear}
 			onClearAll={handleClearAll}
 		/>

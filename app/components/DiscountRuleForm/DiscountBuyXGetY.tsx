@@ -21,19 +21,27 @@ interface DiscountBuyXGetYProps {
 		isMinPurchaseAmount: boolean;
 		appliesTo: 'collection' | 'product';
 		purchaseType: 'one-time' | 'subscription' | 'both';
-		search: string;
-		minQuantity: string;
+		searchOne: string;
+		searchTwo: string;
+		minBuyQuantity: string;
+		minGetQuantity: string;
 		isPercentage: boolean;
 		isAmountOfEach: boolean;
 		isFree: boolean;
 		discount: string;
+		buyItemFrom: string;
+		getItemFrom: string;
 	};
+	handleSearchOneChange: React.Dispatch<any>;
+	handleSearchTwoChange: React.Dispatch<any>;
 }
 
 const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	newRule,
 	setNewRule,
 	handleOpen,
+	handleSearchOneChange,
+	handleSearchTwoChange
 }) => {
 	return (
 		<Card>
@@ -70,8 +78,8 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						label={newRule?.isMinPurchaseAmount ? 'Amount' : 'Quantity'}
 						type="text"
 						min={0}
-						value={newRule.minQuantity}
-						onChange={(value) => setNewRule({ ...newRule, minQuantity: value })}
+						value={newRule.minBuyQuantity}
+						onChange={(value) => setNewRule({ ...newRule, minBuyQuantity: value })}
 						autoComplete="off"
 						placeholder={newRule?.isMinPurchaseAmount ? '0.00' : ''}
 						prefix={newRule?.isMinPurchaseAmount ? '$' : ''}
@@ -82,11 +90,12 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							{ label: 'Specific collections', value: 'collection' },
 							{ label: 'Specific products', value: 'product' },
 						]}
-						value={newRule.appliesTo}
+						value={newRule.buyItemFrom}
 						onChange={(value) =>
 							setNewRule({
 								...newRule,
-								appliesTo: value as 'collection' | 'product',
+								buyItemFrom: value as 'collection' | 'product',
+								searchOne: ''
 							})
 						}
 					/>
@@ -101,7 +110,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						onChange={(value) =>
 							setNewRule({
 								...newRule,
-								purchaseType: value as 'one-time' | 'subscription',
+								purchaseType: value as 'one-time' | 'subscription'
 							})
 						}
 					/>
@@ -109,11 +118,11 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 				<FormLayout.Group>
 					<TextField
 						label=""
-						value={newRule.search}
-						onChange={(value) => setNewRule({ ...newRule, search: value })}
+						value={newRule.searchOne}
+						onChange={handleSearchOneChange}
 						autoComplete="off"
 						prefix={<Icon source={SearchIcon} />}
-						placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
+						placeholder={`Search ${newRule.buyItemFrom === 'collection' ? 'collection' : 'product'}`}
 					/>
 					<Button onClick={handleOpen} variant="secondary">
 						Browse
@@ -134,8 +143,8 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						label="Quantity"
 						type="text"
 						min={0}
-						value={newRule.minQuantity}
-						onChange={(value) => setNewRule({ ...newRule, minQuantity: value })}
+						value={newRule.minGetQuantity}
+						onChange={(value) => setNewRule({ ...newRule, minGetQuantity: value })}
 						autoComplete="off"
 					/>
 					<Select
@@ -144,11 +153,12 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							{ label: 'Specific collections', value: 'collection' },
 							{ label: 'Specific products', value: 'product' },
 						]}
-						value={newRule.appliesTo}
+						value={newRule.getItemFrom}
 						onChange={(value) =>
 							setNewRule({
 								...newRule,
-								appliesTo: value as 'collection' | 'product',
+								getItemFrom: value as 'collection' | 'product',
+								searchTwo: ''
 							})
 						}
 					/>
@@ -156,13 +166,13 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 				<FormLayout.Group>
 					<TextField
 						label=""
-						value={newRule.search}
-						onChange={(value) => setNewRule({ ...newRule, search: value })}
+						value={newRule.searchTwo}
+						onChange={handleSearchTwoChange}
 						autoComplete="off"
 						prefix={<Icon source={SearchIcon} />}
-						placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
+						placeholder={`Search ${newRule.getItemFrom === 'collection' ? 'collection' : 'product'}`}
 					/>
-					<Button onClick={handleOpen} variant="secondary">
+					<Button onClick={() => handleOpen('two')} variant="secondary">
 						Browse
 					</Button>
 				</FormLayout.Group>

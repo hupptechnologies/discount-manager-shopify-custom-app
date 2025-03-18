@@ -13,11 +13,11 @@ interface AdvanceDiscountRuleProps {
 	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
 	newRule: {
 		quantity: string;
-		type: 'stackable' | 'exclusive';
+		advanceDiscountType: 'stackable' | 'exclusive';
 		region: string;
 		condition: string;
 		customerType: 'all' | 'vip' | 'first-time';
-		categoryType: string;
+		productCategory: string;
 		isAI: boolean;
 		isStockBased: boolean;
 	};
@@ -81,11 +81,11 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 								{ label: 'Stackable', value: 'stackable' },
 								{ label: 'Exclusive', value: 'exclusive' },
 							]}
-							value={newRule.type}
+							value={newRule.advanceDiscountType}
 							onChange={(value) =>
 								setNewRule({
 									...newRule,
-									type: value as 'stackable' | 'exclusive',
+									advanceDiscountType: value as 'stackable' | 'exclusive',
 								})
 							}
 						/>
@@ -98,11 +98,11 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 									{ label: 'Shoes', value: 'shoes' },
 									{ label: 'Electronic', value: 'electronic' },
 								]}
-								value={newRule.categoryType}
+								value={newRule.productCategory}
 								onChange={(value) =>
 									setNewRule({
 										...newRule,
-										categoryType: value,
+										productCategory: value,
 									})
 								}
 							/>

@@ -17,16 +17,19 @@ interface DiscountCodeGenProps {
 	handleButtonClick: React.Dispatch<React.SetStateAction<any>>;
 	activeButtonIndex: number;
 	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
-	title: string;
+	heading: string;
 	newRule: {
 		isCustom: boolean;
 		isRandom: boolean;
-		condition: string;
+		checkoutDiscountCode: string;
+		title: string;
+		noOfCodeCount: string;
+		codeLength: string;
 	};
 }
 
 const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
-	title,
+	heading,
 	activeButtonIndex,
 	handleButtonClick,
 	newRule,
@@ -37,7 +40,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 		<Card>
 			<InlineStack align="space-between" gap="200" blockAlign="center">
 				<Text variant="headingMd" fontWeight="semibold" as="h6">
-					{title}
+					{heading}
 				</Text>
 				<Text as="p">{queryType} discount</Text>
 			</InlineStack>
@@ -64,6 +67,13 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					label="Title"
 					helpText="The name of the discount the codes will be grouped under."
 					autoComplete="off"
+					value={newRule?.title}
+					onChange={(value) =>
+						setNewRule({
+							...newRule,
+							title: value
+						})
+					}
 				/>
 			</BlockStack>
 			<br />
@@ -102,8 +112,8 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					</InlineStack>
 					<TextField
 						label
-						value={newRule.condition}
-						onChange={(value) => setNewRule({ ...newRule, condition: value })}
+						value={newRule.checkoutDiscountCode}
+						onChange={(value) => setNewRule({ ...newRule, checkoutDiscountCode: value })}
 						helpText="Customers must enter this code at checkout."
 						autoComplete="off"
 					/>
@@ -114,13 +124,15 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					<TextField
 						label="Number of codes to generate"
 						type="integer"
-						value="123456"
+						value={newRule.noOfCodeCount}
+						onChange={(value) => setNewRule({ ...newRule, noOfCodeCount: value })}
 						autoComplete="off"
 					/>
 					<TextField
 						label="Code length"
 						type="integer"
-						value="6"
+						value={newRule.codeLength}
+						onChange={(value) => setNewRule({ ...newRule, codeLength: value })}
 						autoComplete="off"
 					/>
 				</FormLayout.Group>

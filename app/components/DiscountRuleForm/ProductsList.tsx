@@ -41,12 +41,20 @@ interface Groups {
 	[key: string]: ProductGroup;
 }
 
-const ProductsList = () => {
+interface ProductProps {
+	newRule: {
+		searchOne: string;
+		searchTwo: string;
+		searchType: string;
+	},
+	setNewRule: React.Dispatch<React.SetStateAction<any>>;
+}
+
+const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
 	const { products, pageInfo, totalProductCount, isLoading } = useSelector((state: RootState) => getCreateDiscountDetail(state));
 	const [currentPage, setCurrentPage] = useState<number>(1);
-	const [queryValue, setQueryValue] = useState<string>('');
 	const [cursor, setCursor] = useState<string | undefined>(undefined);
 	const [prevCursor, setPrevCursor] = useState<string | undefined>(undefined);
 	const rowsProduct: Product[] = products?.length > 0 ? products : [];
@@ -66,9 +74,9 @@ const ProductsList = () => {
 	useEffect(() => {
 		dispatch(fetchAllProductsAsync({
 			shopName: shopify.config.shop || '',
-			query: queryValue
+			query: newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo 
 		}));
-	}, [queryValue]);
+	}, [newRule]);
 
 	useEffect(() => {
 		if (pageInfo) {
@@ -79,14 +87,14 @@ const ProductsList = () => {
 	
 	const loadMoreNext = () => {
 		if (pageInfo?.hasNextPage) {
-			dispatch(fetchAllProductsAsync({ shopName: shopify.config.shop || '', query: queryValue, after: cursor }));
+			dispatch(fetchAllProductsAsync({ shopName: shopify.config.shop || '', query: newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo, after: cursor }));
 			setCurrentPage((prevPage) => prevPage + 1);
 		}
 	}
 
 	const loadMorePrevious = () => {
 		if (pageInfo?.hasPreviousPage) {
-			dispatch(fetchAllProductsAsync({ shopName: shopify.config.shop || '', query: queryValue, before: prevCursor }));
+			dispatch(fetchAllProductsAsync({ shopName: shopify.config.shop || '', query: newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo, before: prevCursor }));
 			setCurrentPage((prevPage) => prevPage - 1);
 		}
 	};
@@ -227,26 +235,26 @@ const ProductsList = () => {
 		);
 	});
 
-	const handleQueryChange = (value: string) => {
-		setQueryValue(value);
+	const handleQueryChange = (value: string, type: string) => {
+		setNewRule({ ...newRule, searchOne: type === 'one' ? value : '', searchTwo: type === 'two' ? value : '' });
 	};
 	
 	const handleQueryClear = () => {
-		setQueryValue('');
+		setNewRule({ ...newRule, searchOne: '', searchTwo: '' });
 	};
 	
 	const handleClearAll = () => {
-		setQueryValue('');
+		setNewRule({ ...newRule, searchOne: '', searchTwo: '' });
 	};
 
 	return (
 		<Scrollable style={{ height: '400px' }}>
 			<Filters
-				queryValue={queryValue}
+				queryValue={newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo}
 				filters={[]}
 				appliedFilters={[]}
 				queryPlaceholder="Filter product"
-				onQueryChange={handleQueryChange}
+				onQueryChange={(value) => handleQueryChange(value, newRule?.searchType)}
 				onQueryClear={handleQueryClear}
 				onClearAll={handleClearAll}
 				loading={isLoading}

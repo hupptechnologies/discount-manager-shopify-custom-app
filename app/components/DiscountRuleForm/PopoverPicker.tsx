@@ -42,7 +42,7 @@ const PopoverPicker: React.FC<PopoverProps> = ({
 			{mode === 'date' && <DatePicker
 				month={month}
 				year={year}
-				onChange={setSelectedDates}
+				onChange={(value) => setSelectedDates({ ...selectedDates.selectedStartDates, start: value.start, end: value.end })}
 				onMonthChange={handleMonthChange}
 				selected={selectedDates}
 			/>}
