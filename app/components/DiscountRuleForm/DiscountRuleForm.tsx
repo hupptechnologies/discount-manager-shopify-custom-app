@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Modal, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
 import { Layout } from '@shopify/polaris';
+import pkg from 'lodash';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
 import DiscountCodeGen from './DiscountCodeGen';
 import DiscountValue from './DiscountValue';
@@ -11,13 +12,20 @@ import ProductsList from './ProductsList';
 import DiscountBuyXGetY from './DiscountBuyXGetY';
 
 interface DiscountRule {
+	selectedDiscountType: string | null;
+	selectedMethod: string,
+	title: string;
+	noOfCodeCount: string;
+	codeLength: string;
+	checkoutDiscountCode: string;
 	condition: string;
 	discount: string;
-	type: 'stackable' | 'exclusive';
+	advanceDiscountType: 'stackable' | 'exclusive';
 	quantity: string;
-	categoryType: string;
+	productCategory: string;
 	region: string;
-	search: string;
+	searchOne: string;
+	searchTwo: string;
 	customerType: 'all' | 'vip' | 'first-time';
 	discountType: 'per' | 'fixed';
 	appliesTo: 'collection' | 'product';
@@ -29,10 +37,24 @@ interface DiscountRule {
 	isRandom: boolean;
 	isMinQuantityItem: boolean;
 	isMinPurchaseAmount: boolean;
-	minQuantity: string;
+	minBuyQuantity: string,
+	minGetQuantity: string,
 	isPercentage: boolean;
 	isAmountOfEach: boolean;
 	isFree: boolean;
+	selectedStartDates: {
+		start: object | null;
+		end: object | null;
+	},
+	selectedEndDates: {
+		start: object | null;
+		end: object | null;
+	},
+	selectedStartTime: string;
+	selectedEndTime: string;
+	buyItemFrom: string;
+	getItemFrom: string;
+	searchType: string;
 }
 
 type DiscountRuleFormProps = {
@@ -42,15 +64,22 @@ type DiscountRuleFormProps = {
 export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	queryType,
 }) => {
+	const { debounce } = pkg;
 	const shopify = useAppBridge();
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
 	const [newRule, setNewRule] = useState<DiscountRule>({
+		selectedDiscountType: queryType,
+		selectedMethod: 'code',
+		title: '',
+		noOfCodeCount: '1',
+		codeLength: '2',
+		checkoutDiscountCode: '',
 		condition: '',
 		discount: '',
-		type: 'stackable',
+		advanceDiscountType: 'stackable',
 		quantity: '',
-		categoryType: '',
+		productCategory: '',
 		region: '',
 		customerType: 'vip',
 		isStockBased: false,
@@ -61,33 +90,78 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		discountType: 'per',
 		appliesTo: 'collection',
 		purchaseType: 'one-time',
-		search: '',
+		searchOne: '',
+		searchTwo: '',
 		isMinPurchaseAmount: false,
 		isMinQuantityItem: true,
-		minQuantity: '',
+		minBuyQuantity: '',
+		minGetQuantity: '',
 		isPercentage: true,
 		isAmountOfEach: false,
 		isFree: false,
+		selectedStartDates: {
+			start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+			end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+		},
+		selectedEndDates: {
+			start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+			end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+		},
+		selectedStartTime: '4:30 AM',
+		selectedEndTime: '4:30 AM',
+		buyItemFrom: 'product',
+		getItemFrom: 'product',
+		searchType: 'one'
 	});
+
+	const handleSearchTypeChange = (type: string) => {
+		setNewRule((prev) => ({ ...prev, searchType: type }));
+	};
 
 	const handleButtonClick = useCallback(
 		(index: number) => {
 			if (activeButtonIndex === index) {
 				return;
 			}
+			setNewRule({ ...newRule, selectedMethod: index === 0 ? 'code' : 'automatic' });
 			setActiveButtonIndex(index);
 		},
 		[activeButtonIndex],
 	);
 
+	const debouncedHandleOpen = useCallback(
+		debounce(() => {
+		  handleOpen();
+		}, 500),
+		[]
+	);
+
+	const handleSearchOneChange = (value: string) => {
+		handleSearchTypeChange('one');
+		setNewRule((prev) => ({ ...prev, searchOne: value }));
+		debouncedHandleOpen();
+	};
+
+	const handleSearchTwoChange = (value: string) => {
+		handleSearchTypeChange('two');
+		setNewRule((prev) => ({ ...prev, searchTwo: value }));
+		debouncedHandleOpen();
+	};
+
 	const handleAddRule = () => {
 		setRules([...rules, newRule]);
 		setNewRule({
+			selectedDiscountType: queryType,
+			selectedMethod: 'code',
+			title: '',
+			noOfCodeCount: '1',
+			codeLength: '2',
+			checkoutDiscountCode: '',
 			condition: '',
 			discount: '',
-			type: 'stackable',
+			advanceDiscountType: 'stackable',
 			quantity: '',
-			categoryType: '',
+			productCategory: '',
 			region: '',
 			customerType: 'vip',
 			isStockBased: false,
@@ -98,13 +172,28 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			discountType: 'per',
 			appliesTo: 'collection',
 			purchaseType: 'one-time',
-			search: '',
+			searchOne: '',
+			searchTwo: '',
 			isMinPurchaseAmount: false,
 			isMinQuantityItem: false,
-			minQuantity: '',
+			minBuyQuantity: '',
+			minGetQuantity: '',
 			isPercentage: true,
 			isAmountOfEach: false,
 			isFree: false,
+			selectedStartDates: {
+				start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+				end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+			},
+			selectedEndDates: {
+				start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+				end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+			},
+			selectedStartTime: '4:30 AM',
+			selectedEndTime: '4:30 AM',
+			buyItemFrom: 'product',
+			getItemFrom: 'product',
+			searchType: 'one'
 		});
 	};
 
@@ -120,7 +209,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		<Layout>
 			<Layout.Section>
 				<DiscountCodeGen
-					title={
+					heading={
 						['buyXgetY'].includes(queryType as string)
 							? 'Buy X Get Y'
 							: ['shipping'].includes(queryType as string)
@@ -139,12 +228,15 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						handleOpen={handleOpen}
 						newRule={newRule}
 						setNewRule={setNewRule}
+						handleSearchOneChange={handleSearchOneChange}
+						handleSearchTwoChange={handleSearchTwoChange}
 					/>
 				) : (
 					<DiscountValue
 						handleOpen={handleOpen}
 						newRule={newRule}
 						setNewRule={setNewRule}
+						handleSearchChange={handleSearchOneChange}
 					/>
 				)}
 				<br />
@@ -160,10 +252,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				<Summary />
 			</Layout.Section>
 			<Modal id="product-collection-modal">
-				{newRule?.appliesTo === 'collection' && <CollectionList />}
-				{newRule?.appliesTo === 'product' && <ProductsList />}
+				{(queryType === 'buyXgetY' ? ['collection'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : newRule?.appliesTo === 'collection') && <CollectionList newRule={newRule} setNewRule={setNewRule} />}
+				{(queryType === 'buyXgetY' ? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : newRule?.appliesTo === 'product') && <ProductsList newRule={newRule} setNewRule={setNewRule} />}
 				<TitleBar
-					title={`Add ${newRule?.appliesTo === 'product' ? 'products' : 'collections'}`}
+					title={`Add ${(queryType === 'buyXgetY' ? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : newRule?.appliesTo === 'product') ? 'products' : 'collections'}`}
 				>
 					<button variant="primary">Add</button>
 					<button onClick={handleClose}>Cancel</button>
