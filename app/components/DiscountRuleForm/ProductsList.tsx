@@ -89,7 +89,7 @@ const ProductsList = () => {
 			dispatch(fetchAllProductsAsync({ shopName: shopify.config.shop || '', query: queryValue, before: prevCursor }));
 			setCurrentPage((prevPage) => prevPage - 1);
 		}
-	};	
+	};
 
 	const groupRowsByGroupKey = (
 		groupKey: keyof Product,
@@ -245,7 +245,7 @@ const ProductsList = () => {
 				queryValue={queryValue}
 				filters={[]}
 				appliedFilters={[]}
-				queryPlaceholder="Filter product variants"
+				queryPlaceholder="Filter product"
 				onQueryChange={handleQueryChange}
 				onQueryClear={handleQueryClear}
 				onClearAll={handleClearAll}

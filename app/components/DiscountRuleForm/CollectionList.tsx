@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAppBridge } from '@shopify/app-bridge-react';
 import {
 	Box,
+	Filters,
 	InlineStack,
 	ResourceItem,
 	ResourceList,
@@ -14,7 +15,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { fetchAllCollectionsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
-import { collectionData } from 'app/utils/json';
 
 interface Collection {
 	id: string;
@@ -30,24 +30,74 @@ const CollectionList = () => {
 	const [selectedItems, setSelectedItems] = useState<
 		ResourceListProps['selectedItems']
 	>([]);
-	const [currentPage, setCurrentPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [queryValue, setQueryValue] = useState<string>('');
+	const [cursor, setCursor] = useState<string | undefined>(undefined);
+	const [prevCursor, setPrevCursor] = useState<string | undefined>(undefined);
 
 	const resourceName = {
 		singular: 'customer',
 		plural: 'customers',
 	};
 
-	const rowsCollection: Collection[] = collections?.length > 0 ? collections : collectionData;
+	const rowsCollection: Collection[] = collections?.length > 0 ? collections : [];
 
 	useEffect(() => {
 		dispatch(fetchAllCollectionsAsync({
-			shopName: shopify.config.shop || ''
+			shopName: shopify.config.shop || '',
+			query: queryValue
 		}))
-	}, []);
+	}, [queryValue]);
+
+	useEffect(() => {
+		if (collectionPageInfo) {
+			setCursor(collectionPageInfo.endCursor);
+			setPrevCursor(collectionPageInfo.startCursor);
+		}
+	}, [collectionPageInfo]);
+	
+	const loadMoreNext = () => {
+		if (collectionPageInfo?.hasNextPage) {
+			dispatch(fetchAllCollectionsAsync({ shopName: shopify.config.shop || '', query: queryValue, after: cursor }));
+			setCurrentPage((prevPage) => prevPage + 1);
+		}
+	}
+
+	const loadMorePrevious = () => {
+		if (collectionPageInfo?.hasPreviousPage) {
+			dispatch(fetchAllCollectionsAsync({ shopName: shopify.config.shop || '', query: queryValue, before: prevCursor }));
+			setCurrentPage((prevPage) => prevPage - 1);
+		}
+	};
+
+	const handleQueryChange = (value: string) => {
+		setQueryValue(value);
+	};
+	
+	const handleQueryClear = () => {
+		setQueryValue('');
+	};
+	
+	const handleClearAll = () => {
+		setQueryValue('');
+	};
+
+	const filterControl = (
+		<Filters
+			queryValue={queryValue}
+			filters={[]}
+			appliedFilters={[]}
+			queryPlaceholder="Filter collection"
+			onQueryChange={handleQueryChange}
+			onQueryClear={handleQueryClear}
+			onClearAll={handleClearAll}
+		/>
+	)
 
 	return (
-		<Scrollable style={{ height: '400px' }}>
+		<Scrollable style={{ height: '471px' }}>
 			<ResourceList
+				filterControl={filterControl}
 				resourceName={resourceName}
 				items={rowsCollection}
 				selectable
@@ -77,6 +127,8 @@ const CollectionList = () => {
 				pagination={{
 					hasPrevious: collectionPageInfo?.hasPreviousPage,
 					hasNext: collectionPageInfo?.hasNextPage,
+					onPrevious: () => loadMorePrevious(),
+					onNext: () => loadMoreNext(),
 					label: `Showing ${collections?.length} to ${currentPage} of ${totalCollectionCount} products`,
 				}}
 			/>
