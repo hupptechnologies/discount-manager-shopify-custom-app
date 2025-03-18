@@ -214,7 +214,7 @@ const AnalyticsTable = () => {
 			return value as string;
 		}
 	}
-  
+
 	function isEmpty(value: string | string[]): boolean {
 		if (Array.isArray(value)) {
 			return value.length === 0;

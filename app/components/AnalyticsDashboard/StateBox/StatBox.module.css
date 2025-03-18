@@ -1,34 +1,34 @@
 .statBoxContainer {
-  height: 65px;
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+	height: 65px;
+	position: relative;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
 }
 
 .statBoxLeft {
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-  min-width: 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: end;
+	min-width: 30px;
 }
 
 .statBoxPositionContainer {
-  position: absolute;
-  top: -8px;
-  left: -2px;
-  z-index: 20
+	position: absolute;
+	top: -8px;
+	left: -2px;
+	z-index: 20
 }
 
 .statBoxFlex {
-  display: flex;
-  align-items: center;
-  margin-bottom: -4px;
+	display: flex;
+	align-items: center;
+	margin-bottom: -4px;
 }
 
 .statBoxSparkLine {
-  flex: 1;
-  width: 50%;
-  height: 80%;
-  align-self: flex-end;
+	flex: 1;
+	width: 50%;
+	height: 80%;
+	align-self: flex-end;
 }

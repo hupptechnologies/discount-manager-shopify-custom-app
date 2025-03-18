@@ -60,13 +60,6 @@ const PopoverPicker: React.FC<PopoverProps> = ({
 			</ResourceList.Item>
 		);
 	}
-	
-	function getInitials(time: string) {
-		return time
-			.split(' ')
-			.map((timeName) => timeName.slice(0, 1))
-			.join('');
-	}
 };
 
 export default PopoverPicker;

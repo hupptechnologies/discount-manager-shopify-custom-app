@@ -1,4 +1,3 @@
-import { TitleBar } from '@shopify/app-bridge-react';
 import {
 	BlockStack,
 	Card,
@@ -11,7 +10,6 @@ import {
 export default function Index () {
 	return (
 		<Page>
-			<TitleBar title="Smart Discount Manager – AI-Powered Discount Rules"></TitleBar>
 			<BlockStack gap="500">
 				<Layout>
 					<Layout.Section>

@@ -5,22 +5,22 @@
 
 .Polaris-Scrollable .Polaris-IndexTable .Polaris-IndexTable__PaginationWrapper {
 	position: fixed;
-    bottom: 0px;
-    left: 0px;
-    width: 610px;
+	bottom: 0px;
+	left: 0px;
+	width: 610px;
 }
 
 .spinner-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    position: fixed;
-    left: 50%;
-    top: 0;
-    z-index: 11111;
-    backdrop-filter: blur(1px);
-    transform: translateX(-50%);
-    background-color: rgba(255, 255, 255, 0.3);
-    width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	position: fixed;
+	left: 50%;
+	top: 0;
+	z-index: 11111;
+	backdrop-filter: blur(1px);
+	transform: translateX(-50%);
+	background-color: rgba(255, 255, 255, 0.3);
+	width: 100%;
 }
