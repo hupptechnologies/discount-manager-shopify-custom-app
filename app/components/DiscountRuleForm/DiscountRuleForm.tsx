@@ -10,6 +10,7 @@ import Summary from './Summary';
 import CollectionList from './CollectionList';
 import ProductsList from './ProductsList';
 import DiscountBuyXGetY from './DiscountBuyXGetY';
+import UsageLimit from './UsageLimit';
 
 interface DiscountRule {
 	selectedDiscountType: string | null;
@@ -55,6 +56,9 @@ interface DiscountRule {
 	buyItemFrom: string;
 	getItemFrom: string;
 	searchType: string;
+	totalUsageLimit: boolean,
+	onePerCustomer: boolean
+	totalLimitValue: string;
 }
 
 type DiscountRuleFormProps = {
@@ -111,7 +115,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		selectedEndTime: '4:30 AM',
 		buyItemFrom: 'product',
 		getItemFrom: 'product',
-		searchType: 'one'
+		searchType: 'one',
+		totalUsageLimit: false,
+		onePerCustomer: false,
+		totalLimitValue: ''
 	});
 
 	const handleSearchTypeChange = (type: string) => {
@@ -193,7 +200,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			selectedEndTime: '4:30 AM',
 			buyItemFrom: 'product',
 			getItemFrom: 'product',
-			searchType: 'one'
+			searchType: 'one',
+			totalUsageLimit: false,
+			onePerCustomer: false,
+			totalLimitValue: ''
 		});
 	};
 
@@ -242,6 +252,11 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				<br />
 				<AdvanceDiscountRules
 					queryType={queryType}
+					newRule={newRule}
+					setNewRule={setNewRule}
+				/>
+				<br />
+				<UsageLimit
 					newRule={newRule}
 					setNewRule={setNewRule}
 				/>
