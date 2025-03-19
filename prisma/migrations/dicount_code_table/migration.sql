@@ -5,6 +5,7 @@ CREATE TABLE "DiscountCode" (
   "code" VARCHAR(255) NOT NULL UNIQUE,
   "title" VARCHAR(255) NOT NULL,
   "shop" TEXT NOT NULL,
+  "discountId" TEXT NOT NULL,
   "description" TEXT,
   "discountAmount" FLOAT NOT NULL,
   "discountType" "DiscountType" NOT NULL,

@@ -36,6 +36,7 @@ model DiscountCode {
   code            String        @unique
   title           String
   shop            String
+  discountId      String
   description     String?
   discountAmount  Float
   discountType    DiscountType

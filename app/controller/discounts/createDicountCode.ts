@@ -35,6 +35,11 @@ mutation CreateDiscountCode($basicCodeDiscount: DiscountCodeBasicInput!) {
 	}
 }`;
 
+type DiscountCodeItems = 
+  | { all: boolean }
+  | { products: { productVariantsToAdd: string[] } }
+  | { collections: { add: string[] } };
+
 interface DiscountCodeBasicInput {
 	title: string;
 	code: string;
@@ -47,9 +52,7 @@ interface DiscountCodeBasicInput {
 		value: {
 			percentage: number;
 		};
-		items: {
-			all: boolean;
-		}
+		items: DiscountCodeItems
 	};
 	usageLimit: number;
 	appliesOncePerCustomer: boolean;
@@ -60,6 +63,7 @@ interface DiscountCodeResponse {
 		data: {
 			discountCodeBasicCreate: {
 				codeDiscountNode: {
+					id: string;
 					codeDiscount: {
 						code: string;
 						title: string;
@@ -79,6 +83,8 @@ export interface CreateDiscountCodeInput {
 	endsAt: string;
 	usageLimit: number;
 	appliesOncePerCustomer: boolean;
+	productIDs: string[];
+	collectionIDs: string[];
 }
 
 export const createDiscountCode = async (
@@ -93,9 +99,15 @@ export const createDiscountCode = async (
 		endsAt,
 		usageLimit,
 		appliesOncePerCustomer,
+		productIDs = [],
+		collectionIDs = []
 	}: CreateDiscountCodeInput = await request.json();
 
 	try {
+		const checkCodeExist = await prisma.discountCode.count({ where: { shop, code: code } });
+		if (checkCodeExist > 0) {
+			return { success: false, message: `The discount code "${code}" already exists. Please try using a different code.` }
+		}
 		const response = await prisma.session.findMany({
 			where: { shop },
 		});
@@ -120,15 +132,31 @@ export const createDiscountCode = async (
 						value: {
 							percentage: percentage / 100,
 						},
-						items: {
-							all: true
-						}
+						items: {} as DiscountCodeItems,
 					},
 					usageLimit,
 					appliesOncePerCustomer,
 				} as DiscountCodeBasicInput,
 			},
 		};
+
+		if (productIDs.length > 0) {
+			data.variables.basicCodeDiscount.customerGets.items = {
+				products: {
+					productVariantsToAdd: productIDs
+				}
+			} as DiscountCodeItems;
+		} else if (collectionIDs?.length > 0) {
+			data.variables.basicCodeDiscount.customerGets.items = {
+				collections: {
+					add: collectionIDs
+				}
+			} as DiscountCodeItems;
+		} else {
+			data.variables.basicCodeDiscount.customerGets.items = {
+				all: true,
+			} as DiscountCodeItems;
+		}
 
 		const createDiscountResponse: DiscountCodeResponse = await getDetailUsingGraphQL(shop, accessToken, data);
 
@@ -145,6 +173,7 @@ export const createDiscountCode = async (
 					code: code,
 					title: title,
 					shop,
+					discountId: discountCodeData?.id,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
 					discountAmount: percentage,
