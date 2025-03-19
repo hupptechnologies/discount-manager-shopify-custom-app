@@ -75,7 +75,7 @@ interface DiscountCodeResponse {
 	}
 }
 
-export interface CreateDiscountCodeInput {
+interface CreateDiscountCodeInput {
 	title: string;
 	percentage: number;
 	code: string;
