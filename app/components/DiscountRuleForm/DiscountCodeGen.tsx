@@ -72,7 +72,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					onChange={(value) =>
 						setNewRule({
 							...newRule,
-							title: value
+							title: value,
 						})
 					}
 				/>
@@ -114,7 +114,9 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					<TextField
 						label
 						value={newRule.checkoutDiscountCode}
-						onChange={(value) => setNewRule({ ...newRule, checkoutDiscountCode: value })}
+						onChange={(value) =>
+							setNewRule({ ...newRule, checkoutDiscountCode: value })
+						}
 						helpText="Customers must enter this code at checkout."
 						autoComplete="off"
 					/>
@@ -126,7 +128,9 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						label="Number of codes to generate"
 						type="integer"
 						value={newRule.noOfCodeCount}
-						onChange={(value) => setNewRule({ ...newRule, noOfCodeCount: value })}
+						onChange={(value) =>
+							setNewRule({ ...newRule, noOfCodeCount: value })
+						}
 						autoComplete="off"
 					/>
 					<TextField
@@ -140,7 +144,9 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						label="Dicount prefix"
 						type="text"
 						value={newRule?.dicountCodePrefix}
-						onChange={(value) => setNewRule({ ...newRule, dicountCodePrefix: value })}
+						onChange={(value) =>
+							setNewRule({ ...newRule, dicountCodePrefix: value })
+						}
 						autoComplete="off"
 					/>
 				</FormLayout.Group>

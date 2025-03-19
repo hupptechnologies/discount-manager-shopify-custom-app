@@ -8,10 +8,7 @@ import {
 	TextField,
 	Icon,
 } from '@shopify/polaris';
-import {
-	CalendarIcon,
-	ClockIcon
-} from '@shopify/polaris-icons';
+import { CalendarIcon, ClockIcon } from '@shopify/polaris-icons';
 import PopoverPicker from './PopoverPicker';
 import { getYearMonthDay } from 'app/utils/json';
 
@@ -24,11 +21,11 @@ interface ActiveDatesProps {
 		selectedStartDates: {
 			start: object | null;
 			end: object | null;
-		},
+		};
 		selectedEndDates: {
 			start: object | null;
 			end: object | null;
-		},
+		};
 		selectedStartTime: string;
 		selectedEndTime: string;
 	};
@@ -51,7 +48,9 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 						activator={
 							<TextField
 								label="Start date"
-								value={getYearMonthDay(newRule?.selectedStartDates?.start) || ''}
+								value={
+									getYearMonthDay(newRule?.selectedStartDates?.start) || ''
+								}
 								autoComplete="off"
 								prefix={<Icon source={CalendarIcon} tone="base" />}
 								onFocus={() => setPopoverStartDateActive(true)}
@@ -59,11 +58,15 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 						}
 						popoverActive={popoverStartDateActive}
 						setPopoverActive={setPopoverStartDateActive}
-						mode='date'
+						mode="date"
 						setSelectedDates={(dates: any) => {
 							setNewRule({
 								...newRule,
-								selectedStartDates: { ...newRule.selectedStartDates, start: dates.start, end: dates.end }
+								selectedStartDates: {
+									...newRule.selectedStartDates,
+									start: dates.start,
+									end: dates.end,
+								},
 							});
 							setPopoverStartDateActive(false);
 						}}
@@ -75,7 +78,9 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 							<TextField
 								label="Start time (EDT)"
 								value={newRule.selectedStartTime || ''}
-								onChange={(value) => setNewRule({ ...newRule, selectedStartTime: value })}
+								onChange={(value) =>
+									setNewRule({ ...newRule, selectedStartTime: value })
+								}
 								autoComplete="off"
 								prefix={<Icon source={ClockIcon} tone="base" />}
 								onFocus={() => setPopoverStartTimeActive(true)}
@@ -83,14 +88,13 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 						}
 						popoverActive={popoverStartTimeActive}
 						setPopoverActive={setPopoverStartTimeActive}
-						mode='time'
+						mode="time"
 						setSelectedTime={(value: string) => {
 							setNewRule({ ...newRule, selectedStartTime: value });
 							setPopoverStartTimeActive(false);
 						}}
 						selectedDates={newRule?.selectedStartDates}
 						setSelectedDates={() => {}}
-
 					/>
 				</FormLayout.Group>
 				<Checkbox
@@ -109,7 +113,9 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 							activator={
 								<TextField
 									label="End date"
-									value={getYearMonthDay(newRule?.selectedEndDates?.start) || ''}
+									value={
+										getYearMonthDay(newRule?.selectedEndDates?.start) || ''
+									}
 									autoComplete="off"
 									prefix={<Icon source={CalendarIcon} tone="base" />}
 									onFocus={() => setPopoverEndDateActive(true)}
@@ -117,11 +123,15 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 							}
 							popoverActive={popoverEndDateActive}
 							setPopoverActive={setPopoverEndDateActive}
-							mode='date'
+							mode="date"
 							setSelectedDates={(dates: any) => {
 								setNewRule({
 									...newRule,
-									selectedEndDates: { ...newRule.selectedEndDates, start: dates.start, end: dates.end }
+									selectedEndDates: {
+										...newRule.selectedEndDates,
+										start: dates.start,
+										end: dates.end,
+									},
 								});
 								setPopoverEndDateActive(false);
 							}}
@@ -133,16 +143,18 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 								<TextField
 									label="End time (EDT)"
 									value={newRule?.selectedEndTime}
-									onChange={(value) => setNewRule({ ...newRule, selectedEndTime: value })}
+									onChange={(value) =>
+										setNewRule({ ...newRule, selectedEndTime: value })
+									}
 									autoComplete="off"
-									type='text'
+									type="text"
 									prefix={<Icon source={ClockIcon} tone="base" />}
 									onFocus={() => setPopoverEndTimeActive(true)}
 								/>
 							}
 							popoverActive={popoverEndTimeActive}
 							setPopoverActive={setPopoverEndTimeActive}
-							mode='time'
+							mode="time"
 							setSelectedTime={(value: string) => {
 								setNewRule({ ...newRule, selectedEndTime: value });
 								setPopoverEndTimeActive(false);

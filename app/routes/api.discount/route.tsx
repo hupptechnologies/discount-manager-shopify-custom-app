@@ -26,22 +26,28 @@ export const loader = async ({
 	request: Request;
 }): Promise<Response> => {
 	const url = new URL(request.url);
-	const shop = url.searchParams.get("shop") ?? '';
-	const page = parseInt(url.searchParams.get("page") ?? '1', 10);
-	const pageSize = parseInt(url.searchParams.get("pageSize") ?? '10', 10);
-	const status = url.searchParams.get("status") as 'active' | 'pending' | undefined;
-	const usedCountGreaterThan = parseInt(url.searchParams.get("usedCountGreaterThan") ?? '0', 10);
-	const searchQuery = url.searchParams.get("searchQuery") ?? '';
-	
+	const shop = url.searchParams.get('shop') ?? '';
+	const page = parseInt(url.searchParams.get('page') ?? '1', 10);
+	const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10);
+	const status = url.searchParams.get('status') as
+		| 'active'
+		| 'pending'
+		| undefined;
+	const usedCountGreaterThan = parseInt(
+		url.searchParams.get('usedCountGreaterThan') ?? '0',
+		10,
+	);
+	const searchQuery = url.searchParams.get('searchQuery') ?? '';
+
 	const fetchDiscountCodes = await getDiscountCodes(
 		shop,
 		page,
 		pageSize,
 		status,
 		usedCountGreaterThan,
-		searchQuery
+		searchQuery,
 	);
-	
+
 	return json<LoaderResponse>(fetchDiscountCodes);
 };
 
@@ -53,7 +59,7 @@ export const action = async ({
 	const url = new URL(request.url);
 	const shop = url.searchParams.get('shop') ?? '';
 	const type = url.searchParams.get('type') ?? '';
-	if (request.method === "DELETE") {
+	if (request.method === 'DELETE') {
 		const discountCodeResponse = await deleteDiscountCode(shop, request);
 		return json<ActionResponse>(discountCodeResponse);
 	}

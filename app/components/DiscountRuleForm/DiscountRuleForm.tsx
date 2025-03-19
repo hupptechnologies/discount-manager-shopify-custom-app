@@ -14,7 +14,7 @@ import UsageLimit from './UsageLimit';
 
 interface DiscountRule {
 	selectedDiscountType: string | null;
-	selectedMethod: string,
+	selectedMethod: string;
 	title: string;
 	noOfCodeCount: string;
 	codeLength: string;
@@ -38,26 +38,26 @@ interface DiscountRule {
 	isRandom: boolean;
 	isMinQuantityItem: boolean;
 	isMinPurchaseAmount: boolean;
-	minBuyQuantity: string,
-	minGetQuantity: string,
+	minBuyQuantity: string;
+	minGetQuantity: string;
 	isPercentage: boolean;
 	isAmountOfEach: boolean;
 	isFree: boolean;
 	selectedStartDates: {
 		start: object | null;
 		end: object | null;
-	},
+	};
 	selectedEndDates: {
 		start: object | null;
 		end: object | null;
-	},
+	};
 	selectedStartTime: string;
 	selectedEndTime: string;
 	buyItemFrom: string;
 	getItemFrom: string;
 	searchType: string;
-	totalUsageLimit: boolean,
-	onePerCustomer: boolean
+	totalUsageLimit: boolean;
+	onePerCustomer: boolean;
 	totalLimitValue: string;
 	dicountCodePrefix: string;
 }
@@ -120,7 +120,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		totalUsageLimit: false,
 		onePerCustomer: false,
 		totalLimitValue: '',
-		dicountCodePrefix: ''
+		dicountCodePrefix: '',
 	});
 
 	const handleSearchTypeChange = (type: string) => {
@@ -132,7 +132,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			if (activeButtonIndex === index) {
 				return;
 			}
-			setNewRule({ ...newRule, selectedMethod: index === 0 ? 'code' : 'automatic' });
+			setNewRule({
+				...newRule,
+				selectedMethod: index === 0 ? 'code' : 'automatic',
+			});
 			setActiveButtonIndex(index);
 		},
 		[activeButtonIndex],
@@ -140,9 +143,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 
 	const debouncedHandleOpen = useCallback(
 		debounce(() => {
-		  handleOpen();
+			handleOpen();
 		}, 500),
-		[]
+		[],
 	);
 
 	const handleSearchOneChange = (value: string) => {
@@ -206,7 +209,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			totalUsageLimit: false,
 			onePerCustomer: false,
 			totalLimitValue: '',
-			dicountCodePrefix: ''
+			dicountCodePrefix: '',
 		});
 	};
 
@@ -259,10 +262,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					setNewRule={setNewRule}
 				/>
 				<br />
-				<UsageLimit
-					newRule={newRule}
-					setNewRule={setNewRule}
-				/>
+				<UsageLimit newRule={newRule} setNewRule={setNewRule} />
 				<br />
 				<ActiveDates newRule={newRule} setNewRule={setNewRule} />
 			</Layout.Section>
@@ -270,8 +270,18 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				<Summary />
 			</Layout.Section>
 			<Modal id="product-collection-modal">
-				{(queryType === 'buyXgetY' ? ['collection'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : newRule?.appliesTo === 'collection') && <CollectionList newRule={newRule} setNewRule={setNewRule} />}
-				{(queryType === 'buyXgetY' ? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : newRule?.appliesTo === 'product') && <ProductsList newRule={newRule} setNewRule={setNewRule} />}
+				{(queryType === 'buyXgetY'
+					? ['collection'].includes(
+							newRule?.buyItemFrom || newRule?.getItemFrom,
+						)
+					: newRule?.appliesTo === 'collection') && (
+					<CollectionList newRule={newRule} setNewRule={setNewRule} />
+				)}
+				{(queryType === 'buyXgetY'
+					? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom)
+					: newRule?.appliesTo === 'product') && (
+					<ProductsList newRule={newRule} setNewRule={setNewRule} />
+				)}
 				<TitleBar
 					title={`Add ${(queryType === 'buyXgetY' ? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : newRule?.appliesTo === 'product') ? 'products' : 'collections'}`}
 				>

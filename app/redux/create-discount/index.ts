@@ -68,6 +68,7 @@ export const fetchAllProductsAsync = createAsyncThunk<
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
 			console.log(error?.response?.data, 'An error occurred');
 			return rejectWithValue('An error occurred');
 		}
@@ -102,6 +103,7 @@ export const fetchAllCollectionsAsync = createAsyncThunk<
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
 			console.log(error?.response?.data, 'An error occurred');
 			return rejectWithValue('An error occurred');
 		}

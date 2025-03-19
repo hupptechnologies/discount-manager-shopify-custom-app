@@ -53,12 +53,15 @@ const createDiscountSlice = createSlice({
 		builder.addCase(fetchAllCollectionsAsync.pending, (state) => {
 			state.isCollectionLoading = true;
 		});
-		builder.addCase(fetchAllCollectionsAsync.fulfilled, (state, { payload }) => {
-			state.isCollectionLoading = false;
-			state.collections = payload.collections;
-			state.collectionPageInfo = payload.pageInfo;
-			state.totalCollectionCount = payload.totalCount;
-		});
+		builder.addCase(
+			fetchAllCollectionsAsync.fulfilled,
+			(state, { payload }) => {
+				state.isCollectionLoading = false;
+				state.collections = payload.collections;
+				state.collectionPageInfo = payload.pageInfo;
+				state.totalCollectionCount = payload.totalCount;
+			},
+		);
 		builder.addCase(fetchAllCollectionsAsync.rejected, (state) => {
 			state.isCollectionLoading = false;
 			state.collections = [];

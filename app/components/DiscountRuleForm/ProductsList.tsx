@@ -14,7 +14,7 @@ import {
 	Spinner,
 } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'app/redux/store';
+import type { AppDispatch, RootState } from 'app/redux/store';
 import { fetchAllProductsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 
@@ -47,14 +47,16 @@ interface ProductProps {
 		searchOne: string;
 		searchTwo: string;
 		searchType: string;
-	},
+	};
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { products, pageInfo, totalProductCount, isLoading } = useSelector((state: RootState) => getCreateDiscountDetail(state));
+	const { products, pageInfo, totalProductCount, isLoading } = useSelector(
+		(state: RootState) => getCreateDiscountDetail(state),
+	);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [cursor, setCursor] = useState<string | undefined>(undefined);
 	const [prevCursor, setPrevCursor] = useState<string | undefined>(undefined);
@@ -73,10 +75,15 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 	];
 
 	useEffect(() => {
-		dispatch(fetchAllProductsAsync({
-			shopName: shopify.config.shop || '',
-			query: newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo 
-		}));
+		dispatch(
+			fetchAllProductsAsync({
+				shopName: shopify.config.shop || '',
+				query:
+					newRule?.searchType === 'one'
+						? newRule?.searchOne
+						: newRule?.searchTwo,
+			}),
+		);
 	}, [newRule]);
 
 	useEffect(() => {
@@ -85,17 +92,35 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 			setPrevCursor(pageInfo.startCursor);
 		}
 	}, [pageInfo]);
-	
+
 	const loadMoreNext = () => {
 		if (pageInfo?.hasNextPage) {
-			dispatch(fetchAllProductsAsync({ shopName: shopify.config.shop || '', query: newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo, after: cursor }));
+			dispatch(
+				fetchAllProductsAsync({
+					shopName: shopify.config.shop || '',
+					query:
+						newRule?.searchType === 'one'
+							? newRule?.searchOne
+							: newRule?.searchTwo,
+					after: cursor,
+				}),
+			);
 			setCurrentPage((prevPage) => prevPage + 1);
 		}
-	}
+	};
 
 	const loadMorePrevious = () => {
 		if (pageInfo?.hasPreviousPage) {
-			dispatch(fetchAllProductsAsync({ shopName: shopify.config.shop || '', query: newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo, before: prevCursor }));
+			dispatch(
+				fetchAllProductsAsync({
+					shopName: shopify.config.shop || '',
+					query:
+						newRule?.searchType === 'one'
+							? newRule?.searchOne
+							: newRule?.searchTwo,
+					before: prevCursor,
+				}),
+			);
 			setCurrentPage((prevPage) => prevPage - 1);
 		}
 	};
@@ -237,13 +262,17 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 	});
 
 	const handleQueryChange = (value: string, type: string) => {
-		setNewRule({ ...newRule, searchOne: type === 'one' ? value : '', searchTwo: type === 'two' ? value : '' });
+		setNewRule({
+			...newRule,
+			searchOne: type === 'one' ? value : '',
+			searchTwo: type === 'two' ? value : '',
+		});
 	};
-	
+
 	const handleQueryClear = () => {
 		setNewRule({ ...newRule, searchOne: '', searchTwo: '' });
 	};
-	
+
 	const handleClearAll = () => {
 		setNewRule({ ...newRule, searchOne: '', searchTwo: '' });
 	};
@@ -251,14 +280,18 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 	return (
 		<Scrollable style={{ height: '400px' }}>
 			<Filters
-				queryValue={newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo}
+				queryValue={
+					newRule?.searchType === 'one'
+						? newRule?.searchOne
+						: newRule?.searchTwo
+				}
 				filters={[]}
 				appliedFilters={[]}
 				queryPlaceholder="Filter product"
 				onQueryChange={(value) => handleQueryChange(value, newRule?.searchType)}
 				onQueryClear={handleQueryClear}
 				onClearAll={handleClearAll}
-				loading={(newRule?.searchOne || newRule?.searchTwo) ? isLoading : false }
+				loading={newRule?.searchOne || newRule?.searchTwo ? isLoading : false}
 			/>
 			<IndexTable
 				condensed={useBreakpoints().smDown}
@@ -279,9 +312,11 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 			>
 				{rowMarkup}
 			</IndexTable>
-			{newRule?.searchOne == '' && newRule?.searchTwo === '' && isLoading && <div className='spinner-container'>
-				<Spinner size="large" />
-			</div>}
+			{newRule?.searchOne === '' && newRule?.searchTwo === '' && isLoading && (
+				<div className="spinner-container">
+					<Spinner size="large" />
+				</div>
+			)}
 		</Scrollable>
 	);
 };

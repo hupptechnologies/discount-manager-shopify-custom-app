@@ -9,17 +9,18 @@ import {
 	Badge,
 	useBreakpoints,
 	type IndexFiltersProps,
-	type TabProps
+	type TabProps,
 } from '@shopify/polaris';
 import { discountCodeData } from 'app/utils/json';
 
 const AnalyticsTable = () => {
-	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+	const sleep = (ms: number) =>
+		new Promise((resolve) => setTimeout(resolve, ms));
 	const [itemStrings, setItemStrings] = useState([
 		'All',
 		'Active',
 		'Expire',
-		'Used'
+		'Used',
 	]);
 
 	const tabs: TabProps[] = itemStrings.map((item, index) => ({
@@ -27,7 +28,7 @@ const AnalyticsTable = () => {
 		index,
 		onAction: () => {},
 		id: `${item}-${index}`,
-		isLocked: index === 0
+		isLocked: index === 0,
 	}));
 	const [selected, setSelected] = useState(0);
 	const onCreateNewView = async (value: string) => {
@@ -37,21 +38,41 @@ const AnalyticsTable = () => {
 		return true;
 	};
 	const sortOptions: IndexFiltersProps['sortOptions'] = [
-		{ label: 'Discount Code', value: 'discountCode asc', directionLabel: 'Ascending' },
-		{ label: 'Discount Code', value: 'discountCode desc', directionLabel: 'Descending' },
+		{
+			label: 'Discount Code',
+			value: 'discountCode asc',
+			directionLabel: 'Ascending',
+		},
+		{
+			label: 'Discount Code',
+			value: 'discountCode desc',
+			directionLabel: 'Descending',
+		},
 		{ label: 'Product', value: 'product asc', directionLabel: 'A-Z' },
 		{ label: 'Product', value: 'product desc', directionLabel: 'Z-A' },
 		{ label: 'Date Applied', value: 'dateApplied asc', directionLabel: 'A-Z' },
 		{ label: 'Date Applied', value: 'dateApplied desc', directionLabel: 'Z-A' },
-		{ label: 'Discount Amount', value: 'discountAmount asc', directionLabel: 'Ascending' },
-		{ label: 'Discount Amount', value: 'discountAmount desc', directionLabel: 'Descending' },
+		{
+			label: 'Discount Amount',
+			value: 'discountAmount asc',
+			directionLabel: 'Ascending',
+		},
+		{
+			label: 'Discount Amount',
+			value: 'discountAmount desc',
+			directionLabel: 'Descending',
+		},
 	];
 	const [sortSelected, setSortSelected] = useState(['discountAmount asc']);
-	const {mode, setMode} = useSetIndexFiltersMode();
+	const { mode, setMode } = useSetIndexFiltersMode();
 	const onHandleCancel = () => {};
 
-	const [accountStatus, setAccountStatus] = useState<string[] | undefined>(undefined);
-	const [moneySpent, setMoneySpent] = useState<[number, number] | undefined>(undefined);
+	const [accountStatus, setAccountStatus] = useState<string[] | undefined>(
+		undefined,
+	);
+	const [moneySpent, setMoneySpent] = useState<[number, number] | undefined>(
+		undefined,
+	);
 	const [taggedWith, setTaggedWith] = useState('');
 	const [queryValue, setQueryValue] = useState('');
 
@@ -113,7 +134,8 @@ const AnalyticsTable = () => {
 		plural: 'discountCodes',
 	};
 
-	const {selectedResources, allResourcesSelected, handleSelectionChange} = useIndexResourceState(discountCodes);
+	const { selectedResources, allResourcesSelected, handleSelectionChange } =
+		useIndexResourceState(discountCodes);
 
 	const rowMarkup = discountCodes.map(
 		(
@@ -139,7 +161,15 @@ const AnalyticsTable = () => {
 					</Text>
 				</IndexTable.Cell>
 				<IndexTable.Cell>
-					<Badge tone={status === 'Active' ? 'success' : status === 'Pending' ? 'info' : 'warning'}>
+					<Badge
+						tone={
+							status === 'Active'
+								? 'success'
+								: status === 'Pending'
+									? 'info'
+									: 'warning'
+						}
+					>
 						{status}
 					</Badge>
 				</IndexTable.Cell>
@@ -149,7 +179,7 @@ const AnalyticsTable = () => {
 		),
 	);
 
-	return  (
+	return (
 		<LegacyCard>
 			<IndexFilters
 				sortOptions={sortOptions}
@@ -202,24 +232,24 @@ const AnalyticsTable = () => {
 		</LegacyCard>
 	);
 
-	function disambiguateLabel(key: string, value: string | any[]): string {
+	function disambiguateLabel (key: string, value: string | any[]): string {
 		switch (key) {
 			case 'moneySpent':
-			return `Money spent is between $${value[0]} and $${value[1]}`;
+				return `Money spent is between $${value[0]} and $${value[1]}`;
 			case 'taggedWith':
-			return `Tagged with ${value}`;
+				return `Tagged with ${value}`;
 			case 'accountStatus':
-			return (value as string[]).map((val) => `Customer ${val}`).join(', ');
+				return (value as string[]).map((val) => `Customer ${val}`).join(', ');
 			default:
-			return value as string;
+				return value as string;
 		}
 	}
 
-	function isEmpty(value: string | string[]): boolean {
+	function isEmpty (value: string | string[]): boolean {
 		if (Array.isArray(value)) {
 			return value.length === 0;
 		} else {
-			return value === '' || value == null;
+			return value === '' || value === null;
 		}
 	}
 };

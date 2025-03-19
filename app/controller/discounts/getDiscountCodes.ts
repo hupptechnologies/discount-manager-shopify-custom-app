@@ -6,8 +6,13 @@ export const getDiscountCodes = async (
 	pageSize: number = 10,
 	status?: 'active' | 'pending',
 	usedCountGreaterThan: number = 0,
-	searchQuery?: string
-): Promise<{ success: boolean; message: string; discountCodes: string[]; pagination: { totalCount: number; totalPages: number; currentPage: number }; }> => {
+	searchQuery?: string,
+): Promise<{
+	success: boolean;
+	message: string;
+	discountCodes: string[];
+	pagination: { totalCount: number; totalPages: number; currentPage: number };
+}> => {
 	try {
 		const where: any = {
 			shop,
@@ -49,8 +54,8 @@ export const getDiscountCodes = async (
 				currentPage: page,
 			},
 		};
-
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.log(error, 'Error fetching discount code from database');
 		return {
 			success: false,

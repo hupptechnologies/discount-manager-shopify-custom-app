@@ -1,5 +1,5 @@
-import prisma from "app/db.server";
-import { getDetailUsingGraphQL } from "app/service/product";
+import prisma from 'app/db.server';
+import { getDetailUsingGraphQL } from 'app/service/product';
 
 const CREATE_BUYXGETY_DISCOUNT_QUERY = `
 mutation discountCodeBxgyCreate($bxgyCodeDiscount: DiscountCodeBxgyInput!) {
@@ -74,41 +74,41 @@ fragment collectionsFragment on DiscountCollections {
 `;
 
 interface CreateBxgyDiscountResponse {
-    data: {
-        data: {
-            discountCodeBxgyCreate: {
-                codeDiscountNode: {
-                    id: string;
-                    codeDiscount: {
-                        title: string;
-                        codes: {
-                            nodes: { code: string }[];
-                        };
-                        startsAt: string;
-                        endsAt: string;
-                        customerBuys: {
-                            items: { collections: { add: string[] } }[];
-                            value: { quantity: string };
-                        };
-                        customerGets: {
-                            items: { collections: { add: string[] } }[];
-                            value: {
-                                discountOnQuantity: {
-                                    effect: { percentage: number };
-                                    quantity: string;
-                                };
-                            };
-                        };
-                        customerSelection: { all: boolean };
-                        appliesOncePerCustomer: boolean;
-                        usesPerOrderLimit: number;
-                    };
-                };
-                userErrors: { field: string; code: string; message: string }[];
-            }
-        },
-        errors?: Array<{ message: string }>;
-    }
+	data: {
+		data: {
+			discountCodeBxgyCreate: {
+				codeDiscountNode: {
+					id: string;
+					codeDiscount: {
+						title: string;
+						codes: {
+							nodes: { code: string }[];
+						};
+						startsAt: string;
+						endsAt: string;
+						customerBuys: {
+							items: { collections: { add: string[] } }[];
+							value: { quantity: string };
+						};
+						customerGets: {
+							items: { collections: { add: string[] } }[];
+							value: {
+								discountOnQuantity: {
+									effect: { percentage: number };
+									quantity: string;
+								};
+							};
+						};
+						customerSelection: { all: boolean };
+						appliesOncePerCustomer: boolean;
+						usesPerOrderLimit: number;
+					};
+				};
+				userErrors: { field: string; code: string; message: string }[];
+			};
+		};
+		errors?: Array<{ message: string }>;
+	};
 }
 
 interface CreateBuyxGetYDiscountCodeInput {
@@ -133,7 +133,7 @@ interface CreateBuyxGetYDiscountCodeInput {
 
 export const createBuyXGetYDiscountCode = async (
 	shop: string,
-	request: Request
+	request: Request,
 ): Promise<{ success: boolean; message: string }> => {
 	const {
 		title,
@@ -152,7 +152,10 @@ export const createBuyXGetYDiscountCode = async (
 		});
 
 		if (checkCodeExist > 0) {
-			return { success: false, message: `The discount code "${code}" already exists. Please try using a different code.` };
+			return {
+				success: false,
+				message: `The discount code "${code}" already exists. Please try using a different code.`,
+			};
 		}
 
 		const response = await prisma.session.findMany({
@@ -170,29 +173,29 @@ export const createBuyXGetYDiscountCode = async (
 				bxgyCodeDiscount: {
 					code,
 					customerBuys: {
-					items: {
-						collections: {
-							add: customerBuys.collectionIDs,
+						items: {
+							collections: {
+								add: customerBuys.collectionIDs,
+							},
 						},
-					},
 						value: {
 							quantity: customerBuys.quantity,
 						},
 					},
 					customerGets: {
-					items: {
-						collections: {
-							add: customerGets.collectionIDs,
-						},
-					},
-					value: {
-						discountOnQuantity: {
-							effect: {
-								percentage: percentage / 100,
+						items: {
+							collections: {
+								add: customerGets.collectionIDs,
 							},
-							quantity: customerGets.quantity,
 						},
-					},
+						value: {
+							discountOnQuantity: {
+								effect: {
+									percentage: percentage / 100,
+								},
+								quantity: customerGets.quantity,
+							},
+						},
 					},
 					customerSelection: {
 						all: true,
@@ -202,18 +205,19 @@ export const createBuyXGetYDiscountCode = async (
 					title,
 					usesPerOrderLimit,
 				},
-			}
+			},
 		};
 
 		const responseBuyxGetY: CreateBxgyDiscountResponse = await getDetailUsingGraphQL(shop, accessToken, data);
-		console.log(responseBuyxGetY?.data?.data?.discountCodeBxgyCreate);	
+
 		if (responseBuyxGetY.data.errors) {
 			throw new Error(
 				responseBuyxGetY.data.errors.map((e) => e.message).join(', '),
 			);
 		}
 
-		const discountCodeData = responseBuyxGetY.data?.data?.discountCodeBxgyCreate?.codeDiscountNode;
+		const discountCodeData =
+			responseBuyxGetY.data?.data?.discountCodeBxgyCreate?.codeDiscountNode;
 
 		if (discountCodeData) {
 			await prisma.discountCode.create({
@@ -235,6 +239,7 @@ export const createBuyXGetYDiscountCode = async (
 
 		return { success: false, message: 'Discount record not added in database' };
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.error(error);
 		return { success: false, message: 'Something went wrong' };
 	}

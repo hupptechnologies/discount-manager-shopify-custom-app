@@ -156,9 +156,11 @@ export const fetchProducts = async (
 				hasPreviousPage: false,
 				startCursor: null,
 			},
-			totalCount: productVariantCount?.data?.data?.productVariantsCount?.count || 0,
+			totalCount:
+				productVariantCount?.data?.data?.productVariantsCount?.count || 0,
 		};
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.error(error, 'Error fetching products');
 		return {
 			products: [],

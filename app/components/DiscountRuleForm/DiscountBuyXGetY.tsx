@@ -41,7 +41,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	setNewRule,
 	handleOpen,
 	handleSearchOneChange,
-	handleSearchTwoChange
+	handleSearchTwoChange,
 }) => {
 	return (
 		<Card>
@@ -79,7 +79,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						type="text"
 						min={0}
 						value={newRule.minBuyQuantity}
-						onChange={(value) => setNewRule({ ...newRule, minBuyQuantity: value })}
+						onChange={(value) =>
+							setNewRule({ ...newRule, minBuyQuantity: value })
+						}
 						autoComplete="off"
 						placeholder={newRule?.isMinPurchaseAmount ? '0.00' : ''}
 						prefix={newRule?.isMinPurchaseAmount ? '$' : ''}
@@ -95,7 +97,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							setNewRule({
 								...newRule,
 								buyItemFrom: value as 'collection' | 'product',
-								searchOne: ''
+								searchOne: '',
 							})
 						}
 					/>
@@ -110,7 +112,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						onChange={(value) =>
 							setNewRule({
 								...newRule,
-								purchaseType: value as 'one-time' | 'subscription'
+								purchaseType: value as 'one-time' | 'subscription',
 							})
 						}
 					/>
@@ -144,7 +146,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						type="text"
 						min={0}
 						value={newRule.minGetQuantity}
-						onChange={(value) => setNewRule({ ...newRule, minGetQuantity: value })}
+						onChange={(value) =>
+							setNewRule({ ...newRule, minGetQuantity: value })
+						}
 						autoComplete="off"
 					/>
 					<Select
@@ -158,7 +162,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							setNewRule({
 								...newRule,
 								getItemFrom: value as 'collection' | 'product',
-								searchTwo: ''
+								searchTwo: '',
 							})
 						}
 					/>

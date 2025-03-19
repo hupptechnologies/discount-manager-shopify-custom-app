@@ -35,10 +35,10 @@ mutation CreateDiscountCode($basicCodeDiscount: DiscountCodeBasicInput!) {
 	}
 }`;
 
-type DiscountCodeItems = 
-  | { all: boolean }
-  | { products: { productVariantsToAdd: string[] } }
-  | { collections: { add: string[] } };
+type DiscountCodeItems =
+	| { all: boolean }
+	| { products: { productVariantsToAdd: string[] } }
+	| { collections: { add: string[] } };
 
 interface DiscountCodeBasicInput {
 	title: string;
@@ -52,7 +52,7 @@ interface DiscountCodeBasicInput {
 		value: {
 			percentage: number;
 		};
-		items: DiscountCodeItems
+		items: DiscountCodeItems;
 	};
 	usageLimit: number;
 	appliesOncePerCustomer: boolean;
@@ -72,7 +72,7 @@ interface DiscountCodeResponse {
 			};
 		};
 		errors?: Array<{ message: string }>;
-	}
+	};
 }
 
 interface CreateDiscountCodeInput {
@@ -90,7 +90,7 @@ interface CreateDiscountCodeInput {
 export const createDiscountCode = async (
 	shop: string,
 	request: Request,
-): Promise<{ success: boolean; message: string; }> => {
+): Promise<{ success: boolean; message: string }> => {
 	const {
 		title,
 		percentage,
@@ -100,13 +100,18 @@ export const createDiscountCode = async (
 		usageLimit,
 		appliesOncePerCustomer,
 		productIDs = [],
-		collectionIDs = []
+		collectionIDs = [],
 	}: CreateDiscountCodeInput = await request.json();
 
 	try {
-		const checkCodeExist = await prisma.discountCode.count({ where: { shop, code: code } });
+		const checkCodeExist = await prisma.discountCode.count({
+			where: { shop, code: code },
+		});
 		if (checkCodeExist > 0) {
-			return { success: false, message: `The discount code "${code}" already exists. Please try using a different code.` }
+			return {
+				success: false,
+				message: `The discount code "${code}" already exists. Please try using a different code.`,
+			};
 		}
 		const response = await prisma.session.findMany({
 			where: { shop },
@@ -143,14 +148,14 @@ export const createDiscountCode = async (
 		if (productIDs.length > 0) {
 			data.variables.basicCodeDiscount.customerGets.items = {
 				products: {
-					productVariantsToAdd: productIDs
-				}
+					productVariantsToAdd: productIDs,
+				},
 			} as DiscountCodeItems;
 		} else if (collectionIDs?.length > 0) {
 			data.variables.basicCodeDiscount.customerGets.items = {
 				collections: {
-					add: collectionIDs
-				}
+					add: collectionIDs,
+				},
 			} as DiscountCodeItems;
 		} else {
 			data.variables.basicCodeDiscount.customerGets.items = {
@@ -158,7 +163,8 @@ export const createDiscountCode = async (
 			} as DiscountCodeItems;
 		}
 
-		const createDiscountResponse: DiscountCodeResponse = await getDetailUsingGraphQL(shop, accessToken, data);
+		const createDiscountResponse: DiscountCodeResponse =
+			await getDetailUsingGraphQL(shop, accessToken, data);
 
 		if (createDiscountResponse.data.errors) {
 			throw new Error(
@@ -166,7 +172,9 @@ export const createDiscountCode = async (
 			);
 		}
 
-		const discountCodeData = createDiscountResponse.data?.data?.discountCodeBasicCreate?.codeDiscountNode;
+		const discountCodeData =
+			createDiscountResponse.data?.data?.discountCodeBasicCreate
+				?.codeDiscountNode;
 		if (discountCodeData) {
 			await prisma.discountCode.create({
 				data: {
@@ -186,6 +194,7 @@ export const createDiscountCode = async (
 		}
 		return { success: false, message: 'discount record not added in database' };
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.error(error, 'Error while creating discount code');
 		return { success: false, message: 'Something went wrong' };
 	}

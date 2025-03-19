@@ -27,7 +27,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 	newRule,
 	setNewRule,
 	handleOpen,
-	handleSearchChange
+	handleSearchChange,
 }) => {
 	return (
 		<Card>
@@ -73,7 +73,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 								setNewRule({
 									...newRule,
 									appliesTo: value as 'collection' | 'product',
-									searchOne: ''
+									searchOne: '',
 								})
 							}
 						/>

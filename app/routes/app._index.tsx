@@ -1,11 +1,4 @@
-import {
-	BlockStack,
-	Card,
-	Layout,
-	List,
-	Page,
-	Text
-} from '@shopify/polaris';
+import { BlockStack, Card, Layout, List, Page, Text } from '@shopify/polaris';
 
 export default function Index () {
 	return (

@@ -1,5 +1,4 @@
-import type { AxiosInstance } from 'axios';
-import axios from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 
 interface ShopifyAPIInstanceProps {
 	shop: string;

@@ -1,4 +1,4 @@
-import { getDetailUsingGraphQL } from "app/service/product";
+import { getDetailUsingGraphQL } from 'app/service/product';
 
 const GET_COLLECTIONS_QUERY = `
 	query GetCollections($first: Int, $last: Int, $after: String, $before: String, $query: String) {
@@ -110,7 +110,7 @@ export const fetchCollections = async (
 					: { first: 5, query },
 		};
 
-        const collectionCount: CollectionsCountResponse =
+		const collectionCount: CollectionsCountResponse =
 			await getDetailUsingGraphQL(shop, accessToken, {
 				query: COLLECTION_COUNT_QUERY,
 			});
@@ -128,7 +128,7 @@ export const fetchCollections = async (
 				id: collection?.node?.id.split('/').pop() || '',
 				title: collection?.node?.title || '',
 				image: collection?.node?.image?.url || '',
-				productCount: collection?.node?.productsCount?.count || 0
+				productCount: collection?.node?.productsCount?.count || 0,
 			})) || [];
 		return {
 			collections: collectionData,
@@ -141,6 +141,7 @@ export const fetchCollections = async (
 			totalCount: collectionCount?.data?.data?.collectionsCount.count || 0,
 		};
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.log(error, 'Error fecthing collections');
 		return {
 			collections: [],
@@ -153,4 +154,4 @@ export const fetchCollections = async (
 			totalCount: 0,
 		};
 	}
-}
+};

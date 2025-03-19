@@ -22,13 +22,14 @@ interface DeleteDiscountCodeInput {
 	id: number;
 	code: string;
 	discountId: string;
-};
+}
 
 export const deleteDiscountCode = async (
 	shop: string,
 	request: Request,
 ): Promise<DeleteResponse> => {
-	const { id, code, discountId } : DeleteDiscountCodeInput = await request.json();
+	const { id, code, discountId }: DeleteDiscountCodeInput =
+		await request.json();
 	try {
 		const discountCode = await prisma.discountCode.findFirst({
 			where: { shop, code, id, discountId },
@@ -53,11 +54,15 @@ export const deleteDiscountCode = async (
 		const data = {
 			query: DELETE_DISCOUNT_CODE_QUERY,
 			variables: {
-				id: discountId
-			}
+				id: discountId,
+			},
 		};
 
-		const responseFromShopify = await getDetailUsingGraphQL(shop, accessToken, data);
+		const responseFromShopify = await getDetailUsingGraphQL(
+			shop,
+			accessToken,
+			data,
+		);
 
 		if (responseFromShopify?.data?.data) {
 			await prisma.discountCode.delete({
@@ -72,6 +77,7 @@ export const deleteDiscountCode = async (
 			message: 'Discount code deleted successfully',
 		};
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.error('Error deleting discount code: ', error);
 		return {
 			success: false,

@@ -9,10 +9,10 @@ import {
 	Scrollable,
 	Text,
 	Thumbnail,
-	type ResourceListProps
+	type ResourceListProps,
 } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'app/redux/store';
+import type { AppDispatch, RootState } from 'app/redux/store';
 import { fetchAllCollectionsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 
@@ -28,14 +28,19 @@ interface CollectionProps {
 		searchOne: string;
 		searchTwo: string;
 		searchType: string;
-	},
+	};
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { collections, collectionPageInfo, totalCollectionCount, isCollectionLoading } = useSelector((state: RootState) => getCreateDiscountDetail(state));
+	const {
+		collections,
+		collectionPageInfo,
+		totalCollectionCount,
+		isCollectionLoading,
+	} = useSelector((state: RootState) => getCreateDiscountDetail(state));
 	const [selectedItems, setSelectedItems] = useState<
 		ResourceListProps['selectedItems']
 	>([]);
@@ -48,13 +53,17 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 		plural: 'customers',
 	};
 
-	const rowsCollection: Collection[] = collections?.length > 0 ? collections : [];
+	const rowsCollection: Collection[] =
+		collections?.length > 0 ? collections : [];
 
 	useEffect(() => {
-		dispatch(fetchAllCollectionsAsync({
-			shopName: shopify.config.shop || '',
-			query: newRule?.searchOne === '' ?  newRule?.searchTwo : newRule?.searchOne
-		}))
+		dispatch(
+			fetchAllCollectionsAsync({
+				shopName: shopify.config.shop || '',
+				query:
+					newRule?.searchOne === '' ? newRule?.searchTwo : newRule?.searchOne,
+			}),
+		);
 	}, [newRule]);
 
 	useEffect(() => {
@@ -63,23 +72,39 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 			setPrevCursor(collectionPageInfo.startCursor);
 		}
 	}, [collectionPageInfo]);
-	
+
 	const loadMoreNext = () => {
 		if (collectionPageInfo?.hasNextPage) {
-			dispatch(fetchAllCollectionsAsync({ shopName: shopify.config.shop || '', query: newRule?.searchOne, after: cursor }));
+			dispatch(
+				fetchAllCollectionsAsync({
+					shopName: shopify.config.shop || '',
+					query: newRule?.searchOne,
+					after: cursor,
+				}),
+			);
 			setCurrentPage((prevPage) => prevPage + 1);
 		}
-	}
+	};
 
 	const loadMorePrevious = () => {
 		if (collectionPageInfo?.hasPreviousPage) {
-			dispatch(fetchAllCollectionsAsync({ shopName: shopify.config.shop || '', query: newRule?.searchOne, before: prevCursor }));
+			dispatch(
+				fetchAllCollectionsAsync({
+					shopName: shopify.config.shop || '',
+					query: newRule?.searchOne,
+					before: prevCursor,
+				}),
+			);
 			setCurrentPage((prevPage) => prevPage - 1);
 		}
 	};
 
 	const handleQueryChange = (value: string, type: string) => {
-		setNewRule({ ...newRule, searchOne: type === 'one' ? value : '', searchTwo: type === 'two' ? value : '' });
+		setNewRule({
+			...newRule,
+			searchOne: type === 'one' ? value : '',
+			searchTwo: type === 'two' ? value : '',
+		});
 	};
 
 	const handleQueryClear = () => {
@@ -92,7 +117,9 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 
 	const filterControl = (
 		<Filters
-			queryValue={newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo}
+			queryValue={
+				newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo
+			}
 			filters={[]}
 			appliedFilters={[]}
 			queryPlaceholder="Filter collection"
@@ -100,7 +127,7 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 			onQueryClear={handleQueryClear}
 			onClearAll={handleClearAll}
 		/>
-	)
+	);
 
 	return (
 		<Scrollable style={{ height: '471px' }}>
