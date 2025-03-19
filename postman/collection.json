@@ -7,52 +7,194 @@
 	},
 	"item": [
 		{
-			"name": "fetchProducts",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BASE_URL_DISCOUNT_APP}}/api/products?shop=local-sparkfitness.myshopify.com",
-					"host": [
-						"{{BASE_URL_DISCOUNT_APP}}"
-					],
-					"path": [
-						"api",
-						"products"
-					],
-					"query": [
-						{
-							"key": "shop",
-							"value": "local-sparkfitness.myshopify.com"
+			"name": "product",
+			"item": [
+				{
+					"name": "fetchProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/products?shop=local-sparkfitness.myshopify.com",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "local-sparkfitness.myshopify.com"
+								}
+							]
 						}
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "fetchCollections",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BASE_URL_DISCOUNT_APP}}/api/collections?shop=local-sparkfitness.myshopify.com",
-					"host": [
-						"{{BASE_URL_DISCOUNT_APP}}"
-					],
-					"path": [
-						"api",
-						"collections"
-					],
-					"query": [
-						{
-							"key": "shop",
-							"value": "local-sparkfitness.myshopify.com"
+			"name": "collection",
+			"item": [
+				{
+					"name": "fetchCollections",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/collections?shop=local-sparkfitness.myshopify.com",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"collections"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "local-sparkfitness.myshopify.com"
+								}
+							]
 						}
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "discountCode",
+			"item": [
+				{
+					"name": "createDiscountCode",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 20,\n    \"code\": \"TEST20%\",\n    \"startsAt\": \"2025-03-20\",\n    \"endsAt\": \"2025-04-01\",\n    \"usageLimit\": 100,\n    \"appliesOncePerCustomer\": true,\n    \"collectionIDs\": [\"gid://shopify/Collection/443980579057\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"discount"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "local-sparkfitness.myshopify.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getDiscountCode",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"discount"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "local-sparkfitness.myshopify.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteDiscountCode",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"code\": \"TEST20%\",\n    \"discountId\": \"gid://shopify/DiscountCodeNode/1979699593457\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"discount"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "local-sparkfitness.myshopify.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createBuyXGetYDiscountCode",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 20,\n    \"code\": \"TEST20%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-01\",\n    \"usesPerOrderLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"2\",\n        \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"]\n    },\n    \"customerGets\": {\n        \"quantity\": \"4\",\n        \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&type=buyxgety",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"discount"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "local-sparkfitness.myshopify.com"
+								},
+								{
+									"key": "type",
+									"value": "buyxgety"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

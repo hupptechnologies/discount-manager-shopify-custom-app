@@ -1,4 +1,5 @@
 import { json } from '@remix-run/node';
+import { createBuyXGetYDiscountCode } from 'app/controller/discounts/createBuyxGetyDiscountCode';
 import { createDiscountCode } from 'app/controller/discounts/createDicountCode';
 import { deleteDiscountCode } from 'app/controller/discounts/deleteDiscountCode';
 import { getDiscountCodes } from 'app/controller/discounts/getDiscountCodes';
@@ -51,9 +52,14 @@ export const action = async ({
 }): Promise<Response> => {
 	const url = new URL(request.url);
 	const shop = url.searchParams.get('shop') ?? '';
+	const type = url.searchParams.get('type') ?? '';
 	if (request.method === "DELETE") {
 		const discountCodeResponse = await deleteDiscountCode(shop, request);
 		return json<ActionResponse>(discountCodeResponse);
+	}
+	if (type === 'buyxgety') {
+		const buyXGetYResponse = await createBuyXGetYDiscountCode(shop, request);
+		return json<ActionResponse>(buyXGetYResponse);
 	}
 	const discountCodeResponse = await createDiscountCode(shop, request);
 	return json<ActionResponse>(discountCodeResponse);
