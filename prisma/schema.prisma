@@ -35,6 +35,7 @@ model DiscountCode {
   id              Int           @id @default(autoincrement())
   code            String        @unique
   title           String
+  shop            String
   description     String?
   discountAmount  Float
   discountType    DiscountType

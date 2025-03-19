@@ -4,6 +4,7 @@ CREATE TABLE "DiscountCode" (
   "id" SERIAL PRIMARY KEY,
   "code" VARCHAR(255) NOT NULL UNIQUE,
   "title" VARCHAR(255) NOT NULL,
+  "shop" TEXT NOT NULL,
   "description" TEXT,
   "discountAmount" FLOAT NOT NULL,
   "discountType" "DiscountType" NOT NULL,
