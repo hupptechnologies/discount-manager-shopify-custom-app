@@ -1,0 +1,58 @@
+{
+	"info": {
+		"_postman_id": "1afb687c-f8a7-4707-b1e8-e6352581bb42",
+		"name": "DiscountManagerShopifyAPP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33943909"
+	},
+	"item": [
+		{
+			"name": "fetchProducts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL_DISCOUNT_APP}}/api/products?shop=local-sparkfitness.myshopify.com",
+					"host": [
+						"{{BASE_URL_DISCOUNT_APP}}"
+					],
+					"path": [
+						"api",
+						"products"
+					],
+					"query": [
+						{
+							"key": "shop",
+							"value": "local-sparkfitness.myshopify.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetchCollections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL_DISCOUNT_APP}}/api/collections?shop=local-sparkfitness.myshopify.com",
+					"host": [
+						"{{BASE_URL_DISCOUNT_APP}}"
+					],
+					"path": [
+						"api",
+						"collections"
+					],
+					"query": [
+						{
+							"key": "shop",
+							"value": "local-sparkfitness.myshopify.com"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
