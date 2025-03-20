@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchAllDiscountCodesAsync } from './index';
+import { deleteDiscountCodeAsync, fetchAllDiscountCodesAsync } from './index';
 
 interface Pagination {
 	totalCount: number;
@@ -22,6 +22,7 @@ interface DiscountCode {
 interface discountState {
 	discountCodes: DiscountCode[];
 	isLoading: boolean;
+	isDeleteDiscountCode: boolean;
 	pagination: Pagination;
 	discountStats: {
 		activeDiscount: { count: number; data: number[]; },
@@ -42,7 +43,8 @@ const initialState: discountState = {
 		activeDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
 		usedDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
 		expiredDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
-	}
+	},
+	isDeleteDiscountCode: false
 };
 
 const discountSlice = createSlice({
@@ -72,6 +74,15 @@ const discountSlice = createSlice({
 				usedDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
 				expiredDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
 			}
+		});
+		builder.addCase(deleteDiscountCodeAsync.pending, (state) => {
+			state.isDeleteDiscountCode = true;
+		});
+		builder.addCase(deleteDiscountCodeAsync.fulfilled, (state) => {
+			state.isDeleteDiscountCode = false;
+		});
+		builder.addCase(deleteDiscountCodeAsync.rejected, (state) => {
+			state.isDeleteDiscountCode = false;
 		});
 	},
 });

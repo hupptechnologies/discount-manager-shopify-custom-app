@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAllDiscountCodes } from "app/service/discount";
+import { deleteDiscountCode, fetchAllDiscountCodes } from "app/service/discount";
 
 interface DiscountCode {
 	id: number;
@@ -39,6 +39,21 @@ interface fetchAllDiscountCodesParams {
 	callback?: (success: boolean) => void;
 }
 
+interface DeleteDiscountCodeReturnValue {
+	success: boolean;
+	message: string;
+}
+
+interface DeleteDiscountCodeParams {
+	data: {
+		id: number | null;
+		code: string;
+		discountId: string;
+	}
+	shopName: string;
+	callback?: (success: boolean) => void;
+}
+
 export const fetchAllDiscountCodesAsync = createAsyncThunk<
 	FetchAllDiscountCodeReturnValue,
 	fetchAllDiscountCodesParams
@@ -70,4 +85,32 @@ export const fetchAllDiscountCodesAsync = createAsyncThunk<
 			return rejectWithValue('An error occurred');
 		}
 	},
+);
+
+export const deleteDiscountCodeAsync = createAsyncThunk<
+	DeleteDiscountCodeReturnValue,
+	DeleteDiscountCodeParams
+>(
+	"discount/deleteDiscountCode",
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await deleteDiscountCode(params);
+			if (response.data) {
+				const { success, message } = response.data;
+				if (message) {
+					shopify.toast.show(message);
+				}
+				if (success && params.callback) {
+					params.callback(success);
+				}
+				return fulfillWithValue({ success, message });
+			}
+			return fulfillWithValue({ success: false, message: '' });
+		}	catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	}
 );

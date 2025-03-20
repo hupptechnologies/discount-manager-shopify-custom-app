@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useAppBridge } from '@shopify/app-bridge-react';
+import { Modal, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
 import pkg from 'lodash';
 import {
 	IndexTable,
@@ -12,7 +12,9 @@ import {
 	type IndexFiltersProps,
 	type TabProps,
 	ButtonGroup,
-	Button
+	Button,
+	Layout,
+	Tooltip
 } from '@shopify/polaris';
 import {
 	EditIcon,
@@ -21,7 +23,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
-import { fetchAllDiscountCodesAsync } from 'app/redux/discount';
+import { deleteDiscountCodeAsync, fetchAllDiscountCodesAsync } from 'app/redux/discount';
 import { formatDateWithTime } from 'app/utils/json';
 
 const AnalyticsTable = () => {
@@ -29,7 +31,7 @@ const AnalyticsTable = () => {
 	const { mode, setMode } = useSetIndexFiltersMode();
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { discountCodes, isLoading, pagination: { totalPages, totalCount } } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
+	const { discountCodes, isLoading, pagination: { totalPages, totalCount }, isDeleteDiscountCode } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
 	const [queryValue, setQueryValue] = useState('');
 	const [itemStrings, setItemStrings] = useState([
 		'All',
@@ -38,8 +40,14 @@ const AnalyticsTable = () => {
 		'Used codes',
 	]);
 	const [selected, setSelected] = useState(0);
-	const [currentPage, setCurrentPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [sortSelected, setSortSelected] = useState(['discountCode asc']);
+	const [deleteData, setDeleteData] = useState({
+		id: null,
+		code: '',
+		discountId: ''
+	});
+	const [call, setCall] = useState(false);
 
 	const limit = 10;
 	const sortOptions: IndexFiltersProps['sortOptions'] = [
@@ -72,7 +80,7 @@ const AnalyticsTable = () => {
 
 	useEffect(() => {
 		debouncedHandleFetch(queryValue, selected, currentPage, sortSelected)
-	}, [queryValue, selected, currentPage, limit, sortSelected]);
+	}, [queryValue, selected, currentPage, limit, sortSelected, call]);
 
 	const tabs: TabProps[] = itemStrings.map((item, index) => ({
 		content: item,
@@ -81,33 +89,58 @@ const AnalyticsTable = () => {
 		id: `${item}-${index}`,
 		isLocked: index === 0,
 	}));
-	const onHandleCancel = () => {
-		setQueryValue('')
-	};
 
 	const handleFiltersQueryChange = useCallback(
 		(value: string) => setQueryValue(value),
 		[],
 	);
+
 	const handleQueryValueRemove = useCallback(() => {
-		onHandleCancel();
+		setQueryValue('')
 	}, []);
-	const handleFiltersClearAll = useCallback(() => {
-		handleQueryValueRemove();
-	}, [
-		handleQueryValueRemove
-	]);
 
 	const resourceName = {
 		singular: 'discountCode',
 		plural: 'discountCodes',
 	};
-	
+
+	const handleOpen = (e: React.MouseEvent<HTMLElement>, data: any): void => {
+		e.stopPropagation();
+		setDeleteData(data);
+		shopify.modal.show('delete-comfirmation-modal');
+	};
+
+	const handleClose = () => {
+		setDeleteData({
+			id: null,
+			code: '',
+			discountId: ''
+		});
+		shopify.modal.hide('delete-comfirmation-modal');
+	};
+
+	const handleDelete = () => {
+		dispatch(deleteDiscountCodeAsync({
+			shopName: shopify.config.shop || '',
+			data: {
+				id: deleteData.id,
+				code: deleteData.code,
+				discountId: deleteData.discountId
+			},
+			callback(success) {
+				if (success) {
+					setCall(!call);
+				}
+			},
+		}));
+		handleClose();
+	};
+
 	const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(discountCodes as any[]);
 
 	const rowMarkup = discountCodes?.length > 0 && discountCodes.map(
 		(
-			{ id, code, discountAmount, usageLimit, isActive, startDate, endDate, createdAt },
+			{ id, code, discountId, discountAmount, usageLimit, isActive, startDate, endDate, createdAt },
 			index,
 		) => (
 			<IndexTable.Row
@@ -144,8 +177,12 @@ const AnalyticsTable = () => {
 				<IndexTable.Cell>{formatDateWithTime(createdAt)}</IndexTable.Cell>
 				<IndexTable.Cell>
 					<ButtonGroup noWrap gap='tight'>
-						<Button variant='secondary' icon={EditIcon} tone='success'></Button>
-						<Button variant='secondary' icon={DeleteIcon} tone='critical'></Button>
+						<Tooltip content="Edit discount" dismissOnMouseOut>
+							<Button variant='secondary' icon={EditIcon} tone='success'></Button>
+						</Tooltip>
+						<Tooltip content="Delete discount" dismissOnMouseOut>
+							<Button onClick={(e) => handleOpen(e, { id, code, discountId })} variant='secondary' icon={DeleteIcon} tone='critical'></Button>
+						</Tooltip>
 					</ButtonGroup>
 				</IndexTable.Cell>
 			</IndexTable.Row>
@@ -163,7 +200,7 @@ const AnalyticsTable = () => {
 				onQueryClear={handleQueryValueRemove}
 				onSort={setSortSelected}
 				cancelAction={{
-					onAction: onHandleCancel,
+					onAction: handleQueryValueRemove,
 					disabled: false,
 					loading: false,
 				}}
@@ -176,9 +213,9 @@ const AnalyticsTable = () => {
 				canCreateNewView={false}
 				filters={[]}
 				appliedFilters={[]}
-				onClearAll={handleFiltersClearAll}
+				onClearAll={handleQueryValueRemove}
 				mode={mode}
-				loading={isLoading}
+				loading={isLoading || isDeleteDiscountCode}
 				setMode={setMode}
 			/>
 			<IndexTable
@@ -209,6 +246,16 @@ const AnalyticsTable = () => {
 			>
 				{rowMarkup}
 			</IndexTable>
+			<Modal id="delete-comfirmation-modal">
+				<Layout.Section>
+					<Text as='p' tone='subdued' truncate>Are you sure you want to delete <b>{deleteData.code}</b> discount code? this will remove all related data.</Text>
+				</Layout.Section>
+				<br />
+				<TitleBar title="Delete Confirmation">
+					<button onClick={handleDelete} variant="primary" tone='critical'>Confirm Delete</button>
+					<button onClick={handleClose}>Cancel</button>
+				</TitleBar>
+			</Modal>
 		</LegacyCard>
 	);
 };
