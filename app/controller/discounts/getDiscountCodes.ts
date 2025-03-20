@@ -3,17 +3,14 @@ import prisma from 'app/db.server';
 interface DiscountStats {
 	activeDiscount: {
 		count: number;
-		percentage: string;
 		data: number[];
 	};
 	usedDiscount: {
 		count: number;
-		percentage: string;
 		data: number[];
 	};
 	expiredDiscount: {
 		count: number;
-		percentage: string;
 		data: number[];
 	};
 }
@@ -30,12 +27,6 @@ const getDiscountStats = async (): Promise<DiscountStats> => {
 	const expiredDiscountsCount = await prisma.discountCode.count({
 		where: { endDate: { lt: new Date() } },
 	});
-
-	const totalDiscountsCount = activeDiscountsCount + usedDiscountsCount + expiredDiscountsCount;
-
-	const activeDiscountsPercentage = ((activeDiscountsCount / totalDiscountsCount) * 100).toFixed(2);
-	const usedDiscountsPercentage = ((usedDiscountsCount / totalDiscountsCount) * 100).toFixed(2);
-	const expiredDiscountsPercentage = ((expiredDiscountsCount / totalDiscountsCount) * 100).toFixed(2);
 
 	const today = new Date();
 	const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -67,9 +58,9 @@ const getDiscountStats = async (): Promise<DiscountStats> => {
 	const expiredDiscounts = await getDiscountCountPerDay({ endDate: { lt: new Date() } });
 
 	const discountSummary: DiscountStats = {
-		activeDiscount: { count: activeDiscountsCount, percentage: activeDiscountsPercentage, data: activeDiscounts },
-		usedDiscount: { count: usedDiscountsCount, percentage: usedDiscountsPercentage, data: usedDiscounts },
-		expiredDiscount: { count: expiredDiscountsCount, percentage: expiredDiscountsPercentage, data: expiredDiscounts },
+		activeDiscount: { count: activeDiscountsCount, data: activeDiscounts },
+		usedDiscount: { count: usedDiscountsCount, data: usedDiscounts },
+		expiredDiscount: { count: expiredDiscountsCount, data: expiredDiscounts },
 	};
 
 	return discountSummary;
@@ -87,6 +78,7 @@ export const getDiscountCodes = async (
 	success: boolean;
 	message: string;
 	discountCodes: any;
+	discountStats: any;
 	pagination: { totalCount: number; totalPages: number; currentPage: number };
 }> => {
 	try {
@@ -143,6 +135,7 @@ export const getDiscountCodes = async (
 			success: false,
 			message: 'Something went wrong',
 			discountCodes: [],
+			discountStats: null,
 			pagination: {
 				totalCount: 0,
 				totalPages: 0,

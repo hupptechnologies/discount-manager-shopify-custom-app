@@ -9,10 +9,15 @@ import {
 	useIndexResourceState,
 	Text,
 	Badge,
-	useBreakpoints,
 	type IndexFiltersProps,
 	type TabProps,
+	ButtonGroup,
+	Button
 } from '@shopify/polaris';
+import {
+	EditIcon,
+	DeleteIcon
+} from '@shopify/polaris-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
@@ -106,9 +111,9 @@ const AnalyticsTable = () => {
 			index,
 		) => (
 			<IndexTable.Row
-				id={String(id)}
+				id={id}
 				key={id}
-				selected={selectedResources.includes(String(id))}
+				selected={selectedResources.includes(id)}
 				position={index}
 			>
 				<IndexTable.Cell>
@@ -137,6 +142,12 @@ const AnalyticsTable = () => {
 				<IndexTable.Cell>{formatDateWithTime(startDate)}</IndexTable.Cell>
 				<IndexTable.Cell>{formatDateWithTime(endDate)}</IndexTable.Cell>
 				<IndexTable.Cell>{formatDateWithTime(createdAt)}</IndexTable.Cell>
+				<IndexTable.Cell>
+					<ButtonGroup noWrap gap='tight'>
+						<Button variant='secondary' icon={EditIcon} tone='success'></Button>
+						<Button variant='secondary' icon={DeleteIcon} tone='critical'></Button>
+					</ButtonGroup>
+				</IndexTable.Cell>
 			</IndexTable.Row>
 		),
 	);
@@ -171,7 +182,6 @@ const AnalyticsTable = () => {
 				setMode={setMode}
 			/>
 			<IndexTable
-				condensed={useBreakpoints().smDown}
 				resourceName={resourceName}
 				itemCount={discountCodes.length}
 				selectedItemsCount={
@@ -187,6 +197,7 @@ const AnalyticsTable = () => {
 					{ title: 'Start Date' },
 					{ title: 'End Date' },
 					{ title: 'Created At' },
+					{ title: 'Action' },
 				]}
 				pagination={{
 					hasPrevious: currentPage > 1,
@@ -200,27 +211,6 @@ const AnalyticsTable = () => {
 			</IndexTable>
 		</LegacyCard>
 	);
-
-	function disambiguateLabel (key: string, value: string | any[]): string {
-		switch (key) {
-			case 'moneySpent':
-				return `Money spent is between $${value[0]} and $${value[1]}`;
-			case 'taggedWith':
-				return `Tagged with ${value}`;
-			case 'accountStatus':
-				return (value as string[]).map((val) => `Customer ${val}`).join(', ');
-			default:
-				return value as string;
-		}
-	}
-
-	function isEmpty (value: string | string[]): boolean {
-		if (Array.isArray(value)) {
-			return value.length === 0;
-		} else {
-			return value === '' || value === null;
-		}
-	}
 };
 
 export default AnalyticsTable;

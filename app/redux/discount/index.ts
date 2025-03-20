@@ -4,6 +4,7 @@ import { fetchAllDiscountCodes } from "app/service/discount";
 
 interface DiscountCode {
 	id: number;
+	discountId: string;
 	code: string;
 	discountAmount: number;
 	usageLimit: number;
@@ -21,9 +22,9 @@ interface FetchAllDiscountCodeReturnValue {
 		currentPage: number;
 	};
 	discountStats: {
-		activeDiscount: { count: number; percentage: string; data: number[]; },
-		usedDiscount: { count: number; percentage: string; data: number[]; },
-		expiredDiscount: { count: number; percentage: string; data:number[]; },
+		activeDiscount: { count: number; data: number[]; },
+		usedDiscount: { count: number; data: number[]; },
+		expiredDiscount: { count: number; data:number[]; },
 	};
 }
 

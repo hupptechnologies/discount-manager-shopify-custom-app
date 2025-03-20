@@ -9,6 +9,7 @@ interface Pagination {
 
 interface DiscountCode {
 	id: number;
+	discountId: string;
 	code: string;
 	discountAmount: number;
 	usageLimit: number;
@@ -23,9 +24,9 @@ interface discountState {
 	isLoading: boolean;
 	pagination: Pagination;
 	discountStats: {
-		activeDiscount: { count: number; percentage: string; data: number[]; },
-		usedDiscount: { count: number; percentage: string; data: number[]; },
-		expiredDiscount: { count: number; percentage: string; data: number[]; },
+		activeDiscount: { count: number; data: number[]; },
+		usedDiscount: { count: number; data: number[]; },
+		expiredDiscount: { count: number; data: number[]; },
 	};
 }
 
@@ -38,9 +39,9 @@ const initialState: discountState = {
 		currentPage: 0
 	},
 	discountStats: {
-		activeDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
-		usedDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
-		expiredDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
+		activeDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
+		usedDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
+		expiredDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
 	}
 };
 
@@ -67,9 +68,9 @@ const discountSlice = createSlice({
 				currentPage: 0
 			};
 			state.discountStats = {
-				activeDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
-				usedDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
-				expiredDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
+				activeDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
+				usedDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
+				expiredDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
 			}
 		});
 	},
