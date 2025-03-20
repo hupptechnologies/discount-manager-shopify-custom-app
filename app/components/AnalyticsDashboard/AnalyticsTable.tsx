@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useAppBridge } from '@shopify/app-bridge-react';
+import pkg from 'lodash';
 import {
 	IndexTable,
 	LegacyCard,
@@ -16,42 +17,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import { fetchAllDiscountCodesAsync } from 'app/redux/discount';
+import { formatDateWithTime } from 'app/utils/json';
 
 const AnalyticsTable = () => {
+	const { debounce } = pkg;
+	const { mode, setMode } = useSetIndexFiltersMode();
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { discountCodes, isLoading } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
-	const sleep = (ms: number) =>
-		new Promise((resolve) => setTimeout(resolve, ms));
+	const { discountCodes, isLoading, pagination: { totalPages, totalCount } } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
+	const [queryValue, setQueryValue] = useState('');
 	const [itemStrings, setItemStrings] = useState([
 		'All',
 		'Active codes',
 		'Pending codes',
 		'Used codes',
 	]);
-
-	useEffect(() => {
-		dispatch(fetchAllDiscountCodesAsync({
-			page: '1',
-			pageSize: '10',
-			shopName: shopify.config.shop || ''
-		}));
-	}, []);
-
-	const tabs: TabProps[] = itemStrings.map((item, index) => ({
-		content: item,
-		index,
-		onAction: () => {},
-		id: `${item}-${index}`,
-		isLocked: index === 0,
-	}));
 	const [selected, setSelected] = useState(0);
-	const onCreateNewView = async (value: string) => {
-		await sleep(500);
-		setItemStrings([...itemStrings, value]);
-		setSelected(itemStrings.length);
-		return true;
-	};
+	const [currentPage, setCurrentPage] = useState(1);
+	const [sortSelected, setSortSelected] = useState(['discountCode asc']);
+
+	const limit = 10;
 	const sortOptions: IndexFiltersProps['sortOptions'] = [
 		{
 			label: 'Discount Code',
@@ -63,96 +48,61 @@ const AnalyticsTable = () => {
 			value: 'discountCode desc',
 			directionLabel: 'Descending',
 		},
-		{ label: 'Product', value: 'product asc', directionLabel: 'A-Z' },
-		{ label: 'Product', value: 'product desc', directionLabel: 'Z-A' },
-		{ label: 'Date Applied', value: 'dateApplied asc', directionLabel: 'A-Z' },
-		{ label: 'Date Applied', value: 'dateApplied desc', directionLabel: 'Z-A' },
-		{
-			label: 'Discount Amount',
-			value: 'discountAmount asc',
-			directionLabel: 'Ascending',
-		},
-		{
-			label: 'Discount Amount',
-			value: 'discountAmount desc',
-			directionLabel: 'Descending',
-		},
 	];
-	const [sortSelected, setSortSelected] = useState(['discountAmount asc']);
-	const { mode, setMode } = useSetIndexFiltersMode();
-	const onHandleCancel = () => {};
+	
+	const debouncedHandleFetch = useCallback(
+		debounce((queryValue, selected, currentPage, sortSelected) => {
+			dispatch(fetchAllDiscountCodesAsync({
+				page: currentPage,
+				pageSize: String(limit),
+				shopName: shopify.config.shop || '',
+				searchQuery: queryValue,
+				usedCountGreaterThan: selected === 3 && 1 || null,
+				orderByCode: sortSelected.includes('discountCode asc') ? 'asc' : 'desc',
+				status: selected === 1 && 'active' || selected === 2 && 'pending' || null
+			}));
+		}, 300),
+		[],
+	);
 
-	const [accountStatus, setAccountStatus] = useState<string[] | undefined>(
-		undefined,
-	);
-	const [moneySpent, setMoneySpent] = useState<[number, number] | undefined>(
-		undefined,
-	);
-	const [taggedWith, setTaggedWith] = useState('');
-	const [queryValue, setQueryValue] = useState('');
+	useEffect(() => {
+		debouncedHandleFetch(queryValue, selected, currentPage, sortSelected)
+	}, [queryValue, selected, currentPage, limit, sortSelected]);
+
+	const tabs: TabProps[] = itemStrings.map((item, index) => ({
+		content: item,
+		index,
+		onAction: () => {},
+		id: `${item}-${index}`,
+		isLocked: index === 0,
+	}));
+	const onHandleCancel = () => {
+		setQueryValue('')
+	};
 
 	const handleFiltersQueryChange = useCallback(
 		(value: string) => setQueryValue(value),
 		[],
 	);
-	const handleAccountStatusRemove = useCallback(
-		() => setAccountStatus(undefined),
-		[],
-	);
-	const handleMoneySpentRemove = useCallback(
-		() => setMoneySpent(undefined),
-		[],
-	);
-	const handleTaggedWithRemove = useCallback(() => setTaggedWith(''), []);
-	const handleQueryValueRemove = useCallback(() => setQueryValue(''), []);
+	const handleQueryValueRemove = useCallback(() => {
+		onHandleCancel();
+	}, []);
 	const handleFiltersClearAll = useCallback(() => {
-		handleAccountStatusRemove();
-		handleMoneySpentRemove();
-		handleTaggedWithRemove();
 		handleQueryValueRemove();
 	}, [
-		handleAccountStatusRemove,
-		handleMoneySpentRemove,
-		handleQueryValueRemove,
-		handleTaggedWithRemove,
+		handleQueryValueRemove
 	]);
-
-	const appliedFilters: IndexFiltersProps['appliedFilters'] = [];
-	if (accountStatus && !isEmpty(accountStatus)) {
-		const key = 'accountStatus';
-		appliedFilters.push({
-			key,
-			label: disambiguateLabel(key, accountStatus),
-			onRemove: handleAccountStatusRemove,
-		});
-	}
-	if (moneySpent) {
-		const key = 'moneySpent';
-		appliedFilters.push({
-			key,
-			label: disambiguateLabel(key, moneySpent),
-			onRemove: handleMoneySpentRemove,
-		});
-	}
-	if (!isEmpty(taggedWith)) {
-		const key = 'taggedWith';
-		appliedFilters.push({
-			key,
-			label: disambiguateLabel(key, taggedWith),
-			onRemove: handleTaggedWithRemove,
-		});
-	}
 
 	const resourceName = {
 		singular: 'discountCode',
 		plural: 'discountCodes',
 	};
-
+	
 	const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(discountCodes as any[]);
 
 	const rowMarkup = discountCodes?.length > 0 && discountCodes.map(
 		(
-			{ id, code, discountAmount, usageLimit, isActive, startDate, endDate },
+			{ id, code, discountAmount, usageLimit, isActive, startDate, endDate, createdAt },
 			index,
 		) => (
 			<IndexTable.Row
@@ -184,8 +134,9 @@ const AnalyticsTable = () => {
 						{isActive ? 'Active' : 'Pending'}
 					</Badge>
 				</IndexTable.Cell>
-				<IndexTable.Cell>{startDate}</IndexTable.Cell>
-				<IndexTable.Cell>{endDate}</IndexTable.Cell>
+				<IndexTable.Cell>{formatDateWithTime(startDate)}</IndexTable.Cell>
+				<IndexTable.Cell>{formatDateWithTime(endDate)}</IndexTable.Cell>
+				<IndexTable.Cell>{formatDateWithTime(createdAt)}</IndexTable.Cell>
 			</IndexTable.Row>
 		),
 	);
@@ -198,7 +149,7 @@ const AnalyticsTable = () => {
 				queryValue={queryValue}
 				queryPlaceholder="Searching in all"
 				onQueryChange={handleFiltersQueryChange}
-				onQueryClear={() => setQueryValue('')}
+				onQueryClear={handleQueryValueRemove}
 				onSort={setSortSelected}
 				cancelAction={{
 					onAction: onHandleCancel,
@@ -207,9 +158,11 @@ const AnalyticsTable = () => {
 				}}
 				tabs={tabs}
 				selected={selected}
-				onSelect={setSelected}
+				onSelect={(index) => {
+					setCurrentPage(1);
+					setSelected(index);
+				}}
 				canCreateNewView={false}
-				onCreateNewView={onCreateNewView}
 				filters={[]}
 				appliedFilters={[]}
 				onClearAll={handleFiltersClearAll}
@@ -233,10 +186,14 @@ const AnalyticsTable = () => {
 					{ title: 'Status' },
 					{ title: 'Start Date' },
 					{ title: 'End Date' },
+					{ title: 'Created At' },
 				]}
 				pagination={{
-					hasNext: true,
-					onNext: () => {},
+					hasPrevious: currentPage > 1,
+					hasNext: currentPage < totalPages,
+					onPrevious: () => setCurrentPage((prev) => prev - 1),
+					onNext: () => setCurrentPage((prev) => prev + 1),
+					label: `Showing ${(currentPage - 1) * limit + 1} to ${Math.min(currentPage * limit, totalCount)} of ${totalCount} codes`
 				}}
 			>
 				{rowMarkup}

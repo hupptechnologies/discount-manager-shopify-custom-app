@@ -10,6 +10,7 @@ interface DiscountCode {
 	isActive: boolean;
 	startDate: string;
 	endDate: string;
+	createdAt: string;
 }
 
 interface FetchAllDiscountCodeReturnValue {
@@ -25,7 +26,9 @@ interface fetchAllDiscountCodesParams {
 	page?: string;
 	pageSize?: string;
 	searchQuery?: string;
-	status?: 'active' | 'pending';
+	status?: 'active' | 'pending' | null;
+	orderByCode?: 'asc' | 'desc' | null;
+	usedCountGreaterThan?: number | null;
 	shopName: string;
 	callback?: (success: boolean) => void;
 }

@@ -15,18 +15,23 @@ interface DiscountCode {
 	isActive: boolean;
 	startDate: string;
 	endDate: string;
+	createdAt: string;
 }
 
 interface discountState {
 	discountCodes: DiscountCode[];
 	isLoading: boolean;
-	pagination: Pagination | null;
+	pagination: Pagination;
 }
 
 const initialState: discountState = {
 	discountCodes: [],
 	isLoading: false,
-	pagination: null
+	pagination: {
+		totalCount: 0,
+		totalPages: 0,
+		currentPage: 0
+	}
 };
 
 const discountSlice = createSlice({
@@ -45,7 +50,11 @@ const discountSlice = createSlice({
 		builder.addCase(fetchAllDiscountCodesAsync.rejected, (state) => {
 			state.isLoading = false;
 			state.discountCodes = [];
-			state.pagination = null;
+			state.pagination = {
+				totalCount: 0,
+				totalPages: 0,
+				currentPage: 0
+			};
 		});
 	},
 });
