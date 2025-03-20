@@ -4,6 +4,7 @@ import { createDiscountCode } from 'app/controller/discounts/createDicountCode';
 import { deleteDiscountCode } from 'app/controller/discounts/deleteDiscountCode';
 import { getDiscountCodes } from 'app/controller/discounts/getDiscountCodes';
 import { updateBasicDiscountCode } from 'app/controller/discounts/updateBasicDiscountCode';
+import { updateBuyXGetYDiscountCode } from 'app/controller/discounts/updateBuyxGetyDiscountCode';
 
 interface ActionResponse {
 	success: boolean;
@@ -61,7 +62,14 @@ export const action = async ({
 	const shop = url.searchParams.get('shop') ?? '';
 	const type = url.searchParams.get('type') ?? '';
 	const id = Number(url.searchParams.get('id'))
-	if (request.method === 'PUT' && id) {
+	if (request.method === 'PUT') {
+		if (!id) {
+			return json<ActionResponse>({ success: false, message: 'Id is required for update code' });
+		}
+		if (type === 'buyxgety') {
+			const buyXGetYResponse = await updateBuyXGetYDiscountCode(shop, request, id);
+			return json<ActionResponse>(buyXGetYResponse);
+		}
 		const updateBasicDiscountCodeResponse = await updateBasicDiscountCode(shop, request, id);
 		return json<ActionResponse>(updateBasicDiscountCodeResponse);
 	}
@@ -69,10 +77,13 @@ export const action = async ({
 		const discountCodeResponse = await deleteDiscountCode(shop, request);
 		return json<ActionResponse>(discountCodeResponse);
 	}
-	if (type === 'buyxgety') {
-		const buyXGetYResponse = await createBuyXGetYDiscountCode(shop, request);
-		return json<ActionResponse>(buyXGetYResponse);
+	if (request.method === 'POST') {
+		if (type === 'buyxgety') {
+			const buyXGetYResponse = await createBuyXGetYDiscountCode(shop, request);
+			return json<ActionResponse>(buyXGetYResponse);
+		}
+		const discountCodeResponse = await createDiscountCode(shop, request);
+		return json<ActionResponse>(discountCodeResponse);
 	}
-	const discountCodeResponse = await createDiscountCode(shop, request);
-	return json<ActionResponse>(discountCodeResponse);
+	return json<ActionResponse>({ success: false, message: 'Not found any method' });
 };
