@@ -22,7 +22,7 @@ export const getDiscountCodes = async (
 		};
 
 		if (status) {
-			where.status = status;
+			where.isActive = status === 'active' && true || status === 'pending' && false;
 		}
 
 		if (searchQuery) {

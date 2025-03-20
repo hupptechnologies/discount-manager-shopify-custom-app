@@ -33,8 +33,7 @@ export const loader = async ({
 	const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10);
 	const status = url.searchParams.get('status') as
 		| 'active'
-		| 'pending'
-		| undefined;
+		| 'pending';
 	const usedCountGreaterThan = parseInt(
 		url.searchParams.get('usedCountGreaterThan') ?? '0',
 		10,

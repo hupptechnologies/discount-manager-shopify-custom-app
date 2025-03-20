@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useAppBridge } from '@shopify/app-bridge-react';
 import {
 	IndexTable,
 	LegacyCard,
@@ -11,17 +12,31 @@ import {
 	type IndexFiltersProps,
 	type TabProps,
 } from '@shopify/polaris';
-import { discountCodeData } from 'app/utils/json';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'app/redux/store';
+import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
+import { fetchAllDiscountCodesAsync } from 'app/redux/discount';
 
 const AnalyticsTable = () => {
+	const shopify = useAppBridge();
+	const dispatch = useDispatch<AppDispatch>();
+	const { discountCodes, isLoading } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
 	const sleep = (ms: number) =>
 		new Promise((resolve) => setTimeout(resolve, ms));
 	const [itemStrings, setItemStrings] = useState([
 		'All',
-		'Active',
-		'Expire',
-		'Used',
+		'Active codes',
+		'Pending codes',
+		'Used codes',
 	]);
+
+	useEffect(() => {
+		dispatch(fetchAllDiscountCodesAsync({
+			page: '1',
+			pageSize: '10',
+			shopName: shopify.config.shop || ''
+		}));
+	}, []);
 
 	const tabs: TabProps[] = itemStrings.map((item, index) => ({
 		content: item,
@@ -128,24 +143,22 @@ const AnalyticsTable = () => {
 		});
 	}
 
-	const discountCodes = discountCodeData;
 	const resourceName = {
 		singular: 'discountCode',
 		plural: 'discountCodes',
 	};
 
-	const { selectedResources, allResourcesSelected, handleSelectionChange } =
-		useIndexResourceState(discountCodes);
+	const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(discountCodes as any[]);
 
-	const rowMarkup = discountCodes.map(
+	const rowMarkup = discountCodes?.length > 0 && discountCodes.map(
 		(
-			{ id, code, discount, products, limit, status, startDate, endDate },
+			{ id, code, discountAmount, usageLimit, isActive, startDate, endDate },
 			index,
 		) => (
 			<IndexTable.Row
-				id={id}
+				id={String(id)}
 				key={id}
-				selected={selectedResources.includes(id)}
+				selected={selectedResources.includes(String(id))}
 				position={index}
 			>
 				<IndexTable.Cell>
@@ -153,24 +166,22 @@ const AnalyticsTable = () => {
 						{code}
 					</Text>
 				</IndexTable.Cell>
-				<IndexTable.Cell>{discount}</IndexTable.Cell>
-				<IndexTable.Cell>{products}</IndexTable.Cell>
+				<IndexTable.Cell>{discountAmount}</IndexTable.Cell>
+				<IndexTable.Cell>Summer Collection</IndexTable.Cell>
 				<IndexTable.Cell>
 					<Text as="span" alignment="start">
-						{limit}
+						{usageLimit}
 					</Text>
 				</IndexTable.Cell>
 				<IndexTable.Cell>
 					<Badge
 						tone={
-							status === 'Active'
+							isActive
 								? 'success'
-								: status === 'Pending'
-									? 'info'
-									: 'warning'
+								:'info'
 						}
 					>
-						{status}
+						{isActive ? 'Active' : 'Pending'}
 					</Badge>
 				</IndexTable.Cell>
 				<IndexTable.Cell>{startDate}</IndexTable.Cell>
@@ -203,6 +214,7 @@ const AnalyticsTable = () => {
 				appliedFilters={[]}
 				onClearAll={handleFiltersClearAll}
 				mode={mode}
+				loading={isLoading}
 				setMode={setMode}
 			/>
 			<IndexTable
