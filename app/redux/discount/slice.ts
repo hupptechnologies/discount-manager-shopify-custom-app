@@ -22,6 +22,11 @@ interface discountState {
 	discountCodes: DiscountCode[];
 	isLoading: boolean;
 	pagination: Pagination;
+	discountStats: {
+		activeDiscount: { count: number; percentage: string; data: number[]; },
+		usedDiscount: { count: number; percentage: string; data: number[]; },
+		expiredDiscount: { count: number; percentage: string; data: number[]; },
+	};
 }
 
 const initialState: discountState = {
@@ -31,6 +36,11 @@ const initialState: discountState = {
 		totalCount: 0,
 		totalPages: 0,
 		currentPage: 0
+	},
+	discountStats: {
+		activeDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
+		usedDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
+		expiredDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
 	}
 };
 
@@ -46,6 +56,7 @@ const discountSlice = createSlice({
 			state.isLoading = false;
 			state.discountCodes = payload.discountCodes;
 			state.pagination = payload.pagination;
+			state.discountStats = payload.discountStats;
 		});
 		builder.addCase(fetchAllDiscountCodesAsync.rejected, (state) => {
 			state.isLoading = false;
@@ -55,6 +66,11 @@ const discountSlice = createSlice({
 				totalPages: 0,
 				currentPage: 0
 			};
+			state.discountStats = {
+				activeDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
+				usedDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
+				expiredDiscount: { count: 0, percentage: '0', data: [0,0,0,0,0,0,0] },
+			}
 		});
 	},
 });

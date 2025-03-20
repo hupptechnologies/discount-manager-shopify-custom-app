@@ -20,6 +20,11 @@ interface FetchAllDiscountCodeReturnValue {
 		totalPages: number;
 		currentPage: number;
 	};
+	discountStats: {
+		activeDiscount: { count: number; percentage: string; data: number[]; },
+		usedDiscount: { count: number; percentage: string; data: number[]; },
+		expiredDiscount: { count: number; percentage: string; data:number[]; },
+	};
 }
 
 interface fetchAllDiscountCodesParams {
@@ -42,11 +47,11 @@ export const fetchAllDiscountCodesAsync = createAsyncThunk<
 		try {
 			const response = await fetchAllDiscountCodes(params);
 			if (response.data) {
-				const { discountCodes, pagination, success } = response.data;
+				const { discountCodes, pagination, success, discountStats } = response.data;
 				if (success && params?.callback) {
 					params.callback(success);
 				}
-				return fulfillWithValue({ discountCodes, pagination });
+				return fulfillWithValue({ discountCodes, pagination, discountStats });
 			}
 			return fulfillWithValue({
 				discountCodes: [],
@@ -54,7 +59,8 @@ export const fetchAllDiscountCodesAsync = createAsyncThunk<
 					totalCount: 0,
 					totalPages: 0,
 					currentPage: 0
-				}
+				},
+				discountStats: null
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;

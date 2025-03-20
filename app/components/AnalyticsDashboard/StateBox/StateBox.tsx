@@ -18,7 +18,7 @@ export const StatBox: React.FC<StatBoxProps> = ({
 	const hasData = data && data.length;
 
 	const percentageChange = hasData
-		? getPercentageChange(Number(data[0]), Number(data.at(-1)))
+		? getPercentageChange(Number(data[0]), Number(data.at(-1))) || 0
 		: null;
 
 	return (

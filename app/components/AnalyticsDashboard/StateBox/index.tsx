@@ -7,24 +7,17 @@ import {
 	InlineStack,
 	Button,
 } from '@shopify/polaris';
+import { useSelector } from 'react-redux';
+import { RootState } from 'app/redux/store';
+import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import { StatBox } from './StateBox';
-
-interface DiscountStats {
-	activeDiscounts: number[];
-	usedDiscounts: number[];
-	expiredDiscounts: number[];
-}
 
 interface IndexStateBoxProps {
 	handleOpen: any;
 }
 
 const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
-	const discountStats: DiscountStats = {
-		activeDiscounts: [15, 22, 18, 10, 14, 19, 25],
-		usedDiscounts: [5, 8, 10, 4, 6, 7, 12],
-		expiredDiscounts: [2, 3, 1, 4, 2, 1, 0],
-	};
+	const { discountStats } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
 
 	return (
 		<>
@@ -50,22 +43,22 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 					<Grid.Cell columnSpan={{ xs: 6, lg: 4 }}>
 						<StatBox
 							title="Active Discounts"
-							value={discountStats.activeDiscounts.at(-1) ?? 0}
-							data={discountStats.activeDiscounts}
+							value={discountStats?.activeDiscount?.count ?? 0}
+							data={discountStats?.activeDiscount?.data}
 						/>
 					</Grid.Cell>
 					<Grid.Cell columnSpan={{ xs: 6, lg: 4 }}>
 						<StatBox
 							title="Used Discounts"
-							value={discountStats.usedDiscounts.at(-1) ?? 0}
-							data={discountStats.usedDiscounts}
+							value={discountStats?.usedDiscount?.count ?? 0}
+							data={discountStats?.usedDiscount?.data}
 						/>
 					</Grid.Cell>
 					<Grid.Cell columnSpan={{ xs: 6, lg: 4 }}>
 						<StatBox
 							title="Expired Discounts"
-							value={discountStats.expiredDiscounts.at(-1) ?? 0}
-							data={discountStats.expiredDiscounts}
+							value={discountStats?.expiredDiscount?.count ?? 0}
+							data={discountStats?.expiredDiscount?.data}
 						/>
 					</Grid.Cell>
 				</Grid>

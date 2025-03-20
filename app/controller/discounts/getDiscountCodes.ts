@@ -1,5 +1,80 @@
 import prisma from 'app/db.server';
 
+interface DiscountStats {
+	activeDiscount: {
+		count: number;
+		percentage: string;
+		data: number[];
+	};
+	usedDiscount: {
+		count: number;
+		percentage: string;
+		data: number[];
+	};
+	expiredDiscount: {
+		count: number;
+		percentage: string;
+		data: number[];
+	};
+}
+	
+const getDiscountStats = async (): Promise<DiscountStats> => {
+	const activeDiscountsCount = await prisma.discountCode.count({
+		where: { isActive: true },
+	});
+
+	const usedDiscountsCount = await prisma.discountCode.count({
+		where: { usedCount: { gt: 0 } },
+	});
+
+	const expiredDiscountsCount = await prisma.discountCode.count({
+		where: { endDate: { lt: new Date() } },
+	});
+
+	const totalDiscountsCount = activeDiscountsCount + usedDiscountsCount + expiredDiscountsCount;
+
+	const activeDiscountsPercentage = ((activeDiscountsCount / totalDiscountsCount) * 100).toFixed(2);
+	const usedDiscountsPercentage = ((usedDiscountsCount / totalDiscountsCount) * 100).toFixed(2);
+	const expiredDiscountsPercentage = ((expiredDiscountsCount / totalDiscountsCount) * 100).toFixed(2);
+
+	const today = new Date();
+	const last7Days = Array.from({ length: 7 }, (_, i) => {
+		const date = new Date(today);
+		date.setDate(today.getDate() - i);
+		return date.toISOString().split('T')[0];
+	});
+
+	const getDiscountCountPerDay = async (whereCondition: any) => {
+		const counts = await Promise.all(
+			last7Days.map(async (date) => {
+			const count = await prisma.discountCode.count({
+				where: {
+				...whereCondition,
+				createdAt: {
+					gte: new Date(date),
+					lt: new Date(new Date(date).setDate(new Date(date).getDate() + 1)),
+				},
+				},
+			});
+			return count || 0;
+			})
+		);
+		return counts;
+	};
+
+	const activeDiscounts = await getDiscountCountPerDay({ isActive: true });
+	const usedDiscounts = await getDiscountCountPerDay({ usedCount: { gt: 0 } });
+	const expiredDiscounts = await getDiscountCountPerDay({ endDate: { lt: new Date() } });
+
+	const discountSummary: DiscountStats = {
+		activeDiscount: { count: activeDiscountsCount, percentage: activeDiscountsPercentage, data: activeDiscounts },
+		usedDiscount: { count: usedDiscountsCount, percentage: usedDiscountsPercentage, data: usedDiscounts },
+		expiredDiscount: { count: expiredDiscountsCount, percentage: expiredDiscountsPercentage, data: expiredDiscounts },
+	};
+
+	return discountSummary;
+};
+
 export const getDiscountCodes = async (
 	shop: string,
 	page: number = 1,
@@ -11,7 +86,7 @@ export const getDiscountCodes = async (
 ): Promise<{
 	success: boolean;
 	message: string;
-	discountCodes: string[];
+	discountCodes: any;
 	pagination: { totalCount: number; totalPages: number; currentPage: number };
 }> => {
 	try {
@@ -48,9 +123,12 @@ export const getDiscountCodes = async (
 
 		const totalPages = Math.ceil(totalCount / pageSize);
 
+		const discountStatsData = await getDiscountStats();
+
 		return {
 			success: true,
 			discountCodes,
+			discountStats: discountStatsData,
 			message: 'Fetch discount codes successfuly',
 			pagination: {
 				totalCount,
