@@ -39,6 +39,7 @@ export const loader = async ({
 		10,
 	);
 	const searchQuery = url.searchParams.get('searchQuery') ?? '';
+	const orderByCode = url.searchParams.get('orderByCode') as | 'asc' | 'desc';
 
 	const fetchDiscountCodes = await getDiscountCodes(
 		shop,
@@ -47,6 +48,7 @@ export const loader = async ({
 		status,
 		usedCountGreaterThan,
 		searchQuery,
+		orderByCode
 	);
 
 	return json<LoaderResponse>(fetchDiscountCodes);

@@ -7,6 +7,7 @@ export const getDiscountCodes = async (
 	status?: 'active' | 'pending',
 	usedCountGreaterThan: number = 0,
 	searchQuery?: string,
+	orderByCode?: 'asc' | 'desc'
 ): Promise<{
 	success: boolean;
 	message: string;
@@ -40,6 +41,9 @@ export const getDiscountCodes = async (
 			where,
 			skip: (page - 1) * pageSize,
 			take: pageSize,
+			orderBy: {
+				code: orderByCode
+			}
 		});
 
 		const totalPages = Math.ceil(totalCount / pageSize);
