@@ -3,6 +3,7 @@ import { createBuyXGetYDiscountCode } from 'app/controller/discounts/createBuyxG
 import { createDiscountCode } from 'app/controller/discounts/createDicountCode';
 import { deleteDiscountCode } from 'app/controller/discounts/deleteDiscountCode';
 import { getDiscountCodes } from 'app/controller/discounts/getDiscountCodes';
+import { updateBasicDiscountCode } from 'app/controller/discounts/updateBasicDiscountCode';
 
 interface ActionResponse {
 	success: boolean;
@@ -59,6 +60,11 @@ export const action = async ({
 	const url = new URL(request.url);
 	const shop = url.searchParams.get('shop') ?? '';
 	const type = url.searchParams.get('type') ?? '';
+	const id = Number(url.searchParams.get('id'))
+	if (request.method === 'PUT' && id) {
+		const updateBasicDiscountCodeResponse = await updateBasicDiscountCode(shop, request, id);
+		return json<ActionResponse>(updateBasicDiscountCodeResponse);
+	}
 	if (request.method === 'DELETE') {
 		const discountCodeResponse = await deleteDiscountCode(shop, request);
 		return json<ActionResponse>(discountCodeResponse);
