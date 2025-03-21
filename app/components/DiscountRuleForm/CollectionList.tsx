@@ -28,6 +28,7 @@ interface CollectionProps {
 		searchOne: string;
 		searchTwo: string;
 		searchType: string;
+		collectionIDs: string[];
 	};
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 }
@@ -64,7 +65,7 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 					newRule?.searchOne === '' ? newRule?.searchTwo : newRule?.searchOne,
 			}),
 		);
-	}, [newRule]);
+	}, [newRule?.searchOne, newRule?.searchTwo]);
 
 	useEffect(() => {
 		if (collectionPageInfo) {
@@ -137,7 +138,10 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 				items={rowsCollection}
 				selectable
 				selectedItems={selectedItems}
-				onSelectionChange={setSelectedItems}
+				onSelectionChange={(value) => {
+					setNewRule({ ...newRule, collectionIDs: value });
+					setSelectedItems(value);
+				}}
 				renderItem={(item) => {
 					const { id, image, title, productCount } = item;
 					return (

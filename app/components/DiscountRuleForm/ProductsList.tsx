@@ -47,6 +47,7 @@ interface ProductProps {
 		searchOne: string;
 		searchTwo: string;
 		searchType: string;
+		productIDs: string[];
 	};
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 }
@@ -84,7 +85,7 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 						: newRule?.searchTwo,
 			}),
 		);
-	}, [newRule]);
+	}, [newRule?.searchOne, newRule?.searchTwo]);
 
 	useEffect(() => {
 		if (pageInfo) {
@@ -168,6 +169,11 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 				resourceFilter: ({ disabled }) => !disabled,
 			},
 		);
+	useEffect(() => {
+		if (selectedResources.length > 0) {
+			setNewRule({ ...newRule, productIDs: selectedResources });
+		}
+	}, [selectedResources]);
 
 	const groupedProducts = groupRowsByGroupKey(
 		'title',
@@ -294,7 +300,6 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 				loading={newRule?.searchOne || newRule?.searchTwo ? isLoading : false}
 			/>
 			<IndexTable
-				condensed={useBreakpoints().smDown}
 				onSelectionChange={handleSelectionChange}
 				selectedItemsCount={
 					allResourcesSelected ? 'All' : selectedResources.length

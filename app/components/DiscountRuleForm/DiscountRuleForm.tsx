@@ -65,6 +65,8 @@ interface DiscountRule {
 	onePerCustomer: boolean;
 	totalLimitValue: string;
 	dicountCodePrefix: string;
+	collectionIDs: string[];
+	productIDs: string[];
 }
 
 type DiscountRuleFormProps = {
@@ -129,6 +131,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		onePerCustomer: false,
 		totalLimitValue: '',
 		dicountCodePrefix: '',
+		collectionIDs: [],
+		productIDs: []
 	});
 
 	const handleSearchTypeChange = (type: string) => {
@@ -220,6 +224,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			onePerCustomer: false,
 			totalLimitValue: '',
 			dicountCodePrefix: '',
+			collectionIDs: [],
+			productIDs: [],
 		});
 	};
 
@@ -246,11 +252,11 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const handleSave = () => {
 		handleSubmit();
 	};
-	
+
 	const handleDiscard = () => {
 		shopify.saveBar.hide('save-bar');
 	};
-	
+
 	const handleSubmit = () => {
 		dispatch(createDiscountCodeAsync({
 			shopName: shopify.config.shop || '',
@@ -260,8 +266,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				percentage: Number(newRule?.discount),
 				startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
 				endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
-				collectionIDs: [],
-				productIDs: ["gid://shopify/ProductVariant/45807212593393"],
+				collectionIDs: newRule?.collectionIDs,
+				productIDs: newRule?.productIDs,
 				usageLimit: Number(newRule?.totalLimitValue),
 				appliesOncePerCustomer: newRule?.onePerCustomer,
 			},
@@ -274,7 +280,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			},
 		}))
 	};
-
+	
 	return (
 		<Layout>
 			<Layout.Section>

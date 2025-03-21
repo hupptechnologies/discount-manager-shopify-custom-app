@@ -125,7 +125,7 @@ export const fetchCollections = async (
 
 		const collectionData: Collection[] =
 			collections?.map((collection) => ({
-				id: collection?.node?.id.split('/').pop() || '',
+				id: collection?.node?.id || '',
 				title: collection?.node?.title || '',
 				image: collection?.node?.image?.url || '',
 				productCount: collection?.node?.productsCount?.count || 0,

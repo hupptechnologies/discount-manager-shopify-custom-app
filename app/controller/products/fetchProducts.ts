@@ -134,7 +134,7 @@ export const fetchProducts = async (
 
 		const productData: ProductVariant[] =
 			products?.map((product) => ({
-				id: product?.node?.id.split('/').pop() || '',
+				id: product?.node?.id || '',
 				variant: product?.node?.title || '',
 				title: product?.node?.product?.title || '',
 				price: product?.node?.price || '',
