@@ -126,7 +126,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						prefix={<Icon source={SearchIcon} />}
 						placeholder={`Search ${newRule.buyItemFrom === 'collection' ? 'collection' : 'product'}`}
 					/>
-					<Button onClick={handleOpen} variant="secondary">
+					<Button onClick={() => handleOpen('buy', newRule.buyItemFrom === 'collection' ? 'collection' : 'product')} variant="secondary">
 						Browse
 					</Button>
 				</FormLayout.Group>
@@ -176,7 +176,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						prefix={<Icon source={SearchIcon} />}
 						placeholder={`Search ${newRule.getItemFrom === 'collection' ? 'collection' : 'product'}`}
 					/>
-					<Button onClick={() => handleOpen('two')} variant="secondary">
+					<Button onClick={() => handleOpen('get', newRule.getItemFrom === 'collection' ? 'collection' : 'product')} variant="secondary">
 						Browse
 					</Button>
 				</FormLayout.Group>

@@ -80,6 +80,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const navigate = useNavigate();
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
+	const [selected, setSelected] = useState<number>(0);
 	const [newRule, setNewRule] = useState<DiscountRule>({
 		selectedDiscountType: queryType,
 		selectedMethod: 'code',
@@ -150,7 +151,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 
 	const debouncedHandleOpen = useCallback(
 		debounce(() => {
-			handleOpen();
+			handleOpen('', '');
 		}, 500),
 		[],
 	);
@@ -158,12 +159,14 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const handleSearchOneChange = (value: string) => {
 		handleSearchTypeChange('one');
 		setNewRule((prev) => ({ ...prev, searchOne: value }));
+		setSelected(1);
 		debouncedHandleOpen();
 	};
 
 	const handleSearchTwoChange = (value: string) => {
 		handleSearchTypeChange('two');
 		setNewRule((prev) => ({ ...prev, searchTwo: value }));
+		setSelected(2);
 		debouncedHandleOpen();
 	};
 
@@ -220,7 +223,15 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		});
 	};
 
-	const handleOpen = () => {
+	const handleOpen = (type: string | null, value: string) => {
+		if (type === 'buy') {
+			setSelected(1);
+			setNewRule({ ...newRule, buyItemFrom: value });
+		}
+		if (type === 'get') {
+			setSelected(2);
+			setNewRule({ ...newRule, getItemFrom: value });
+		}
 		shopify.modal.show('product-collection-modal');
 	};
 
@@ -237,7 +248,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 	
 	const handleDiscard = () => {
-		console.log('Discarding');
 		shopify.saveBar.hide('save-bar');
 	};
 	
@@ -315,16 +325,22 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				<Summary />
 			</Layout.Section>
 			<Modal id="product-collection-modal">
-				{(queryType === 'buyXgetY'
-					? ['collection'].includes(
-							newRule?.buyItemFrom || newRule?.getItemFrom,
-						)
-					: newRule?.appliesTo === 'collection') && (
+				{(newRule?.buyItemFrom === 'collection' && selected === 1) && (
 					<CollectionList newRule={newRule} setNewRule={setNewRule} />
 				)}
-				{(queryType === 'buyXgetY'
-					? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom)
-					: newRule?.appliesTo === 'product') && (
+				{(newRule?.buyItemFrom === 'product' && selected === 1) && (
+					<ProductsList newRule={newRule} setNewRule={setNewRule} />
+				)}
+				{(newRule?.getItemFrom === 'collection' && selected === 2) && (
+					<CollectionList newRule={newRule} setNewRule={setNewRule} />
+				)}
+				{(newRule?.getItemFrom === 'product' && selected === 2) && (
+					<ProductsList newRule={newRule} setNewRule={setNewRule} />
+				)}
+				{(newRule?.appliesTo === 'collection' && selected === 0) && (
+					<CollectionList newRule={newRule} setNewRule={setNewRule} />
+				)}
+				{(newRule?.appliesTo === 'product' && selected === 0) && (
 					<ProductsList newRule={newRule} setNewRule={setNewRule} />
 				)}
 				<TitleBar
