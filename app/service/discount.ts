@@ -20,6 +20,21 @@ interface DeleteDiscountCodeParams {
 	shopName: string;
 }
 
+interface CreateDiscountCodeParams {
+	data: {
+		title: string;
+		percentage: number;
+		code: string;
+		startsAt: string;
+		endsAt: string;
+		usageLimit: number;
+		appliesOncePerCustomer: boolean;
+		productIDs: string[];
+		collectionIDs: string[];
+	},
+	shopName: string;
+}
+
 export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { page = 1, pageSize = 10, shopName, status, searchQuery = '', usedCountGreaterThan, orderByCode } = params;
@@ -51,4 +66,10 @@ export const deleteDiscountCode = (params: DeleteDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, data } = params;
 	return requestInstance.delete(`discount?shop=${shopName}`, { data });
+};
+
+export const createDiscountCode = (params: CreateDiscountCodeParams) => {
+	const requestInstance: AxiosInstance = backendAPI();
+	const { shopName, data } = params;
+	return requestInstance.post(`discount?shop=${shopName}`, data);
 };

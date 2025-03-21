@@ -1,7 +1,11 @@
 import { useCallback, useState } from 'react';
-import { Modal, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
+import { Modal, SaveBar, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
 import { Layout } from '@shopify/polaris';
 import pkg from 'lodash';
+import { useDispatch } from 'react-redux';
+import { createDiscountCodeAsync } from 'app/redux/discount';
+import { AppDispatch } from 'app/redux/store';
+import { useNavigate } from '@remix-run/react';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
 import DiscountCodeGen from './DiscountCodeGen';
 import DiscountValue from './DiscountValue';
@@ -11,6 +15,7 @@ import CollectionList from './CollectionList';
 import ProductsList from './ProductsList';
 import DiscountBuyXGetY from './DiscountBuyXGetY';
 import UsageLimit from './UsageLimit';
+import { getYearMonthDay } from 'app/utils/json';
 
 interface DiscountRule {
 	selectedDiscountType: string | null;
@@ -71,6 +76,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 }) => {
 	const { debounce } = pkg;
 	const shopify = useAppBridge();
+	const dispatch = useDispatch<AppDispatch>();
+	const navigate = useNavigate();
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
 	const [newRule, setNewRule] = useState<DiscountRule>({
@@ -221,6 +228,43 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		shopify.modal.hide('product-collection-modal');
 	};
 
+	const handleSaveBarOpen = () => {
+		shopify.saveBar.show('save-bar');
+	};
+
+	const handleSave = () => {
+		handleSubmit();
+	};
+	
+	const handleDiscard = () => {
+		console.log('Discarding');
+		shopify.saveBar.hide('save-bar');
+	};
+	
+	const handleSubmit = () => {
+		dispatch(createDiscountCodeAsync({
+			shopName: shopify.config.shop || '',
+			data: {
+				title: newRule?.title,
+				code: newRule?.checkoutDiscountCode,
+				percentage: Number(newRule?.discount),
+				startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
+				endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+				collectionIDs: [],
+				productIDs: ["gid://shopify/ProductVariant/45807212593393"],
+				usageLimit: Number(newRule?.totalLimitValue),
+				appliesOncePerCustomer: newRule?.onePerCustomer,
+			},
+			callback(success) {
+				if (success) {
+					handleAddRule();
+					shopify.saveBar.hide('save-bar');
+					navigate('/app/manage-discount');
+				}
+			},
+		}))
+	};
+
 	return (
 		<Layout>
 			<Layout.Section>
@@ -237,6 +281,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					activeButtonIndex={activeButtonIndex}
 					handleButtonClick={handleButtonClick}
 					queryType={queryType}
+					handleSaveBarOpen={handleSaveBarOpen}
 				/>
 				<br />
 				{['buyXgetY'].includes(queryType as string) ? (
@@ -289,6 +334,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					<button onClick={handleClose}>Cancel</button>
 				</TitleBar>
 			</Modal>
+			<SaveBar id="save-bar">
+				<button variant="primary" onClick={handleSave}></button>
+				<button onClick={handleDiscard}></button>
+			</SaveBar>
 		</Layout>
 	);
 };
