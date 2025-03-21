@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createDiscountCode, deleteDiscountCode, fetchAllDiscountCodes } from "app/service/discount";
+import { createBuyXGetYDiscountCode, createDiscountCode, deleteDiscountCode, fetchAllDiscountCodes } from "app/service/discount";
 
 interface DiscountCode {
 	id: number;
@@ -66,6 +66,27 @@ interface CreateDiscountCodeParams {
 		productIDs: string[];
 		collectionIDs: string[];
 	}
+	shopName: string;
+	callback?: (success: boolean) => void;
+}
+
+interface CreateBuyXGetYDiscountCodeParams {
+	data: {
+		title: string;
+		percentage: number;
+		code: string;
+		startsAt: string;
+		endsAt: string;
+		usesPerOrderLimit: number;
+		customerBuys: {
+			quantity: string;
+			collectionIDs: string[];
+		};
+		customerGets: {
+			quantity: string;
+			collectionIDs: string[];
+		};
+	},
 	shopName: string;
 	callback?: (success: boolean) => void;
 }
@@ -139,6 +160,34 @@ export const createDiscountCodeAsync = createAsyncThunk<
 	async (params, { rejectWithValue, fulfillWithValue }) => {
 		try {
 			const response = await createDiscountCode(params);
+			if (response.data) {
+				const { success, message } = response.data;
+				if (message) {
+					shopify.toast.show(message);
+				}
+				if (success && params.callback) {
+					params.callback(success);
+				}
+				return fulfillWithValue({ success, message });
+			}
+			return fulfillWithValue({ success: false, message: '' });
+		}	catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	}
+);
+
+export const createBuyXGetYDiscountCodeAsync = createAsyncThunk<
+	ReturnValue,
+	CreateBuyXGetYDiscountCodeParams
+>(
+	"discount/createBuyXGetYDiscountCode",
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await createBuyXGetYDiscountCode(params);
 			if (response.data) {
 				const { success, message } = response.data;
 				if (message) {

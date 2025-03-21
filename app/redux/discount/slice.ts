@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createDiscountCodeAsync, deleteDiscountCodeAsync, fetchAllDiscountCodesAsync } from './index';
+import { createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync, deleteDiscountCodeAsync, fetchAllDiscountCodesAsync } from './index';
 
 interface Pagination {
 	totalCount: number;
@@ -24,6 +24,7 @@ interface discountState {
 	isLoading: boolean;
 	isDeleteDiscountCode: boolean;
 	isCreateDiscountCode: boolean;
+	isBuyXGetYCreateDiscountCode: boolean;
 	pagination: Pagination;
 	discountStats: {
 		activeDiscount: { count: number; data: number[]; },
@@ -46,7 +47,8 @@ const initialState: discountState = {
 		expiredDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
 	},
 	isDeleteDiscountCode: false,
-	isCreateDiscountCode: false
+	isCreateDiscountCode: false,
+	isBuyXGetYCreateDiscountCode: false
 };
 
 const discountSlice = createSlice({
@@ -94,6 +96,15 @@ const discountSlice = createSlice({
 		});
 		builder.addCase(createDiscountCodeAsync.rejected, (state) => {
 			state.isCreateDiscountCode = false;
+		});
+		builder.addCase(createBuyXGetYDiscountCodeAsync.pending, (state) => {
+			state.isBuyXGetYCreateDiscountCode = true;
+		});
+		builder.addCase(createBuyXGetYDiscountCodeAsync.fulfilled, (state) => {
+			state.isBuyXGetYCreateDiscountCode = false;
+		});
+		builder.addCase(createBuyXGetYDiscountCodeAsync.rejected, (state) => {
+			state.isBuyXGetYCreateDiscountCode = false;
 		});
 	},
 });

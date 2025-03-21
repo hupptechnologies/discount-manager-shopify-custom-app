@@ -35,6 +35,26 @@ interface CreateDiscountCodeParams {
 	shopName: string;
 }
 
+interface CreateBuyXGetYDiscountCodeParams {
+	data: {
+		title: string;
+		percentage: number;
+		code: string;
+		startsAt: string;
+		endsAt: string;
+		usesPerOrderLimit: number;
+		customerBuys: {
+			quantity: string;
+			collectionIDs: string[];
+		};
+		customerGets: {
+			quantity: string;
+			collectionIDs: string[];
+		};
+	},
+	shopName: string;
+}
+
 export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { page = 1, pageSize = 10, shopName, status, searchQuery = '', usedCountGreaterThan, orderByCode } = params;
@@ -72,4 +92,10 @@ export const createDiscountCode = (params: CreateDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, data } = params;
 	return requestInstance.post(`discount?shop=${shopName}`, data);
+};
+
+export const createBuyXGetYDiscountCode = (params: CreateBuyXGetYDiscountCodeParams) => {
+	const requestInstance: AxiosInstance = backendAPI();
+	const { shopName, data } = params;
+	return requestInstance.post(`discount?shop=${shopName}&type=buyxgety`, data);
 };

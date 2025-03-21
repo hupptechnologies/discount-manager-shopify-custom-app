@@ -3,7 +3,7 @@ import { Modal, SaveBar, TitleBar, useAppBridge } from '@shopify/app-bridge-reac
 import { Layout } from '@shopify/polaris';
 import pkg from 'lodash';
 import { useDispatch } from 'react-redux';
-import { createDiscountCodeAsync } from 'app/redux/discount';
+import { createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync } from 'app/redux/discount';
 import { AppDispatch } from 'app/redux/store';
 import { useNavigate } from '@remix-run/react';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
@@ -258,6 +258,35 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleSubmit = () => {
+		if (queryType === 'buyXgetY') {
+			dispatch(createBuyXGetYDiscountCodeAsync({
+				shopName: shopify.config.shop || '',
+				data: {
+					title: newRule?.title,
+					code: newRule?.discount,
+					percentage: Number(newRule?.discount),
+					startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
+					endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+					usesPerOrderLimit: Number(newRule?.totalLimitValue),
+					customerBuys: {
+						quantity: newRule?.minBuyQuantity,
+						collectionIDs: ["gid://shopify/Collection/446505353457"]
+					},
+					customerGets: {
+						quantity: newRule?.minGetQuantity,
+						collectionIDs: ["gid://shopify/Collection/444497264881"]
+					}
+				},
+				callback(success) {
+					if (success) {
+						handleAddRule();
+						shopify.saveBar.hide('save-bar');
+						navigate('/app/manage-discount');
+					}
+				},
+			}))
+			return;
+		}
 		dispatch(createDiscountCodeAsync({
 			shopName: shopify.config.shop || '',
 			data: {
