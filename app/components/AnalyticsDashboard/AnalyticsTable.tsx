@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Modal, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
+import { useNavigate } from '@remix-run/react';
 import pkg from 'lodash';
 import {
 	IndexTable,
@@ -29,6 +30,7 @@ import { formatDateWithTime } from 'app/utils/json';
 const AnalyticsTable = () => {
 	const { debounce } = pkg;
 	const { mode, setMode } = useSetIndexFiltersMode();
+	const navigate = useNavigate();
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
 	const { discountCodes, isLoading, pagination: { totalPages, totalCount }, isDeleteDiscountCode } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
@@ -136,6 +138,11 @@ const AnalyticsTable = () => {
 		handleClose();
 	};
 
+	const handleEdit = (e: React.MouseEvent<HTMLElement>): void => {
+		e.stopPropagation();
+		navigate('/app/update-discount?type=product');
+	};
+
 	const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(discountCodes as any[]);
 
 	const rowMarkup = discountCodes?.length > 0 && discountCodes.map(
@@ -178,7 +185,7 @@ const AnalyticsTable = () => {
 				<IndexTable.Cell>
 					<ButtonGroup noWrap gap='tight'>
 						<Tooltip content="Edit discount" dismissOnMouseOut>
-							<Button variant='secondary' icon={EditIcon} tone='success'></Button>
+							<Button onClick={(e) => handleEdit(e)} variant='secondary' icon={EditIcon} tone='success'></Button>
 						</Tooltip>
 						<Tooltip content="Delete discount" dismissOnMouseOut>
 							<Button onClick={(e) => handleOpen(e, { id, code, discountId })} variant='secondary' icon={DeleteIcon} tone='critical'></Button>
