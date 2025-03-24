@@ -1,11 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from '@remix-run/react';
 import { Modal, SaveBar, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
 import { Layout } from '@shopify/polaris';
 import pkg from 'lodash';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync } from 'app/redux/discount';
-import { AppDispatch } from 'app/redux/store';
-import { useNavigate } from '@remix-run/react';
+import { AppDispatch, RootState } from 'app/redux/store';
+import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
 import DiscountCodeGen from './DiscountCodeGen';
 import DiscountValue from './DiscountValue';
@@ -79,6 +80,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const { debounce } = pkg;
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
+	const { getDiscountCode } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
 	const navigate = useNavigate();
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
@@ -134,6 +136,20 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		collectionIDs: [],
 		productIDs: []
 	});
+
+	useEffect(() => {
+		if (getDiscountCode?.length > 0) {
+			setNewRule({
+				...newRule,
+				title: getDiscountCode[0]?.codeDiscount?.title || '',
+				checkoutDiscountCode: getDiscountCode[0]?.codeDiscount?.codes?.edges[0].node?.code || '',
+				discount: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage * 100,
+				totalUsageLimit: true,
+				totalLimitValue: getDiscountCode[0]?.codeDiscount?.usageLimit,
+				onePerCustomer:  getDiscountCode[0]?.codeDiscount?.appliesOncePerCustomer
+			})
+		}
+	}, [getDiscountCode]);
 
 	const handleSearchTypeChange = (type: string) => {
 		setNewRule((prev) => ({ ...prev, searchType: type }));

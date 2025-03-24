@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createBuyXGetYDiscountCode, createDiscountCode, deleteDiscountCode, fetchAllDiscountCodes } from "app/service/discount";
+import { createBuyXGetYDiscountCode, createDiscountCode, deleteDiscountCode, fetchAllDiscountCodes, getDiscountCodeById } from "app/service/discount";
 
 interface DiscountCode {
 	id: number;
@@ -88,6 +88,18 @@ interface CreateBuyXGetYDiscountCodeParams {
 		};
 	},
 	shopName: string;
+	callback?: (success: boolean) => void;
+}
+
+interface GetDiscountCodeByIdReturnValue {
+	success: boolean;
+	message: string;
+	discountCode: string[];
+}
+
+interface GetDiscountCodeByIdParams {
+	shopName: string;
+	id: number;
 	callback?: (success: boolean) => void;
 }
 
@@ -199,6 +211,31 @@ export const createBuyXGetYDiscountCodeAsync = createAsyncThunk<
 				return fulfillWithValue({ success, message });
 			}
 			return fulfillWithValue({ success: false, message: '' });
+		}	catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	}
+);
+
+export const getDiscountCodeByIdAsync = createAsyncThunk<
+	GetDiscountCodeByIdReturnValue,
+	GetDiscountCodeByIdParams
+>(
+	"discount/getDiscountCodeById",
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await getDiscountCodeById(params);
+			if (response.data) {
+				const { success, discountCode, message } = response.data;
+				if (success && params.callback) {
+					params.callback(success);
+				}
+				return fulfillWithValue({ success, discountCode, message });
+			}
+			return fulfillWithValue({ success: false, discountCode: null, message: '' });
 		}	catch (err: any) {
 			const error = err as AxiosError;
 			// eslint-disable-next-line no-console

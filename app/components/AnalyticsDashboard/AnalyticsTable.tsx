@@ -24,10 +24,13 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
-import { deleteDiscountCodeAsync, fetchAllDiscountCodesAsync } from 'app/redux/discount';
+import { deleteDiscountCodeAsync, fetchAllDiscountCodesAsync, getDiscountCodeByIdAsync } from 'app/redux/discount';
 import { formatDateWithTime } from 'app/utils/json';
 
-const AnalyticsTable = () => {
+interface AnalyticsTableProps {
+	setIsLoadingUpdate: any;
+}
+const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) => {
 	const { debounce } = pkg;
 	const { mode, setMode } = useSetIndexFiltersMode();
 	const navigate = useNavigate();
@@ -138,9 +141,19 @@ const AnalyticsTable = () => {
 		handleClose();
 	};
 
-	const handleEdit = (e: React.MouseEvent<HTMLElement>): void => {
+	const handleEdit = (e: React.MouseEvent<HTMLElement>, id: number, type: string): void => {
 		e.stopPropagation();
-		navigate('/app/update-discount?type=product');
+		setIsLoadingUpdate(true);
+		dispatch(getDiscountCodeByIdAsync({
+			shopName: shopify.config.shop || '',
+			id: id,
+			callback(success) {
+				if (success) {
+					setIsLoadingUpdate(false);
+					navigate(`/app/update-discount?type=${type}`);
+				}
+			},
+		}))
 	};
 
 	const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(discountCodes as any[]);
@@ -185,10 +198,10 @@ const AnalyticsTable = () => {
 				<IndexTable.Cell>
 					<ButtonGroup noWrap gap='tight'>
 						<Tooltip content="Edit discount" dismissOnMouseOut>
-							<Button onClick={(e) => handleEdit(e)} variant='secondary' icon={EditIcon} tone='success'></Button>
+							<Button onClick={(e: any) => handleEdit(e, parseInt(discountId.split('/').pop() as string), 'product')} variant='secondary' icon={EditIcon} tone='success'></Button>
 						</Tooltip>
 						<Tooltip content="Delete discount" dismissOnMouseOut>
-							<Button onClick={(e) => handleOpen(e, { id, code, discountId })} variant='secondary' icon={DeleteIcon} tone='critical'></Button>
+							<Button onClick={(e: any) => handleOpen(e, { id, code, discountId })} variant='secondary' icon={DeleteIcon} tone='critical'></Button>
 						</Tooltip>
 					</ButtonGroup>
 				</IndexTable.Cell>

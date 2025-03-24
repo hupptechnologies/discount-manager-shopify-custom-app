@@ -55,6 +55,11 @@ interface CreateBuyXGetYDiscountCodeParams {
 	shopName: string;
 }
 
+interface GetDiscountCodeByIdParams {
+	shopName: string;
+	id: number;
+}
+
 export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { page = 1, pageSize = 10, shopName, status, searchQuery = '', usedCountGreaterThan, orderByCode } = params;
@@ -98,4 +103,10 @@ export const createBuyXGetYDiscountCode = (params: CreateBuyXGetYDiscountCodePar
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, data } = params;
 	return requestInstance.post(`discount?shop=${shopName}&type=buyxgety`, data);
+};
+
+export const getDiscountCodeById = (params: GetDiscountCodeByIdParams) => {
+	const requestInstance: AxiosInstance = backendAPI();
+	const { shopName, id } = params;
+	return requestInstance.get(`discount?shop=${shopName}&id=${id}`);
 };

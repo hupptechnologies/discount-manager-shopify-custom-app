@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync, deleteDiscountCodeAsync, fetchAllDiscountCodesAsync } from './index';
+import { createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync, deleteDiscountCodeAsync, fetchAllDiscountCodesAsync, getDiscountCodeByIdAsync } from './index';
 
 interface Pagination {
 	totalCount: number;
@@ -25,12 +25,14 @@ interface discountState {
 	isDeleteDiscountCode: boolean;
 	isCreateDiscountCode: boolean;
 	isBuyXGetYCreateDiscountCode: boolean;
+	isGetDiscountCodeById: boolean;
 	pagination: Pagination;
 	discountStats: {
 		activeDiscount: { count: number; data: number[]; },
 		usedDiscount: { count: number; data: number[]; },
 		expiredDiscount: { count: number; data: number[]; },
 	};
+	getDiscountCode : string[];
 }
 
 const initialState: discountState = {
@@ -48,7 +50,9 @@ const initialState: discountState = {
 	},
 	isDeleteDiscountCode: false,
 	isCreateDiscountCode: false,
-	isBuyXGetYCreateDiscountCode: false
+	isBuyXGetYCreateDiscountCode: false,
+	isGetDiscountCodeById: false,
+	getDiscountCode: []
 };
 
 const discountSlice = createSlice({
@@ -105,6 +109,17 @@ const discountSlice = createSlice({
 		});
 		builder.addCase(createBuyXGetYDiscountCodeAsync.rejected, (state) => {
 			state.isBuyXGetYCreateDiscountCode = false;
+		});
+		builder.addCase(getDiscountCodeByIdAsync.pending, (state) => {
+			state.isGetDiscountCodeById = true;
+		});
+		builder.addCase(getDiscountCodeByIdAsync.fulfilled, (state, { payload }) => {
+			state.isGetDiscountCodeById = false;
+			state.getDiscountCode = payload.discountCode;
+		});
+		builder.addCase(getDiscountCodeByIdAsync.rejected, (state) => {
+			state.isGetDiscountCodeById = false;
+			state.getDiscountCode = [];
 		});
 	},
 });
