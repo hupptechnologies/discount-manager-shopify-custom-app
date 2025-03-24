@@ -2,12 +2,19 @@ import { json } from '@remix-run/node';
 import { createBuyXGetYDiscountCode } from 'app/controller/discounts/createBuyxGetyDiscountCode';
 import { createDiscountCode } from 'app/controller/discounts/createDicountCode';
 import { deleteDiscountCode } from 'app/controller/discounts/deleteDiscountCode';
+import { getDiscountCodeById } from 'app/controller/discounts/getDiscountCodeById';
 import { getDiscountCodes } from 'app/controller/discounts/getDiscountCodes';
 import { updateBasicDiscountCode } from 'app/controller/discounts/updateBasicDiscountCode';
 import { updateBuyXGetYDiscountCode } from 'app/controller/discounts/updateBuyxGetyDiscountCode';
 
 interface ActionResponse {
 	success: boolean;
+	message: string;
+}
+
+interface getDiscountCodeResponse {
+	success: boolean;
+	discountCode: object | null;
 	message: string;
 }
 
@@ -40,6 +47,12 @@ export const loader = async ({
 	);
 	const searchQuery = url.searchParams.get('searchQuery') ?? '';
 	const orderByCode = url.searchParams.get('orderByCode') as | 'asc' | 'desc';
+	const id = Number(url.searchParams.get('id'));
+
+	if (id) {
+		const getDiscountCodeResponse = await getDiscountCodeById(id, shop); 
+		return json<getDiscountCodeResponse>(getDiscountCodeResponse);
+	}
 
 	const fetchDiscountCodes = await getDiscountCodes(
 		shop,
