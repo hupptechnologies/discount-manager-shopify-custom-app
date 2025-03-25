@@ -103,7 +103,7 @@ export const createDiscountCode = (params: CreateDiscountCodeParams) => {
 
 export const createBuyXGetYDiscountCode = (params: CreateBuyXGetYDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { shopName, data, type = 'buyxgety' } = params;
+	const { shopName, data, type = 'buyXgetY' } = params;
 	return requestInstance.post(`discount?shop=${shopName}&type=${type}`, data);
 };
 

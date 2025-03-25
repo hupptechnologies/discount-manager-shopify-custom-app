@@ -30,6 +30,7 @@ interface DiscountValueProps {
 		searchOne: string;
 	};
 	editObj: EditObj;
+	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
 }
 
 const DiscountValue: React.FC<DiscountValueProps> = ({
@@ -38,6 +39,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 	setNewRule,
 	handleOpen,
 	handleSearchChange,
+	queryType
 }) => {
 	return (
 		<Card>
@@ -103,20 +105,22 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							}
 						/>
 					</FormLayout.Group>
-					<FormLayout.Group>
-						<TextField
-							label=""
-							value={newRule.searchOne}
-							onChange={handleSearchChange}
-							autoComplete="off"
-							prefix={<Icon source={SearchIcon} />}
-							placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
-						/>
-						<Button onClick={() => handleOpen('none', newRule.appliesTo)} variant="secondary">
-							Browse
-						</Button>
-					</FormLayout.Group>
-					{editObj?.isEdit &&
+					{queryType === 'products' &&
+						<FormLayout.Group>
+							<TextField
+								label=""
+								value={newRule.searchOne}
+								onChange={handleSearchChange}
+								autoComplete="off"
+								prefix={<Icon source={SearchIcon} />}
+								placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
+							/>
+							<Button onClick={() => handleOpen('none', newRule.appliesTo)} variant="secondary">
+								Browse
+							</Button>
+						</FormLayout.Group>
+					}
+					{editObj?.isEdit && queryType === 'products' &&
 						<FormLayout.Group>
 							<EditItemsList editObj={editObj} />
 						</FormLayout.Group>

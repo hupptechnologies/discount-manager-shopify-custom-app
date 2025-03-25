@@ -289,7 +289,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				shopName: shopify.config.shop || '',
 				data: {
 					title: newRule?.title,
-					code: newRule?.discount,
+					code: newRule?.checkoutDiscountCode,
 					percentage: Number(newRule?.discount),
 					startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
 					endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
@@ -372,6 +372,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						setNewRule={setNewRule}
 						handleSearchChange={handleSearchOneChange}
 						editObj={editObj}
+						queryType={queryType}
 					/>
 				)}
 				<br />

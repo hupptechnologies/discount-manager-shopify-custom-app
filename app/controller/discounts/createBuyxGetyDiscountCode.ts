@@ -234,7 +234,7 @@ export const createBuyXGetYDiscountCode = async (
 					discountType: 'PERCENT',
 					isActive: true,
 					discountScope: type.toUpperCase()
-				},
+				}
 			});
 			return { success: true, message: 'Discount code created successfully' };
 		}

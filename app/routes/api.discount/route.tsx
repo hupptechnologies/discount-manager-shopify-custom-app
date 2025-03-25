@@ -81,7 +81,7 @@ export const action = async ({
 		if (!id) {
 			return json<ActionResponse>({ success: false, message: 'Id is required for update code' });
 		}
-		if (type === 'buyxgety') {
+		if (type === 'buyXgetY') {
 			const buyXGetYResponse = await updateBuyXGetYDiscountCode(shop, request, id);
 			return json<ActionResponse>(buyXGetYResponse);
 		}
@@ -93,7 +93,7 @@ export const action = async ({
 		return json<ActionResponse>(discountCodeResponse);
 	}
 	if (request.method === 'POST') {
-		if (type === 'buyxgety') {
+		if (type === 'buyXgetY') {
 			const buyXGetYResponse = await createBuyXGetYDiscountCode(shop, request, type);
 			return json<ActionResponse>(buyXGetYResponse);
 		}
