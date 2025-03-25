@@ -1,8 +1,9 @@
 import { AxiosError } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createBuyXGetYDiscountCode, createDiscountCode, deleteDiscountCode, fetchAllDiscountCodes, getDiscountCodeById } from "app/service/discount";
+import { GetDiscountCodeList } from "./slice";
 
-interface DiscountCode {
+export interface DiscountCode {
 	id: number;
 	discountId: string;
 	code: string;
@@ -12,6 +13,7 @@ interface DiscountCode {
 	startDate: string;
 	endDate: string;
 	createdAt: string;
+	discountScope: string;
 }
 
 interface FetchAllDiscountCodeReturnValue {
@@ -96,7 +98,8 @@ interface CreateBuyXGetYDiscountCodeParams {
 interface GetDiscountCodeByIdReturnValue {
 	success: boolean;
 	message: string;
-	discountCode: string[];
+	discountCode: GetDiscountCodeList[];
+	discountScope: string;
 }
 
 interface GetDiscountCodeByIdParams {
@@ -231,13 +234,13 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 		try {
 			const response = await getDiscountCodeById(params);
 			if (response.data) {
-				const { success, discountCode, message } = response.data;
+				const { success, discountCode, message, discountScope } = response.data;
 				if (success && params.callback) {
 					params.callback(success);
 				}
-				return fulfillWithValue({ success, discountCode, message });
+				return fulfillWithValue({ success, discountCode, message, discountScope });
 			}
-			return fulfillWithValue({ success: false, discountCode: null, message: '' });
+			return fulfillWithValue({ success: false, discountCode: null, message: '', discountScope: '' });
 		}	catch (err: any) {
 			const error = err as AxiosError;
 			// eslint-disable-next-line no-console

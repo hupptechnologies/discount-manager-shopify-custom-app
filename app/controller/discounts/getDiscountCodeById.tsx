@@ -1,3 +1,4 @@
+import { getDiscountCodeResponse } from 'app/routes/api.discount/route';
 import prisma from '../../db.server';
 import { getDetailUsingGraphQL } from "app/service/product";
 
@@ -33,6 +34,18 @@ query getDiscountCode($query: String!) {
 										node {
 											title
 											id
+											product {
+												variantsCount {
+													count
+												}
+												featuredMedia {
+													preview {
+														image {
+															url
+														}
+													}
+												}
+											}
 										}
 									}
 								}
@@ -76,14 +89,26 @@ interface DiscountQueryResponse {
 										node: {
 											id: string;
 											title: string;
-										};
-									}[];
-								};
-								products: {
-									edges: {
-										node: {
-											id: string;
-											title: string;
+											products: {
+												edges: {
+													node: {
+														id: string;
+														title: string;
+														product: {
+															variantsCount: {
+																count: number | null;
+															}
+															featuredMedia: {
+																preview: {
+																	image: {
+																		url: string;
+																	}
+																}
+															}
+														};
+													};
+												}[];
+											};
 										};
 									}[];
 								};
@@ -98,11 +123,7 @@ interface DiscountQueryResponse {
 	}
 }
 
-export const getDiscountCodeById = async (id: number, shop: string): Promise<{
-	success: boolean;
-	message: string;
-	discountCode: object | null;
-}> => {
+export const getDiscountCodeById = async (id: number, shop: string): Promise<getDiscountCodeResponse> => {
 	try {
 		const response = await prisma.session.findMany({
 			where: { shop },
@@ -120,14 +141,21 @@ export const getDiscountCodeById = async (id: number, shop: string): Promise<{
 			}
 		}
 		const getDiscountCodeByIdFromShopify: DiscountQueryResponse = await getDetailUsingGraphQL(shop, accessToken, data);
+
+		const getCodeObj = await prisma.discountCode.findFirst({
+			where: {
+				shop,
+				discountId: `gid://shopify/DiscountCodeNode/${id}`
+			}
+		})
 		const discountCode = getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNodes || null;
 		if (getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNodes?.nodes) {
-			return { success: true, discountCode: discountCode?.nodes, message: 'Fetch discount code successfuly' };
+			return { success: true, discountCode: discountCode?.nodes, discountScope: getCodeObj?.discountScope || '', message: 'Fetch discount code successfuly' };
 		}
 
-		return { success: false, message: 'Record not found!', discountCode: null, };
+		return { success: false, message: 'Record not found!', discountCode: null, discountScope: '' };
 	} catch (error) {
 		console.log(error, 'Error fetching dicount code details using an discount id');
-		return { success: false, discountCode: [], message: 'Something went wrong' };
+		return { success: false, discountCode: [], message: 'Something went wrong', discountScope: ''  };
 	}
 };

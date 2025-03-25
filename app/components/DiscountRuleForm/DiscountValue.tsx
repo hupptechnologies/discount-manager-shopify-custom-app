@@ -9,6 +9,14 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
+import { ItemsList } from 'app/redux/discount/slice';
+import EditItemsList from './EditItemsList';
+
+export interface EditObj {
+	type: 'product' | 'collection';
+	isEdit: boolean;
+	items: ItemsList[];
+}
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -21,9 +29,11 @@ interface DiscountValueProps {
 		purchaseType: 'one-time' | 'subscription' | 'both';
 		searchOne: string;
 	};
+	editObj: EditObj;
 }
 
 const DiscountValue: React.FC<DiscountValueProps> = ({
+	editObj,
 	newRule,
 	setNewRule,
 	handleOpen,
@@ -106,6 +116,11 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							Browse
 						</Button>
 					</FormLayout.Group>
+					{editObj?.isEdit &&
+						<FormLayout.Group>
+							<EditItemsList editObj={editObj} />
+						</FormLayout.Group>
+					}
 				</FormLayout>
 			</BlockStack>
 		</Card>

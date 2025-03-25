@@ -6,7 +6,7 @@ import pkg from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync } from 'app/redux/discount';
 import { AppDispatch, RootState } from 'app/redux/store';
-import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
+import { ItemsList, getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
 import DiscountCodeGen from './DiscountCodeGen';
 import DiscountValue from './DiscountValue';
@@ -80,11 +80,16 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const { debounce } = pkg;
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { getDiscountCode } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
+	const { getDiscountCode, discountScope } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
 	const navigate = useNavigate();
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
 	const [selected, setSelected] = useState<number>(0);
+	const [editObj, setEditObj] = useState<{ type: 'product' | 'collection'; isEdit: boolean; items: ItemsList[]; }>({
+		type: 'product',
+		isEdit: false,
+		items: []
+	});
 	const [newRule, setNewRule] = useState<DiscountRule>({
 		selectedDiscountType: queryType,
 		selectedMethod: 'code',
@@ -139,17 +144,22 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 
 	useEffect(() => {
 		if (getDiscountCode?.length > 0) {
+			setEditObj({
+				type: ['PRODUCT'].includes(discountScope) ? 'product' : 'collection',
+				isEdit: true,
+				items: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges || []
+			});
 			setNewRule({
 				...newRule,
 				title: getDiscountCode[0]?.codeDiscount?.title || '',
 				checkoutDiscountCode: getDiscountCode[0]?.codeDiscount?.codes?.edges[0].node?.code || '',
-				discount: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage * 100,
+				discount: String(getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage * 100),
 				totalUsageLimit: true,
 				totalLimitValue: getDiscountCode[0]?.codeDiscount?.usageLimit,
 				onePerCustomer:  getDiscountCode[0]?.codeDiscount?.appliesOncePerCustomer
 			})
 		}
-	}, [getDiscountCode]);
+	}, [getDiscountCode, discountScope]);
 
 	const handleSearchTypeChange = (type: string) => {
 		setNewRule((prev) => ({ ...prev, searchType: type }));
@@ -361,6 +371,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						newRule={newRule}
 						setNewRule={setNewRule}
 						handleSearchChange={handleSearchOneChange}
+						editObj={editObj}
 					/>
 				)}
 				<br />

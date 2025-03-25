@@ -12,9 +12,10 @@ interface ActionResponse {
 	message: string;
 }
 
-interface getDiscountCodeResponse {
+export interface getDiscountCodeResponse {
 	success: boolean;
 	discountCode: object | null;
+	discountScope: string  | null;
 	message: string;
 }
 

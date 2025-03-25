@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync, deleteDiscountCodeAsync, fetchAllDiscountCodesAsync, getDiscountCodeByIdAsync } from './index';
+import { DiscountCode, createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync, deleteDiscountCodeAsync, fetchAllDiscountCodesAsync, getDiscountCodeByIdAsync } from './index';
 
 interface Pagination {
 	totalCount: number;
@@ -7,16 +7,50 @@ interface Pagination {
 	currentPage: number;
 }
 
-interface DiscountCode {
-	id: number;
-	discountId: string;
-	code: string;
-	discountAmount: number;
-	usageLimit: number;
-	isActive: boolean;
-	startDate: string;
-	endDate: string;
-	createdAt: string;
+export interface nodeList {
+	node: {
+		code: string;
+	}
+}
+
+export interface ItemsList {
+	node: {
+		title: string;
+		id: string;
+		product: {
+			variantsCount: {
+				count: number;
+			};
+			featuredMedia: {
+				preview: {
+					image: {
+						url: string;
+					}
+				}
+			}
+		}
+	}
+}
+
+export interface GetDiscountCodeList {
+	codeDiscount: {
+		title: string;
+		usageLimit: string;
+		appliesOncePerCustomer: boolean;
+		codes: {
+			edges: nodeList[];
+		}
+		customerGets: {
+			value: {
+				percentage: number;
+			};
+			items: {
+				productVariants: {
+					edges: ItemsList[];
+				}
+			};
+		}
+	}
 }
 
 interface discountState {
@@ -32,7 +66,8 @@ interface discountState {
 		usedDiscount: { count: number; data: number[]; },
 		expiredDiscount: { count: number; data: number[]; },
 	};
-	getDiscountCode : string[];
+	getDiscountCode : GetDiscountCodeList[];
+	discountScope: string;
 }
 
 const initialState: discountState = {
@@ -52,7 +87,8 @@ const initialState: discountState = {
 	isCreateDiscountCode: false,
 	isBuyXGetYCreateDiscountCode: false,
 	isGetDiscountCodeById: false,
-	getDiscountCode: []
+	getDiscountCode: [],
+	discountScope: ''
 };
 
 const discountSlice = createSlice({
@@ -116,10 +152,12 @@ const discountSlice = createSlice({
 		builder.addCase(getDiscountCodeByIdAsync.fulfilled, (state, { payload }) => {
 			state.isGetDiscountCodeById = false;
 			state.getDiscountCode = payload.discountCode;
+			state.discountScope = payload.discountScope;
 		});
 		builder.addCase(getDiscountCodeByIdAsync.rejected, (state) => {
 			state.isGetDiscountCodeById = false;
 			state.getDiscountCode = [];
+			state.discountScope = '';
 		});
 	},
 });

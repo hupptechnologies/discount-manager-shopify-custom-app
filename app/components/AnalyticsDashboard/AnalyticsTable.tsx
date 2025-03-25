@@ -109,7 +109,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 		plural: 'discountCodes',
 	};
 
-	const handleOpen = (e: React.MouseEvent<HTMLElement>, data: any): void => {
+	const handleOpen = (e: any, data: any): void => {
 		e.stopPropagation();
 		setDeleteData(data);
 		shopify.modal.show('delete-comfirmation-modal');
@@ -150,7 +150,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 			callback(success) {
 				if (success) {
 					setIsLoadingUpdate(false);
-					navigate(`/app/update-discount?type=${type}`);
+					navigate(`/app/update-discount?type=${type.toLowerCase()}`);
 				}
 			},
 		}))
@@ -160,7 +160,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 
 	const rowMarkup = discountCodes?.length > 0 && discountCodes.map(
 		(
-			{ id, code, discountId, discountAmount, usageLimit, isActive, startDate, endDate, createdAt },
+			{ id, code, discountId, discountAmount, usageLimit, isActive, startDate, endDate, createdAt, discountScope },
 			index,
 		) => (
 			<IndexTable.Row
@@ -175,7 +175,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 					</Text>
 				</IndexTable.Cell>
 				<IndexTable.Cell>{discountAmount}</IndexTable.Cell>
-				<IndexTable.Cell>Summer Collection</IndexTable.Cell>
+				<IndexTable.Cell>{discountScope}</IndexTable.Cell>
 				<IndexTable.Cell>
 					<Text as="span" alignment="start">
 						{usageLimit}
@@ -198,7 +198,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 				<IndexTable.Cell>
 					<ButtonGroup noWrap gap='tight'>
 						<Tooltip content="Edit discount" dismissOnMouseOut>
-							<Button onClick={(e: any) => handleEdit(e, parseInt(discountId.split('/').pop() as string), 'product')} variant='secondary' icon={EditIcon} tone='success'></Button>
+							<Button onClick={(e: any) => handleEdit(e, parseInt(discountId.split('/').pop() as string), discountScope)} variant='secondary' icon={EditIcon} tone='success'></Button>
 						</Tooltip>
 						<Tooltip content="Delete discount" dismissOnMouseOut>
 							<Button onClick={(e: any) => handleOpen(e, { id, code, discountId })} variant='secondary' icon={DeleteIcon} tone='critical'></Button>
@@ -248,7 +248,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 				headings={[
 					{ title: 'Discount Code' },
 					{ title: 'Discount Percentage' },
-					{ title: 'Applicable Products' },
+					{ title: 'Applicable Scope' },
 					{ title: 'Usage Limit' },
 					{ title: 'Status' },
 					{ title: 'Start Date' },
