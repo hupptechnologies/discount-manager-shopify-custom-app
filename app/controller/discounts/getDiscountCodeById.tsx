@@ -1,6 +1,6 @@
-import { getDiscountCodeResponse } from 'app/routes/api.discount/route';
+import type { getDiscountCodeResponse } from 'app/routes/api.discount/route';
 import prisma from '../../db.server';
-import { getDetailUsingGraphQL } from "app/service/product";
+import { getDetailUsingGraphQL } from 'app/service/product';
 
 const GET_BASIC_DISCOUNT_CODE_QUERY = `
 query getDiscountCode($ID: ID!) {
@@ -165,7 +165,7 @@ interface DiscountCodeBxgy {
 						};
 						image: {
 							url: string;
-						}
+						};
 					};
 				}[];
 			};
@@ -182,17 +182,17 @@ interface DiscountCodeBxgy {
 		};
 		items: {
 			collections: {
-			edges: {
-				node: {
-					title: string;
-					productsCount: {
-						count: number;
+				edges: {
+					node: {
+						title: string;
+						productsCount: {
+							count: number;
+						};
+						image: {
+							url: string;
+						};
 					};
-					image: {
-						url: string;
-					}
-				};
-			}[];
+				}[];
 			};
 		}[];
 	};
@@ -226,14 +226,14 @@ interface DiscountCodeBasic {
 						product: {
 							variantsCount: {
 								count: number | null;
-							}
+							};
 							featuredMedia: {
 								preview: {
 									image: {
 										url: string;
-									}
-								}
-							}
+									};
+								};
+							};
 						};
 					};
 				}[];
@@ -251,11 +251,15 @@ interface BasicDiscountQueryResponse {
 				id: string;
 				codeDiscount: DiscountCodeBasic | DiscountCodeBxgy;
 			};
-		}
-	}
+		};
+	};
 }
 
-export const getDiscountCodeById = async (id: number, shop: string, discountType: string): Promise<getDiscountCodeResponse> => {
+export const getDiscountCodeById = async (
+	id: number,
+	shop: string,
+	discountType: string,
+): Promise<getDiscountCodeResponse> => {
 	try {
 		const response = await prisma.session.findMany({
 			where: { shop },
@@ -265,29 +269,53 @@ export const getDiscountCodeById = async (id: number, shop: string, discountType
 		if (!accessToken) {
 			throw new Error('Access token not found');
 		}
-		
+
 		const data = {
-			query: discountType === 'PRODUCT' ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_BUYXGETY_DISCOUNT_CODE_QUERY,
+			query:
+				discountType === 'PRODUCT'
+					? GET_BASIC_DISCOUNT_CODE_QUERY
+					: GET_BUYXGETY_DISCOUNT_CODE_QUERY,
 			variables: {
-				ID: `gid://shopify/DiscountCodeNode/${id}`
-			}
-		}
-		const getDiscountCodeByIdFromShopify: BasicDiscountQueryResponse = await getDetailUsingGraphQL(shop, accessToken, data);
-		
+				ID: `gid://shopify/DiscountCodeNode/${id}`,
+			},
+		};
+		const getDiscountCodeByIdFromShopify: BasicDiscountQueryResponse =
+			await getDetailUsingGraphQL(shop, accessToken, data);
+
 		const getCodeObj = await prisma.discountCode.findFirst({
 			where: {
 				shop,
-				discountId: `gid://shopify/DiscountCodeNode/${id}`
-			}
-		})
-		const discountCode = getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode || null;
+				discountId: `gid://shopify/DiscountCodeNode/${id}`,
+			},
+		});
+		const discountCode =
+			getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode || null;
 		if (getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode) {
-			return { success: true, discountCode: [discountCode], discountScope: getCodeObj?.discountScope || '', message: 'Fetch discount code successfuly' };
+			return {
+				success: true,
+				discountCode: [discountCode],
+				discountScope: getCodeObj?.discountScope || '',
+				message: 'Fetch discount code successfuly',
+			};
 		}
 
-		return { success: false, message: 'Record not found!', discountCode: null, discountScope: '' };
+		return {
+			success: false,
+			message: 'Record not found!',
+			discountCode: null,
+			discountScope: '',
+		};
 	} catch (error) {
-		console.log(error, 'Error fetching dicount code details using an discount id');
-		return { success: false, discountCode: [], message: 'Something went wrong', discountScope: ''  };
+		// eslint-disable-next-line no-console
+		console.log(
+			error,
+			'Error fetching dicount code details using an discount id',
+		);
+		return {
+			success: false,
+			discountCode: [],
+			message: 'Something went wrong',
+			discountScope: '',
+		};
 	}
 };

@@ -14,7 +14,7 @@ interface DiscountStats {
 		data: number[];
 	};
 }
-	
+
 const getDiscountStats = async (): Promise<DiscountStats> => {
 	const activeDiscountsCount = await prisma.discountCode.count({
 		where: { isActive: true },
@@ -38,24 +38,28 @@ const getDiscountStats = async (): Promise<DiscountStats> => {
 	const getDiscountCountPerDay = async (whereCondition: any) => {
 		const counts = await Promise.all(
 			last7Days.map(async (date) => {
-			const count = await prisma.discountCode.count({
-				where: {
-				...whereCondition,
-				createdAt: {
-					gte: new Date(date),
-					lt: new Date(new Date(date).setDate(new Date(date).getDate() + 1)),
-				},
-				},
-			});
-			return count || 0;
-			})
+				const count = await prisma.discountCode.count({
+					where: {
+						...whereCondition,
+						createdAt: {
+							gte: new Date(date),
+							lt: new Date(
+								new Date(date).setDate(new Date(date).getDate() + 1),
+							),
+						},
+					},
+				});
+				return count || 0;
+			}),
 		);
 		return counts;
 	};
 
 	const activeDiscounts = await getDiscountCountPerDay({ isActive: true });
 	const usedDiscounts = await getDiscountCountPerDay({ usedCount: { gt: 0 } });
-	const expiredDiscounts = await getDiscountCountPerDay({ endDate: { lt: new Date() } });
+	const expiredDiscounts = await getDiscountCountPerDay({
+		endDate: { lt: new Date() },
+	});
 
 	const discountSummary: DiscountStats = {
 		activeDiscount: { count: activeDiscountsCount, data: activeDiscounts },
@@ -73,7 +77,7 @@ export const getDiscountCodes = async (
 	status?: 'active' | 'pending',
 	usedCountGreaterThan: number = 0,
 	searchQuery?: string,
-	orderByCode?: 'asc' | 'desc'
+	orderByCode?: 'asc' | 'desc',
 ): Promise<{
 	success: boolean;
 	message: string;
@@ -90,7 +94,8 @@ export const getDiscountCodes = async (
 		};
 
 		if (status) {
-			where.isActive = status === 'active' && true || status === 'pending' && false;
+			where.isActive =
+				(status === 'active' && true) || (status === 'pending' && false);
 		}
 
 		if (searchQuery) {
@@ -109,8 +114,8 @@ export const getDiscountCodes = async (
 			skip: (page - 1) * pageSize,
 			take: pageSize,
 			orderBy: {
-				code: orderByCode
-			}
+				code: orderByCode,
+			},
 		});
 
 		const totalPages = Math.ceil(totalCount / pageSize);

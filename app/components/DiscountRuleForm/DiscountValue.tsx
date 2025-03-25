@@ -9,7 +9,7 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
-import { ItemsList } from 'app/redux/discount/slice';
+import type { ItemsList } from 'app/redux/discount/slice';
 import EditItemsList from './EditItemsList';
 
 export interface EditObj {
@@ -39,7 +39,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 	setNewRule,
 	handleOpen,
 	handleSearchChange,
-	queryType
+	queryType,
 }) => {
 	return (
 		<Card>
@@ -105,7 +105,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							}
 						/>
 					</FormLayout.Group>
-					{queryType === 'products' &&
+					{queryType === 'products' && (
 						<FormLayout.Group>
 							<TextField
 								label=""
@@ -115,16 +115,19 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 								prefix={<Icon source={SearchIcon} />}
 								placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
 							/>
-							<Button onClick={() => handleOpen('none', newRule.appliesTo)} variant="secondary">
+							<Button
+								onClick={() => handleOpen('none', newRule.appliesTo)}
+								variant="secondary"
+							>
 								Browse
 							</Button>
 						</FormLayout.Group>
-					}
-					{editObj?.isEdit && queryType === 'products' &&
+					)}
+					{editObj?.isEdit && queryType === 'products' && (
 						<FormLayout.Group>
 							<EditItemsList editObj={editObj} />
 						</FormLayout.Group>
-					}
+					)}
 				</FormLayout>
 			</BlockStack>
 		</Card>

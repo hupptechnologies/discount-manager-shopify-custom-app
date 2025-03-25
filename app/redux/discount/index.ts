@@ -1,7 +1,13 @@
-import { AxiosError } from "axios";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createBuyXGetYDiscountCode, createDiscountCode, deleteDiscountCode, fetchAllDiscountCodes, getDiscountCodeById } from "app/service/discount";
-import { GetDiscountCodeList } from "./slice";
+import type { AxiosError } from 'axios';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import {
+	createBuyXGetYDiscountCode,
+	createDiscountCode,
+	deleteDiscountCode,
+	fetchAllDiscountCodes,
+	getDiscountCodeById,
+} from 'app/service/discount';
+import type { GetDiscountCodeList } from './slice';
 
 export interface DiscountCode {
 	id: number;
@@ -24,9 +30,9 @@ interface FetchAllDiscountCodeReturnValue {
 		currentPage: number;
 	};
 	discountStats: {
-		activeDiscount: { count: number; data: number[]; },
-		usedDiscount: { count: number; data: number[]; },
-		expiredDiscount: { count: number; data:number[]; },
+		activeDiscount: { count: number; data: number[] };
+		usedDiscount: { count: number; data: number[] };
+		expiredDiscount: { count: number; data: number[] };
 	};
 }
 
@@ -51,7 +57,7 @@ interface DeleteDiscountCodeParams {
 		id: number | null;
 		code: string;
 		discountId: string;
-	}
+	};
 	shopName: string;
 	callback?: (success: boolean) => void;
 }
@@ -67,7 +73,7 @@ interface CreateDiscountCodeParams {
 		appliesOncePerCustomer: boolean;
 		productIDs: string[];
 		collectionIDs: string[];
-	}
+	};
 	shopName: string;
 	type: string | null;
 	callback?: (success: boolean) => void;
@@ -89,7 +95,7 @@ interface CreateBuyXGetYDiscountCodeParams {
 			quantity: string;
 			collectionIDs: string[];
 		};
-	},
+	};
 	shopName: string;
 	type: string | null;
 	callback?: (success: boolean) => void;
@@ -118,7 +124,8 @@ export const fetchAllDiscountCodesAsync = createAsyncThunk<
 		try {
 			const response = await fetchAllDiscountCodes(params);
 			if (response.data) {
-				const { discountCodes, pagination, success, discountStats } = response.data;
+				const { discountCodes, pagination, success, discountStats } =
+					response.data;
 				if (success && params?.callback) {
 					params.callback(success);
 				}
@@ -129,9 +136,9 @@ export const fetchAllDiscountCodesAsync = createAsyncThunk<
 				pagination: {
 					totalCount: 0,
 					totalPages: 0,
-					currentPage: 0
+					currentPage: 0,
 				},
-				discountStats: null
+				discountStats: null,
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;
@@ -146,7 +153,7 @@ export const deleteDiscountCodeAsync = createAsyncThunk<
 	ReturnValue,
 	DeleteDiscountCodeParams
 >(
-	"discount/deleteDiscountCode",
+	'discount/deleteDiscountCode',
 	async (params, { rejectWithValue, fulfillWithValue }) => {
 		try {
 			const response = await deleteDiscountCode(params);
@@ -161,20 +168,20 @@ export const deleteDiscountCodeAsync = createAsyncThunk<
 				return fulfillWithValue({ success, message });
 			}
 			return fulfillWithValue({ success: false, message: '' });
-		}	catch (err: any) {
+		} catch (err: any) {
 			const error = err as AxiosError;
 			// eslint-disable-next-line no-console
 			console.log(error?.response?.data, 'An error occurred');
 			return rejectWithValue('An error occurred');
 		}
-	}
+	},
 );
 
 export const createDiscountCodeAsync = createAsyncThunk<
 	ReturnValue,
 	CreateDiscountCodeParams
 >(
-	"discount/createDiscountCode",
+	'discount/createDiscountCode',
 	async (params, { rejectWithValue, fulfillWithValue }) => {
 		try {
 			const response = await createDiscountCode(params);
@@ -189,20 +196,20 @@ export const createDiscountCodeAsync = createAsyncThunk<
 				return fulfillWithValue({ success, message });
 			}
 			return fulfillWithValue({ success: false, message: '' });
-		}	catch (err: any) {
+		} catch (err: any) {
 			const error = err as AxiosError;
 			// eslint-disable-next-line no-console
 			console.log(error?.response?.data, 'An error occurred');
 			return rejectWithValue('An error occurred');
 		}
-	}
+	},
 );
 
 export const createBuyXGetYDiscountCodeAsync = createAsyncThunk<
 	ReturnValue,
 	CreateBuyXGetYDiscountCodeParams
 >(
-	"discount/createBuyXGetYDiscountCode",
+	'discount/createBuyXGetYDiscountCode',
 	async (params, { rejectWithValue, fulfillWithValue }) => {
 		try {
 			const response = await createBuyXGetYDiscountCode(params);
@@ -217,20 +224,20 @@ export const createBuyXGetYDiscountCodeAsync = createAsyncThunk<
 				return fulfillWithValue({ success, message });
 			}
 			return fulfillWithValue({ success: false, message: '' });
-		}	catch (err: any) {
+		} catch (err: any) {
 			const error = err as AxiosError;
 			// eslint-disable-next-line no-console
 			console.log(error?.response?.data, 'An error occurred');
 			return rejectWithValue('An error occurred');
 		}
-	}
+	},
 );
 
 export const getDiscountCodeByIdAsync = createAsyncThunk<
 	GetDiscountCodeByIdReturnValue,
 	GetDiscountCodeByIdParams
 >(
-	"discount/getDiscountCodeById",
+	'discount/getDiscountCodeById',
 	async (params, { rejectWithValue, fulfillWithValue }) => {
 		try {
 			const response = await getDiscountCodeById(params);
@@ -239,14 +246,24 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 				if (success && params.callback) {
 					params.callback(success);
 				}
-				return fulfillWithValue({ success, discountCode, message, discountScope });
+				return fulfillWithValue({
+					success,
+					discountCode,
+					message,
+					discountScope,
+				});
 			}
-			return fulfillWithValue({ success: false, discountCode: null, message: '', discountScope: '' });
-		}	catch (err: any) {
+			return fulfillWithValue({
+				success: false,
+				discountCode: null,
+				message: '',
+				discountScope: '',
+			});
+		} catch (err: any) {
 			const error = err as AxiosError;
 			// eslint-disable-next-line no-console
 			console.log(error?.response?.data, 'An error occurred');
 			return rejectWithValue('An error occurred');
 		}
-	}
+	},
 );

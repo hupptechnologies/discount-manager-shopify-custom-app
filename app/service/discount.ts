@@ -1,5 +1,5 @@
-import { AxiosInstance } from "axios";
-import { backendAPI } from "./index";
+import type { AxiosInstance } from 'axios';
+import { backendAPI } from './index';
 
 interface FetchAllDiscountCodesParams {
 	page?: string;
@@ -31,7 +31,7 @@ interface CreateDiscountCodeParams {
 		appliesOncePerCustomer: boolean;
 		productIDs: string[];
 		collectionIDs: string[];
-	},
+	};
 	shopName: string;
 	type: string | null;
 }
@@ -52,7 +52,7 @@ interface CreateBuyXGetYDiscountCodeParams {
 			quantity: string;
 			collectionIDs: string[];
 		};
-	},
+	};
 	shopName: string;
 	type: string | null;
 }
@@ -65,7 +65,15 @@ interface GetDiscountCodeByIdParams {
 
 export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { page = 1, pageSize = 10, shopName, status, searchQuery = '', usedCountGreaterThan, orderByCode } = params;
+	const {
+		page = 1,
+		pageSize = 10,
+		shopName,
+		status,
+		searchQuery = '',
+		usedCountGreaterThan,
+		orderByCode,
+	} = params;
 
 	let url = `discount?shop=${shopName}`;
 	if (page) {
@@ -81,10 +89,10 @@ export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
 		url += `&status=${status}`;
 	}
 	if (usedCountGreaterThan) {
-		url += `&usedCountGreaterThan=1`;
+		url += '&usedCountGreaterThan=1';
 	}
 	if (orderByCode) {
-		url += `&orderByCode=${orderByCode}`
+		url += `&orderByCode=${orderByCode}`;
 	}
 
 	return requestInstance.get(url);
@@ -102,7 +110,9 @@ export const createDiscountCode = (params: CreateDiscountCodeParams) => {
 	return requestInstance.post(`discount?shop=${shopName}&type=${type}`, data);
 };
 
-export const createBuyXGetYDiscountCode = (params: CreateBuyXGetYDiscountCodeParams) => {
+export const createBuyXGetYDiscountCode = (
+	params: CreateBuyXGetYDiscountCodeParams,
+) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, data, type = 'buyXgetY' } = params;
 	return requestInstance.post(`discount?shop=${shopName}&type=${type}`, data);
@@ -111,5 +121,7 @@ export const createBuyXGetYDiscountCode = (params: CreateBuyXGetYDiscountCodePar
 export const getDiscountCodeById = (params: GetDiscountCodeByIdParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, id, discountType } = params;
-	return requestInstance.get(`discount?shop=${shopName}&id=${id}&discountType=${discountType}`);
+	return requestInstance.get(
+		`discount?shop=${shopName}&id=${id}&discountType=${discountType}`,
+	);
 };

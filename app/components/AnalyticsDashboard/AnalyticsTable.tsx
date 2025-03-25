@@ -15,42 +15,50 @@ import {
 	ButtonGroup,
 	Button,
 	Layout,
-	Tooltip
+	Tooltip,
 } from '@shopify/polaris';
-import {
-	EditIcon,
-	DeleteIcon
-} from '@shopify/polaris-icons';
+import { EditIcon, DeleteIcon } from '@shopify/polaris-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'app/redux/store';
+import type { AppDispatch, RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
-import { deleteDiscountCodeAsync, fetchAllDiscountCodesAsync, getDiscountCodeByIdAsync } from 'app/redux/discount';
+import {
+	deleteDiscountCodeAsync,
+	fetchAllDiscountCodesAsync,
+	getDiscountCodeByIdAsync,
+} from 'app/redux/discount';
 import { formatDateWithTime } from 'app/utils/json';
 
 interface AnalyticsTableProps {
 	setIsLoadingUpdate: any;
 }
-const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) => {
+const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
+	setIsLoadingUpdate,
+}) => {
 	const { debounce } = pkg;
 	const { mode, setMode } = useSetIndexFiltersMode();
 	const navigate = useNavigate();
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { discountCodes, isLoading, pagination: { totalPages, totalCount }, isDeleteDiscountCode } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
+	const {
+		discountCodes,
+		isLoading,
+		pagination: { totalPages, totalCount },
+		isDeleteDiscountCode,
+	} = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
 	const [queryValue, setQueryValue] = useState('');
-	const [itemStrings, setItemStrings] = useState([
+	const itemStrings = [
 		'All',
 		'Active codes',
 		'Pending codes',
 		'Used codes',
-	]);
+	];
 	const [selected, setSelected] = useState(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [sortSelected, setSortSelected] = useState(['discountCode asc']);
 	const [deleteData, setDeleteData] = useState({
 		id: null,
 		code: '',
-		discountId: ''
+		discountId: '',
 	});
 	const [call, setCall] = useState(false);
 
@@ -67,24 +75,31 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 			directionLabel: 'Descending',
 		},
 	];
-	
+
 	const debouncedHandleFetch = useCallback(
 		debounce((queryValue, selected, currentPage, sortSelected) => {
-			dispatch(fetchAllDiscountCodesAsync({
-				page: currentPage,
-				pageSize: String(limit),
-				shopName: shopify.config.shop || '',
-				searchQuery: queryValue,
-				usedCountGreaterThan: selected === 3 && 1 || null,
-				orderByCode: sortSelected.includes('discountCode asc') ? 'asc' : 'desc',
-				status: selected === 1 && 'active' || selected === 2 && 'pending' || null
-			}));
+			dispatch(
+				fetchAllDiscountCodesAsync({
+					page: currentPage,
+					pageSize: String(limit),
+					shopName: shopify.config.shop || '',
+					searchQuery: queryValue,
+					usedCountGreaterThan: (selected === 3 && 1) || null,
+					orderByCode: sortSelected.includes('discountCode asc')
+						? 'asc'
+						: 'desc',
+					status:
+						(selected === 1 && 'active') ||
+						(selected === 2 && 'pending') ||
+						null,
+				}),
+			);
 		}, 300),
 		[],
 	);
 
 	useEffect(() => {
-		debouncedHandleFetch(queryValue, selected, currentPage, sortSelected)
+		debouncedHandleFetch(queryValue, selected, currentPage, sortSelected);
 	}, [queryValue, selected, currentPage, limit, sortSelected, call]);
 
 	const tabs: TabProps[] = itemStrings.map((item, index) => ({
@@ -101,7 +116,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 	);
 
 	const handleQueryValueRemove = useCallback(() => {
-		setQueryValue('')
+		setQueryValue('');
 	}, []);
 
 	const resourceName = {
@@ -119,96 +134,130 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 		setDeleteData({
 			id: null,
 			code: '',
-			discountId: ''
+			discountId: '',
 		});
 		shopify.modal.hide('delete-comfirmation-modal');
 	};
 
 	const handleDelete = () => {
-		dispatch(deleteDiscountCodeAsync({
-			shopName: shopify.config.shop || '',
-			data: {
-				id: deleteData.id,
-				code: deleteData.code,
-				discountId: deleteData.discountId
-			},
-			callback(success) {
-				if (success) {
-					setCall(!call);
-				}
-			},
-		}));
+		dispatch(
+			deleteDiscountCodeAsync({
+				shopName: shopify.config.shop || '',
+				data: {
+					id: deleteData.id,
+					code: deleteData.code,
+					discountId: deleteData.discountId,
+				},
+				callback (success) {
+					if (success) {
+						setCall(!call);
+					}
+				},
+			}),
+		);
 		handleClose();
 	};
 
-	const handleEdit = (e: React.MouseEvent<HTMLElement>, id: number, type: string): void => {
+	const handleEdit = (
+		e: React.MouseEvent<HTMLElement>,
+		id: number,
+		type: string,
+	): void => {
 		e.stopPropagation();
 		setIsLoadingUpdate(true);
-		dispatch(getDiscountCodeByIdAsync({
-			shopName: shopify.config.shop || '',
-			id: id,
-			discountType: type,
-			callback(success) {
-				if (success) {
-					setIsLoadingUpdate(false);
-					navigate(`/app/update-discount?type=${type === 'PRODUCT' ? 'products' : 'buyXgetY'}`);
-				}
-			},
-		}))
+		dispatch(
+			getDiscountCodeByIdAsync({
+				shopName: shopify.config.shop || '',
+				id: id,
+				discountType: type,
+				callback (success) {
+					if (success) {
+						setIsLoadingUpdate(false);
+						navigate(
+							`/app/update-discount?type=${type === 'PRODUCT' ? 'products' : 'buyXgetY'}`,
+						);
+					}
+				},
+			}),
+		);
 	};
 
-	const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(discountCodes as any[]);
+	const { selectedResources, allResourcesSelected, handleSelectionChange } =
+		useIndexResourceState(discountCodes as any[]);
 
-	const rowMarkup = discountCodes?.length > 0 && discountCodes.map(
-		(
-			{ id, code, discountId, discountAmount, usageLimit, isActive, startDate, endDate, createdAt, discountScope },
-			index,
-		) => (
-			<IndexTable.Row
-				id={id}
-				key={id}
-				selected={selectedResources.includes(id)}
-				position={index}
-			>
-				<IndexTable.Cell>
-					<Text variant="bodyMd" fontWeight="bold" as="span">
-						{code}
-					</Text>
-				</IndexTable.Cell>
-				<IndexTable.Cell>{discountAmount}</IndexTable.Cell>
-				<IndexTable.Cell>{discountScope}</IndexTable.Cell>
-				<IndexTable.Cell>
-					<Text as="span" alignment="start">
-						{usageLimit}
-					</Text>
-				</IndexTable.Cell>
-				<IndexTable.Cell>
-					<Badge
-						tone={
-							isActive
-								? 'success'
-								:'info'
-						}
-					>
-						{isActive ? 'Active' : 'Pending'}
-					</Badge>
-				</IndexTable.Cell>
-				<IndexTable.Cell>{formatDateWithTime(startDate)}</IndexTable.Cell>
-				<IndexTable.Cell>{formatDateWithTime(endDate)}</IndexTable.Cell>
-				<IndexTable.Cell>{formatDateWithTime(createdAt)}</IndexTable.Cell>
-				<IndexTable.Cell>
-					<ButtonGroup noWrap gap='tight'>
-						<Tooltip content="Edit discount" dismissOnMouseOut>
-							<Button onClick={(e: any) => handleEdit(e, parseInt(discountId.split('/').pop() as string), discountScope)} variant='secondary' icon={EditIcon} tone='success'></Button>
-						</Tooltip>
-						<Tooltip content="Delete discount" dismissOnMouseOut>
-							<Button onClick={(e: any) => handleOpen(e, { id, code, discountId })} variant='secondary' icon={DeleteIcon} tone='critical'></Button>
-						</Tooltip>
-					</ButtonGroup>
-				</IndexTable.Cell>
-			</IndexTable.Row>
-		),
-	);
+	const rowMarkup =
+		discountCodes?.length > 0 &&
+		discountCodes.map(
+			(
+				{
+					id,
+					code,
+					discountId,
+					discountAmount,
+					usageLimit,
+					isActive,
+					startDate,
+					endDate,
+					createdAt,
+					discountScope,
+				},
+				index,
+			) => (
+				<IndexTable.Row
+					id={id}
+					key={id}
+					selected={selectedResources.includes(id)}
+					position={index}
+				>
+					<IndexTable.Cell>
+						<Text variant="bodyMd" fontWeight="bold" as="span">
+							{code}
+						</Text>
+					</IndexTable.Cell>
+					<IndexTable.Cell>{discountAmount}</IndexTable.Cell>
+					<IndexTable.Cell>{discountScope}</IndexTable.Cell>
+					<IndexTable.Cell>
+						<Text as="span" alignment="start">
+							{usageLimit}
+						</Text>
+					</IndexTable.Cell>
+					<IndexTable.Cell>
+						<Badge tone={isActive ? 'success' : 'info'}>
+							{isActive ? 'Active' : 'Pending'}
+						</Badge>
+					</IndexTable.Cell>
+					<IndexTable.Cell>{formatDateWithTime(startDate)}</IndexTable.Cell>
+					<IndexTable.Cell>{formatDateWithTime(endDate)}</IndexTable.Cell>
+					<IndexTable.Cell>{formatDateWithTime(createdAt)}</IndexTable.Cell>
+					<IndexTable.Cell>
+						<ButtonGroup noWrap gap="tight">
+							<Tooltip content="Edit discount" dismissOnMouseOut>
+								<Button
+									onClick={(e: any) =>
+										handleEdit(
+											e,
+											parseInt(discountId.split('/').pop() as string),
+											discountScope,
+										)
+									}
+									variant="secondary"
+									icon={EditIcon}
+									tone="success"
+								></Button>
+							</Tooltip>
+							<Tooltip content="Delete discount" dismissOnMouseOut>
+								<Button
+									onClick={(e: any) => handleOpen(e, { id, code, discountId })}
+									variant="secondary"
+									icon={DeleteIcon}
+									tone="critical"
+								></Button>
+							</Tooltip>
+						</ButtonGroup>
+					</IndexTable.Cell>
+				</IndexTable.Row>
+			),
+		);
 
 	return (
 		<LegacyCard>
@@ -262,18 +311,23 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 					hasNext: currentPage < totalPages,
 					onPrevious: () => setCurrentPage((prev) => prev - 1),
 					onNext: () => setCurrentPage((prev) => prev + 1),
-					label: `Showing ${(currentPage - 1) * limit + 1} to ${Math.min(currentPage * limit, totalCount)} of ${totalCount} codes`
+					label: `Showing ${(currentPage - 1) * limit + 1} to ${Math.min(currentPage * limit, totalCount)} of ${totalCount} codes`,
 				}}
 			>
 				{rowMarkup}
 			</IndexTable>
 			<Modal id="delete-comfirmation-modal">
 				<Layout.Section>
-					<Text as='p' tone='subdued' truncate>Are you sure you want to delete <b>{deleteData.code}</b> discount code? this will remove all related data.</Text>
+					<Text as="p" tone="subdued" truncate>
+						Are you sure you want to delete <b>{deleteData.code}</b> discount
+						code? this will remove all related data.
+					</Text>
 				</Layout.Section>
 				<br />
 				<TitleBar title="Delete Confirmation">
-					<button onClick={handleDelete} variant="primary" tone='critical'>Confirm Delete</button>
+					<button onClick={handleDelete} variant="primary" tone="critical">
+						Confirm Delete
+					</button>
 					<button onClick={handleClose}>Cancel</button>
 				</TitleBar>
 			</Modal>

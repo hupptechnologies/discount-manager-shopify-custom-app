@@ -15,7 +15,7 @@ import {
 interface DiscountCodeGenProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	handleButtonClick: React.Dispatch<React.SetStateAction<any>>;
-	handleSaveBarOpen:  any;
+	handleSaveBarOpen: any;
 	activeButtonIndex: number;
 	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
 	heading: string;
@@ -37,7 +37,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 	newRule,
 	setNewRule,
 	queryType,
-	handleSaveBarOpen
+	handleSaveBarOpen,
 }) => {
 	return (
 		<Card>
@@ -118,7 +118,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						value={newRule.checkoutDiscountCode}
 						onChange={(value) => {
 							handleSaveBarOpen();
-							setNewRule({ ...newRule, checkoutDiscountCode: value })
+							setNewRule({ ...newRule, checkoutDiscountCode: value });
 						}}
 						helpText="Customers must enter this code at checkout."
 						autoComplete="off"

@@ -8,7 +8,7 @@ import {
 	Button,
 } from '@shopify/polaris';
 import { useSelector } from 'react-redux';
-import { RootState } from 'app/redux/store';
+import type { RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import { StatBox } from './StateBox';
 
@@ -17,7 +17,9 @@ interface IndexStateBoxProps {
 }
 
 const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
-	const { discountStats } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
+	const { discountStats } = useSelector((state: RootState) =>
+		getAllDiscountCodeDetail(state),
+	);
 
 	return (
 		<>

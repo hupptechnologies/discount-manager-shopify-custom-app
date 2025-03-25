@@ -5,7 +5,7 @@ import discountSilce from './discount/slice';
 const store = configureStore({
 	reducer: {
 		createDiscount: createDiscountSilce,
-		discount: discountSilce
+		discount: discountSilce,
 	},
 	devTools: process.env.NODE_ENV !== 'production',
 });

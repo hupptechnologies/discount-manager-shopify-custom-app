@@ -1,5 +1,4 @@
 import { getDetailUsingGraphQL } from 'app/service/product';
-import { PrismaClient } from '@prisma/client';
 
 const UPDATE_BUY_X_GET_Y_DISCOUNT_CODE_QUERY = `
 mutation discountCodeBxgyUpdate($id: ID!, $bxgyCodeDiscount: DiscountCodeBxgyInput!) {
@@ -95,7 +94,7 @@ interface CreateBuyxGetYDiscountCodeInput {
 export const updateBuyXGetYDiscountCode = async (
 	shop: string,
 	request: Request,
-	id: number
+	id: number,
 ): Promise<UpdateBuyXGetYDiscountCodeResponse> => {
 	const {
 		title,
@@ -109,7 +108,7 @@ export const updateBuyXGetYDiscountCode = async (
 	}: CreateBuyxGetYDiscountCodeInput = await request.json();
 	try {
 		const findDiscountExist = await prisma.discountCode.findFirst({
-			where: { shop, id }
+			where: { shop, id },
 		});
 
 		if (findDiscountExist) {
@@ -135,7 +134,7 @@ export const updateBuyXGetYDiscountCode = async (
 						customerBuys: {
 							items: {
 								collections: {
-									add: customerBuys.collectionIDs
+									add: customerBuys.collectionIDs,
 								},
 							},
 							value: {
@@ -145,7 +144,7 @@ export const updateBuyXGetYDiscountCode = async (
 						customerGets: {
 							items: {
 								collections: {
-									add: customerGets.collectionIDs
+									add: customerGets.collectionIDs,
 								},
 							},
 							value: {
@@ -161,10 +160,17 @@ export const updateBuyXGetYDiscountCode = async (
 				},
 			};
 
-			const updateDiscountCodeFromShopify: GraphQLResponse = await getDetailUsingGraphQL(shop, accessToken, data);
+			const updateDiscountCodeFromShopify: GraphQLResponse =
+				await getDetailUsingGraphQL(shop, accessToken, data);
 
-			if (updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate.userErrors.length > 0) {
-				const errors = updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
+			if (
+				updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate
+					.userErrors.length > 0
+			) {
+				const errors =
+					updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate.userErrors
+						.map((error) => `${error.field}: ${error.message}`)
+						.join(', ');
 				throw new Error(`GraphQL errors: ${errors}`);
 			}
 
@@ -173,7 +179,9 @@ export const updateBuyXGetYDiscountCode = async (
 					code,
 					title,
 					shop,
-					discountId: updateDiscountCodeFromShopify?.data?.data?.discountCodeBxgyUpdate?.codeDiscountNode?.id,
+					discountId:
+						updateDiscountCodeFromShopify?.data?.data?.discountCodeBxgyUpdate
+							?.codeDiscountNode?.id,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
 					discountAmount: percentage,
@@ -187,7 +195,7 @@ export const updateBuyXGetYDiscountCode = async (
 				success: true,
 				message: 'Buy X Get Y discount code updated successfully',
 			};
-		};
+		}
 
 		return { success: false, message: 'Record not found' };
 	} catch (error) {

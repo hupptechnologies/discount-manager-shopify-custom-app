@@ -1,5 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { DiscountCode, createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync, deleteDiscountCodeAsync, fetchAllDiscountCodesAsync, getDiscountCodeByIdAsync } from './index';
+import type { DiscountCode } from './index';
+import {
+	createBuyXGetYDiscountCodeAsync,
+	createDiscountCodeAsync,
+	deleteDiscountCodeAsync,
+	fetchAllDiscountCodesAsync,
+	getDiscountCodeByIdAsync,
+} from './index';
 
 interface Pagination {
 	totalCount: number;
@@ -10,7 +17,7 @@ interface Pagination {
 export interface nodeList {
 	node: {
 		code: string;
-	}
+	};
 }
 
 export interface ItemsList {
@@ -25,11 +32,11 @@ export interface ItemsList {
 				preview: {
 					image: {
 						url: string;
-					}
-				}
-			}
-		}
-	}
+					};
+				};
+			};
+		};
+	};
 }
 
 export interface GetDiscountCodeList {
@@ -39,7 +46,7 @@ export interface GetDiscountCodeList {
 		appliesOncePerCustomer: boolean;
 		codes: {
 			edges: nodeList[];
-		}
+		};
 		customerGets: {
 			value: {
 				percentage: number;
@@ -47,10 +54,10 @@ export interface GetDiscountCodeList {
 			items: {
 				productVariants: {
 					edges: ItemsList[];
-				}
+				};
 			};
-		}
-	}
+		};
+	};
 }
 
 interface discountState {
@@ -62,11 +69,11 @@ interface discountState {
 	isGetDiscountCodeById: boolean;
 	pagination: Pagination;
 	discountStats: {
-		activeDiscount: { count: number; data: number[]; },
-		usedDiscount: { count: number; data: number[]; },
-		expiredDiscount: { count: number; data: number[]; },
+		activeDiscount: { count: number; data: number[] };
+		usedDiscount: { count: number; data: number[] };
+		expiredDiscount: { count: number; data: number[] };
 	};
-	getDiscountCode : GetDiscountCodeList[];
+	getDiscountCode: GetDiscountCodeList[];
 	discountScope: string;
 }
 
@@ -76,19 +83,19 @@ const initialState: discountState = {
 	pagination: {
 		totalCount: 0,
 		totalPages: 0,
-		currentPage: 0
+		currentPage: 0,
 	},
 	discountStats: {
-		activeDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
-		usedDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
-		expiredDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
+		activeDiscount: { count: 0, data: [0, 0, 0, 0, 0, 0, 0] },
+		usedDiscount: { count: 0, data: [0, 0, 0, 0, 0, 0, 0] },
+		expiredDiscount: { count: 0, data: [0, 0, 0, 0, 0, 0, 0] },
 	},
 	isDeleteDiscountCode: false,
 	isCreateDiscountCode: false,
 	isBuyXGetYCreateDiscountCode: false,
 	isGetDiscountCodeById: false,
 	getDiscountCode: [],
-	discountScope: ''
+	discountScope: '',
 };
 
 const discountSlice = createSlice({
@@ -99,25 +106,28 @@ const discountSlice = createSlice({
 		builder.addCase(fetchAllDiscountCodesAsync.pending, (state) => {
 			state.isLoading = true;
 		});
-		builder.addCase(fetchAllDiscountCodesAsync.fulfilled, (state, { payload }) => {
-			state.isLoading = false;
-			state.discountCodes = payload.discountCodes;
-			state.pagination = payload.pagination;
-			state.discountStats = payload.discountStats;
-		});
+		builder.addCase(
+			fetchAllDiscountCodesAsync.fulfilled,
+			(state, { payload }) => {
+				state.isLoading = false;
+				state.discountCodes = payload.discountCodes;
+				state.pagination = payload.pagination;
+				state.discountStats = payload.discountStats;
+			},
+		);
 		builder.addCase(fetchAllDiscountCodesAsync.rejected, (state) => {
 			state.isLoading = false;
 			state.discountCodes = [];
 			state.pagination = {
 				totalCount: 0,
 				totalPages: 0,
-				currentPage: 0
+				currentPage: 0,
 			};
 			state.discountStats = {
-				activeDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
-				usedDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
-				expiredDiscount: { count: 0, data: [0,0,0,0,0,0,0] },
-			}
+				activeDiscount: { count: 0, data: [0, 0, 0, 0, 0, 0, 0] },
+				usedDiscount: { count: 0, data: [0, 0, 0, 0, 0, 0, 0] },
+				expiredDiscount: { count: 0, data: [0, 0, 0, 0, 0, 0, 0] },
+			};
 		});
 		builder.addCase(deleteDiscountCodeAsync.pending, (state) => {
 			state.isDeleteDiscountCode = true;
@@ -149,11 +159,14 @@ const discountSlice = createSlice({
 		builder.addCase(getDiscountCodeByIdAsync.pending, (state) => {
 			state.isGetDiscountCodeById = true;
 		});
-		builder.addCase(getDiscountCodeByIdAsync.fulfilled, (state, { payload }) => {
-			state.isGetDiscountCodeById = false;
-			state.getDiscountCode = payload.discountCode;
-			state.discountScope = payload.discountScope;
-		});
+		builder.addCase(
+			getDiscountCodeByIdAsync.fulfilled,
+			(state, { payload }) => {
+				state.isGetDiscountCodeById = false;
+				state.getDiscountCode = payload.discountCode;
+				state.discountScope = payload.discountScope;
+			},
+		);
 		builder.addCase(getDiscountCodeByIdAsync.rejected, (state) => {
 			state.isGetDiscountCodeById = false;
 			state.getDiscountCode = [];
@@ -162,8 +175,7 @@ const discountSlice = createSlice({
 	},
 });
 
-export const getAllDiscountCodeDetail = (state: {
-	discount: discountState;
-}) => state.discount;
+export const getAllDiscountCodeDetail = (state: { discount: discountState }) =>
+	state.discount;
 
 export default discountSlice.reducer;

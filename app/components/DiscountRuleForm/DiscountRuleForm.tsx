@@ -1,12 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from '@remix-run/react';
-import { Modal, SaveBar, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
+import {
+	Modal,
+	SaveBar,
+	TitleBar,
+	useAppBridge,
+} from '@shopify/app-bridge-react';
 import { Layout } from '@shopify/polaris';
 import pkg from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { createBuyXGetYDiscountCodeAsync, createDiscountCodeAsync } from 'app/redux/discount';
-import { AppDispatch, RootState } from 'app/redux/store';
-import { ItemsList, getAllDiscountCodeDetail } from 'app/redux/discount/slice';
+import {
+	createBuyXGetYDiscountCodeAsync,
+	createDiscountCodeAsync,
+} from 'app/redux/discount';
+import type { AppDispatch, RootState } from 'app/redux/store';
+import type { ItemsList, getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
 import DiscountCodeGen from './DiscountCodeGen';
 import DiscountValue from './DiscountValue';
@@ -80,15 +88,21 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const { debounce } = pkg;
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { getDiscountCode, discountScope } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
+	const { getDiscountCode, discountScope } = useSelector((state: RootState) =>
+		getAllDiscountCodeDetail(state),
+	);
 	const navigate = useNavigate();
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
 	const [selected, setSelected] = useState<number>(0);
-	const [editObj, setEditObj] = useState<{ type: 'product' | 'collection'; isEdit: boolean; items: ItemsList[]; }>({
+	const [editObj, setEditObj] = useState<{
+		type: 'product' | 'collection';
+		isEdit: boolean;
+		items: ItemsList[];
+	}>({
 		type: 'product',
 		isEdit: false,
-		items: []
+		items: [],
 	});
 	const [newRule, setNewRule] = useState<DiscountRule>({
 		selectedDiscountType: queryType,
@@ -139,7 +153,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		totalLimitValue: '',
 		dicountCodePrefix: '',
 		collectionIDs: [],
-		productIDs: []
+		productIDs: [],
 	});
 
 	useEffect(() => {
@@ -148,17 +162,30 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			setEditObj({
 				type: ifExist ? 'product' : 'collection',
 				isEdit: true,
-				items: ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges : getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges
+				items: ifExist
+					? getDiscountCode[0]?.codeDiscount?.customerGets?.items
+							?.productVariants?.edges
+					: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections
+							?.edges,
 			});
 			setNewRule({
 				...newRule,
 				title: getDiscountCode[0]?.codeDiscount?.title || '',
-				checkoutDiscountCode: getDiscountCode[0]?.codeDiscount?.codes?.edges[0].node?.code || '',
-				discount: String((ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage : getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect?.percentage) * 100),
+				checkoutDiscountCode:
+					getDiscountCode[0]?.codeDiscount?.codes?.edges[0].node?.code || '',
+				discount: String(
+					(ifExist
+						? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage
+						: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect
+								?.percentage) * 100,
+				),
 				totalUsageLimit: true,
-				totalLimitValue: ifExist ? getDiscountCode[0]?.codeDiscount?.usageLimit : getDiscountCode[0]?.codeDiscount?.usesPerOrderLimit,
-				onePerCustomer:  getDiscountCode[0]?.codeDiscount?.appliesOncePerCustomer
-			})
+				totalLimitValue: ifExist
+					? getDiscountCode[0]?.codeDiscount?.usageLimit
+					: getDiscountCode[0]?.codeDiscount?.usesPerOrderLimit,
+				onePerCustomer:
+					getDiscountCode[0]?.codeDiscount?.appliesOncePerCustomer,
+			});
 		}
 	}, [getDiscountCode, discountScope]);
 
@@ -283,10 +310,42 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const handleDiscard = () => {
 		shopify.saveBar.hide('save-bar');
 	};
-	
+
 	const handleSubmit = () => {
 		if (queryType === 'buyXgetY') {
-			dispatch(createBuyXGetYDiscountCodeAsync({
+			dispatch(
+				createBuyXGetYDiscountCodeAsync({
+					shopName: shopify.config.shop || '',
+					data: {
+						title: newRule?.title,
+						code: newRule?.checkoutDiscountCode,
+						percentage: Number(newRule?.discount),
+						startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
+						endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+						usageLimit: Number(newRule?.totalLimitValue),
+						customerBuys: {
+							quantity: newRule?.minBuyQuantity,
+							collectionIDs: ['gid://shopify/Collection/446505353457'],
+						},
+						customerGets: {
+							quantity: newRule?.minGetQuantity,
+							collectionIDs: ['gid://shopify/Collection/444497264881'],
+						},
+					},
+					type: queryType,
+					callback (success) {
+						if (success) {
+							handleAddRule();
+							shopify.saveBar.hide('save-bar');
+							navigate('/app/manage-discount');
+						}
+					},
+				}),
+			);
+			return;
+		}
+		dispatch(
+			createDiscountCodeAsync({
 				shopName: shopify.config.shop || '',
 				data: {
 					title: newRule?.title,
@@ -294,51 +353,23 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					percentage: Number(newRule?.discount),
 					startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
 					endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+					collectionIDs: newRule?.collectionIDs,
+					productIDs: newRule?.productIDs,
 					usageLimit: Number(newRule?.totalLimitValue),
-					customerBuys: {
-						quantity: newRule?.minBuyQuantity,
-						collectionIDs: ["gid://shopify/Collection/446505353457"]
-					},
-					customerGets: {
-						quantity: newRule?.minGetQuantity,
-						collectionIDs: ["gid://shopify/Collection/444497264881"]
-					}
+					appliesOncePerCustomer: newRule?.onePerCustomer,
 				},
 				type: queryType,
-				callback(success) {
+				callback (success) {
 					if (success) {
 						handleAddRule();
 						shopify.saveBar.hide('save-bar');
 						navigate('/app/manage-discount');
 					}
 				},
-			}))
-			return;
-		}
-		dispatch(createDiscountCodeAsync({
-			shopName: shopify.config.shop || '',
-			data: {
-				title: newRule?.title,
-				code: newRule?.checkoutDiscountCode,
-				percentage: Number(newRule?.discount),
-				startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
-				endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
-				collectionIDs: newRule?.collectionIDs,
-				productIDs: newRule?.productIDs,
-				usageLimit: Number(newRule?.totalLimitValue),
-				appliesOncePerCustomer: newRule?.onePerCustomer
-			},
-			type: queryType,
-			callback(success) {
-				if (success) {
-					handleAddRule();
-					shopify.saveBar.hide('save-bar');
-					navigate('/app/manage-discount');
-				}
-			},
-		}))
+			}),
+		);
 	};
-	
+
 	return (
 		<Layout>
 			<Layout.Section>
@@ -393,22 +424,22 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				<Summary />
 			</Layout.Section>
 			<Modal id="product-collection-modal">
-				{(newRule?.buyItemFrom === 'collection' && selected === 1) && (
+				{newRule?.buyItemFrom === 'collection' && selected === 1 && (
 					<CollectionList newRule={newRule} setNewRule={setNewRule} />
 				)}
-				{(newRule?.buyItemFrom === 'product' && selected === 1) && (
+				{newRule?.buyItemFrom === 'product' && selected === 1 && (
 					<ProductsList newRule={newRule} setNewRule={setNewRule} />
 				)}
-				{(newRule?.getItemFrom === 'collection' && selected === 2) && (
+				{newRule?.getItemFrom === 'collection' && selected === 2 && (
 					<CollectionList newRule={newRule} setNewRule={setNewRule} />
 				)}
-				{(newRule?.getItemFrom === 'product' && selected === 2) && (
+				{newRule?.getItemFrom === 'product' && selected === 2 && (
 					<ProductsList newRule={newRule} setNewRule={setNewRule} />
 				)}
-				{(newRule?.appliesTo === 'collection' && selected === 0) && (
+				{newRule?.appliesTo === 'collection' && selected === 0 && (
 					<CollectionList newRule={newRule} setNewRule={setNewRule} />
 				)}
-				{(newRule?.appliesTo === 'product' && selected === 0) && (
+				{newRule?.appliesTo === 'product' && selected === 0 && (
 					<ProductsList newRule={newRule} setNewRule={setNewRule} />
 				)}
 				<TitleBar

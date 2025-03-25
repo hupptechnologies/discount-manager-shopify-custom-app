@@ -134,7 +134,7 @@ interface CreateBuyxGetYDiscountCodeInput {
 export const createBuyXGetYDiscountCode = async (
 	shop: string,
 	request: Request,
-	type: string
+	type: string,
 ): Promise<{ success: boolean; message: string }> => {
 	const {
 		title,
@@ -147,7 +147,7 @@ export const createBuyXGetYDiscountCode = async (
 		customerGets,
 	}: CreateBuyxGetYDiscountCodeInput = await request.json();
 
-	try {		
+	try {
 		const checkCodeExist = await prisma.discountCode.count({
 			where: { shop, code },
 		});
@@ -209,7 +209,8 @@ export const createBuyXGetYDiscountCode = async (
 			},
 		};
 
-		const responseBuyxGetY: CreateBxgyDiscountResponse = await getDetailUsingGraphQL(shop, accessToken, data);
+		const responseBuyxGetY: CreateBxgyDiscountResponse =
+			await getDetailUsingGraphQL(shop, accessToken, data);
 
 		if (responseBuyxGetY.data.errors) {
 			throw new Error(
@@ -233,8 +234,8 @@ export const createBuyXGetYDiscountCode = async (
 					usageLimit: usageLimit,
 					discountType: 'PERCENT',
 					isActive: true,
-					discountScope: type.toUpperCase()
-				}
+					discountScope: type.toUpperCase(),
+				},
 			});
 			return { success: true, message: 'Discount code created successfully' };
 		}

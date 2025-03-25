@@ -90,7 +90,7 @@ interface CreateDiscountCodeInput {
 export const createDiscountCode = async (
 	shop: string,
 	request: Request,
-	type: string
+	type: string,
 ): Promise<{ success: boolean; message: string }> => {
 	const {
 		title,
@@ -189,7 +189,7 @@ export const createDiscountCode = async (
 					discountType: 'PERCENT',
 					usageLimit,
 					isActive: true,
-					discountScope: type.toUpperCase()
+					discountScope: type.toUpperCase(),
 				},
 			});
 			return { success: true, message: 'Discount code created successfully' };

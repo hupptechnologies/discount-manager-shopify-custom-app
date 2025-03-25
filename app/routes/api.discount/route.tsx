@@ -15,7 +15,7 @@ interface ActionResponse {
 export interface getDiscountCodeResponse {
 	success: boolean;
 	discountCode: object | null;
-	discountScope: string  | null;
+	discountScope: string | null;
 	message: string;
 }
 
@@ -39,20 +39,22 @@ export const loader = async ({
 	const shop = url.searchParams.get('shop') ?? '';
 	const page = parseInt(url.searchParams.get('page') ?? '1', 10);
 	const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10);
-	const status = url.searchParams.get('status') as
-		| 'active'
-		| 'pending';
+	const status = url.searchParams.get('status') as 'active' | 'pending';
 	const usedCountGreaterThan = parseInt(
 		url.searchParams.get('usedCountGreaterThan') ?? '0',
 		10,
 	);
 	const searchQuery = url.searchParams.get('searchQuery') ?? '';
-	const orderByCode = url.searchParams.get('orderByCode') as | 'asc' | 'desc';
+	const orderByCode = url.searchParams.get('orderByCode') as 'asc' | 'desc';
 	const id = Number(url.searchParams.get('id'));
 	const discountType = url.searchParams.get('discountType') ?? '';
 
 	if (id && discountType) {
-		const getDiscountCodeResponse = await getDiscountCodeById(id, shop, discountType);
+		const getDiscountCodeResponse = await getDiscountCodeById(
+			id,
+			shop,
+			discountType,
+		);
 		return json<getDiscountCodeResponse>(getDiscountCodeResponse);
 	}
 
@@ -63,7 +65,7 @@ export const loader = async ({
 		status,
 		usedCountGreaterThan,
 		searchQuery,
-		orderByCode
+		orderByCode,
 	);
 
 	return json<LoaderResponse>(fetchDiscountCodes);
@@ -77,16 +79,27 @@ export const action = async ({
 	const url = new URL(request.url);
 	const shop = url.searchParams.get('shop') ?? '';
 	const type = url.searchParams.get('type') ?? '';
-	const id = Number(url.searchParams.get('id'))
+	const id = Number(url.searchParams.get('id'));
 	if (request.method === 'PUT') {
 		if (!id) {
-			return json<ActionResponse>({ success: false, message: 'Id is required for update code' });
+			return json<ActionResponse>({
+				success: false,
+				message: 'Id is required for update code',
+			});
 		}
 		if (type === 'buyXgetY') {
-			const buyXGetYResponse = await updateBuyXGetYDiscountCode(shop, request, id);
+			const buyXGetYResponse = await updateBuyXGetYDiscountCode(
+				shop,
+				request,
+				id,
+			);
 			return json<ActionResponse>(buyXGetYResponse);
 		}
-		const updateBasicDiscountCodeResponse = await updateBasicDiscountCode(shop, request, id);
+		const updateBasicDiscountCodeResponse = await updateBasicDiscountCode(
+			shop,
+			request,
+			id,
+		);
 		return json<ActionResponse>(updateBasicDiscountCodeResponse);
 	}
 	if (request.method === 'DELETE') {
@@ -95,11 +108,18 @@ export const action = async ({
 	}
 	if (request.method === 'POST') {
 		if (type === 'buyXgetY') {
-			const buyXGetYResponse = await createBuyXGetYDiscountCode(shop, request, type);
+			const buyXGetYResponse = await createBuyXGetYDiscountCode(
+				shop,
+				request,
+				type,
+			);
 			return json<ActionResponse>(buyXGetYResponse);
 		}
 		const discountCodeResponse = await createDiscountCode(shop, request, type);
 		return json<ActionResponse>(discountCodeResponse);
 	}
-	return json<ActionResponse>({ success: false, message: 'Not found any method' });
+	return json<ActionResponse>({
+		success: false,
+		message: 'Not found any method',
+	});
 };

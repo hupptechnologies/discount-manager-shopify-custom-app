@@ -4,7 +4,6 @@ import {
 	Text,
 	useIndexResourceState,
 	IndexTable,
-	useBreakpoints,
 	Thumbnail,
 	InlineStack,
 	Scrollable,

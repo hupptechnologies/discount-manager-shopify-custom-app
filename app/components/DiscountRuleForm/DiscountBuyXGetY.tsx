@@ -12,7 +12,7 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
-import { EditObj } from './DiscountValue';
+import type { EditObj } from './DiscountValue';
 import EditItemsList from './EditItemsList';
 
 interface DiscountBuyXGetYProps {
@@ -47,7 +47,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	handleOpen,
 	handleSearchOneChange,
 	handleSearchTwoChange,
-	queryType
+	queryType,
 }) => {
 	return (
 		<Card>
@@ -132,15 +132,23 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						prefix={<Icon source={SearchIcon} />}
 						placeholder={`Search ${newRule.buyItemFrom === 'collection' ? 'collection' : 'product'}`}
 					/>
-					<Button onClick={() => handleOpen('buy', newRule.buyItemFrom === 'collection' ? 'collection' : 'product')} variant="secondary">
+					<Button
+						onClick={() =>
+							handleOpen(
+								'buy',
+								newRule.buyItemFrom === 'collection' ? 'collection' : 'product',
+							)
+						}
+						variant="secondary"
+					>
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{editObj?.isEdit && queryType === 'buyXgetY' &&
+				{editObj?.isEdit && queryType === 'buyXgetY' && (
 					<FormLayout.Group>
 						<EditItemsList editObj={editObj} />
 					</FormLayout.Group>
-				}
+				)}
 				<Divider borderColor="border" />
 				<BlockStack gap="300">
 					<Text variant="headingMd" fontWeight="semibold" as="h6">
@@ -187,15 +195,23 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						prefix={<Icon source={SearchIcon} />}
 						placeholder={`Search ${newRule.getItemFrom === 'collection' ? 'collection' : 'product'}`}
 					/>
-					<Button onClick={() => handleOpen('get', newRule.getItemFrom === 'collection' ? 'collection' : 'product')} variant="secondary">
+					<Button
+						onClick={() =>
+							handleOpen(
+								'get',
+								newRule.getItemFrom === 'collection' ? 'collection' : 'product',
+							)
+						}
+						variant="secondary"
+					>
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{editObj?.isEdit && queryType === 'buyXgetY' &&
+				{editObj?.isEdit && queryType === 'buyXgetY' && (
 					<FormLayout.Group>
 						<EditItemsList editObj={editObj} />
 					</FormLayout.Group>
-				}
+				)}
 				<Text variant="bodyMd" fontWeight="bold" as="h4">
 					At a discounted value
 				</Text>
