@@ -60,6 +60,7 @@ interface CreateBuyXGetYDiscountCodeParams {
 interface GetDiscountCodeByIdParams {
 	shopName: string;
 	id: number;
+	discountType: string;
 }
 
 export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
@@ -109,6 +110,6 @@ export const createBuyXGetYDiscountCode = (params: CreateBuyXGetYDiscountCodePar
 
 export const getDiscountCodeById = (params: GetDiscountCodeByIdParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { shopName, id } = params;
-	return requestInstance.get(`discount?shop=${shopName}&id=${id}`);
+	const { shopName, id, discountType } = params;
+	return requestInstance.get(`discount?shop=${shopName}&id=${id}&discountType=${discountType}`);
 };

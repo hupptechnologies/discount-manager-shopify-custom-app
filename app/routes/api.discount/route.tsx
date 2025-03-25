@@ -49,9 +49,10 @@ export const loader = async ({
 	const searchQuery = url.searchParams.get('searchQuery') ?? '';
 	const orderByCode = url.searchParams.get('orderByCode') as | 'asc' | 'desc';
 	const id = Number(url.searchParams.get('id'));
+	const discountType = url.searchParams.get('discountType') ?? '';
 
-	if (id) {
-		const getDiscountCodeResponse = await getDiscountCodeById(id, shop); 
+	if (id && discountType) {
+		const getDiscountCodeResponse = await getDiscountCodeById(id, shop, discountType);
 		return json<getDiscountCodeResponse>(getDiscountCodeResponse);
 	}
 

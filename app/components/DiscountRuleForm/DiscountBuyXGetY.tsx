@@ -12,6 +12,8 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
+import { EditObj } from './DiscountValue';
+import EditItemsList from './EditItemsList';
 
 interface DiscountBuyXGetYProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -34,14 +36,18 @@ interface DiscountBuyXGetYProps {
 	};
 	handleSearchOneChange: React.Dispatch<any>;
 	handleSearchTwoChange: React.Dispatch<any>;
+	editObj: EditObj;
+	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
 }
 
 const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
+	editObj,
 	newRule,
 	setNewRule,
 	handleOpen,
 	handleSearchOneChange,
 	handleSearchTwoChange,
+	queryType
 }) => {
 	return (
 		<Card>
@@ -130,6 +136,11 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
+				{editObj?.isEdit && queryType === 'buyXgetY' &&
+					<FormLayout.Group>
+						<EditItemsList editObj={editObj} />
+					</FormLayout.Group>
+				}
 				<Divider borderColor="border" />
 				<BlockStack gap="300">
 					<Text variant="headingMd" fontWeight="semibold" as="h6">
@@ -180,6 +191,11 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
+				{editObj?.isEdit && queryType === 'buyXgetY' &&
+					<FormLayout.Group>
+						<EditItemsList editObj={editObj} />
+					</FormLayout.Group>
+				}
 				<Text variant="bodyMd" fontWeight="bold" as="h4">
 					At a discounted value
 				</Text>

@@ -2,47 +2,45 @@ import { getDiscountCodeResponse } from 'app/routes/api.discount/route';
 import prisma from '../../db.server';
 import { getDetailUsingGraphQL } from "app/service/product";
 
-const GET_DISCOUNT_CODE_DETAILS_QUERY = `
-query getDiscountCode($query: String!) {
-	codeDiscountNodes(first: 1, query: $query) {
-		nodes {
-			id
-			codeDiscount {
-				__typename
-				... on DiscountCodeBasic {
-					status
-					title
-					startsAt
-					endsAt
-					codes(first: 1) {
-						edges {
-							node {
-								code
-							}
+const GET_BASIC_DISCOUNT_CODE_QUERY = `
+query getDiscountCode($ID: ID!) {
+	codeDiscountNode(id: $ID) {
+		id
+		codeDiscount {
+			__typename
+			... on DiscountCodeBasic {
+				status
+				title
+				startsAt
+				endsAt
+				codes(first: 1) {
+					edges {
+						node {
+							code
 						}
 					}
-					customerGets {
-						value {
-							... on DiscountPercentage {
-								percentage
-							}
+				}
+				customerGets {
+					value {
+						... on DiscountPercentage {
+							percentage
 						}
-						items {
-							... on DiscountProducts {
-								productVariants(first: 10) {
-									edges {
-										node {
-											title
-											id
-											product {
-												variantsCount {
-													count
-												}
-												featuredMedia {
-													preview {
-														image {
-															url
-														}
+					}
+					items {
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										title
+										id
+										product {
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
 													}
 												}
 											}
@@ -52,78 +50,212 @@ query getDiscountCode($query: String!) {
 							}
 						}
 					}
-					usageLimit
-					appliesOncePerCustomer
 				}
+				usageLimit
+				appliesOncePerCustomer
 			}
 		}
 	}
 }`;
 
-interface DiscountQueryResponse {
-	data: {
-		data: {
-			codeDiscountNodes: {
-				nodes: {
-					id: string;
-					codeDiscount: {
-						__typename: string;
-						status: string;
+const GET_BUYXGETY_DISCOUNT_CODE_QUERY = `
+query getDiscountcode($ID: ID!) {
+	codeDiscountNode(id: $ID) {
+		id
+		codeDiscount {
+			__typename
+			... on DiscountCodeBxgy {
+				status
+				title
+				startsAt
+				endsAt
+				codes(first: 1) {
+					edges {
+						node {
+							code
+						}
+					}
+				}
+				customerBuys {
+					value {
+						... on DiscountQuantity {
+							quantity
+						}
+					}
+					items {
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				customerGets {
+					value {
+						... on DiscountOnQuantity {
+							effect {
+								... on DiscountPercentage {
+									percentage
+								}
+							}
+							quantity {
+								quantity
+							}
+						}
+					}
+					items {
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				usesPerOrderLimit
+				appliesOncePerCustomer
+			}
+		}
+	}
+}`;
+
+interface DiscountCodeBxgy {
+	__typename: 'DiscountCodeBxgy';
+	status: string;
+	title: string;
+	startsAt: string;
+	endsAt: string;
+	codes: {
+		edges: {
+			node: {
+				code: string;
+			};
+		}[];
+	};
+	customerBuys: {
+		value: {
+			quantity: number;
+		};
+		items: {
+			collections: {
+				edges: {
+					node: {
 						title: string;
-						startsAt: string;
-						endsAt: string;
-						codes: {
-							edges: {
-								node: {
-									code: string;
-								};
-							}[];
+						productsCount: {
+							count: number;
 						};
-						customerGets: {
-							value: {
-								percentage: number;
-							};
-							items: {
-								productVariants: {
-									edges: {
-										node: {
-											id: string;
-											title: string;
-											products: {
-												edges: {
-													node: {
-														id: string;
-														title: string;
-														product: {
-															variantsCount: {
-																count: number | null;
-															}
-															featuredMedia: {
-																preview: {
-																	image: {
-																		url: string;
-																	}
-																}
-															}
-														};
-													};
-												}[];
-											};
-										};
-									}[];
-								};
-							}[];
-						};
-						usageLimit: number | null;
-						appliesOncePerCustomer: boolean;
+						image: {
+							url: string;
+						}
 					};
 				}[];
+			};
+		}[];
+	};
+	customerGets: {
+		value: {
+			effect: {
+				percentage: number;
+			};
+			quantity: {
+				quantity: number;
+			};
+		};
+		items: {
+			collections: {
+			edges: {
+				node: {
+					title: string;
+					productsCount: {
+						count: number;
+					};
+					image: {
+						url: string;
+					}
+				};
+			}[];
+			};
+		}[];
+	};
+	usesPerOrderLimit: number | null;
+	appliesOncePerCustomer: boolean;
+}
+
+interface DiscountCodeBasic {
+	__typename: string;
+	status: string;
+	title: string;
+	startsAt: string;
+	endsAt: string;
+	codes: {
+		edges: {
+			node: {
+				code: string;
+			};
+		}[];
+	};
+	customerGets: {
+		value: {
+			percentage: number;
+		};
+		items: {
+			productVariants: {
+				edges: {
+					node: {
+						id: string;
+						title: string;
+						product: {
+							variantsCount: {
+								count: number | null;
+							}
+							featuredMedia: {
+								preview: {
+									image: {
+										url: string;
+									}
+								}
+							}
+						};
+					};
+				}[];
+			};
+		}[];
+	};
+	usageLimit: number | null;
+	appliesOncePerCustomer: boolean;
+}
+
+interface BasicDiscountQueryResponse {
+	data: {
+		data: {
+			codeDiscountNode: {
+				id: string;
+				codeDiscount: DiscountCodeBasic | DiscountCodeBxgy;
 			};
 		}
 	}
 }
 
-export const getDiscountCodeById = async (id: number, shop: string): Promise<getDiscountCodeResponse> => {
+export const getDiscountCodeById = async (id: number, shop: string, discountType: string): Promise<getDiscountCodeResponse> => {
 	try {
 		const response = await prisma.session.findMany({
 			where: { shop },
@@ -135,22 +267,22 @@ export const getDiscountCodeById = async (id: number, shop: string): Promise<get
 		}
 		
 		const data = {
-			query: GET_DISCOUNT_CODE_DETAILS_QUERY,
+			query: discountType === 'PRODUCT' ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_BUYXGETY_DISCOUNT_CODE_QUERY,
 			variables: {
-				query: `id:${id}`
+				ID: `gid://shopify/DiscountCodeNode/${id}`
 			}
 		}
-		const getDiscountCodeByIdFromShopify: DiscountQueryResponse = await getDetailUsingGraphQL(shop, accessToken, data);
-
+		const getDiscountCodeByIdFromShopify: BasicDiscountQueryResponse = await getDetailUsingGraphQL(shop, accessToken, data);
+		
 		const getCodeObj = await prisma.discountCode.findFirst({
 			where: {
 				shop,
 				discountId: `gid://shopify/DiscountCodeNode/${id}`
 			}
 		})
-		const discountCode = getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNodes || null;
-		if (getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNodes?.nodes) {
-			return { success: true, discountCode: discountCode?.nodes, discountScope: getCodeObj?.discountScope || '', message: 'Fetch discount code successfuly' };
+		const discountCode = getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode || null;
+		if (getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode) {
+			return { success: true, discountCode: [discountCode], discountScope: getCodeObj?.discountScope || '', message: 'Fetch discount code successfuly' };
 		}
 
 		return { success: false, message: 'Record not found!', discountCode: null, discountScope: '' };

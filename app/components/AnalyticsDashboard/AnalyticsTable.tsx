@@ -147,10 +147,11 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({ setIsLoadingUpdate }) =
 		dispatch(getDiscountCodeByIdAsync({
 			shopName: shopify.config.shop || '',
 			id: id,
+			discountType: type,
 			callback(success) {
 				if (success) {
 					setIsLoadingUpdate(false);
-					navigate(`/app/update-discount?type=${type.toLowerCase()}`);
+					navigate(`/app/update-discount?type=${type === 'PRODUCT' ? 'products' : 'buyXgetY'}`);
 				}
 			},
 		}))

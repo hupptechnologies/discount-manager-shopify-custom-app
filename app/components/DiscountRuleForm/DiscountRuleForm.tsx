@@ -144,18 +144,19 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 
 	useEffect(() => {
 		if (getDiscountCode?.length > 0) {
+			const ifExist = ['PRODUCT'].includes(discountScope);
 			setEditObj({
-				type: ['PRODUCT'].includes(discountScope) ? 'product' : 'collection',
+				type: ifExist ? 'product' : 'collection',
 				isEdit: true,
-				items: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges || []
+				items: ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges : getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges
 			});
 			setNewRule({
 				...newRule,
 				title: getDiscountCode[0]?.codeDiscount?.title || '',
 				checkoutDiscountCode: getDiscountCode[0]?.codeDiscount?.codes?.edges[0].node?.code || '',
-				discount: String(getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage * 100),
+				discount: String((ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage : getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect?.percentage) * 100),
 				totalUsageLimit: true,
-				totalLimitValue: getDiscountCode[0]?.codeDiscount?.usageLimit,
+				totalLimitValue: ifExist ? getDiscountCode[0]?.codeDiscount?.usageLimit : getDiscountCode[0]?.codeDiscount?.usesPerOrderLimit,
 				onePerCustomer:  getDiscountCode[0]?.codeDiscount?.appliesOncePerCustomer
 			})
 		}
@@ -364,6 +365,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						setNewRule={setNewRule}
 						handleSearchOneChange={handleSearchOneChange}
 						handleSearchTwoChange={handleSearchTwoChange}
+						editObj={editObj}
+						queryType={queryType}
 					/>
 				) : (
 					<DiscountValue

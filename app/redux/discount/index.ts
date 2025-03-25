@@ -105,6 +105,7 @@ interface GetDiscountCodeByIdReturnValue {
 interface GetDiscountCodeByIdParams {
 	shopName: string;
 	id: number;
+	discountType: string;
 	callback?: (success: boolean) => void;
 }
 
