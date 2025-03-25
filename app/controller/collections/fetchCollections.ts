@@ -1,3 +1,5 @@
+import prisma from '../../db.server';
+import { Collection } from 'app/routes/api.collections/route';
 import { getDetailUsingGraphQL } from 'app/service/product';
 
 const GET_COLLECTIONS_QUERY = `
@@ -32,13 +34,6 @@ const COLLECTION_COUNT_QUERY = `
 		}
 	}
 `;
-
-interface Collection {
-	id: string;
-	title: string;
-	productCount: number;
-	image: string | null;
-}
 
 interface PageInfo {
 	endCursor: string | null;

@@ -20,7 +20,7 @@ const DiscountTypeList = () => {
 	const discountTypes = [
 		{
 			id: '1',
-			url: '/app/create-discount?type=product',
+			url: '/app/create-discount?type=products',
 			title: 'Amount off products',
 			description: 'Discount specific products or collections of products',
 			badge: <Badge icon={ProductIcon}>Product discount</Badge>,

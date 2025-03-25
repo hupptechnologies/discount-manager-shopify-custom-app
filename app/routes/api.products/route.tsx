@@ -1,8 +1,17 @@
 import { json } from '@remix-run/node';
 import { fetchProducts } from '../../controller/products/fetchProducts';
 
+export interface ProductVariant {
+	id: string;
+	variant: string;
+	title: string;
+	price: string;
+	quantity: number;
+	image: string | null;
+}
+
 interface LoaderResponse {
-	products: any[];
+	products: ProductVariant[];
 	pageInfo: {
 		endCursor: string | null;
 		hasNextPage: boolean;

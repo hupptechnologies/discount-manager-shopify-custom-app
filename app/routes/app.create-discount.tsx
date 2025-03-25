@@ -8,7 +8,7 @@ export default function CreateDiscountPage () {
 	const [queryType, setQueryType] = useState<QueryType>(null);
 
 	useEffect(() => {
-		const query = window.location.search || '?type=product';
+		const query = window.location.search || '?type=products';
 		const urlParams = new URLSearchParams(query).get('type') as QueryType;
 		setQueryType(urlParams);
 	}, []);

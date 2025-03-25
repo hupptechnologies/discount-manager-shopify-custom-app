@@ -1,8 +1,15 @@
 import { json } from '@remix-run/node';
 import { fetchCollections } from '../../controller/collections/fetchCollections';
 
+export interface Collection {
+	id: string;
+	title: string;
+	productCount: number;
+	image: string | null;
+}
+
 interface LoaderResponse {
-	collections: any[];
+	collections: Collection[];
 	pageInfo: {
 		endCursor: string | null;
 		hasNextPage: boolean;

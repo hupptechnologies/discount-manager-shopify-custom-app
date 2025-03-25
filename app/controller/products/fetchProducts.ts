@@ -1,4 +1,5 @@
 import prisma from '../../db.server';
+import { ProductVariant } from 'app/routes/api.products/route';
 import { getDetailUsingGraphQL } from '../../service/product';
 
 const PRODUCT_VARIANTS_QUERY = `
@@ -39,15 +40,6 @@ const PRODUCT_VARIANTS_COUNT_QUERY = `
         }
     }
 `;
-
-interface ProductVariant {
-	id: string;
-	variant: string;
-	title: string;
-	price: string;
-	quantity: number;
-	image: string | null;
-}
 
 interface PageInfo {
 	endCursor: string | null;

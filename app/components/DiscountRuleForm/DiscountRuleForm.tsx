@@ -14,7 +14,7 @@ import {
 	createDiscountCodeAsync,
 } from 'app/redux/discount';
 import type { AppDispatch, RootState } from 'app/redux/store';
-import type { ItemsList, getAllDiscountCodeDetail } from 'app/redux/discount/slice';
+import { getAllDiscountCodeDetail, type ItemsList } from 'app/redux/discount/slice';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
 import DiscountCodeGen from './DiscountCodeGen';
 import DiscountValue from './DiscountValue';
@@ -445,7 +445,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				<TitleBar
 					title={`Add ${(queryType === 'buyXgetY' ? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : newRule?.appliesTo === 'product') ? 'products' : 'collections'}`}
 				>
-					<button variant="primary">Add</button>
+					<button variant="primary" onClick={handleClose}>Add</button>
 					<button onClick={handleClose}>Cancel</button>
 				</TitleBar>
 			</Modal>
