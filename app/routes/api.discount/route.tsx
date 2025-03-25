@@ -93,10 +93,10 @@ export const action = async ({
 	}
 	if (request.method === 'POST') {
 		if (type === 'buyxgety') {
-			const buyXGetYResponse = await createBuyXGetYDiscountCode(shop, request);
+			const buyXGetYResponse = await createBuyXGetYDiscountCode(shop, request, type);
 			return json<ActionResponse>(buyXGetYResponse);
 		}
-		const discountCodeResponse = await createDiscountCode(shop, request);
+		const discountCodeResponse = await createDiscountCode(shop, request, type);
 		return json<ActionResponse>(discountCodeResponse);
 	}
 	return json<ActionResponse>({ success: false, message: 'Not found any method' });

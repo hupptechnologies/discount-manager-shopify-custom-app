@@ -33,6 +33,7 @@ interface CreateDiscountCodeParams {
 		collectionIDs: string[];
 	},
 	shopName: string;
+	type: string | null;
 }
 
 interface CreateBuyXGetYDiscountCodeParams {
@@ -42,7 +43,7 @@ interface CreateBuyXGetYDiscountCodeParams {
 		code: string;
 		startsAt: string;
 		endsAt: string;
-		usesPerOrderLimit: number;
+		usageLimit: number;
 		customerBuys: {
 			quantity: string;
 			collectionIDs: string[];
@@ -53,6 +54,7 @@ interface CreateBuyXGetYDiscountCodeParams {
 		};
 	},
 	shopName: string;
+	type: string | null;
 }
 
 interface GetDiscountCodeByIdParams {
@@ -95,14 +97,14 @@ export const deleteDiscountCode = (params: DeleteDiscountCodeParams) => {
 
 export const createDiscountCode = (params: CreateDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { shopName, data } = params;
-	return requestInstance.post(`discount?shop=${shopName}`, data);
+	const { shopName, data, type = 'product' } = params;
+	return requestInstance.post(`discount?shop=${shopName}&type=${type}`, data);
 };
 
 export const createBuyXGetYDiscountCode = (params: CreateBuyXGetYDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { shopName, data } = params;
-	return requestInstance.post(`discount?shop=${shopName}&type=buyxgety`, data);
+	const { shopName, data, type = 'buyxgety' } = params;
+	return requestInstance.post(`discount?shop=${shopName}&type=${type}`, data);
 };
 
 export const getDiscountCodeById = (params: GetDiscountCodeByIdParams) => {

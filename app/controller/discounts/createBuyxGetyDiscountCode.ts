@@ -117,7 +117,7 @@ interface CreateBuyxGetYDiscountCodeInput {
 	code: string;
 	startsAt: string;
 	endsAt: string;
-	usesPerOrderLimit: number;
+	usageLimit: number;
 	appliesOncePerCustomer: boolean;
 	customerBuys: {
 		quantity: string;
@@ -134,6 +134,7 @@ interface CreateBuyxGetYDiscountCodeInput {
 export const createBuyXGetYDiscountCode = async (
 	shop: string,
 	request: Request,
+	type: string
 ): Promise<{ success: boolean; message: string }> => {
 	const {
 		title,
@@ -141,12 +142,12 @@ export const createBuyXGetYDiscountCode = async (
 		code,
 		startsAt,
 		endsAt,
-		usesPerOrderLimit,
+		usageLimit,
 		customerBuys,
 		customerGets,
 	}: CreateBuyxGetYDiscountCodeInput = await request.json();
 
-	try {
+	try {		
 		const checkCodeExist = await prisma.discountCode.count({
 			where: { shop, code },
 		});
@@ -203,7 +204,7 @@ export const createBuyXGetYDiscountCode = async (
 					endsAt,
 					startsAt,
 					title,
-					usesPerOrderLimit,
+					usesPerOrderLimit: usageLimit,
 				},
 			},
 		};
@@ -229,9 +230,10 @@ export const createBuyXGetYDiscountCode = async (
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
 					discountAmount: percentage,
+					usageLimit: usageLimit,
 					discountType: 'PERCENT',
-					usageLimit: usesPerOrderLimit,
 					isActive: true,
+					discountScope: type.toUpperCase()
 				},
 			});
 			return { success: true, message: 'Discount code created successfully' };

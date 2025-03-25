@@ -272,7 +272,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const handleDiscard = () => {
 		shopify.saveBar.hide('save-bar');
 	};
-
+	
 	const handleSubmit = () => {
 		if (queryType === 'buyXgetY') {
 			dispatch(createBuyXGetYDiscountCodeAsync({
@@ -283,7 +283,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					percentage: Number(newRule?.discount),
 					startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
 					endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
-					usesPerOrderLimit: Number(newRule?.totalLimitValue),
+					usageLimit: Number(newRule?.totalLimitValue),
 					customerBuys: {
 						quantity: newRule?.minBuyQuantity,
 						collectionIDs: ["gid://shopify/Collection/446505353457"]
@@ -293,6 +293,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						collectionIDs: ["gid://shopify/Collection/444497264881"]
 					}
 				},
+				type: queryType,
 				callback(success) {
 					if (success) {
 						handleAddRule();
@@ -314,8 +315,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				collectionIDs: newRule?.collectionIDs,
 				productIDs: newRule?.productIDs,
 				usageLimit: Number(newRule?.totalLimitValue),
-				appliesOncePerCustomer: newRule?.onePerCustomer,
+				appliesOncePerCustomer: newRule?.onePerCustomer
 			},
+			type: queryType,
 			callback(success) {
 				if (success) {
 					handleAddRule();

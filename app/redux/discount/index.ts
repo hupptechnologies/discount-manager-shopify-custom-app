@@ -67,6 +67,7 @@ interface CreateDiscountCodeParams {
 		collectionIDs: string[];
 	}
 	shopName: string;
+	type: string | null;
 	callback?: (success: boolean) => void;
 }
 
@@ -77,7 +78,7 @@ interface CreateBuyXGetYDiscountCodeParams {
 		code: string;
 		startsAt: string;
 		endsAt: string;
-		usesPerOrderLimit: number;
+		usageLimit: number;
 		customerBuys: {
 			quantity: string;
 			collectionIDs: string[];
@@ -88,6 +89,7 @@ interface CreateBuyXGetYDiscountCodeParams {
 		};
 	},
 	shopName: string;
+	type: string | null;
 	callback?: (success: boolean) => void;
 }
 
