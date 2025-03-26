@@ -10,7 +10,7 @@ interface PopoverProps {
 	setSelectedTime: any;
 	selectedDates: any;
 	setSelectedDates: any;
-}
+};
 
 const PopoverPicker: React.FC<PopoverProps> = ({
 	activator,

@@ -14,6 +14,7 @@ import {
 } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from 'app/redux/store';
+import type { DiscountRule } from './DiscountRuleForm';
 import { fetchAllProductsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 
@@ -25,31 +26,26 @@ interface Product {
 	title: string;
 	image?: string;
 	disabled?: boolean;
-}
+};
 
 interface ProductRow extends Product {
 	position: number;
-}
+};
 
 interface ProductGroup {
 	id: string;
 	position: number;
 	products: ProductRow[];
-}
+};
 
 interface Groups {
 	[key: string]: ProductGroup;
-}
+};
 
 interface ProductProps {
-	newRule: {
-		searchOne: string;
-		searchTwo: string;
-		searchType: string;
-		productIDs: string[];
-	};
+	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
-}
+};
 
 const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 	const shopify = useAppBridge();

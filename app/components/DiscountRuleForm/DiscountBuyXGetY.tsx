@@ -13,32 +13,19 @@ import {
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
 import type { EditObj } from './DiscountValue';
+import type { DiscountRule } from './DiscountRuleForm';
+import type { QueryType } from 'app/routes/app.create-discount';
 import EditItemsList from './EditItemsList';
 
 interface DiscountBuyXGetYProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	handleOpen: any;
-	newRule: {
-		isMinQuantityItem: boolean;
-		isMinPurchaseAmount: boolean;
-		appliesTo: 'collection' | 'product';
-		purchaseType: 'one-time' | 'subscription' | 'both';
-		searchOne: string;
-		searchTwo: string;
-		minBuyQuantity: string;
-		minGetQuantity: string;
-		isPercentage: boolean;
-		isAmountOfEach: boolean;
-		isFree: boolean;
-		discount: string;
-		buyItemFrom: string;
-		getItemFrom: string;
-	};
+	newRule: DiscountRule;
 	handleSearchOneChange: React.Dispatch<any>;
 	handleSearchTwoChange: React.Dispatch<any>;
 	editObj: EditObj;
-	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
-}
+	queryType: QueryType;
+};
 
 const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	editObj,

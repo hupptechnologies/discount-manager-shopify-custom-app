@@ -17,6 +17,7 @@ import {
 } from 'app/redux/discount';
 import type { AppDispatch, RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail, type ItemsList } from 'app/redux/discount/slice';
+import type { QueryType } from 'app/routes/app.create-discount';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
 import DiscountCodeGen from './DiscountCodeGen';
 import DiscountValue from './DiscountValue';
@@ -28,7 +29,7 @@ import DiscountBuyXGetY from './DiscountBuyXGetY';
 import UsageLimit from './UsageLimit';
 import { convertToLocalTime, formatDateWithTimeZone } from 'app/utils/json';
 
-interface DiscountRule {
+export interface DiscountRule {
 	selectedDiscountType: string | null;
 	selectedMethod: string;
 	title: string;
@@ -91,10 +92,10 @@ interface DiscountRule {
 		collectionIDs: string[];
 		productIDs: string[];
 	}
-}
+};
 
-type DiscountRuleFormProps = {
-	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
+interface DiscountRuleFormProps {
+	queryType: QueryType
 };
 
 export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({

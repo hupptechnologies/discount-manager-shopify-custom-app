@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Page } from '@shopify/polaris';
+import type { QueryType } from './app.create-discount';
 import { DiscountRuleForm } from 'app/components/DiscountRuleForm/DiscountRuleForm';
-
-type QueryType = 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
 
 export default function UpdateDiscountPage () {
 	const [queryType, setQueryType] = useState<QueryType>(null);

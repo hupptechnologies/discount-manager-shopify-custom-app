@@ -7,15 +7,12 @@ import {
 	Text,
 	TextField,
 } from '@shopify/polaris';
+import type { DiscountRule } from './DiscountRuleForm';
 
 interface UsageLimitProps {
-	newRule: {
-		totalUsageLimit: boolean;
-		onePerCustomer: boolean;
-		totalLimitValue: string;
-	};
+	newRule: DiscountRule;
 	setNewRule: React.Dispatch<any>;
-}
+};
 
 const UsageLimit: React.FC<UsageLimitProps> = ({ newRule, setNewRule }) => {
 	return (

@@ -14,7 +14,7 @@ import type { EditObj } from './DiscountValue';
 
 export interface EditItemsListProps {
 	editObj: EditObj;
-}
+};
 
 const EditItemsList: React.FC<EditItemsListProps> = ({ editObj }) => {
 	return (

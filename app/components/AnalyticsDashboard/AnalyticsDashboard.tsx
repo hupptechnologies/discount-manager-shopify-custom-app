@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 interface AnalyticsDashboardProps {
 	handleOpen: any;
-}
+};
 
 const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 	handleOpen,

@@ -30,7 +30,8 @@ import { formatDateWithTime } from 'app/utils/json';
 
 interface AnalyticsTableProps {
 	setIsLoadingUpdate: any;
-}
+};
+
 const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 	setIsLoadingUpdate,
 }) => {

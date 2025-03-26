@@ -9,27 +9,14 @@ import {
 	Icon,
 } from '@shopify/polaris';
 import { CalendarIcon, ClockIcon } from '@shopify/polaris-icons';
+import type { DiscountRule } from './DiscountRuleForm';
 import PopoverPicker from './PopoverPicker';
 import { getYearMonthDay } from 'app/utils/json';
 
 interface ActiveDatesProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
-	newRule: {
-		condition: string;
-		discount: string;
-		isEndDate: boolean;
-		selectedStartDates: {
-			start: object | null;
-			end: object | null;
-		};
-		selectedEndDates: {
-			start: object | null;
-			end: object | null;
-		};
-		selectedStartTime: string;
-		selectedEndTime: string;
-	};
-}
+	newRule: DiscountRule;
+};
 
 const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 	const [popoverStartDateActive, setPopoverStartDateActive] = useState(true);

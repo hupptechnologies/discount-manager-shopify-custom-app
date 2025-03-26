@@ -6,12 +6,12 @@ import {
 	List,
 	Text,
 } from '@shopify/polaris';
+import type { QueryType } from 'app/routes/app.create-discount';
+import type { DiscountRule } from './DiscountRuleForm';
 
 type DiscountRuleFormProps = {
-	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
-	newRule: {
-		checkoutDiscountCode: string;
-	};
+	queryType: QueryType;
+	newRule: DiscountRule;
 };
 
 const Summary: React.FC<DiscountRuleFormProps> = ({ queryType, newRule }) => {

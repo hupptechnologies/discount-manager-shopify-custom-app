@@ -65,3 +65,10 @@ export const convertToLocalTime = (startsAt: string, endsAt: string) => {
 		selectedEndTime: endDateTime.toFormat('hh:mm a'),
 	};
 };
+
+export const generateDiscountCode = (length: number = 8): string => {
+	const prefixes = ['FREE', 'EVENT', 'STANDARD', 'SUMMER', 'WINTER', 'FESTIVAL', 'HOLIDAY'];
+	const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+	const randomPercentage = Math.floor(Math.random() * 100) + 1;
+	return `${randomPrefix}${randomPercentage}%`;
+};

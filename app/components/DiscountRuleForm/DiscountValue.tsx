@@ -11,28 +11,24 @@ import {
 import { SearchIcon } from '@shopify/polaris-icons';
 import type { ItemsList } from 'app/redux/discount/slice';
 import EditItemsList from './EditItemsList';
+import { QueryType } from 'app/routes/app.create-discount';
+import { DiscountRule } from './DiscountRuleForm';
 
 export interface EditObj {
 	type: 'product' | 'collection';
 	isEdit: boolean;
 	items: ItemsList[];
-}
+};
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	handleSearchChange: React.Dispatch<any>;
 	handleOpen: any;
-	newRule: {
-		discount: string;
-		discountType: 'per' | 'fixed';
-		appliesTo: 'collection' | 'product';
-		purchaseType: 'one-time' | 'subscription' | 'both';
-		searchOne: string;
-	};
+	newRule: DiscountRule;
 	editObj: EditObj;
-	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
+	queryType: QueryType;
 	handleSaveBarOpen: any;
-}
+};
 
 const DiscountValue: React.FC<DiscountValueProps> = ({
 	editObj,

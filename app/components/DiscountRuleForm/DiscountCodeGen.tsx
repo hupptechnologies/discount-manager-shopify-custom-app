@@ -11,24 +11,19 @@ import {
 	Text,
 	TextField,
 } from '@shopify/polaris';
+import { generateDiscountCode } from 'app/utils/json';
+import type { DiscountRule } from './DiscountRuleForm';
+import type { QueryType } from 'app/routes/app.create-discount';
 
 interface DiscountCodeGenProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	handleButtonClick: React.Dispatch<React.SetStateAction<any>>;
 	handleSaveBarOpen: any;
 	activeButtonIndex: number;
-	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
+	queryType: QueryType;
 	heading: string;
-	newRule: {
-		isCustom: boolean;
-		isRandom: boolean;
-		checkoutDiscountCode: string;
-		title: string;
-		noOfCodeCount: string;
-		codeLength: string;
-		dicountCodePrefix: string;
-	};
-}
+	newRule: DiscountRule;
+};
 
 const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 	heading,
@@ -111,7 +106,15 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						<Text variant="bodyMd" as="h3">
 							Discount code
 						</Text>
-						<Link removeUnderline>Generate code</Link>
+						<Link
+							onClick={() => {
+								handleSaveBarOpen();
+								setNewRule({ ...newRule, checkoutDiscountCode: generateDiscountCode(8) })
+							}}
+							removeUnderline
+						>
+							Generate code
+						</Link>
 					</InlineStack>
 					<TextField
 						label

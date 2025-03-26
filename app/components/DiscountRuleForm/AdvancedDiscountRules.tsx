@@ -7,22 +7,15 @@ import {
 	Text,
 	TextField,
 } from '@shopify/polaris';
+import type { DiscountRule } from './DiscountRuleForm';
+import type { QueryType } from 'app/routes/app.create-discount';
 
 export interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
-	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
-	newRule: {
-		quantity: string;
-		advanceDiscountType: 'stackable' | 'exclusive';
-		region: string;
-		condition: string;
-		customerType: 'all' | 'vip' | 'first-time';
-		productCategory: string;
-		isAI: boolean;
-		isStockBased: boolean;
-	};
+	queryType: QueryType;
+	newRule: DiscountRule;
 	handleSaveBarOpen: any;
-}
+};
 
 const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	newRule,
