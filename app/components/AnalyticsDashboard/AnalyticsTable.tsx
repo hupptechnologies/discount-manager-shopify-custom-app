@@ -176,13 +176,22 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					if (success) {
 						setIsLoadingUpdate(false);
 						navigate(
-							`/app/update-discount?type=${type === 'PRODUCT' ? 'products' : 'buyXgetY'}`,
+							`/app/update-discount?type=${type === 'BUYXGETY' ? 'buyXgetY' : type === 'PRODUCT' ? 'products' : type === 'ORDER' ? 'order' : 'shipping'}`,
 						);
 					}
 				},
 			}),
 		);
 	};
+
+	const bulkActions = [
+		{
+			icon: DeleteIcon,
+			destructive: true,
+			content: 'Delete all codes',
+			onAction: () => console.log('Todo: implement bulk delete'),
+		},
+	];
 
 	const { selectedResources, allResourcesSelected, handleSelectionChange } =
 		useIndexResourceState(discountCodes as any[]);
@@ -216,7 +225,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 							{code}
 						</Text>
 					</IndexTable.Cell>
-					<IndexTable.Cell>{discountAmount}</IndexTable.Cell>
+					<IndexTable.Cell>{discountAmount}%</IndexTable.Cell>
 					<IndexTable.Cell>{discountScope}</IndexTable.Cell>
 					<IndexTable.Cell>
 						<Text as="span" alignment="start">
@@ -298,6 +307,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					allResourcesSelected ? 'All' : selectedResources.length
 				}
 				onSelectionChange={handleSelectionChange}
+				bulkActions={bulkActions}
 				headings={[
 					{ title: 'Discount Code' },
 					{ title: 'Discount Percentage' },

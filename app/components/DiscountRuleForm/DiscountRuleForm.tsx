@@ -186,7 +186,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 
 	useEffect(() => {
 		if (getDiscountCode?.length > 0) {
-			const ifExist = ['PRODUCT'].includes(discountScope);
+			const ifExist = ['PRODUCT', 'ORDER', 'SHIPPING'].includes(discountScope);
 			const items = ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
 				: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges ?? [];
 			const { selectedStartDates, selectedEndDates,selectedEndTime, selectedStartTime } = convertToLocalTime(getDiscountCode[0]?.codeDiscount?.startsAt, getDiscountCode[0]?.codeDiscount?.endsAt);

@@ -272,9 +272,9 @@ export const getDiscountCodeById = async (
 
 		const data = {
 			query:
-				discountType === 'PRODUCT'
-					? GET_BASIC_DISCOUNT_CODE_QUERY
-					: GET_BUYXGETY_DISCOUNT_CODE_QUERY,
+				discountType === 'BUYXGETY'
+					? GET_BUYXGETY_DISCOUNT_CODE_QUERY
+					: GET_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
 				ID: `gid://shopify/DiscountCodeNode/${id}`,
 			},
