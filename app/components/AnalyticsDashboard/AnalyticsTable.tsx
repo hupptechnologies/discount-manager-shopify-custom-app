@@ -20,7 +20,7 @@ import {
 import { EditIcon, DeleteIcon } from '@shopify/polaris-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from 'app/redux/store';
-import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
+import { getAllDiscountCodeDetail, handleUpdateDiscountCodeId } from 'app/redux/discount/slice';
 import {
 	deleteDiscountCodeAsync,
 	fetchAllDiscountCodesAsync,
@@ -160,15 +160,17 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 
 	const handleEdit = (
 		e: React.MouseEvent<HTMLElement>,
+		discountId: number,
 		id: number,
 		type: string,
 	): void => {
 		e.stopPropagation();
 		setIsLoadingUpdate(true);
+		dispatch(handleUpdateDiscountCodeId({ id }));
 		dispatch(
 			getDiscountCodeByIdAsync({
 				shopName: shopify.config.shop || '',
-				id: id,
+				id: discountId,
 				discountType: type,
 				callback (success) {
 					if (success) {
@@ -237,6 +239,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 										handleEdit(
 											e,
 											parseInt(discountId.split('/').pop() as string),
+											id,
 											discountScope,
 										)
 									}

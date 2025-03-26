@@ -6,6 +6,7 @@ import {
 	deleteDiscountCodeAsync,
 	fetchAllDiscountCodesAsync,
 	getDiscountCodeByIdAsync,
+	updateDiscountCodeAsync,
 } from './index';
 
 interface Pagination {
@@ -67,6 +68,7 @@ interface discountState {
 	isCreateDiscountCode: boolean;
 	isBuyXGetYCreateDiscountCode: boolean;
 	isGetDiscountCodeById: boolean;
+	isUpdateDiscountCode: boolean;
 	pagination: Pagination;
 	discountStats: {
 		activeDiscount: { count: number; data: number[] };
@@ -75,6 +77,7 @@ interface discountState {
 	};
 	getDiscountCode: GetDiscountCodeList[];
 	discountScope: string;
+	updateDiscountCodeId: number | null;
 }
 
 const initialState: discountState = {
@@ -94,14 +97,20 @@ const initialState: discountState = {
 	isCreateDiscountCode: false,
 	isBuyXGetYCreateDiscountCode: false,
 	isGetDiscountCodeById: false,
+	isUpdateDiscountCode: false,
 	getDiscountCode: [],
 	discountScope: '',
+	updateDiscountCodeId: null
 };
 
 const discountSlice = createSlice({
 	name: 'discount',
 	initialState,
-	reducers: {},
+	reducers: {
+		handleUpdateDiscountCodeId: (state, { payload }) => {
+			state.updateDiscountCodeId = payload.id;
+		}
+	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchAllDiscountCodesAsync.pending, (state) => {
 			state.isLoading = true;
@@ -172,8 +181,16 @@ const discountSlice = createSlice({
 			state.getDiscountCode = [];
 			state.discountScope = '';
 		});
+		builder.addCase(updateDiscountCodeAsync.pending, (state) => {
+			state.isUpdateDiscountCode = true;
+		});
+		builder.addCase(updateDiscountCodeAsync.rejected, (state) => {
+			state.isUpdateDiscountCode = false;
+		});
 	},
 });
+
+export const { handleUpdateDiscountCodeId } = discountSlice.actions;
 
 export const getAllDiscountCodeDetail = (state: { discount: discountState }) =>
 	state.discount;

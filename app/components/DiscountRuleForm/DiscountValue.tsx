@@ -123,7 +123,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							</Button>
 						</FormLayout.Group>
 					)}
-					{editObj?.isEdit && queryType === 'products' && (
+					{editObj?.isEdit && queryType === 'products' && editObj?.items?.length > 0 && (
 						<FormLayout.Group>
 							<EditItemsList editObj={editObj} />
 						</FormLayout.Group>

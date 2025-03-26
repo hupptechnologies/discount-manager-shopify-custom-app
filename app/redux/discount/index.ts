@@ -1,11 +1,13 @@
 import type { AxiosError } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+	UpdateDiscountCodeParams,
 	createBuyXGetYDiscountCode,
 	createDiscountCode,
 	deleteDiscountCode,
 	fetchAllDiscountCodes,
 	getDiscountCodeById,
+	updateDiscountCode,
 } from 'app/service/discount';
 import type { GetDiscountCodeList } from './slice';
 
@@ -259,6 +261,34 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 				message: '',
 				discountScope: '',
 			});
+		} catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	},
+);
+
+export const updateDiscountCodeAsync = createAsyncThunk<
+	ReturnValue,
+	UpdateDiscountCodeParams
+>(
+	'discount/updateDiscountCode',
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await updateDiscountCode(params);
+			if (response.data) {
+				const { success, message } = response.data;
+				if (message) {
+					shopify.toast.show(message);
+				}
+				if (success && params.callback) {
+					params.callback(success);
+				}
+				return fulfillWithValue({ success, message });
+			}
+			return fulfillWithValue({ success: false, message: '' });
 		} catch (err: any) {
 			const error = err as AxiosError;
 			// eslint-disable-next-line no-console

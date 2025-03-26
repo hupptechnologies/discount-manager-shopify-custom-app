@@ -63,6 +63,24 @@ interface GetDiscountCodeByIdParams {
 	discountType: string;
 }
 
+export interface UpdateDiscountCodeParams {
+	data: {
+		title: string;
+		percentage: number;
+		code: string;
+		startsAt: string;
+		endsAt: string;
+		usageLimit: number;
+		appliesOncePerCustomer: boolean;
+		productIDs: string[];
+		collectionIDs: string[];
+	};
+	shopName: string;
+	id: number | null;
+	type: string | null;
+	callback?: (success: boolean) => void;
+}
+
 export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const {
@@ -124,4 +142,12 @@ export const getDiscountCodeById = (params: GetDiscountCodeByIdParams) => {
 	return requestInstance.get(
 		`discount?shop=${shopName}&id=${id}&discountType=${discountType}`,
 	);
+};
+
+export const updateDiscountCode = (
+	params: UpdateDiscountCodeParams,
+) => {
+	const requestInstance: AxiosInstance = backendAPI();
+	const { shopName, id, type = 'products', data } = params;
+	return requestInstance.put(`discount?shop=${shopName}&id=${id}&type=${type}`, data);
 };

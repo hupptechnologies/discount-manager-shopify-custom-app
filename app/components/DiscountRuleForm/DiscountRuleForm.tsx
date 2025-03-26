@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
 	createBuyXGetYDiscountCodeAsync,
 	createDiscountCodeAsync,
+	updateDiscountCodeAsync,
 } from 'app/redux/discount';
 import type { AppDispatch, RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail, type ItemsList } from 'app/redux/discount/slice';
@@ -88,7 +89,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const { debounce } = pkg;
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { getDiscountCode, discountScope } = useSelector((state: RootState) =>
+	const { getDiscountCode, discountScope, updateDiscountCodeId } = useSelector((state: RootState) =>
 		getAllDiscountCodeDetail(state),
 	);
 	const navigate = useNavigate();
@@ -155,18 +156,16 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		collectionIDs: [],
 		productIDs: [],
 	});
-
+	
 	useEffect(() => {
 		if (getDiscountCode?.length > 0) {
 			const ifExist = ['PRODUCT'].includes(discountScope);
+			const items = ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
+				: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges ?? [];
 			setEditObj({
 				type: ifExist ? 'product' : 'collection',
 				isEdit: true,
-				items: ifExist
-					? getDiscountCode[0]?.codeDiscount?.customerGets?.items
-							?.productVariants?.edges
-					: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections
-							?.edges,
+				items: items,
 			});
 			setNewRule({
 				...newRule,
@@ -304,6 +303,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleSave = () => {
+		if (editObj?.isEdit) {
+			return handleUpdate();
+		}
 		handleSubmit();
 	};
 
@@ -369,6 +371,34 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			}),
 		);
 	};
+
+	const handleUpdate = () => {
+		dispatch(
+			updateDiscountCodeAsync({
+				shopName: shopify.config.shop || '',
+				data: {
+					title: newRule?.title,
+					code: newRule?.checkoutDiscountCode,
+					percentage: Number(newRule?.discount),
+					startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
+					endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+					usageLimit: Number(newRule?.totalLimitValue),
+					collectionIDs: newRule?.collectionIDs,
+					productIDs: newRule?.productIDs,
+					appliesOncePerCustomer: newRule?.onePerCustomer,
+				},
+				type: queryType,
+				id: updateDiscountCodeId,
+				callback (success) {
+					if (success) {
+						handleAddRule();
+						shopify.saveBar.hide('save-bar');
+						navigate('/app/manage-discount');
+					}
+				},
+			}),
+		);
+	}
 
 	return (
 		<Layout>
