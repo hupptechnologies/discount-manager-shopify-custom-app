@@ -1,5 +1,5 @@
-import type { getDiscountCodeResponse } from 'app/routes/api.discount/route';
 import prisma from '../../db.server';
+import type { getDiscountCodeResponse } from 'app/routes/api.discount/route';
 import { getDetailUsingGraphQL } from 'app/service/product';
 
 const GET_BASIC_DISCOUNT_CODE_QUERY = `
@@ -291,6 +291,15 @@ export const getDiscountCodeById = async (
 	discountType: string,
 ): Promise<getDiscountCodeResponse> => {
 	try {
+		if (!shop || !id || !discountType) {
+			return {
+				success: false,
+				message: 'Required fields id, discountType and shop',
+				discountCode: null,
+				discountScope: '',
+				advancedRule: null
+			}
+		}
 		const response = await prisma.session.findMany({
 			where: { shop },
 		});
@@ -325,7 +334,7 @@ export const getDiscountCodeById = async (
 				success: true,
 				discountCode: [discountCode],
 				discountScope: getCodeObj?.discountScope || '',
-				advancedRule: getCodeObj?.advancedRule,
+				advancedRule: (getCodeObj?.advancedRule as object | null),
 				message: 'Fetch discount code successfuly',
 			};
 		}

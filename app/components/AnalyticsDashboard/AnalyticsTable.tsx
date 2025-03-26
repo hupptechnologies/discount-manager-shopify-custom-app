@@ -216,9 +216,9 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				index,
 			) => (
 				<IndexTable.Row
-					id={String(id)}
+					id={id}
 					key={id}
-					selected={selectedResources.includes(String(id))}
+					selected={selectedResources.includes(id)}
 					position={index}
 				>
 					<IndexTable.Cell>

@@ -74,7 +74,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 18,\n    \"code\": \"TESTFREE18%\",\n    \"startsAt\": \"2025-03-20\",\n    \"endsAt\": \"2025-03-22\",\n    \"usageLimit\": 15,\n    \"appliesOncePerCustomer\": false,\n    \"productIDs\": [\"gid://shopify/ProductVariant/45807212593393\", \"gid://shopify/ProductVariant/45807212560625\"]\n}",
+							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 18,\n    \"code\": \"TESTFREE18%\",\n    \"startsAt\": \"2025-03-25T21:00:31Z\",\n    \"endsAt\": \"2025-03-28T00:30:00Z\",\n    \"usageLimit\": 15,\n    \"appliesOncePerCustomer\": false,\n    // \"productIDs\": [\n    //     \"gid://shopify/ProductVariant/45807212593393\",\n    //     \"gid://shopify/ProductVariant/45807212560625\"\n    // ],\n    \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -171,7 +171,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&id=1981237625073&discountType=BUYXGETY",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&id=1981493674225&discountType=PRODUCT",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -186,11 +186,11 @@
 								},
 								{
 									"key": "id",
-									"value": "1981237625073"
+									"value": "1981493674225"
 								},
 								{
 									"key": "discountType",
-									"value": "BUYXGETY"
+									"value": "PRODUCT"
 								}
 							]
 						}

@@ -107,6 +107,12 @@ export const createDiscountCode = async (
 	}: CreateDiscountCodeInput = await request.json();
 
 	try {
+		if (!percentage || !code || !productIDs || !collectionIDs) {
+			return {
+				success: false,
+				message: 'Required fields percentage, code, productIDs & collectionIDs'
+			}
+		}
 		const checkCodeExist = await prisma.discountCode.count({
 			where: { shop, code: code },
 		});
@@ -185,7 +191,7 @@ export const createDiscountCode = async (
 					title: title,
 					shop,
 					discountId: discountCodeData?.id,
-					advancedRule,
+					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
 					discountAmount: percentage,

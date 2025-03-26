@@ -31,6 +31,12 @@ export const deleteDiscountCode = async (
 	const { id, code, discountId }: DeleteDiscountCodeInput =
 		await request.json();
 	try {
+		if (!id || !code || !discountId) {
+			return {
+				success: false,
+				message: 'Required fields id, code, discountId'
+			}
+		}
 		const discountCode = await prisma.discountCode.findFirst({
 			where: { shop, code, id, discountId },
 		});

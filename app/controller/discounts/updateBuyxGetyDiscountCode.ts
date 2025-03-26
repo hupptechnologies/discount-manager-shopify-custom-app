@@ -109,6 +109,12 @@ export const updateBuyXGetYDiscountCode = async (
 		advancedRule
 	}: CreateBuyxGetYDiscountCodeInput = await request.json();
 	try {
+		if (!shop || !id) {
+			return {
+				success: false,
+				message: 'Required fields id and shop'
+			}
+		}
 		const findDiscountExist = await prisma.discountCode.findFirst({
 			where: { shop, id },
 		});
@@ -189,7 +195,7 @@ export const updateBuyXGetYDiscountCode = async (
 					endDate: new Date(endsAt),
 					discountAmount: percentage,
 					discountType: 'PERCENT',
-					advancedRule,
+					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
 					usageLimit,
 					isActive: true,
 				},

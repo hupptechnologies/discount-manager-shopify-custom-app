@@ -150,6 +150,12 @@ export const createBuyXGetYDiscountCode = async (
 	}: CreateBuyxGetYDiscountCodeInput = await request.json();
 
 	try {
+		if (!percentage || !code) {
+			return {
+				success: false,
+				message: 'Required fields percentage, code'
+			}
+		}
 		const checkCodeExist = await prisma.discountCode.count({
 			where: { shop, code },
 		});
@@ -235,7 +241,7 @@ export const createBuyXGetYDiscountCode = async (
 					discountAmount: percentage,
 					usageLimit: usageLimit,
 					discountType: 'PERCENT',
-					advancedRule,
+					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
 					isActive: true,
 					discountScope: type === 'buyXgetY' ? 'BUYXGETY' : 'PRODUCT',
 				},
