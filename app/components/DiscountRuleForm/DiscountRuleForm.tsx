@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
 	createBuyXGetYDiscountCodeAsync,
 	createDiscountCodeAsync,
+	updateBuyXGetYDiscountCodeAsync,
 	updateDiscountCodeAsync,
 } from 'app/redux/discount';
 import type { AppDispatch, RootState } from 'app/redux/store';
@@ -77,6 +78,19 @@ interface DiscountRule {
 	dicountCodePrefix: string;
 	collectionIDs: string[];
 	productIDs: string[];
+	customerBuys: {
+		quantity: string;
+		items: ItemsList[];
+		collectionIDs: string[];
+		productIDs: string[];
+	};
+	customerGets: {
+		quantity: string;
+		percentage: string;
+		items: ItemsList[];
+		collectionIDs: string[];
+		productIDs: string[];
+	}
 }
 
 type DiscountRuleFormProps = {
@@ -155,6 +169,19 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		dicountCodePrefix: '',
 		collectionIDs: [],
 		productIDs: [],
+		customerBuys: {
+			items: [],
+			productIDs: [],
+			collectionIDs: [],
+			quantity: '0'
+		},
+		customerGets: {
+			items: [],
+			productIDs: [],
+			collectionIDs: [],
+			quantity: '0',
+			percentage: ''
+		}
 	});
 	
 	useEffect(() => {
@@ -184,6 +211,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					: getDiscountCode[0]?.codeDiscount?.usesPerOrderLimit,
 				onePerCustomer:
 					getDiscountCode[0]?.codeDiscount?.appliesOncePerCustomer,
+				minGetQuantity: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.quantity?.quantity,
+				minBuyQuantity: getDiscountCode[0]?.codeDiscount?.customerBuys?.value?.quantity,
 			});
 		}
 	}, [getDiscountCode, discountScope]);
@@ -279,6 +308,19 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			dicountCodePrefix: '',
 			collectionIDs: [],
 			productIDs: [],
+			customerBuys: {
+				items: [],
+				productIDs: [],
+				collectionIDs: [],
+				quantity: '0'
+			},
+			customerGets: {
+				items: [],
+				productIDs: [],
+				collectionIDs: [],
+				quantity: '0',
+				percentage: ''
+			}
 		});
 	};
 
@@ -373,6 +415,39 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleUpdate = () => {
+		if (queryType === 'buyXgetY') {
+			dispatch(
+				updateBuyXGetYDiscountCodeAsync({
+					shopName: shopify.config.shop || '',
+					data: {
+						title: newRule?.title,
+						code: newRule?.checkoutDiscountCode,
+						percentage: Number(newRule?.discount),
+						startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
+						endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+						usageLimit: Number(newRule?.totalLimitValue),
+						customerBuys: {
+							quantity: newRule?.minBuyQuantity,
+							collectionIDs: ['gid://shopify/Collection/446505353457'],
+						},
+						customerGets: {
+							quantity: newRule?.minGetQuantity,
+							collectionIDs: ['gid://shopify/Collection/444497264881'],
+						},
+					},
+					type: queryType,
+					id: updateDiscountCodeId,
+					callback (success) {
+						if (success) {
+							handleAddRule();
+							shopify.saveBar.hide('save-bar');
+							navigate('/app/manage-discount');
+						}
+					},
+				}),
+			);
+			return;
+		}
 		dispatch(
 			updateDiscountCodeAsync({
 				shopName: shopify.config.shop || '',

@@ -6,6 +6,7 @@ import {
 	deleteDiscountCodeAsync,
 	fetchAllDiscountCodesAsync,
 	getDiscountCodeByIdAsync,
+	updateBuyXGetYDiscountCodeAsync,
 	updateDiscountCodeAsync,
 } from './index';
 
@@ -69,6 +70,7 @@ interface discountState {
 	isBuyXGetYCreateDiscountCode: boolean;
 	isGetDiscountCodeById: boolean;
 	isUpdateDiscountCode: boolean;
+	isUpdateBuyXGetyDiscountCode: boolean;
 	pagination: Pagination;
 	discountStats: {
 		activeDiscount: { count: number; data: number[] };
@@ -98,6 +100,7 @@ const initialState: discountState = {
 	isBuyXGetYCreateDiscountCode: false,
 	isGetDiscountCodeById: false,
 	isUpdateDiscountCode: false,
+	isUpdateBuyXGetyDiscountCode: false,
 	getDiscountCode: [],
 	discountScope: '',
 	updateDiscountCodeId: null
@@ -186,6 +189,12 @@ const discountSlice = createSlice({
 		});
 		builder.addCase(updateDiscountCodeAsync.rejected, (state) => {
 			state.isUpdateDiscountCode = false;
+		});
+		builder.addCase(updateBuyXGetYDiscountCodeAsync.pending, (state) => {
+			state.isUpdateBuyXGetyDiscountCode = true;
+		});
+		builder.addCase(updateBuyXGetYDiscountCodeAsync.rejected, (state) => {
+			state.isUpdateBuyXGetyDiscountCode = false;
 		});
 	},
 });

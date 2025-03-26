@@ -1,12 +1,19 @@
 import type { AxiosError } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+	CreateBuyXGetYDiscountCodeParams,
+	CreateDiscountCodeParams,
+	DeleteDiscountCodeParams,
+	FetchAllDiscountCodesParams,
+	GetDiscountCodeByIdParams,
+	UpdateBuyXGetYDiscountCodeParams,
 	UpdateDiscountCodeParams,
 	createBuyXGetYDiscountCode,
 	createDiscountCode,
 	deleteDiscountCode,
 	fetchAllDiscountCodes,
 	getDiscountCodeById,
+	updateBuyXGetYDiscountCode,
 	updateDiscountCode,
 } from 'app/service/discount';
 import type { GetDiscountCodeList } from './slice';
@@ -38,69 +45,9 @@ interface FetchAllDiscountCodeReturnValue {
 	};
 }
 
-interface fetchAllDiscountCodesParams {
-	page?: string;
-	pageSize?: string;
-	searchQuery?: string;
-	status?: 'active' | 'pending' | null;
-	orderByCode?: 'asc' | 'desc' | null;
-	usedCountGreaterThan?: number | null;
-	shopName: string;
-	callback?: (success: boolean) => void;
-}
-
 interface ReturnValue {
 	success: boolean;
 	message: string;
-}
-
-interface DeleteDiscountCodeParams {
-	data: {
-		id: number | null;
-		code: string;
-		discountId: string;
-	};
-	shopName: string;
-	callback?: (success: boolean) => void;
-}
-
-interface CreateDiscountCodeParams {
-	data: {
-		title: string;
-		percentage: number;
-		code: string;
-		startsAt: string;
-		endsAt: string;
-		usageLimit: number;
-		appliesOncePerCustomer: boolean;
-		productIDs: string[];
-		collectionIDs: string[];
-	};
-	shopName: string;
-	type: string | null;
-	callback?: (success: boolean) => void;
-}
-
-interface CreateBuyXGetYDiscountCodeParams {
-	data: {
-		title: string;
-		percentage: number;
-		code: string;
-		startsAt: string;
-		endsAt: string;
-		usageLimit: number;
-		customerBuys: {
-			quantity: string;
-			collectionIDs: string[];
-		};
-		customerGets: {
-			quantity: string;
-			collectionIDs: string[];
-		};
-	};
-	shopName: string;
-	type: string | null;
-	callback?: (success: boolean) => void;
 }
 
 interface GetDiscountCodeByIdReturnValue {
@@ -110,16 +57,9 @@ interface GetDiscountCodeByIdReturnValue {
 	discountScope: string;
 }
 
-interface GetDiscountCodeByIdParams {
-	shopName: string;
-	id: number;
-	discountType: string;
-	callback?: (success: boolean) => void;
-}
-
 export const fetchAllDiscountCodesAsync = createAsyncThunk<
 	FetchAllDiscountCodeReturnValue,
-	fetchAllDiscountCodesParams
+	FetchAllDiscountCodesParams
 >(
 	'discount/fetchAllDiscountCodes',
 	async (params, { rejectWithValue, fulfillWithValue }) => {
@@ -278,6 +218,34 @@ export const updateDiscountCodeAsync = createAsyncThunk<
 	async (params, { rejectWithValue, fulfillWithValue }) => {
 		try {
 			const response = await updateDiscountCode(params);
+			if (response.data) {
+				const { success, message } = response.data;
+				if (message) {
+					shopify.toast.show(message);
+				}
+				if (success && params.callback) {
+					params.callback(success);
+				}
+				return fulfillWithValue({ success, message });
+			}
+			return fulfillWithValue({ success: false, message: '' });
+		} catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	},
+);
+
+export const updateBuyXGetYDiscountCodeAsync = createAsyncThunk<
+	ReturnValue,
+	UpdateBuyXGetYDiscountCodeParams
+>(
+	'discount/updateBuyXGetYDiscountCode',
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await updateBuyXGetYDiscountCode(params);
 			if (response.data) {
 				const { success, message } = response.data;
 				if (message) {

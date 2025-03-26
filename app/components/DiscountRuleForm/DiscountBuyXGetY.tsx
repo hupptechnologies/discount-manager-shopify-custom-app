@@ -144,7 +144,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{editObj?.isEdit && queryType === 'buyXgetY' && (
+				{editObj?.isEdit && queryType === 'buyXgetY' && editObj?.items?.length > 0 && (
 					<FormLayout.Group>
 						<EditItemsList editObj={editObj} />
 					</FormLayout.Group>
@@ -207,7 +207,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{editObj?.isEdit && queryType === 'buyXgetY' && (
+				{editObj?.isEdit && queryType === 'buyXgetY' && editObj?.items?.length > 0 && (
 					<FormLayout.Group>
 						<EditItemsList editObj={editObj} />
 					</FormLayout.Group>

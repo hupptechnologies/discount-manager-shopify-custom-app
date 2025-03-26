@@ -1,26 +1,28 @@
 import type { AxiosInstance } from 'axios';
 import { backendAPI } from './index';
 
-interface FetchAllDiscountCodesParams {
+export interface FetchAllDiscountCodesParams {
 	page?: string;
 	pageSize?: string;
-	status?: 'active' | 'pending' | null;
 	searchQuery?: string;
-	usedCountGreaterThan?: number | null;
+	status?: 'active' | 'pending' | null;
 	orderByCode?: 'asc' | 'desc' | null;
+	usedCountGreaterThan?: number | null;
 	shopName: string;
+	callback?: (success: boolean) => void;
 }
 
-interface DeleteDiscountCodeParams {
+export interface DeleteDiscountCodeParams {
 	data: {
 		id: number | null;
 		code: string;
 		discountId: string;
 	};
 	shopName: string;
+	callback?: (success: boolean) => void;
 }
 
-interface CreateDiscountCodeParams {
+export interface CreateDiscountCodeParams {
 	data: {
 		title: string;
 		percentage: number;
@@ -34,9 +36,10 @@ interface CreateDiscountCodeParams {
 	};
 	shopName: string;
 	type: string | null;
+	callback?: (success: boolean) => void;
 }
 
-interface CreateBuyXGetYDiscountCodeParams {
+export interface CreateBuyXGetYDiscountCodeParams {
 	data: {
 		title: string;
 		percentage: number;
@@ -55,12 +58,14 @@ interface CreateBuyXGetYDiscountCodeParams {
 	};
 	shopName: string;
 	type: string | null;
+	callback?: (success: boolean) => void;
 }
 
-interface GetDiscountCodeByIdParams {
+export interface GetDiscountCodeByIdParams {
 	shopName: string;
 	id: number;
 	discountType: string;
+	callback?: (success: boolean) => void;
 }
 
 export interface UpdateDiscountCodeParams {
@@ -74,6 +79,29 @@ export interface UpdateDiscountCodeParams {
 		appliesOncePerCustomer: boolean;
 		productIDs: string[];
 		collectionIDs: string[];
+	};
+	shopName: string;
+	id: number | null;
+	type: string | null;
+	callback?: (success: boolean) => void;
+}
+
+export interface UpdateBuyXGetYDiscountCodeParams {
+	data: {
+		title: string;
+		percentage: number;
+		code: string;
+		startsAt: string;
+		endsAt: string;
+		usageLimit: number;
+		customerBuys: {
+			quantity: string;
+			collectionIDs: string[];
+		};
+		customerGets: {
+			quantity: string;
+			collectionIDs: string[];
+		};
 	};
 	shopName: string;
 	id: number | null;
@@ -149,5 +177,13 @@ export const updateDiscountCode = (
 ) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, id, type = 'products', data } = params;
+	return requestInstance.put(`discount?shop=${shopName}&id=${id}&type=${type}`, data);
+};
+
+export const updateBuyXGetYDiscountCode = (
+	params: UpdateBuyXGetYDiscountCodeParams,
+) => {
+	const requestInstance: AxiosInstance = backendAPI();
+	const { shopName, id, type = 'buyXgetY', data } = params;
 	return requestInstance.put(`discount?shop=${shopName}&id=${id}&type=${type}`, data);
 };

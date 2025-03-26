@@ -77,7 +77,7 @@ interface CreateBuyxGetYDiscountCodeInput {
 	code: string;
 	startsAt: string;
 	endsAt: string;
-	usesPerOrderLimit: number;
+	usageLimit: number;
 	appliesOncePerCustomer: boolean;
 	customerBuys: {
 		quantity: string;
@@ -102,7 +102,7 @@ export const updateBuyXGetYDiscountCode = async (
 		code,
 		startsAt,
 		endsAt,
-		usesPerOrderLimit,
+		usageLimit,
 		customerBuys,
 		customerGets,
 	}: CreateBuyxGetYDiscountCodeInput = await request.json();
@@ -130,7 +130,7 @@ export const updateBuyXGetYDiscountCode = async (
 						endsAt,
 						startsAt,
 						title,
-						usesPerOrderLimit,
+						usesPerOrderLimit: usageLimit,
 						customerBuys: {
 							items: {
 								collections: {
@@ -174,7 +174,8 @@ export const updateBuyXGetYDiscountCode = async (
 				throw new Error(`GraphQL errors: ${errors}`);
 			}
 
-			await prisma.discountCode.create({
+			await prisma.discountCode.update({
+				where: { shop, id },
 				data: {
 					code,
 					title,
@@ -186,7 +187,7 @@ export const updateBuyXGetYDiscountCode = async (
 					endDate: new Date(endsAt),
 					discountAmount: percentage,
 					discountType: 'PERCENT',
-					usageLimit: usesPerOrderLimit,
+					usageLimit,
 					isActive: true,
 				},
 			});
