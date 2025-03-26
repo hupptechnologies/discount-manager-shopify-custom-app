@@ -64,6 +64,7 @@ interface CreateDiscountCodeInput {
 	appliesOncePerCustomer: boolean;
 	productIDs: string[];
 	collectionIDs: string[];
+	advancedRule: object | null;
 }
 
 export const updateBasicDiscountCode = async (
@@ -81,6 +82,7 @@ export const updateBasicDiscountCode = async (
 		appliesOncePerCustomer,
 		productIDs = [],
 		collectionIDs = [],
+		advancedRule
 	}: CreateDiscountCodeInput = await request.json();
 	try {
 		const findDiscountExist = await prisma.discountCode.findFirst({
@@ -163,6 +165,7 @@ export const updateBasicDiscountCode = async (
 					endDate: new Date(endsAt),
 					discountAmount: percentage,
 					discountType: 'PERCENT',
+					advancedRule,
 					usageLimit,
 					isActive: true,
 				},

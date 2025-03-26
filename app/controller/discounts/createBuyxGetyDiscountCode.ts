@@ -129,6 +129,7 @@ interface CreateBuyxGetYDiscountCodeInput {
 		productIDs: string[];
 		collectionIDs: string[];
 	};
+	advancedRule: object | null;
 }
 
 export const createBuyXGetYDiscountCode = async (
@@ -145,6 +146,7 @@ export const createBuyXGetYDiscountCode = async (
 		usageLimit,
 		customerBuys,
 		customerGets,
+		advancedRule
 	}: CreateBuyxGetYDiscountCodeInput = await request.json();
 
 	try {
@@ -233,6 +235,7 @@ export const createBuyXGetYDiscountCode = async (
 					discountAmount: percentage,
 					usageLimit: usageLimit,
 					discountType: 'PERCENT',
+					advancedRule,
 					isActive: true,
 					discountScope: type === 'buyXgetY' ? 'BUYXGETY' : 'PRODUCT',
 				},

@@ -295,6 +295,7 @@ export const getDiscountCodeById = async (
 				success: true,
 				discountCode: [discountCode],
 				discountScope: getCodeObj?.discountScope || '',
+				advancedRule: getCodeObj?.advancedRule,
 				message: 'Fetch discount code successfuly',
 			};
 		}
@@ -304,6 +305,7 @@ export const getDiscountCodeById = async (
 			message: 'Record not found!',
 			discountCode: null,
 			discountScope: '',
+			advancedRule: null
 		};
 	} catch (error) {
 		// eslint-disable-next-line no-console
@@ -316,6 +318,7 @@ export const getDiscountCodeById = async (
 			discountCode: [],
 			message: 'Something went wrong',
 			discountScope: '',
+			advancedRule: null
 		};
 	}
 };

@@ -85,6 +85,7 @@ interface CreateDiscountCodeInput {
 	appliesOncePerCustomer: boolean;
 	productIDs: string[];
 	collectionIDs: string[];
+	advancedRule: object | null;
 }
 
 export const createDiscountCode = async (
@@ -102,6 +103,7 @@ export const createDiscountCode = async (
 		appliesOncePerCustomer,
 		productIDs = [],
 		collectionIDs = [],
+		advancedRule
 	}: CreateDiscountCodeInput = await request.json();
 
 	try {
@@ -183,6 +185,7 @@ export const createDiscountCode = async (
 					title: title,
 					shop,
 					discountId: discountCodeData?.id,
+					advancedRule,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
 					discountAmount: percentage,

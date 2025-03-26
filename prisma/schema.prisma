@@ -37,7 +37,7 @@ model DiscountCode {
   title           String
   shop            String
   discountId      String
-  description     String?
+  advancedRule    Json?
   discountAmount  Float
   discountType    DiscountType
   discountScope   DiscountScope

@@ -9,6 +9,7 @@ import {
 	updateBuyXGetYDiscountCodeAsync,
 	updateDiscountCodeAsync,
 } from './index';
+import { AdvancedRuleObject } from 'app/service/discount';
 
 interface Pagination {
 	totalCount: number;
@@ -79,6 +80,7 @@ interface discountState {
 	};
 	getDiscountCode: GetDiscountCodeList[];
 	discountScope: string;
+	advancedRule: AdvancedRuleObject | null;
 	updateDiscountCodeId: number | null;
 }
 
@@ -103,7 +105,8 @@ const initialState: discountState = {
 	isUpdateBuyXGetyDiscountCode: false,
 	getDiscountCode: [],
 	discountScope: '',
-	updateDiscountCodeId: null
+	updateDiscountCodeId: null,
+	advancedRule: null
 };
 
 const discountSlice = createSlice({
@@ -177,12 +180,14 @@ const discountSlice = createSlice({
 				state.isGetDiscountCodeById = false;
 				state.getDiscountCode = payload.discountCode;
 				state.discountScope = payload.discountScope;
+				state.advancedRule = payload.advancedRule;
 			},
 		);
 		builder.addCase(getDiscountCodeByIdAsync.rejected, (state) => {
 			state.isGetDiscountCodeById = false;
 			state.getDiscountCode = [];
 			state.discountScope = '';
+			state.advancedRule = null;
 		});
 		builder.addCase(updateDiscountCodeAsync.pending, (state) => {
 			state.isUpdateDiscountCode = true;

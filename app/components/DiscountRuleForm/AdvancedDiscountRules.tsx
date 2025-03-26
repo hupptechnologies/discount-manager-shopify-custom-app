@@ -8,7 +8,7 @@ import {
 	TextField,
 } from '@shopify/polaris';
 
-interface AdvanceDiscountRuleProps {
+export interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
 	newRule: {
@@ -43,7 +43,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 							placeholder="e.g. Buy 2, Get 1 Free"
 							autoComplete="off"
 						/>
-						{['product', 'buyXgetY'].includes(queryType as string) && (
+						{['products', 'buyXgetY'].includes(queryType as string) && (
 							<TextField
 								label="Quantity-Based Discount"
 								type="integer"
@@ -91,7 +91,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
-						{['product', 'buyXgetY'].includes(queryType as string) && (
+						{['products', 'buyXgetY'].includes(queryType as string) && (
 							<Select
 								label="Discount by Product Category"
 								options={[
@@ -117,7 +117,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 							/>
 						)}
 					</FormLayout.Group>
-					{['product'].includes(queryType as string) && (
+					{['products'].includes(queryType as string) && (
 						<Checkbox
 							label="Stock-Based Discount"
 							checked={newRule.isStockBased}

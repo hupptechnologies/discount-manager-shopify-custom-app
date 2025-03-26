@@ -103,7 +103,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const { debounce } = pkg;
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { getDiscountCode, discountScope, updateDiscountCodeId } = useSelector((state: RootState) =>
+	const { getDiscountCode, discountScope, updateDiscountCodeId, advancedRule } = useSelector((state: RootState) =>
 		getAllDiscountCodeDetail(state),
 	);
 	const navigate = useNavigate();
@@ -217,10 +217,18 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				selectedStartDates: selectedStartDates,
 				selectedEndDates: selectedEndDates,
 				selectedEndTime: selectedEndTime,
-				selectedStartTime: selectedStartTime
+				selectedStartTime: selectedStartTime,
+				quantity: advancedRule?.quantity ?? '',
+				advanceDiscountType: advancedRule?.advanceDiscountType ?? 'exclusive',
+				region: advancedRule?.region ?? '',
+				condition: advancedRule?.condition ?? '',
+				customerType: advancedRule?.customerType ?? 'all',
+				productCategory: advancedRule?.productCategory ?? '',
+				isAI: advancedRule?.isAI ?? false,
+				isStockBased: advancedRule?.isStockBased ?? false
 			});
 		}
-	}, [getDiscountCode, discountScope]);
+	}, [getDiscountCode, discountScope, advancedRule]);
 	
 	const handleSearchTypeChange = (type: string) => {
 		setNewRule((prev) => ({ ...prev, searchType: type }));
@@ -364,8 +372,18 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const handleDiscard = () => {
 		shopify.saveBar.hide('save-bar');
 	};
-	
+
 	const handleSubmit = () => {
+		const advancedRule = {
+			quantity: newRule?.quantity,
+			advanceDiscountType: newRule?.advanceDiscountType,
+			region: newRule?.region,
+			condition: newRule?.condition,
+			customerType: newRule?.customerType,
+			productCategory: newRule?.productCategory,
+			isAI: newRule?.isAI,
+			isStockBased: newRule?.isStockBased
+		};
 		if (queryType === 'buyXgetY') {
 			dispatch(
 				createBuyXGetYDiscountCodeAsync({
@@ -385,6 +403,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 							quantity: newRule?.minGetQuantity,
 							collectionIDs: ['gid://shopify/Collection/444497264881'],
 						},
+						advancedRule
 					},
 					type: queryType,
 					callback (success) {
@@ -411,6 +430,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					productIDs: newRule?.productIDs,
 					usageLimit: Number(newRule?.totalLimitValue),
 					appliesOncePerCustomer: newRule?.onePerCustomer,
+					advancedRule
 				},
 				type: queryType,
 				callback (success) {
@@ -425,6 +445,16 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleUpdate = () => {
+		const advancedRule = {
+			quantity: newRule?.quantity,
+			advanceDiscountType: newRule?.advanceDiscountType,
+			region: newRule?.region,
+			condition: newRule?.condition,
+			customerType: newRule?.customerType,
+			productCategory: newRule?.productCategory,
+			isAI: newRule?.isAI,
+			isStockBased: newRule?.isStockBased
+		};
 		if (queryType === 'buyXgetY') {
 			dispatch(
 				updateBuyXGetYDiscountCodeAsync({
@@ -444,6 +474,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 							quantity: newRule?.minGetQuantity,
 							collectionIDs: ['gid://shopify/Collection/444497264881'],
 						},
+						advancedRule
 					},
 					type: queryType,
 					id: updateDiscountCodeId,
@@ -471,6 +502,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					collectionIDs: newRule?.collectionIDs,
 					productIDs: newRule?.productIDs,
 					appliesOncePerCustomer: newRule?.onePerCustomer,
+					advancedRule
 				},
 				type: queryType,
 				id: updateDiscountCodeId,

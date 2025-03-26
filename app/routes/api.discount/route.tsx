@@ -15,6 +15,7 @@ interface ActionResponse {
 export interface getDiscountCodeResponse {
 	success: boolean;
 	discountCode: object | null;
+	advancedRule: object | null;
 	discountScope: string | null;
 	message: string;
 }

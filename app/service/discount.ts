@@ -33,6 +33,7 @@ export interface CreateDiscountCodeParams {
 		appliesOncePerCustomer: boolean;
 		productIDs: string[];
 		collectionIDs: string[];
+		advancedRule: object | null;
 	};
 	shopName: string;
 	type: string | null;
@@ -55,6 +56,7 @@ export interface CreateBuyXGetYDiscountCodeParams {
 			quantity: string;
 			collectionIDs: string[];
 		};
+		advancedRule: object | null;
 	};
 	shopName: string;
 	type: string | null;
@@ -68,6 +70,17 @@ export interface GetDiscountCodeByIdParams {
 	callback?: (success: boolean) => void;
 }
 
+export interface AdvancedRuleObject {
+	quantity: string;
+	advanceDiscountType: 'stackable' | 'exclusive';
+	region: string;
+	condition: string;
+	customerType: 'all' | 'vip' | 'first-time';
+	productCategory: string;
+	isAI: boolean;
+	isStockBased: boolean;
+}
+
 export interface UpdateDiscountCodeParams {
 	data: {
 		title: string;
@@ -79,6 +92,7 @@ export interface UpdateDiscountCodeParams {
 		appliesOncePerCustomer: boolean;
 		productIDs: string[];
 		collectionIDs: string[];
+		advancedRule: AdvancedRuleObject | null;
 	};
 	shopName: string;
 	id: number | null;
@@ -102,6 +116,7 @@ export interface UpdateBuyXGetYDiscountCodeParams {
 			quantity: string;
 			collectionIDs: string[];
 		};
+		advancedRule: object | null;
 	};
 	shopName: string;
 	id: number | null;

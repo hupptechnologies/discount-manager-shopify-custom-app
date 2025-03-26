@@ -89,6 +89,7 @@ interface CreateBuyxGetYDiscountCodeInput {
 		productIDs: string[];
 		collectionIDs: string[];
 	};
+	advancedRule: object | null;
 }
 
 export const updateBuyXGetYDiscountCode = async (
@@ -105,6 +106,7 @@ export const updateBuyXGetYDiscountCode = async (
 		usageLimit,
 		customerBuys,
 		customerGets,
+		advancedRule
 	}: CreateBuyxGetYDiscountCodeInput = await request.json();
 	try {
 		const findDiscountExist = await prisma.discountCode.findFirst({
@@ -187,6 +189,7 @@ export const updateBuyXGetYDiscountCode = async (
 					endDate: new Date(endsAt),
 					discountAmount: percentage,
 					discountType: 'PERCENT',
+					advancedRule,
 					usageLimit,
 					isActive: true,
 				},

@@ -107,7 +107,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"FREE TEST\",\n    \"percentage\": 12,\n    \"code\": \"FREETEST12%\",\n    \"startsAt\": \"2025-05-01\",\n    \"endsAt\": \"2025-05-10\",\n    \"usageLimit\": 3\n    // \"appliesOncePerCustomer\": true\n    // \"collectionIDs\": [\"gid://shopify/Collection/443980579057\"]\n}",
+							"raw": "{\n    \"title\": \"FREEDISCOUNT 2\",\n    \"percentage\": 20,\n    \"code\": \"FREEDISCOUNT20%\",\n    \"startsAt\": \"2025-05-01\",\n    \"endsAt\": \"2025-05-10\",\n    \"usageLimit\": 20\n    // \"appliesOncePerCustomer\": true\n    // \"collectionIDs\": [\"gid://shopify/Collection/443980579057\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -115,7 +115,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&id=3",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&id=26",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -130,7 +130,7 @@
 								},
 								{
 									"key": "id",
-									"value": "3"
+									"value": "26"
 								}
 							]
 						}
@@ -159,6 +159,38 @@
 								{
 									"key": "orderByCode",
 									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getDiscountCodeDetailsById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&id=1981237625073&discountType=BUYXGETY",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"discount"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "local-sparkfitness.myshopify.com"
+								},
+								{
+									"key": "id",
+									"value": "1981237625073"
+								},
+								{
+									"key": "discountType",
+									"value": "BUYXGETY"
 								}
 							]
 						}
@@ -205,7 +237,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 20,\n    \"code\": \"TEST20%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-01\",\n    \"usesPerOrderLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"2\",\n        \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"]\n    },\n    \"customerGets\": {\n        \"quantity\": \"4\",\n        \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"]\n    }\n}",
+							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 20,\n    \"code\": \"TEST30%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-01\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"2\",\n        \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"]\n    },\n    \"customerGets\": {\n        \"quantity\": \"4\",\n        \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -242,7 +274,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"BuyXGetYTest\",\n    \"percentage\": 45,\n    \"code\": \"BOGO45%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-02\",\n    \"usesPerOrderLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"5\"\n        // \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"]\n    },\n    \"customerGets\": {\n        \"quantity\": \"5\"\n        // \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"]\n    }\n}",
+							"raw": "{\n    \"title\": \"BuyXGetYTest\",\n    \"percentage\": 45,\n    \"code\": \"BOGO45%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-02\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"5\"\n        // \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"]\n    },\n    \"customerGets\": {\n        \"quantity\": \"5\"\n        // \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
