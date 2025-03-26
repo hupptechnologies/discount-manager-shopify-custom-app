@@ -189,7 +189,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 			icon: DeleteIcon,
 			destructive: true,
 			content: 'Delete all codes',
-			onAction: () => console.log('Todo: implement bulk delete'),
+			onAction: () => shopify.modal.show('delete-comfirmation-modal'),
 		},
 	];
 
@@ -215,9 +215,9 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				index,
 			) => (
 				<IndexTable.Row
-					id={id}
+					id={String(id)}
 					key={id}
-					selected={selectedResources.includes(id)}
+					selected={selectedResources.includes(String(id))}
 					position={index}
 				>
 					<IndexTable.Cell>

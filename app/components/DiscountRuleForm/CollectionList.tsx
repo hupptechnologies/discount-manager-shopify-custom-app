@@ -139,7 +139,7 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 				selectable
 				selectedItems={selectedItems}
 				onSelectionChange={(value) => {
-					setNewRule({ ...newRule, collectionIDs: value });
+					setNewRule({ ...newRule, collectionIDs: value, productIDs: [] });
 					setSelectedItems(value);
 				}}
 				renderItem={(item) => {

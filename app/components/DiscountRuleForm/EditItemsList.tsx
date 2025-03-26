@@ -80,13 +80,13 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ editObj }) => {
 							id,
 							title,
 							productsCount: { count },
-							image: { url },
+							image,
 						} = item?.node;
 						return (
 							<ResourceItem
 								id={id}
 								url=""
-								media={<Thumbnail size="small" alt="" source={url} />}
+								media={<Thumbnail size="small" alt="" source={image?.url} />}
 								accessibilityLabel={`View details for ${title}`}
 							>
 								<InlineStack align="space-between" blockAlign="center">

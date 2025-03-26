@@ -110,6 +110,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
 	const [selected, setSelected] = useState<number>(0);
+	const [run, setRun] = useState<boolean>(false);
 	const [editObj, setEditObj] = useState<{
 		type: 'product' | 'collection';
 		isEdit: boolean;
@@ -187,11 +188,12 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	useEffect(() => {
 		if (getDiscountCode?.length > 0) {
 			const ifExist = ['PRODUCT', 'ORDER', 'SHIPPING'].includes(discountScope);
-			const items = ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
+			const productVariantsExist = getDiscountCode[0]?.codeDiscount?.customerGets?.items.productVariants?.edges?.length > 0;			
+			const items = productVariantsExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
 				: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges ?? [];
 			const { selectedStartDates, selectedEndDates,selectedEndTime, selectedStartTime } = convertToLocalTime(getDiscountCode[0]?.codeDiscount?.startsAt, getDiscountCode[0]?.codeDiscount?.endsAt);
 			setEditObj({
-				type: ifExist ? 'product' : 'collection',
+				type: productVariantsExist ? 'product' : 'collection',
 				isEdit: true,
 				items: items,
 			});
@@ -228,8 +230,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				isStockBased: advancedRule?.isStockBased ?? false
 			});
 		}
-	}, [getDiscountCode, discountScope, advancedRule]);
-	
+	}, [getDiscountCode, discountScope, advancedRule, run]);
+
 	const handleSearchTypeChange = (type: string) => {
 		setNewRule((prev) => ({ ...prev, searchType: type }));
 	};
@@ -289,7 +291,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			isAI: false,
 			isEndDate: false,
 			isRandom: false,
-			isCustom: false,
+			isCustom: true,
 			discountType: 'per',
 			appliesTo: 'collection',
 			purchaseType: 'one-time',
@@ -370,6 +372,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleDiscard = () => {
+		if (editObj?.isEdit) {
+			setRun(!run);
+		}
+		handleAddRule();
 		shopify.saveBar.hide('save-bar');
 	};
 
@@ -554,6 +560,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						handleSearchChange={handleSearchOneChange}
 						editObj={editObj}
 						queryType={queryType}
+						handleSaveBarOpen={handleSaveBarOpen}
 					/>
 				)}
 				<br />
@@ -561,6 +568,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					queryType={queryType}
 					newRule={newRule}
 					setNewRule={setNewRule}
+					handleSaveBarOpen={handleSaveBarOpen}
 				/>
 				<br />
 				<UsageLimit newRule={newRule} setNewRule={setNewRule} />
@@ -568,7 +576,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				<ActiveDates newRule={newRule} setNewRule={setNewRule} />
 			</Layout.Section>
 			<Layout.Section variant="oneThird">
-				<Summary />
+				<Summary newRule={newRule} queryType={queryType} />
 			</Layout.Section>
 			<Modal id="product-collection-modal">
 				{newRule?.buyItemFrom === 'collection' && selected === 1 && (

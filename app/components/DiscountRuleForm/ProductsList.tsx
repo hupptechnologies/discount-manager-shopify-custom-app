@@ -170,7 +170,7 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 		);
 	useEffect(() => {
 		if (selectedResources.length > 0) {
-			setNewRule({ ...newRule, productIDs: selectedResources });
+			setNewRule({ ...newRule, productIDs: selectedResources, collectionIDs: [] });
 		}
 	}, [selectedResources]);
 

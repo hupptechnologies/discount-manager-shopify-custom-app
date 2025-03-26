@@ -7,24 +7,38 @@ import {
 	Text,
 } from '@shopify/polaris';
 
-export default function Summary () {
+type DiscountRuleFormProps = {
+	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
+	newRule: {
+		checkoutDiscountCode: string;
+	};
+};
+
+const Summary: React.FC<DiscountRuleFormProps> = ({ queryType, newRule }) => {
+	const typeList = {
+		order: 'Amount off orders',
+		products: 'Amount off products',
+		shipping: 'Free Shipping',
+		buyXgetY: 'Buy X get Y'
+	};
+
 	return (
 		<Card>
 			<InlineStack gap="400">
 				<Text variant="bodyMd" as="h6">
-					No discount code yet
+					{newRule?.checkoutDiscountCode ? newRule?.checkoutDiscountCode : 'No discount code yet'}
 				</Text>
 			</InlineStack>
 			<BlockStack gap="400">
 				<Text variant="headingSm" as="p">
-					CODE123
+					Code
 				</Text>
 				<Box>
 					<Text variant="headingSm" as="p">
 						Type
 					</Text>
 					<Text as="p" variant="bodyMd">
-						Amount off products
+						{queryType && typeList[queryType]}
 					</Text>
 				</Box>
 				<Box>
@@ -44,4 +58,6 @@ export default function Summary () {
 			</BlockStack>
 		</Card>
 	);
-}
+};
+
+export default Summary;

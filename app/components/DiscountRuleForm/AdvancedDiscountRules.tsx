@@ -21,12 +21,14 @@ export interface AdvanceDiscountRuleProps {
 		isAI: boolean;
 		isStockBased: boolean;
 	};
+	handleSaveBarOpen: any;
 }
 
 const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	newRule,
 	setNewRule,
 	queryType,
+	handleSaveBarOpen
 }) => {
 	return (
 		<Card>
@@ -39,7 +41,10 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 						<TextField
 							label="Discount Condition"
 							value={newRule.condition}
-							onChange={(value) => setNewRule({ ...newRule, condition: value })}
+							onChange={(value) => {
+								handleSaveBarOpen();
+								setNewRule({ ...newRule, condition: value });
+							}}
 							placeholder="e.g. Buy 2, Get 1 Free"
 							autoComplete="off"
 						/>
@@ -49,9 +54,10 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 								type="integer"
 								min={0}
 								value={newRule.quantity}
-								onChange={(value) =>
-									setNewRule({ ...newRule, quantity: value })
-								}
+								onChange={(value) => {
+									handleSaveBarOpen();
+									setNewRule({ ...newRule, quantity: value });
+								}}
 								placeholder="e.g. Buy 3+ items"
 								autoComplete="off"
 							/>
@@ -67,12 +73,13 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 									{ label: 'First-Time Buyers', value: 'first-time' },
 								]}
 								value={newRule.customerType}
-								onChange={(value) =>
+								onChange={(value) => {
+									handleSaveBarOpen();
 									setNewRule({
 										...newRule,
 										customerType: value as 'all' | 'vip' | 'first-time',
-									})
-								}
+									});
+								}}
 							/>
 						)}
 						<Select
@@ -82,12 +89,13 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 								{ label: 'Exclusive', value: 'exclusive' },
 							]}
 							value={newRule.advanceDiscountType}
-							onChange={(value) =>
+							onChange={(value) => {
+								handleSaveBarOpen();
 								setNewRule({
 									...newRule,
 									advanceDiscountType: value as 'stackable' | 'exclusive',
-								})
-							}
+								});
+							}}
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
@@ -99,12 +107,13 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 									{ label: 'Electronic', value: 'electronic' },
 								]}
 								value={newRule.productCategory}
-								onChange={(value) =>
+								onChange={(value) => {
+									handleSaveBarOpen();
 									setNewRule({
 										...newRule,
 										productCategory: value,
-									})
-								}
+									});
+								}}
 							/>
 						)}
 						{['order', 'shipping'].includes(queryType as string) && (
@@ -121,19 +130,23 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 						<Checkbox
 							label="Stock-Based Discount"
 							checked={newRule.isStockBased}
-							onChange={() =>
+							onChange={() => {
+								handleSaveBarOpen();
 								setNewRule({
 									...newRule,
 									isStockBased: !newRule.isStockBased,
-								})
-							}
+								});
+							}}
 							helpText="Auto-apply 25% discount when stock is below 10 units"
 						/>
 					)}
 					<Checkbox
 						label="Enable AI Discounts"
 						checked={newRule.isAI}
-						onChange={() => setNewRule({ ...newRule, isAI: !newRule.isAI })}
+						onChange={() => {
+							handleSaveBarOpen();
+							setNewRule({ ...newRule, isAI: !newRule.isAI });
+						}}
 					/>
 				</FormLayout>
 			</BlockStack>

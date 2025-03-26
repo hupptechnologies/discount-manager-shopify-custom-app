@@ -49,6 +49,22 @@ query getDiscountCode($ID: ID!) {
 								}
 							}
 						}
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										id
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 				usageLimit
@@ -234,6 +250,20 @@ interface DiscountCodeBasic {
 									};
 								};
 							};
+						};
+					};
+				}[];
+			};
+			collections: {
+				edges: {
+					node: {
+						id: string;
+						title: string;
+						productsCount: {
+							count: number;
+						};
+						image: {
+							url: string | null;
 						};
 					};
 				}[];

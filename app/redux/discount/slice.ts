@@ -39,6 +39,12 @@ export interface ItemsList {
 				};
 			};
 		};
+		productsCount: {
+			count: number;
+		};
+		image: {
+			url: string;
+		}
 	};
 }
 
@@ -46,20 +52,37 @@ export interface GetDiscountCodeList {
 	codeDiscount: {
 		title: string;
 		usageLimit: string;
+		startsAt: string;
+		endsAt: string;
 		appliesOncePerCustomer: boolean;
 		codes: {
 			edges: nodeList[];
 		};
+		usesPerOrderLimit: string;
 		customerGets: {
 			value: {
+				effect: {
+					percentage: number;		
+				}
+				quantity: {
+					quantity: string;
+				}
 				percentage: number;
 			};
 			items: {
 				productVariants: {
 					edges: ItemsList[];
 				};
+				collections: {
+					edges: ItemsList[];
+				}
 			};
 		};
+		customerBuys: {
+			value: {
+				quantity: string;
+			}
+		}
 	};
 }
 

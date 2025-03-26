@@ -31,6 +31,7 @@ interface DiscountValueProps {
 	};
 	editObj: EditObj;
 	queryType: 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
+	handleSaveBarOpen: any;
 }
 
 const DiscountValue: React.FC<DiscountValueProps> = ({
@@ -40,6 +41,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 	handleOpen,
 	handleSearchChange,
 	queryType,
+	handleSaveBarOpen
 }) => {
 	return (
 		<Card>
@@ -56,17 +58,21 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 								{ label: 'Fixed amount', value: 'fixed' },
 							]}
 							value={newRule.discountType}
-							onChange={(value) =>
+							onChange={(value) => {
+								handleSaveBarOpen();
 								setNewRule({
 									...newRule,
 									discountType: value as 'per' | 'fixed',
-								})
-							}
+								});
+							}}
 						/>
 						<TextField
 							label=""
 							value={newRule.discount}
-							onChange={(value) => setNewRule({ ...newRule, discount: value })}
+							onChange={(value) => {
+								handleSaveBarOpen();
+								setNewRule({ ...newRule, discount: value });
+							}}
 							autoComplete="off"
 							prefix={newRule.discountType === 'fixed' ? '$' : ''}
 							suffix={newRule.discountType === 'per' ? '%' : ''}
@@ -74,21 +80,24 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
-						<Select
-							label="Applies to"
-							options={[
-								{ label: 'Specific collections', value: 'collection' },
-								{ label: 'Specific products', value: 'product' },
-							]}
-							value={newRule.appliesTo}
-							onChange={(value) =>
-								setNewRule({
-									...newRule,
-									appliesTo: value as 'collection' | 'product',
-									searchOne: '',
-								})
-							}
-						/>
+						{queryType === 'products' && (
+							<Select
+								label="Applies to"
+								options={[
+									{ label: 'Specific collections', value: 'collection' },
+									{ label: 'Specific products', value: 'product' },
+								]}
+								value={newRule.appliesTo}
+								onChange={(value) => {
+									handleSaveBarOpen();
+									setNewRule({
+										...newRule,
+										appliesTo: value as 'collection' | 'product',
+										searchOne: '',
+									});
+								}}
+							/>
+						)}
 						<Select
 							label="Purchase type"
 							options={[
@@ -97,12 +106,13 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 								{ label: 'Both', value: 'both' },
 							]}
 							value={newRule.purchaseType}
-							onChange={(value) =>
+							onChange={(value) => {
+								handleSaveBarOpen();
 								setNewRule({
 									...newRule,
 									purchaseType: value as 'one-time' | 'subscription',
-								})
-							}
+								});
+							}}
 						/>
 					</FormLayout.Group>
 					{queryType === 'products' && (
