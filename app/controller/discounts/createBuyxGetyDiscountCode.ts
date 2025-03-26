@@ -234,7 +234,7 @@ export const createBuyXGetYDiscountCode = async (
 					usageLimit: usageLimit,
 					discountType: 'PERCENT',
 					isActive: true,
-					discountScope: type.toUpperCase(),
+					discountScope: type === 'buyXgetY' ? 'BUYXGETY' : 'PRODUCT',
 				},
 			});
 			return { success: true, message: 'Discount code created successfully' };

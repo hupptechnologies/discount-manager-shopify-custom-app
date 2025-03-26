@@ -189,7 +189,7 @@ export const createDiscountCode = async (
 					discountType: 'PERCENT',
 					usageLimit,
 					isActive: true,
-					discountScope: type.toUpperCase(),
+					discountScope: type === 'products' ? 'PRODUCT' : 'ORDER',
 				},
 			});
 			return { success: true, message: 'Discount code created successfully' };

@@ -21,7 +21,7 @@ const PopoverPicker: React.FC<PopoverProps> = ({
 	setSelectedDates,
 	selectedDates,
 }) => {
-	const [{ month, year }, setDate] = useState({ month: 1, year: 2018 });
+	const [{ month, year }, setDate] = useState({ month: new Date(selectedDates?.start).getMonth(), year: new Date(selectedDates?.start).getFullYear() });
 
 	const handleMonthChange = useCallback(
 		(month: number, year: number) => setDate({ month, year }),

@@ -26,7 +26,7 @@ import CollectionList from './CollectionList';
 import ProductsList from './ProductsList';
 import DiscountBuyXGetY from './DiscountBuyXGetY';
 import UsageLimit from './UsageLimit';
-import { getYearMonthDay } from 'app/utils/json';
+import { convertToLocalTime, formatDateWithTimeZone } from 'app/utils/json';
 
 interface DiscountRule {
 	selectedDiscountType: string | null;
@@ -151,12 +151,12 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		isAmountOfEach: false,
 		isFree: false,
 		selectedStartDates: {
-			start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
-			end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+			start: new Date(),
+			end: new Date(),
 		},
 		selectedEndDates: {
-			start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
-			end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+			start: new Date(),
+			end: new Date(),
 		},
 		selectedStartTime: '4:30 AM',
 		selectedEndTime: '4:30 AM',
@@ -183,12 +183,13 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			percentage: ''
 		}
 	});
-	
+
 	useEffect(() => {
 		if (getDiscountCode?.length > 0) {
 			const ifExist = ['PRODUCT'].includes(discountScope);
 			const items = ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
 				: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges ?? [];
+			const { selectedStartDates, selectedEndDates,selectedEndTime, selectedStartTime } = convertToLocalTime(getDiscountCode[0]?.codeDiscount?.startsAt, getDiscountCode[0]?.codeDiscount?.endsAt);
 			setEditObj({
 				type: ifExist ? 'product' : 'collection',
 				isEdit: true,
@@ -213,10 +214,14 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					getDiscountCode[0]?.codeDiscount?.appliesOncePerCustomer,
 				minGetQuantity: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.quantity?.quantity,
 				minBuyQuantity: getDiscountCode[0]?.codeDiscount?.customerBuys?.value?.quantity,
+				selectedStartDates: selectedStartDates,
+				selectedEndDates: selectedEndDates,
+				selectedEndTime: selectedEndTime,
+				selectedStartTime: selectedStartTime
 			});
 		}
 	}, [getDiscountCode, discountScope]);
-
+	
 	const handleSearchTypeChange = (type: string) => {
 		setNewRule((prev) => ({ ...prev, searchType: type }));
 	};
@@ -290,12 +295,12 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			isAmountOfEach: false,
 			isFree: false,
 			selectedStartDates: {
-				start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
-				end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+				start: new Date(),
+				end: new Date(),
 			},
 			selectedEndDates: {
-				start: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
-				end: new Date('Wed Feb 07 2018 00:00:00 GMT-0500 (EST)'),
+				start: new Date(),
+				end: new Date(),
 			},
 			selectedStartTime: '4:30 AM',
 			selectedEndTime: '4:30 AM',
@@ -321,6 +326,11 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				quantity: '0',
 				percentage: ''
 			}
+		});
+		setEditObj({
+			type: 'product',
+			isEdit: false,
+			items: [],
 		});
 	};
 
@@ -354,7 +364,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const handleDiscard = () => {
 		shopify.saveBar.hide('save-bar');
 	};
-
+	
 	const handleSubmit = () => {
 		if (queryType === 'buyXgetY') {
 			dispatch(
@@ -364,8 +374,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						title: newRule?.title,
 						code: newRule?.checkoutDiscountCode,
 						percentage: Number(newRule?.discount),
-						startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
-						endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+						startsAt: formatDateWithTimeZone(newRule?.selectedStartDates?.start, newRule?.selectedStartTime),
+						endsAt: formatDateWithTimeZone(newRule?.selectedEndDates?.start, newRule?.selectedEndTime),
 						usageLimit: Number(newRule?.totalLimitValue),
 						customerBuys: {
 							quantity: newRule?.minBuyQuantity,
@@ -395,8 +405,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					title: newRule?.title,
 					code: newRule?.checkoutDiscountCode,
 					percentage: Number(newRule?.discount),
-					startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
-					endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+					startsAt: formatDateWithTimeZone(newRule?.selectedStartDates?.start, newRule?.selectedStartTime),
+					endsAt: formatDateWithTimeZone(newRule?.selectedEndDates?.start, newRule?.selectedEndTime),
 					collectionIDs: newRule?.collectionIDs,
 					productIDs: newRule?.productIDs,
 					usageLimit: Number(newRule?.totalLimitValue),
@@ -423,8 +433,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						title: newRule?.title,
 						code: newRule?.checkoutDiscountCode,
 						percentage: Number(newRule?.discount),
-						startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
-						endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+						startsAt: formatDateWithTimeZone(newRule?.selectedStartDates?.start, newRule?.selectedStartTime),
+						endsAt: formatDateWithTimeZone(newRule?.selectedEndDates?.start, newRule?.selectedEndTime),
 						usageLimit: Number(newRule?.totalLimitValue),
 						customerBuys: {
 							quantity: newRule?.minBuyQuantity,
@@ -455,8 +465,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					title: newRule?.title,
 					code: newRule?.checkoutDiscountCode,
 					percentage: Number(newRule?.discount),
-					startsAt: getYearMonthDay(newRule?.selectedStartDates?.start),
-					endsAt: getYearMonthDay(newRule?.selectedEndDates?.start),
+					startsAt: formatDateWithTimeZone(newRule?.selectedStartDates?.start, newRule?.selectedStartTime),
+					endsAt: formatDateWithTimeZone(newRule?.selectedEndDates?.start, newRule?.selectedEndTime),
 					usageLimit: Number(newRule?.totalLimitValue),
 					collectionIDs: newRule?.collectionIDs,
 					productIDs: newRule?.productIDs,

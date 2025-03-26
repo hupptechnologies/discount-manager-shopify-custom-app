@@ -1,45 +1,4 @@
-export const discountCodeData = [
-	{
-		id: '1',
-		code: 'SAVE10',
-		discount: '10%',
-		products: 'All Products',
-		limit: 100,
-		status: 'Active',
-		startDate: '2025-03-01',
-		endDate: '2025-04-01',
-	},
-	{
-		id: '2',
-		code: 'SUMMER20',
-		discount: '20%',
-		products: 'Summer Collection',
-		limit: 50,
-		status: 'Active',
-		startDate: '2025-06-01',
-		endDate: '2025-06-30',
-	},
-	{
-		id: '3',
-		code: 'WINTER15',
-		discount: '15%',
-		products: 'Winter Jackets',
-		limit: 'Unlimited',
-		status: 'Expired',
-		startDate: '2024-12-01',
-		endDate: '2024-12-31',
-	},
-	{
-		id: '4',
-		code: 'BLACKFRIDAY',
-		discount: '30%',
-		products: 'Electronics',
-		limit: 200,
-		status: 'Pending',
-		startDate: '2025-11-01',
-		endDate: '2025-11-30',
-	},
-];
+import { DateTime } from 'luxon';
 
 export const generateTimeList = (): string[] => {
 	const timeList: string[] = [];
@@ -70,4 +29,39 @@ export const formatDateWithTime = (dateString: string): string => {
 	const month = (date.getMonth() + 1).toString().padStart(2, '0');
 	const day = date.getDate().toString().padStart(2, '0');
 	return `${year}-${month}-${day}`;
+};
+
+export const formatDateWithTimeZone = (dateString: any, timeString: string): string | null => {
+	const date = DateTime.fromJSDate(dateString);
+	const timeParts = timeString.match(/(\d{1,2}):(\d{2})\s([APM]{2})/);
+	if (!timeParts) {
+		throw new Error('Invalid time format');
+	}
+	let hours = parseInt(timeParts[1], 10);
+	const minutes = parseInt(timeParts[2], 10);
+	const period = timeParts[3];
+	if (period === 'PM' && hours !== 12) {
+		hours += 12;
+	} else if (period === 'AM' && hours === 12) {
+		hours = 0;
+	}
+	const updatedDate = date.set({ hour: hours, minute: minutes });
+	return updatedDate.setZone('Asia/Kolkata').toISO();
+};
+
+export const convertToLocalTime = (startsAt: string, endsAt: string) => {
+	const startDateTime = DateTime.fromISO(startsAt, { zone: 'utc' }).setZone('Asia/Kolkata');
+	const endDateTime = DateTime.fromISO(endsAt, { zone: 'utc' }).setZone('Asia/Kolkata');
+  	return {
+		selectedStartDates: {
+			start: startDateTime.toJSDate(),
+			end: startDateTime.toJSDate(),
+		},
+		selectedEndDates: {
+			start: endDateTime.toJSDate(),
+			end: endDateTime.toJSDate(),
+		},
+		selectedStartTime: startDateTime.toFormat('hh:mm a'),
+		selectedEndTime: endDateTime.toFormat('hh:mm a'),
+	};
 };

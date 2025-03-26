@@ -53,7 +53,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 								}
 								autoComplete="off"
 								prefix={<Icon source={CalendarIcon} tone="base" />}
-								onFocus={() => setPopoverStartDateActive(true)}
+								onFocus={() => setPopoverStartDateActive(!popoverStartDateActive)}
 							/>
 						}
 						popoverActive={popoverStartDateActive}
@@ -83,7 +83,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 								}
 								autoComplete="off"
 								prefix={<Icon source={ClockIcon} tone="base" />}
-								onFocus={() => setPopoverStartTimeActive(true)}
+								onFocus={() => setPopoverStartTimeActive(!popoverStartTimeActive)}
 							/>
 						}
 						popoverActive={popoverStartTimeActive}
@@ -118,7 +118,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 									}
 									autoComplete="off"
 									prefix={<Icon source={CalendarIcon} tone="base" />}
-									onFocus={() => setPopoverEndDateActive(true)}
+									onFocus={() => setPopoverEndDateActive(!popoverEndDateActive)}
 								/>
 							}
 							popoverActive={popoverEndDateActive}
@@ -149,7 +149,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 									autoComplete="off"
 									type="text"
 									prefix={<Icon source={ClockIcon} tone="base" />}
-									onFocus={() => setPopoverEndTimeActive(true)}
+									onFocus={() => setPopoverEndTimeActive(!popoverEndTimeActive)}
 								/>
 							}
 							popoverActive={popoverEndTimeActive}

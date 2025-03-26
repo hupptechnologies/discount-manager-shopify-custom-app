@@ -27,8 +27,8 @@ export interface CreateDiscountCodeParams {
 		title: string;
 		percentage: number;
 		code: string;
-		startsAt: string;
-		endsAt: string;
+		startsAt: string | null;
+		endsAt: string | null;
 		usageLimit: number;
 		appliesOncePerCustomer: boolean;
 		productIDs: string[];
@@ -44,8 +44,8 @@ export interface CreateBuyXGetYDiscountCodeParams {
 		title: string;
 		percentage: number;
 		code: string;
-		startsAt: string;
-		endsAt: string;
+		startsAt: string | null;
+		endsAt: string | null;
 		usageLimit: number;
 		customerBuys: {
 			quantity: string;
@@ -73,8 +73,8 @@ export interface UpdateDiscountCodeParams {
 		title: string;
 		percentage: number;
 		code: string;
-		startsAt: string;
-		endsAt: string;
+		startsAt: string | null;
+		endsAt: string | null;
 		usageLimit: number;
 		appliesOncePerCustomer: boolean;
 		productIDs: string[];
@@ -91,8 +91,8 @@ export interface UpdateBuyXGetYDiscountCodeParams {
 		title: string;
 		percentage: number;
 		code: string;
-		startsAt: string;
-		endsAt: string;
+		startsAt: string | null;
+		endsAt: string | null;
 		usageLimit: number;
 		customerBuys: {
 			quantity: string;
