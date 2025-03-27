@@ -62,7 +62,7 @@ export interface GetDiscountCodeList {
 		customerGets: {
 			value: {
 				effect: {
-					percentage: number;		
+					percentage: number;
 				}
 				quantity: {
 					quantity: string;
@@ -81,7 +81,15 @@ export interface GetDiscountCodeList {
 		customerBuys: {
 			value: {
 				quantity: string;
-			}
+			};
+			items: {
+				productVariants: {
+					edges: ItemsList[];
+				};
+				collections: {
+					edges: ItemsList[];
+				}
+			};
 		}
 	};
 }

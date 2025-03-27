@@ -71,9 +71,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						label={newRule?.isMinPurchaseAmount ? 'Amount' : 'Quantity'}
 						type="text"
 						min={0}
-						value={newRule.minBuyQuantity}
+						value={newRule.customerBuys.quantity}
 						onChange={(value) =>
-							setNewRule({ ...newRule, minBuyQuantity: value })
+							setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, quantity: value } })
 						}
 						autoComplete="off"
 						placeholder={newRule?.isMinPurchaseAmount ? '0.00' : ''}
@@ -131,9 +131,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{editObj?.isEdit && queryType === 'buyXgetY' && editObj?.items?.length > 0 && (
+				{editObj?.isEdit && queryType === 'buyXgetY' && newRule.customerBuys?.items?.length > 0 && (
 					<FormLayout.Group>
-						<EditItemsList editObj={editObj} />
+						<EditItemsList type={newRule?.buyItemFrom} items={newRule.customerBuys?.items} />
 					</FormLayout.Group>
 				)}
 				<Divider borderColor="border" />
@@ -151,9 +151,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						label="Quantity"
 						type="text"
 						min={0}
-						value={newRule.minGetQuantity}
+						value={newRule.customerGets.quantity}
 						onChange={(value) =>
-							setNewRule({ ...newRule, minGetQuantity: value })
+							setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, quantity: value } })
 						}
 						autoComplete="off"
 					/>
@@ -194,9 +194,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{editObj?.isEdit && queryType === 'buyXgetY' && editObj?.items?.length > 0 && (
+				{editObj?.isEdit && queryType === 'buyXgetY' && newRule?.customerGets?.items?.length > 0 && (
 					<FormLayout.Group>
-						<EditItemsList editObj={editObj} />
+						<EditItemsList type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
 					</FormLayout.Group>
 				)}
 				<Text variant="bodyMd" fontWeight="bold" as="h4">
@@ -221,9 +221,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 										label=""
 										type="text"
 										min={0}
-										value={newRule.discount}
+										value={newRule.customerGets.percentage}
 										onChange={(value) =>
-											setNewRule({ ...newRule, discount: value })
+											setNewRule({ ...newRule,  customerGets: { ...newRule.customerGets, percentage: Number(value) }})
 										}
 										autoComplete="off"
 										suffix="%"

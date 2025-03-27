@@ -81,16 +81,20 @@ export interface DiscountRule {
 	productIDs: string[];
 	customerBuys: {
 		quantity: string;
-		items: ItemsList[];
+		items: ItemsList[] | any;
 		collectionIDs: string[];
 		productIDs: string[];
+		removeCollectionIDs: string[];
+		removeProductIDs: string[];
 	};
 	customerGets: {
 		quantity: string;
 		percentage: string;
-		items: ItemsList[];
+		items: ItemsList[] | any;
 		collectionIDs: string[];
 		productIDs: string[];
+		removeCollectionIDs: string[];
+		removeProductIDs: string[];
 	}
 };
 
@@ -175,48 +179,65 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			items: [],
 			productIDs: [],
 			collectionIDs: [],
-			quantity: '0'
+			quantity: '0',
+			removeCollectionIDs: [],
+			removeProductIDs: []
 		},
 		customerGets: {
 			items: [],
 			productIDs: [],
 			collectionIDs: [],
 			quantity: '0',
-			percentage: ''
+			percentage: '0',
+			removeCollectionIDs: [],
+			removeProductIDs: []
 		}
 	});
 
 	useEffect(() => {
 		if (getDiscountCode?.length > 0) {
 			const ifExist = ['PRODUCT', 'ORDER', 'SHIPPING'].includes(discountScope);
-			const productVariantsExist = getDiscountCode[0]?.codeDiscount?.customerGets?.items.productVariants?.edges?.length > 0;			
-			const items = productVariantsExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
+			const productVariantsExistForGet = getDiscountCode[0]?.codeDiscount?.customerGets?.items.productVariants?.edges?.length > 0;
+			const productVariantsExistForBuy = getDiscountCode[0]?.codeDiscount?.customerBuys?.items.productVariants?.edges?.length > 0;
+			const items = productVariantsExistForGet ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
 				: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges ?? [];
 			const { selectedStartDates, selectedEndDates,selectedEndTime, selectedStartTime } = convertToLocalTime(getDiscountCode[0]?.codeDiscount?.startsAt, getDiscountCode[0]?.codeDiscount?.endsAt);
 			setEditObj({
-				type: productVariantsExist ? 'product' : 'collection',
+				type: productVariantsExistForGet ? 'product' : 'collection',
 				isEdit: true,
-				items: items,
+				items: []
 			});
 			setNewRule({
 				...newRule,
+				appliesTo: productVariantsExistForGet ? 'product' : 'collection',
+				getItemFrom: productVariantsExistForGet ? 'product' : 'collection',
+				buyItemFrom: productVariantsExistForBuy ? 'product' : 'collection',
 				title: getDiscountCode[0]?.codeDiscount?.title || '',
 				checkoutDiscountCode:
 					getDiscountCode[0]?.codeDiscount?.codes?.edges[0].node?.code || '',
-				discount: String(
-					(ifExist
-						? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage
-						: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect
-								?.percentage) * 100,
-				),
+				customerGets: {
+					...newRule.customerGets,
+					percentage: String(
+						(ifExist
+							? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage
+							: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect
+									?.percentage) * 100,
+					),
+					quantity: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.quantity?.quantity,
+					items: items
+				},
+				customerBuys: {
+					...newRule.customerBuys,
+					quantity: getDiscountCode[0]?.codeDiscount?.customerBuys?.value?.quantity,
+					items: productVariantsExistForBuy ? getDiscountCode[0]?.codeDiscount?.customerBuys?.items?.productVariants?.edges ?? []
+						: getDiscountCode[0]?.codeDiscount?.customerBuys?.items?.collections?.edges ?? []
+				},
 				totalUsageLimit: true,
 				totalLimitValue: ifExist
 					? getDiscountCode[0]?.codeDiscount?.usageLimit
 					: getDiscountCode[0]?.codeDiscount?.usesPerOrderLimit,
 				onePerCustomer:
 					getDiscountCode[0]?.codeDiscount?.appliesOncePerCustomer,
-				minGetQuantity: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.quantity?.quantity,
-				minBuyQuantity: getDiscountCode[0]?.codeDiscount?.customerBuys?.value?.quantity,
 				selectedStartDates: selectedStartDates,
 				selectedEndDates: selectedEndDates,
 				selectedEndTime: selectedEndTime,
@@ -328,14 +349,18 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				items: [],
 				productIDs: [],
 				collectionIDs: [],
-				quantity: '0'
+				quantity: '0',
+				removeCollectionIDs: [],
+				removeProductIDs: []
 			},
 			customerGets: {
 				items: [],
 				productIDs: [],
 				collectionIDs: [],
 				quantity: '0',
-				percentage: ''
+				percentage: '',
+				removeCollectionIDs: [],
+				removeProductIDs: []
 			}
 		});
 		setEditObj({
@@ -379,7 +404,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		handleAddRule();
 		shopify.saveBar.hide('save-bar');
 	};
-
+	
 	const handleSubmit = () => {
 		const advancedRule = {
 			quantity: newRule?.quantity,
@@ -398,18 +423,11 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					data: {
 						title: newRule?.title,
 						code: newRule?.checkoutDiscountCode,
-						percentage: Number(newRule?.discount),
 						startsAt: formatDateWithTimeZone(newRule?.selectedStartDates?.start, newRule?.selectedStartTime),
 						endsAt: formatDateWithTimeZone(newRule?.selectedEndDates?.start, newRule?.selectedEndTime),
 						usageLimit: Number(newRule?.totalLimitValue),
-						customerBuys: {
-							quantity: newRule?.minBuyQuantity,
-							collectionIDs: ['gid://shopify/Collection/446505353457'],
-						},
-						customerGets: {
-							quantity: newRule?.minGetQuantity,
-							collectionIDs: ['gid://shopify/Collection/444497264881'],
-						},
+						customerBuys: newRule.customerBuys,
+						customerGets: newRule.customerGets,
 						advancedRule
 					},
 					type: queryType,
@@ -430,11 +448,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				data: {
 					title: newRule?.title,
 					code: newRule?.checkoutDiscountCode,
-					percentage: Number(newRule?.discount),
 					startsAt: formatDateWithTimeZone(newRule?.selectedStartDates?.start, newRule?.selectedStartTime),
 					endsAt: formatDateWithTimeZone(newRule?.selectedEndDates?.start, newRule?.selectedEndTime),
-					collectionIDs: newRule?.collectionIDs,
-					productIDs: newRule?.productIDs,
+					customerGets: newRule.customerGets,
 					usageLimit: Number(newRule?.totalLimitValue),
 					appliesOncePerCustomer: newRule?.onePerCustomer,
 					advancedRule
@@ -462,6 +478,12 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			isAI: newRule?.isAI,
 			isStockBased: newRule?.isStockBased
 		};
+		if (newRule.customerGets.items.length > 0) {
+			delete newRule.customerGets.items;
+		}
+		if (newRule.customerBuys.items.length > 0) {
+			delete newRule.customerBuys.items;
+		}
 		if (queryType === 'buyXgetY') {
 			dispatch(
 				updateBuyXGetYDiscountCodeAsync({
@@ -469,18 +491,11 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					data: {
 						title: newRule?.title,
 						code: newRule?.checkoutDiscountCode,
-						percentage: Number(newRule?.discount),
 						startsAt: formatDateWithTimeZone(newRule?.selectedStartDates?.start, newRule?.selectedStartTime),
 						endsAt: formatDateWithTimeZone(newRule?.selectedEndDates?.start, newRule?.selectedEndTime),
 						usageLimit: Number(newRule?.totalLimitValue),
-						customerBuys: {
-							quantity: newRule?.minBuyQuantity,
-							collectionIDs: ['gid://shopify/Collection/446505353457'],
-						},
-						customerGets: {
-							quantity: newRule?.minGetQuantity,
-							collectionIDs: ['gid://shopify/Collection/444497264881'],
-						},
+						customerBuys: newRule.customerBuys,
+						customerGets: newRule.customerGets,
 						advancedRule
 					},
 					type: queryType,
@@ -502,12 +517,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				data: {
 					title: newRule?.title,
 					code: newRule?.checkoutDiscountCode,
-					percentage: Number(newRule?.discount),
 					startsAt: formatDateWithTimeZone(newRule?.selectedStartDates?.start, newRule?.selectedStartTime),
 					endsAt: formatDateWithTimeZone(newRule?.selectedEndDates?.start, newRule?.selectedEndTime),
 					usageLimit: Number(newRule?.totalLimitValue),
-					collectionIDs: newRule?.collectionIDs,
-					productIDs: newRule?.productIDs,
+					customerGets: newRule.customerGets,
 					appliesOncePerCustomer: newRule?.onePerCustomer,
 					advancedRule
 				},
@@ -523,7 +536,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			}),
 		);
 	}
-
+	console.log(newRule);
+	
 	return (
 		<Layout>
 			<Layout.Section>
@@ -581,22 +595,22 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			</Layout.Section>
 			<Modal id="product-collection-modal">
 				{newRule?.buyItemFrom === 'collection' && selected === 1 && (
-					<CollectionList newRule={newRule} setNewRule={setNewRule} />
+					<CollectionList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				{newRule?.buyItemFrom === 'product' && selected === 1 && (
-					<ProductsList newRule={newRule} setNewRule={setNewRule} />
+					<ProductsList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				{newRule?.getItemFrom === 'collection' && selected === 2 && (
-					<CollectionList newRule={newRule} setNewRule={setNewRule} />
+					<CollectionList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				{newRule?.getItemFrom === 'product' && selected === 2 && (
-					<ProductsList newRule={newRule} setNewRule={setNewRule} />
+					<ProductsList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				{newRule?.appliesTo === 'collection' && selected === 0 && (
-					<CollectionList newRule={newRule} setNewRule={setNewRule} />
+					<CollectionList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				{newRule?.appliesTo === 'product' && selected === 0 && (
-					<ProductsList newRule={newRule} setNewRule={setNewRule} />
+					<ProductsList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				<TitleBar
 					title={`Add ${(queryType === 'buyXgetY' ? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : newRule?.appliesTo === 'product') ? 'products' : 'collections'}`}

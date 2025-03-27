@@ -27,9 +27,10 @@ interface Collection {
 interface CollectionProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
+	selected: number;
 };
 
-const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
+const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, selected }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
 	const {
@@ -135,7 +136,12 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule }) => {
 				selectable
 				selectedItems={selectedItems}
 				onSelectionChange={(value) => {
-					setNewRule({ ...newRule, collectionIDs: value, productIDs: [] });
+					if (selected !== 1) {
+						setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: value, productIDs: [] } });
+					}
+					if (selected === 1) {
+						setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, collectionIDs: value, productIDs: [] } });
+					}
 					setSelectedItems(value);
 				}}
 				renderItem={(item) => {

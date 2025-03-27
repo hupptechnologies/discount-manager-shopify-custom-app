@@ -10,19 +10,20 @@ import {
 	Button,
 } from '@shopify/polaris';
 import { XIcon } from '@shopify/polaris-icons';
-import type { EditObj } from './DiscountValue';
+import type { ItemsList } from 'app/redux/discount/slice';
 
 export interface EditItemsListProps {
-	editObj: EditObj;
+	type: string;
+	items: ItemsList[]
 };
 
-const EditItemsList: React.FC<EditItemsListProps> = ({ editObj }) => {
+const EditItemsList: React.FC<EditItemsListProps> = ({ type, items }) => {
 	return (
 		<Card>
-			{editObj?.type === 'product' && (
+			{type === 'product' && (
 				<ResourceList
 					resourceName={{ singular: 'item', plural: 'items' }}
-					items={editObj?.items}
+					items={items}
 					renderItem={(item) => {
 						const {
 							id,
@@ -48,13 +49,13 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ editObj }) => {
 										<Text variant="bodyMd" fontWeight="bold" as="h3">
 											{title}
 										</Text>
-										{editObj?.type === 'product' && (
+										{type === 'product' && (
 											<Text as="p" tone="subdued">
 												(1 of {count} variants selected)
 											</Text>
 										)}
 									</Box>
-									{editObj?.type === 'product' && (
+									{type === 'product' && (
 										<Box>
 											<InlineStack align="space-between" blockAlign="center">
 												<Button variant="plain">Edit</Button>
@@ -71,10 +72,10 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ editObj }) => {
 					}}
 				/>
 			)}
-			{editObj?.type === 'collection' && (
+			{type === 'collection' && (
 				<ResourceList
 					resourceName={{ singular: 'item', plural: 'items' }}
-					items={editObj?.items}
+					items={items}
 					renderItem={(item) => {
 						const {
 							id,
@@ -94,7 +95,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ editObj }) => {
 										<Text variant="bodyMd" fontWeight="bold" as="h3">
 											{title}
 										</Text>
-										{editObj?.type === 'collection' && (
+										{type === 'collection' && (
 											<Text as="p" tone="subdued">
 												{count} products
 											</Text>

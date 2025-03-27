@@ -64,10 +64,10 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 						/>
 						<TextField
 							label=""
-							value={newRule.discount}
+							value={newRule.customerGets.percentage}
 							onChange={(value) => {
 								handleSaveBarOpen();
-								setNewRule({ ...newRule, discount: value });
+								setNewRule({ ...newRule,  customerGets: { ...newRule.customerGets, percentage: Number(value) }});
 							}}
 							autoComplete="off"
 							prefix={newRule.discountType === 'fixed' ? '$' : ''}
@@ -129,9 +129,9 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							</Button>
 						</FormLayout.Group>
 					)}
-					{editObj?.isEdit && queryType === 'products' && editObj?.items?.length > 0 && (
+					{editObj?.isEdit && queryType === 'products' && newRule?.customerGets?.items?.length > 0 && (
 						<FormLayout.Group>
-							<EditItemsList editObj={editObj} />
+							<EditItemsList type={editObj.type} items={newRule?.customerGets?.items} />
 						</FormLayout.Group>
 					)}
 				</FormLayout>

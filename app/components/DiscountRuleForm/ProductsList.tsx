@@ -45,9 +45,10 @@ interface Groups {
 interface ProductProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
+	selected: number;
 };
 
-const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
+const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
 	const { products, pageInfo, totalProductCount, isLoading } = useSelector(
@@ -166,9 +167,14 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule }) => {
 		);
 	useEffect(() => {
 		if (selectedResources.length > 0) {
-			setNewRule({ ...newRule, productIDs: selectedResources, collectionIDs: [] });
+			if (selected !== 1) {
+				setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: [], productIDs: selectedResources } });
+			}
+			if (selected === 1) {
+				setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, collectionIDs: [], productIDs: selectedResources } });
+			}
 		}
-	}, [selectedResources]);
+	}, [selectedResources, selected]);
 
 	const groupedProducts = groupRowsByGroupKey(
 		'title',

@@ -25,14 +25,17 @@ export interface DeleteDiscountCodeParams {
 export interface CreateDiscountCodeParams {
 	data: {
 		title: string;
-		percentage: number;
 		code: string;
 		startsAt: string | null;
 		endsAt: string | null;
 		usageLimit: number;
 		appliesOncePerCustomer: boolean;
-		productIDs: string[];
-		collectionIDs: string[];
+		customerGets: {
+			percentage: string;
+			quantity: string;
+			collectionIDs: string[];
+			productIDs: string[];
+		};
 		advancedRule: object | null;
 	};
 	shopName: string;
@@ -43,7 +46,6 @@ export interface CreateDiscountCodeParams {
 export interface CreateBuyXGetYDiscountCodeParams {
 	data: {
 		title: string;
-		percentage: number;
 		code: string;
 		startsAt: string | null;
 		endsAt: string | null;
@@ -51,10 +53,13 @@ export interface CreateBuyXGetYDiscountCodeParams {
 		customerBuys: {
 			quantity: string;
 			collectionIDs: string[];
+			productIDs: string[];
 		};
 		customerGets: {
+			percentage: string;
 			quantity: string;
 			collectionIDs: string[];
+			productIDs: string[];
 		};
 		advancedRule: object | null;
 	};
@@ -84,14 +89,17 @@ export interface AdvancedRuleObject {
 export interface UpdateDiscountCodeParams {
 	data: {
 		title: string;
-		percentage: number;
 		code: string;
 		startsAt: string | null;
 		endsAt: string | null;
 		usageLimit: number;
 		appliesOncePerCustomer: boolean;
-		productIDs: string[];
-		collectionIDs: string[];
+		customerGets: {
+			percentage: string;
+			quantity: string;
+			collectionIDs: string[];
+			productIDs: string[];
+		};
 		advancedRule: AdvancedRuleObject | null;
 	};
 	shopName: string;
@@ -103,7 +111,6 @@ export interface UpdateDiscountCodeParams {
 export interface UpdateBuyXGetYDiscountCodeParams {
 	data: {
 		title: string;
-		percentage: number;
 		code: string;
 		startsAt: string | null;
 		endsAt: string | null;
@@ -111,10 +118,13 @@ export interface UpdateBuyXGetYDiscountCodeParams {
 		customerBuys: {
 			quantity: string;
 			collectionIDs: string[];
+			productIDs: string[];
 		};
 		customerGets: {
+			percentage: string;
 			quantity: string;
 			collectionIDs: string[];
+			productIDs: string[];
 		};
 		advancedRule: object | null;
 	};
