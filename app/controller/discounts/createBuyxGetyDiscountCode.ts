@@ -17,9 +17,6 @@ mutation discountCodeBxgyCreate($bxgyCodeDiscount: DiscountCodeBxgyInput!) {
 					startsAt
 					endsAt
 					customerBuys {
-						items {
-							...collectionsFragment
-						}
 						value {
 							... on DiscountQuantity {
 								quantity
@@ -41,9 +38,6 @@ mutation discountCodeBxgyCreate($bxgyCodeDiscount: DiscountCodeBxgyInput!) {
 								}
 							}
 						}
-						items {
-							...collectionsFragment
-						}
 					}
 					customerSelection {
 						... on DiscountCustomerAll {
@@ -61,17 +55,7 @@ mutation discountCodeBxgyCreate($bxgyCodeDiscount: DiscountCodeBxgyInput!) {
 			message
 		}
 	}
-}
-
-fragment collectionsFragment on DiscountCollections {
-	collections(first: 10) {
-		nodes {
-			id
-			title
-		}
-	}
-}
-`;
+}`;
 
 interface CreateBxgyDiscountResponse {
 	data: {
@@ -87,11 +71,17 @@ interface CreateBxgyDiscountResponse {
 						startsAt: string;
 						endsAt: string;
 						customerBuys: {
-							items: { collections: { add: string[] } }[];
+							items: {
+								products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; }
+								collections: { add: string[]; remove: string[]; }
+							}[];
 							value: { quantity: string };
 						};
 						customerGets: {
-							items: { collections: { add: string[] } }[];
+							items: {
+								products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; }
+								collections: { add: string[]; remove: string[]; }
+							}[];
 							value: {
 								discountOnQuantity: {
 									effect: { percentage: number };
@@ -113,7 +103,6 @@ interface CreateBxgyDiscountResponse {
 
 interface CreateBuyxGetYDiscountCodeInput {
 	title: string;
-	percentage: number;
 	code: string;
 	startsAt: string;
 	endsAt: string;
@@ -123,11 +112,16 @@ interface CreateBuyxGetYDiscountCodeInput {
 		quantity: string;
 		productIDs: string[];
 		collectionIDs: string[];
+		removeCollectionIDs: string[];
+		removeProductIDs: string[];
 	};
 	customerGets: {
+		percentage: string;
 		quantity: string;
 		productIDs: string[];
 		collectionIDs: string[];
+		removeCollectionIDs: string[];
+		removeProductIDs: string[];
 	};
 	advancedRule: object | null;
 }
@@ -139,7 +133,6 @@ export const createBuyXGetYDiscountCode = async (
 ): Promise<{ success: boolean; message: string }> => {
 	const {
 		title,
-		percentage,
 		code,
 		startsAt,
 		endsAt,
@@ -150,7 +143,7 @@ export const createBuyXGetYDiscountCode = async (
 	}: CreateBuyxGetYDiscountCodeInput = await request.json();
 
 	try {
-		if (!percentage || !code) {
+		if (!customerGets.percentage || !code) {
 			return {
 				success: false,
 				message: 'Required fields percentage, code'
@@ -183,9 +176,18 @@ export const createBuyXGetYDiscountCode = async (
 					code,
 					customerBuys: {
 						items: {
-							collections: {
-								add: customerBuys.collectionIDs,
-							},
+							...(customerBuys.collectionIDs.length > 0 && {
+								collections: {
+									add: customerBuys.collectionIDs,
+									remove: customerBuys.removeCollectionIDs
+								}
+							}),
+							...(customerBuys.productIDs.length > 0 && {
+								products: {
+									productVariantsToAdd: customerBuys.productIDs,
+									productVariantsToRemove: customerBuys.removeProductIDs
+								}
+							})
 						},
 						value: {
 							quantity: customerBuys.quantity,
@@ -193,14 +195,23 @@ export const createBuyXGetYDiscountCode = async (
 					},
 					customerGets: {
 						items: {
-							collections: {
-								add: customerGets.collectionIDs,
-							},
+							...(customerGets.collectionIDs.length > 0 && {
+								collections: {
+									add: customerGets.collectionIDs,
+									remove: customerGets.removeCollectionIDs
+								}
+							}),
+							...(customerGets.productIDs.length > 0 && {
+								products: {
+									productVariantsToAdd: customerGets.productIDs,
+									productVariantsToRemove: customerGets.removeProductIDs
+								}
+							})
 						},
 						value: {
 							discountOnQuantity: {
 								effect: {
-									percentage: percentage / 100,
+									percentage: Number(customerGets.percentage) / 100,
 								},
 								quantity: customerGets.quantity,
 							},
@@ -238,7 +249,7 @@ export const createBuyXGetYDiscountCode = async (
 					discountId: discountCodeData.id,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
-					discountAmount: percentage,
+					discountAmount: Number(customerGets.percentage),
 					usageLimit: usageLimit,
 					discountType: 'PERCENT',
 					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,

@@ -37,8 +37,8 @@ mutation CreateDiscountCode($basicCodeDiscount: DiscountCodeBasicInput!) {
 
 type DiscountCodeItems =
 	| { all: boolean }
-	| { products: { productVariantsToAdd: string[] } }
-	| { collections: { add: string[] } };
+	| { products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; } }
+	| { collections: { add: string[]; remove: string[]; } };
 
 interface DiscountCodeBasicInput {
 	title: string;
@@ -77,14 +77,19 @@ interface DiscountCodeResponse {
 
 interface CreateDiscountCodeInput {
 	title: string;
-	percentage: number;
 	code: string;
 	startsAt: string;
 	endsAt: string;
 	usageLimit: number;
 	appliesOncePerCustomer: boolean;
-	productIDs: string[];
-	collectionIDs: string[];
+	customerGets: {
+		percentage: string;
+		quantity: string;
+		productIDs: string[];
+		collectionIDs: string[];
+		removeCollectionIDs: string[];
+		removeProductIDs: string[];
+	};
 	advancedRule: object | null;
 }
 
@@ -95,22 +100,20 @@ export const createDiscountCode = async (
 ): Promise<{ success: boolean; message: string }> => {
 	const {
 		title,
-		percentage,
 		code,
 		startsAt,
 		endsAt,
 		usageLimit,
 		appliesOncePerCustomer,
-		productIDs = [],
-		collectionIDs = [],
+		customerGets,
 		advancedRule
 	}: CreateDiscountCodeInput = await request.json();
 
 	try {
-		if (!percentage || !code || !productIDs || !collectionIDs) {
+		if (!customerGets.percentage || !code) {
 			return {
 				success: false,
-				message: 'Required fields percentage, code, productIDs & collectionIDs'
+				message: 'Required fields percentage and code'
 			}
 		}
 		const checkCodeExist = await prisma.discountCode.count({
@@ -144,7 +147,7 @@ export const createDiscountCode = async (
 					},
 					customerGets: {
 						value: {
-							percentage: percentage / 100,
+							percentage: Number(customerGets.percentage) / 100,
 						},
 						items: {} as DiscountCodeItems,
 					},
@@ -154,16 +157,26 @@ export const createDiscountCode = async (
 			},
 		};
 
-		if (productIDs.length > 0) {
+		if (customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) {
 			data.variables.basicCodeDiscount.customerGets.items = {
 				products: {
-					productVariantsToAdd: productIDs,
+					...(customerGets.productIDs.length > 0 && {
+						productVariantsToAdd: customerGets.productIDs,
+					}),
+					...(customerGets.removeProductIDs.length > 0 && {
+						productVariantsToRemove: customerGets.removeProductIDs,
+					}),
 				},
 			} as DiscountCodeItems;
-		} else if (collectionIDs?.length > 0) {
+		} else if (customerGets.collectionIDs?.length > 0 || customerGets.removeCollectionIDs.length > 0) {
 			data.variables.basicCodeDiscount.customerGets.items = {
 				collections: {
-					add: collectionIDs,
+					...(customerGets.collectionIDs.length > 0 && {
+						add: customerGets.collectionIDs
+					}),
+					...(customerGets.removeCollectionIDs.length > 0 && {
+						remove: customerGets.removeCollectionIDs
+					})
 				},
 			} as DiscountCodeItems;
 		} else {
@@ -194,7 +207,7 @@ export const createDiscountCode = async (
 					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
-					discountAmount: percentage,
+					discountAmount: Number(customerGets.percentage),
 					discountType: 'PERCENT',
 					usageLimit,
 					isActive: true,

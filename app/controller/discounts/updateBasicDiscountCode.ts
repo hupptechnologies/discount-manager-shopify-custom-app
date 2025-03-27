@@ -56,14 +56,19 @@ type UpdateBasicDiscountCodeResponse = {
 
 interface CreateDiscountCodeInput {
 	title: string;
-	percentage: number;
 	code: string;
 	startsAt: string;
 	endsAt: string;
 	usageLimit: number;
 	appliesOncePerCustomer: boolean;
-	productIDs: string[];
-	collectionIDs: string[];
+	customerGets: {
+		percentage: string;
+		quantity: string;
+		productIDs: string[];
+		collectionIDs: string[];
+		removeCollectionIDs: string[];
+		removeProductIDs: string[];
+	};
 	advancedRule: object | null;
 }
 
@@ -74,14 +79,12 @@ export const updateBasicDiscountCode = async (
 ): Promise<UpdateBasicDiscountCodeResponse> => {
 	const {
 		title,
-		percentage,
 		code,
 		startsAt,
 		endsAt,
 		usageLimit,
 		appliesOncePerCustomer,
-		productIDs = [],
-		collectionIDs = [],
+		customerGets,
 		advancedRule
 	}: CreateDiscountCodeInput = await request.json();
 	try {
@@ -118,7 +121,7 @@ export const updateBasicDiscountCode = async (
 						usageLimit: usageLimit,
 						customerGets: {
 							value: {
-								percentage: percentage / 100,
+								percentage: Number(customerGets.percentage) / 100,
 							},
 							items: {} as DiscountCodeItems,
 						},
@@ -126,16 +129,26 @@ export const updateBasicDiscountCode = async (
 				},
 			};
 
-			if (productIDs.length > 0) {
+			if (customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) {
 				data.variables.basicCodeDiscount.customerGets.items = {
 					products: {
-						productVariantsToAdd: productIDs,
+						...(customerGets.productIDs.length > 0 && {
+							productVariantsToAdd: customerGets.productIDs,
+						}),
+						...(customerGets.removeProductIDs.length > 0 && {
+							productVariantsToRemove: customerGets.removeProductIDs,
+						}),
 					},
 				} as DiscountCodeItems;
-			} else if (collectionIDs?.length > 0) {
+			} else if (customerGets.collectionIDs?.length > 0 || customerGets.removeCollectionIDs.length > 0) {
 				data.variables.basicCodeDiscount.customerGets.items = {
 					collections: {
-						add: collectionIDs,
+						...(customerGets.collectionIDs.length > 0 && {
+							add: customerGets.collectionIDs
+						}),
+						...(customerGets.removeCollectionIDs.length > 0 && {
+							remove: customerGets.removeCollectionIDs
+						})
 					},
 				} as DiscountCodeItems;
 			} else {
@@ -169,7 +182,7 @@ export const updateBasicDiscountCode = async (
 							?.codeDiscountNode.id,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
-					discountAmount: percentage,
+					discountAmount: Number(customerGets.percentage),
 					discountType: 'PERCENT',
 					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
 					usageLimit,

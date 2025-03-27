@@ -114,6 +114,28 @@ query getDiscountcode($ID: ID!) {
 								}
 							}
 						}
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										title
+										id
+										product {
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 				customerGets {
@@ -140,6 +162,28 @@ query getDiscountcode($ID: ID!) {
 										}
 										image {
 											url
+										}
+									}
+								}
+							}
+						}
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										title
+										id
+										product {
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
+													}
+												}
+											}
 										}
 									}
 								}
@@ -185,6 +229,26 @@ interface DiscountCodeBxgy {
 					};
 				}[];
 			};
+			productVariants: {
+				edges: {
+					node: {
+						id: string;
+						title: string;
+						product: {
+							variantsCount: {
+								count: number | null;
+							};
+							featuredMedia: {
+								preview: {
+									image: {
+										url: string;
+									};
+								};
+							};
+						};
+					};
+				}[];
+			};
 		}[];
 	};
 	customerGets: {
@@ -206,6 +270,26 @@ interface DiscountCodeBxgy {
 						};
 						image: {
 							url: string;
+						};
+					};
+				}[];
+			};
+			productVariants: {
+				edges: {
+					node: {
+						id: string;
+						title: string;
+						product: {
+							variantsCount: {
+								count: number | null;
+							};
+							featuredMedia: {
+								preview: {
+									image: {
+										url: string;
+									};
+								};
+							};
 						};
 					};
 				}[];

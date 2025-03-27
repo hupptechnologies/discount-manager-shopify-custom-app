@@ -73,7 +73,6 @@ type UpdateBuyXGetYDiscountCodeResponse = {
 
 interface CreateBuyxGetYDiscountCodeInput {
 	title: string;
-	percentage: number;
 	code: string;
 	startsAt: string;
 	endsAt: string;
@@ -83,11 +82,16 @@ interface CreateBuyxGetYDiscountCodeInput {
 		quantity: string;
 		productIDs: string[];
 		collectionIDs: string[];
+		removeCollectionIDs: string[];
+		removeProductIDs: string[];
 	};
 	customerGets: {
+		percentage: string;
 		quantity: string;
 		productIDs: string[];
 		collectionIDs: string[];
+		removeCollectionIDs: string[];
+		removeProductIDs: string[];
 	};
 	advancedRule: object | null;
 }
@@ -99,7 +103,6 @@ export const updateBuyXGetYDiscountCode = async (
 ): Promise<UpdateBuyXGetYDiscountCodeResponse> => {
 	const {
 		title,
-		percentage,
 		code,
 		startsAt,
 		endsAt,
@@ -141,9 +144,26 @@ export const updateBuyXGetYDiscountCode = async (
 						usesPerOrderLimit: usageLimit,
 						customerBuys: {
 							items: {
-								collections: {
-									add: customerBuys.collectionIDs,
-								},
+								...((customerBuys.collectionIDs.length > 0 || customerBuys.removeCollectionIDs.length > 0) && {
+									collections: {
+										...(customerBuys.collectionIDs.length > 0 && {
+											add: customerBuys.collectionIDs
+										}),
+										...(customerBuys.removeCollectionIDs.length > 0 && {
+											remove: customerBuys.removeCollectionIDs
+										}),
+									}
+								}),
+								...((customerBuys.productIDs.length > 0 || customerBuys.removeProductIDs.length > 0) && {
+									products: {
+										...(customerBuys.productIDs.length > 0 && {
+											productVariantsToAdd: customerBuys.productIDs,
+										}),
+										...(customerBuys.removeProductIDs.length > 0 && {
+											productVariantsToRemove: customerBuys.removeProductIDs,
+										}),
+									}
+								})
 							},
 							value: {
 								quantity: customerBuys.quantity,
@@ -151,14 +171,31 @@ export const updateBuyXGetYDiscountCode = async (
 						},
 						customerGets: {
 							items: {
-								collections: {
-									add: customerGets.collectionIDs,
-								},
+								...((customerGets.collectionIDs.length > 0 || customerGets.removeCollectionIDs.length > 0) && {
+									collections: {
+										...(customerGets.collectionIDs.length > 0 && {
+											add: customerGets.collectionIDs
+										}),
+										...(customerGets.removeCollectionIDs.length > 0 && {
+											remove: customerGets.removeCollectionIDs
+										}),
+									}
+								}),
+								...((customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) && {
+									products: {
+										...(customerGets.productIDs.length > 0 && {
+											productVariantsToAdd: customerGets.productIDs,
+										}),
+										...(customerGets.removeProductIDs.length > 0 && {
+											productVariantsToRemove: customerGets.removeProductIDs,
+										}),
+									}
+								})
 							},
 							value: {
 								discountOnQuantity: {
 									effect: {
-										percentage: percentage / 100,
+										percentage: Number(customerGets.percentage) / 100,
 									},
 									quantity: customerGets.quantity,
 								},
@@ -167,7 +204,7 @@ export const updateBuyXGetYDiscountCode = async (
 					} as DiscountCodeBxgyInput,
 				},
 			};
-
+			
 			const updateDiscountCodeFromShopify: GraphQLResponse =
 				await getDetailUsingGraphQL(shop, accessToken, data);
 
@@ -193,7 +230,7 @@ export const updateBuyXGetYDiscountCode = async (
 							?.codeDiscountNode?.id,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
-					discountAmount: percentage,
+					discountAmount: Number(customerGets.percentage),
 					discountType: 'PERCENT',
 					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
 					usageLimit,
