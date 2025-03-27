@@ -167,7 +167,7 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 		);
 	useEffect(() => {
 		if (selectedResources.length > 0) {
-			if (selected !== 1) {
+			if (selected === 0) {
 				setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: [], productIDs: selectedResources } });
 			}
 			if (selected === 1) {

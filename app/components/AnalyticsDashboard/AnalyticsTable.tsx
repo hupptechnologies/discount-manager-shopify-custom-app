@@ -32,6 +32,12 @@ interface AnalyticsTableProps {
 	setIsLoadingUpdate: any;
 };
 
+interface DeleteDataList {
+	id: null | number;
+	code: string;
+	discountId: string;
+}
+
 const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 	setIsLoadingUpdate,
 }) => {
@@ -51,12 +57,13 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 		'All',
 		'Active codes',
 		'Pending codes',
+		'Expired codes',
 		'Used codes',
 	];
 	const [selected, setSelected] = useState(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [sortSelected, setSortSelected] = useState(['discountCode asc']);
-	const [deleteData, setDeleteData] = useState({
+	const [deleteData, setDeleteData] = useState<DeleteDataList>({
 		id: null,
 		code: '',
 		discountId: '',
@@ -85,13 +92,14 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					pageSize: String(limit),
 					shopName: shopify.config.shop || '',
 					searchQuery: queryValue,
-					usedCountGreaterThan: (selected === 3 && 1) || null,
+					usedCountGreaterThan: (selected === 4 && 1) || null,
 					orderByCode: sortSelected.includes('discountCode asc')
 						? 'asc'
 						: 'desc',
 					status:
 						(selected === 1 && 'active') ||
 						(selected === 2 && 'pending') ||
+						(selected === 3 && 'expired') ||
 						null,
 				}),
 			);
@@ -125,7 +133,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 		plural: 'discountCodes',
 	};
 
-	const handleOpen = (e: any, data: any): void => {
+	const handleOpen = (e: any, data: DeleteDataList): void => {
 		e.stopPropagation();
 		setDeleteData(data);
 		shopify.modal.show('delete-comfirmation-modal');
@@ -234,8 +242,8 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 						</Text>
 					</IndexTable.Cell>
 					<IndexTable.Cell>
-						<Badge tone={isActive ? 'success' : 'info'}>
-							{isActive ? 'Active' : 'Pending'}
+						<Badge tone={new Date(endDate) < new Date() ? 'warning' : isActive ? 'success' : 'attention'}>
+							{new Date(endDate) < new Date() ? 'Expired' : isActive ? 'Active' : 'Pending'}
 						</Badge>
 					</IndexTable.Cell>
 					<IndexTable.Cell>{formatDateWithTime(startDate)}</IndexTable.Cell>

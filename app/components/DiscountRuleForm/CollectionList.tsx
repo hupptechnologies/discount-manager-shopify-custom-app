@@ -136,7 +136,7 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 				selectable
 				selectedItems={selectedItems}
 				onSelectionChange={(value) => {
-					if (selected !== 1) {
+					if (selected === 0) {
 						setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: value, productIDs: [] } });
 					}
 					if (selected === 1) {

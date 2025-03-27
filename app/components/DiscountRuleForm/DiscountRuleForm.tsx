@@ -46,7 +46,6 @@ export interface DiscountRule {
 	searchTwo: string;
 	customerType: 'all' | 'vip' | 'first-time';
 	discountType: 'per' | 'fixed';
-	appliesTo: 'collection' | 'product';
 	purchaseType: 'one-time' | 'subscription' | 'both';
 	isStockBased: boolean;
 	isAI: boolean;
@@ -133,7 +132,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		isRandom: false,
 		isCustom: true,
 		discountType: 'per',
-		appliesTo: 'collection',
 		purchaseType: 'one-time',
 		searchOne: '',
 		searchTwo: '',
@@ -189,7 +187,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			setIsEdit(true);
 			setNewRule({
 				...newRule,
-				appliesTo: productVariantsExistForGet ? 'product' : 'collection',
 				getItemFrom: productVariantsExistForGet ? 'product' : 'collection',
 				buyItemFrom: productVariantsExistForBuy ? 'product' : 'collection',
 				title: getDiscountCode[0]?.codeDiscount?.title || '',
@@ -269,7 +266,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const handleSearchTwoChange = (value: string) => {
 		handleSearchTypeChange('two');
 		setNewRule((prev) => ({ ...prev, searchTwo: value }));
-		setSelected(2);
+		setSelected(0);
 		debouncedHandleOpen();
 	};
 
@@ -295,7 +292,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			isRandom: false,
 			isCustom: true,
 			discountType: 'per',
-			appliesTo: 'collection',
 			purchaseType: 'one-time',
 			searchOne: '',
 			searchTwo: '',
@@ -348,7 +344,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			setNewRule({ ...newRule, buyItemFrom: value });
 		}
 		if (type === 'get') {
-			setSelected(2);
+			setSelected(0);
 			setNewRule({ ...newRule, getItemFrom: value });
 		}
 		shopify.modal.show('product-collection-modal');
@@ -571,20 +567,14 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				{newRule?.buyItemFrom === 'product' && selected === 1 && (
 					<ProductsList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
-				{newRule?.getItemFrom === 'collection' && selected === 2 && (
+				{newRule?.getItemFrom === 'collection' && selected === 0 && (
 					<CollectionList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
-				{newRule?.getItemFrom === 'product' && selected === 2 && (
-					<ProductsList selected={selected} newRule={newRule} setNewRule={setNewRule} />
-				)}
-				{newRule?.appliesTo === 'collection' && selected === 0 && (
-					<CollectionList selected={selected} newRule={newRule} setNewRule={setNewRule} />
-				)}
-				{newRule?.appliesTo === 'product' && selected === 0 && (
+				{newRule?.getItemFrom === 'product' && selected === 0 && (
 					<ProductsList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				<TitleBar
-					title={`Add ${(queryType === 'buyXgetY' ? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : newRule?.appliesTo === 'product') ? 'products' : 'collections'}`}
+					title={`Add ${queryType === 'buyXgetY' ? ['product'].includes(newRule?.buyItemFrom || newRule?.getItemFrom) : 'collections'}`}
 				>
 					<button variant="primary" onClick={handleClose}>Add</button>
 					<button onClick={handleClose}>Cancel</button>

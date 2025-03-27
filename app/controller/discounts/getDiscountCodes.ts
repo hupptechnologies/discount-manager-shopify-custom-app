@@ -74,7 +74,7 @@ export const getDiscountCodes = async (
 	shop: string,
 	page: number = 1,
 	pageSize: number = 10,
-	status?: 'active' | 'pending',
+	status?: 'active' | 'pending' | 'expired',
 	usedCountGreaterThan: number = 0,
 	searchQuery?: string,
 	orderByCode?: 'asc' | 'desc',
@@ -94,8 +94,16 @@ export const getDiscountCodes = async (
 		};
 
 		if (status) {
-			where.isActive =
-				(status === 'active' && true) || (status === 'pending' && false);
+			if (status === 'expired') {
+				where.endDate = {
+					lt: new Date(),
+				};
+			} else {
+				where.isActive = (status === 'active' && true) || (status === 'pending' && false);
+				where.endDate = {
+					gt: new Date(),
+				};
+			}
 		}
 
 		if (searchQuery) {
