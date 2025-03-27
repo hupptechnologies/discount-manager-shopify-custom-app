@@ -126,7 +126,7 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 			onClearAll={handleClearAll}
 		/>
 	);
-
+	
 	return (
 		<Scrollable style={{ height: '471px' }}>
 			<ResourceList
@@ -136,11 +136,25 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 				selectable
 				selectedItems={selectedItems}
 				onSelectionChange={(value) => {
+					const selectedObjects = rowsCollection.filter((row) => value.includes(row.id))
+						.map((row) => ({
+							node: {
+								id: row.id,
+								title: row.title,
+								productsCount: {
+									count: row.productCount || 0,
+								},
+								image: {
+									url: row.image
+								}
+							},
+						}
+					));
 					if (selected === 0) {
-						setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: value, productIDs: [] } });
+						setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: value, productIDs: [], items: selectedObjects } });
 					}
 					if (selected === 1) {
-						setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, collectionIDs: value, productIDs: [] } });
+						setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, collectionIDs: value, productIDs: [], items: selectedObjects  } });
 					}
 					setSelectedItems(value);
 				}}
@@ -150,7 +164,7 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 						<ResourceItem
 							id={id}
 							accessibilityLabel={`View details for ${title}`}
-							onClick={() => ''}
+							url=''
 						>
 							<InlineStack gap="200" align="start" blockAlign="center">
 								<Thumbnail size="small" alt="" source={image} />

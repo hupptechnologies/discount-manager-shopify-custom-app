@@ -28,3 +28,11 @@
 .edit-item-cancel-icon .Polaris-Icon {
 	margin: 0;
 }
+
+.edit-item-list .Polaris-ResourceItem:hover {
+	background-color: unset;
+}
+
+.edit-item-cancel-icon:hover {
+	background-color: var(--p-color-bg-surface-secondary-hover);
+}

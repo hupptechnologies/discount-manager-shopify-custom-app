@@ -15,7 +15,7 @@ export default function CreateDiscountPage () {
 
 	return (
 		<Page
-			backAction={{ content: '', url: '/app/manage-discount' }}
+			backAction={{ url: '/app/manage-discount', onAction: () => shopify.saveBar.hide('save-bar')}}
 			title="Create discount"
 		>
 			{queryType && <DiscountRuleForm queryType={queryType} />}

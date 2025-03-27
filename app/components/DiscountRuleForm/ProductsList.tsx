@@ -26,6 +26,7 @@ interface Product {
 	title: string;
 	image?: string;
 	disabled?: boolean;
+	variantsCount: object | null;
 };
 
 interface ProductRow extends Product {
@@ -167,11 +168,27 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 		);
 	useEffect(() => {
 		if (selectedResources.length > 0) {
+			const selectedObjects = rowsProduct.filter((row) => selectedResources.includes(row.id))
+				.map((row) => ({
+					node: {
+						id: row.id,
+						title: row.title,
+						product: {
+							variantsCount: row.variantsCount,
+							featuredMedia: {
+								preview: {
+									image: { url: row.image },
+								},
+							},
+						},
+					},
+				}
+			));
 			if (selected === 0) {
-				setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: [], productIDs: selectedResources } });
+				setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: [], productIDs: selectedResources, items: selectedObjects } });
 			}
 			if (selected === 1) {
-				setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, collectionIDs: [], productIDs: selectedResources } });
+				setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, collectionIDs: [], productIDs: selectedResources, items: selectedObjects } });
 			}
 		}
 	}, [selectedResources, selected]);

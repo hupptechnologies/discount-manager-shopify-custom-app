@@ -18,7 +18,10 @@ const PRODUCT_VARIANTS_QUERY = `
                     price
                     inventoryQuantity
                     product {
-                    title
+						title
+						variantsCount {
+							count
+						}
                         featuredMedia {
                             preview {
                                 image {
@@ -70,6 +73,9 @@ interface GraphQLResponse {
 						inventoryQuantity: number;
 						product: {
 							title: string;
+							variantsCount: {
+								count: number;
+							};
 							featuredMedia: {
 								preview: {
 									image: {
@@ -131,6 +137,7 @@ export const fetchProducts = async (
 				title: product?.node?.product?.title || '',
 				price: product?.node?.price || '',
 				quantity: product?.node?.inventoryQuantity || 0,
+				variantsCount: product?.node?.product?.variantsCount,
 				image:
 					product?.node?.product?.featuredMedia?.preview?.image?.url || null,
 			})) || [];

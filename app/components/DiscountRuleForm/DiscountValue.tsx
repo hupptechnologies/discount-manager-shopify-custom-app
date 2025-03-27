@@ -31,7 +31,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 	handleSearchChange,
 	queryType,
 	handleSaveBarOpen
-}) => {
+}) => {	
 	return (
 		<Card>
 			<BlockStack>
@@ -122,7 +122,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							</Button>
 						</FormLayout.Group>
 					)}
-					{isEdit && queryType === 'products' && newRule?.customerGets?.items?.length > 0 && (
+					{queryType === 'products' && newRule?.customerGets?.items?.length > 0 && (
 						<FormLayout.Group>
 							<EditItemsList type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
 						</FormLayout.Group>

@@ -195,10 +195,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				customerGets: {
 					...newRule.customerGets,
 					percentage: String(
-						(ifExist
-							? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage
-							: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect
-									?.percentage) * 100,
+						Math.round((ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage : getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect?.percentage) * 100),
 					),
 					quantity: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.quantity?.quantity,
 					items: items
@@ -230,7 +227,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			});
 		}
 	}, [getDiscountCode, discountScope, advancedRule, run]);
-
+	
 	const handleSearchTypeChange = (type: string) => {
 		setNewRule((prev) => ({ ...prev, searchType: type }));
 	};
