@@ -3,6 +3,7 @@ import type { DiscountCode } from './index';
 import {
 	createBuyXGetYDiscountCodeAsync,
 	createDiscountCodeAsync,
+	deleteAllDiscountCodeAsync,
 	deleteDiscountCodeAsync,
 	fetchAllDiscountCodesAsync,
 	getDiscountCodeByIdAsync,
@@ -98,6 +99,7 @@ interface discountState {
 	discountCodes: DiscountCode[];
 	isLoading: boolean;
 	isDeleteDiscountCode: boolean;
+	isDeleteAllDiscountCode: boolean;
 	isCreateDiscountCode: boolean;
 	isBuyXGetYCreateDiscountCode: boolean;
 	isGetDiscountCodeById: boolean;
@@ -129,6 +131,7 @@ const initialState: discountState = {
 		expiredDiscount: { count: 0, data: [0, 0, 0, 0, 0, 0, 0] },
 	},
 	isDeleteDiscountCode: false,
+	isDeleteAllDiscountCode: false,
 	isCreateDiscountCode: false,
 	isBuyXGetYCreateDiscountCode: false,
 	isGetDiscountCodeById: false,
@@ -186,6 +189,15 @@ const discountSlice = createSlice({
 		});
 		builder.addCase(deleteDiscountCodeAsync.rejected, (state) => {
 			state.isDeleteDiscountCode = false;
+		});
+		builder.addCase(deleteAllDiscountCodeAsync.pending, (state) => {
+			state.isDeleteAllDiscountCode = true;
+		});
+		builder.addCase(deleteAllDiscountCodeAsync.fulfilled, (state) => {
+			state.isDeleteAllDiscountCode = false;
+		});
+		builder.addCase(deleteAllDiscountCodeAsync.rejected, (state) => {
+			state.isDeleteAllDiscountCode = false;
 		});
 		builder.addCase(createDiscountCodeAsync.pending, (state) => {
 			state.isCreateDiscountCode = true;

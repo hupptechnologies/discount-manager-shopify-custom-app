@@ -1,6 +1,7 @@
 import { json } from '@remix-run/node';
 import { createBuyXGetYDiscountCode } from 'app/controller/discounts/createBuyxGetyDiscountCode';
 import { createDiscountCode } from 'app/controller/discounts/createDicountCode';
+import { deleteAllDiscountCodes } from 'app/controller/discounts/deleteAllDiscountCode';
 import { deleteDiscountCode } from 'app/controller/discounts/deleteDiscountCode';
 import { getDiscountCodeById } from 'app/controller/discounts/getDiscountCodeById';
 import { getDiscountCodes } from 'app/controller/discounts/getDiscountCodes';
@@ -40,7 +41,7 @@ export const loader = async ({
 	const shop = url.searchParams.get('shop') ?? '';
 	const page = parseInt(url.searchParams.get('page') ?? '1', 10);
 	const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10);
-	const status = url.searchParams.get('status') as 'active' | 'pending';
+	const status = url.searchParams.get('status') as 'active' | 'pending' | 'expired';
 	const usedCountGreaterThan = parseInt(
 		url.searchParams.get('usedCountGreaterThan') ?? '0',
 		10,
@@ -103,7 +104,11 @@ export const action = async ({
 		);
 		return json<ActionResponse>(updateBasicDiscountCodeResponse);
 	}
-	if (request.method === 'DELETE') {
+	if (request.method === 'DELETE') {		
+		if (type === 'all_code_delete') {
+			const deleteAllDiscountCode = await deleteAllDiscountCodes(shop);
+			return json<ActionResponse>(deleteAllDiscountCode);
+		}
 		const discountCodeResponse = await deleteDiscountCode(shop, request);
 		return json<ActionResponse>(discountCodeResponse);
 	}

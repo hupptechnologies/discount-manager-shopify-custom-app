@@ -5,7 +5,7 @@ export interface FetchAllDiscountCodesParams {
 	page?: string;
 	pageSize?: string;
 	searchQuery?: string;
-	status?: 'active' | 'pending' | null;
+	status?: 'active' | 'pending' | 'expired' | null;
 	orderByCode?: 'asc' | 'desc' | null;
 	usedCountGreaterThan?: number | null;
 	shopName: string;
@@ -18,6 +18,12 @@ export interface DeleteDiscountCodeParams {
 		code: string;
 		discountId: string;
 	};
+	shopName: string;
+	callback?: (success: boolean) => void;
+}
+
+export interface DeleteAllDiscountCodeParams {
+	type: string;
 	shopName: string;
 	callback?: (success: boolean) => void;
 }
@@ -173,6 +179,12 @@ export const deleteDiscountCode = (params: DeleteDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, data } = params;
 	return requestInstance.delete(`discount?shop=${shopName}`, { data });
+};
+
+export const deleteAllDiscountCode = (params: DeleteAllDiscountCodeParams) => {
+	const requestInstance: AxiosInstance = backendAPI();
+	const { shopName, type } = params;
+	return requestInstance.delete(`discount?shop=${shopName}&type=${type}`);
 };
 
 export const createDiscountCode = (params: CreateDiscountCodeParams) => {

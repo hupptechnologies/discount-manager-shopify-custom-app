@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail, handleUpdateDiscountCodeId } from 'app/redux/discount/slice';
 import {
+	deleteAllDiscountCodeAsync,
 	deleteDiscountCodeAsync,
 	fetchAllDiscountCodesAsync,
 	getDiscountCodeByIdAsync,
@@ -149,21 +150,35 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 	};
 
 	const handleDelete = () => {
-		dispatch(
-			deleteDiscountCodeAsync({
-				shopName: shopify.config.shop || '',
-				data: {
-					id: deleteData.id,
-					code: deleteData.code,
-					discountId: deleteData.discountId,
-				},
-				callback (success) {
-					if (success) {
-						setCall(!call);
-					}
-				},
-			}),
-		);
+		if (deleteData.code === 'all_code_delete') {
+			dispatch(
+				deleteAllDiscountCodeAsync({
+					shopName: shopify.config.shop || '',
+					type: deleteData.code,
+					callback (success) {
+						if (success) {
+							setCall(!call);
+						}
+					},
+				}),
+			);
+		} else {
+			dispatch(
+				deleteDiscountCodeAsync({
+					shopName: shopify.config.shop || '',
+					data: {
+						id: deleteData.id,
+						code: deleteData.code,
+						discountId: deleteData.discountId,
+					},
+					callback (success) {
+						if (success) {
+							setCall(!call);
+						}
+					},
+				}),
+			);
+		}
 		handleClose();
 	};
 
@@ -198,7 +213,10 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 			icon: DeleteIcon,
 			destructive: true,
 			content: 'Delete all codes',
-			onAction: () => shopify.modal.show('delete-comfirmation-modal'),
+			onAction: (e: any) => {
+				setDeleteData({ ...deleteData, code: 'all_code_delete' });
+				shopify.modal.show('delete-comfirmation-modal');
+			},
 		},
 	];
 
@@ -316,7 +334,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					allResourcesSelected ? 'All' : selectedResources.length
 				}
 				onSelectionChange={handleSelectionChange}
-				bulkActions={bulkActions}
+				bulkActions={selectedResources?.length === discountCodes?.length ? bulkActions : []}
 				headings={[
 					{ title: 'Discount Code' },
 					{ title: 'Discount Percentage' },

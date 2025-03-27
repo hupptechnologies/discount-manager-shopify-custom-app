@@ -4,6 +4,7 @@ import {
 	AdvancedRuleObject,
 	CreateBuyXGetYDiscountCodeParams,
 	CreateDiscountCodeParams,
+	DeleteAllDiscountCodeParams,
 	DeleteDiscountCodeParams,
 	FetchAllDiscountCodesParams,
 	GetDiscountCodeByIdParams,
@@ -11,6 +12,7 @@ import {
 	UpdateDiscountCodeParams,
 	createBuyXGetYDiscountCode,
 	createDiscountCode,
+	deleteAllDiscountCode,
 	deleteDiscountCode,
 	fetchAllDiscountCodes,
 	getDiscountCodeById,
@@ -116,6 +118,34 @@ export const deleteDiscountCodeAsync = createAsyncThunk<
 			const error = err as AxiosError;
 			// eslint-disable-next-line no-console
 			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	},
+);
+
+export const deleteAllDiscountCodeAsync = createAsyncThunk<
+	ReturnValue,
+	DeleteAllDiscountCodeParams
+>(
+	'discount/deleteAllDiscountCode',
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await deleteAllDiscountCode(params);
+			if (response.data) {
+				const { success, message } = response.data;
+				if (message) {
+					shopify.toast.show(message);
+				}
+				if (success && params.callback) {
+					params.callback(success);
+				}
+				return fulfillWithValue({ success, message });
+			}
+			return fulfillWithValue({ success: false, message: '' });
+		} catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error, 'An error occurred');
 			return rejectWithValue('An error occurred');
 		}
 	},

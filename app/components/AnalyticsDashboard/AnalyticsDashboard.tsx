@@ -14,7 +14,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 	handleOpen,
 }) => {
 	const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
-	const { isGetDiscountCodeById } = useSelector((state: RootState) =>
+	const { isGetDiscountCodeById, isDeleteAllDiscountCode } = useSelector((state: RootState) =>
 		getAllDiscountCodeDetail(state),
 	);
 	return (
@@ -23,7 +23,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 			<Layout.Section>
 				<AnalyticsTable setIsLoadingUpdate={setIsLoadingUpdate} />
 			</Layout.Section>
-			{(isGetDiscountCodeById || isLoadingUpdate) && (
+			{(isGetDiscountCodeById || isLoadingUpdate || isDeleteAllDiscountCode) && (
 				<div className="spinner-container">
 					<Spinner size="large" />
 				</div>
