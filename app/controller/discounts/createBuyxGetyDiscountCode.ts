@@ -5,7 +5,7 @@ const CREATE_BUYXGETY_DISCOUNT_QUERY = `
 mutation discountCodeBxgyCreate($bxgyCodeDiscount: DiscountCodeBxgyInput!) {
 	discountCodeBxgyCreate(bxgyCodeDiscount: $bxgyCodeDiscount) {
 		codeDiscountNode {
-            id
+			id
 			codeDiscount {
 				... on DiscountCodeBxgy {
 					title

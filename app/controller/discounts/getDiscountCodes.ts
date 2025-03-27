@@ -134,7 +134,7 @@ export const getDiscountCodes = async (
 			success: true,
 			discountCodes,
 			discountStats: discountStatsData,
-			message: 'Fetch discount codes successfuly',
+			message: 'Fetch discount codes successfully',
 			pagination: {
 				totalCount,
 				totalPages,

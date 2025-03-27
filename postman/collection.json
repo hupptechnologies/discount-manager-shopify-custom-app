@@ -15,7 +15,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/products?shop=local-sparkfitness.myshopify.com",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/products?shop={{shopForDiscountApp}}",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -26,7 +26,7 @@
 							"query": [
 								{
 									"key": "shop",
-									"value": "local-sparkfitness.myshopify.com"
+									"value": "{{shopForDiscountApp}}"
 								}
 							]
 						}
@@ -44,7 +44,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/collections?shop=local-sparkfitness.myshopify.com",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/collections?shop={{shopForDiscountApp}}",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -55,7 +55,7 @@
 							"query": [
 								{
 									"key": "shop",
-									"value": "local-sparkfitness.myshopify.com"
+									"value": "{{shopForDiscountApp}}"
 								}
 							]
 						}
@@ -74,7 +74,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 18,\n    \"code\": \"TESTFREE18%\",\n    \"startsAt\": \"2025-03-25T21:00:31Z\",\n    \"endsAt\": \"2025-03-28T00:30:00Z\",\n    \"usageLimit\": 15,\n    \"appliesOncePerCustomer\": false,\n    // \"productIDs\": [\n    //     \"gid://shopify/ProductVariant/45807212593393\",\n    //     \"gid://shopify/ProductVariant/45807212560625\"\n    // ],\n    \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"]\n}",
+							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 18,\n    \"code\": \"TESTFREE18%\",\n    \"startsAt\": \"2025-03-25T21:00:31Z\",\n    \"endsAt\": \"2025-03-28T00:30:00Z\",\n    \"usageLimit\": 15,\n    \"appliesOncePerCustomer\": false,\n    \"customerGets\": {\n        \"quantity\": \"5\",\n        \"collectionIDs\": [],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -82,7 +82,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -93,7 +93,7 @@
 							"query": [
 								{
 									"key": "shop",
-									"value": "local-sparkfitness.myshopify.com"
+									"value": "{{shopForDiscountApp}}"
 								}
 							]
 						}
@@ -107,7 +107,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"FREEDISCOUNT 2\",\n    \"percentage\": 20,\n    \"code\": \"FREEDISCOUNT20%\",\n    \"startsAt\": \"2025-05-01\",\n    \"endsAt\": \"2025-05-10\",\n    \"usageLimit\": 20\n    // \"appliesOncePerCustomer\": true\n    // \"collectionIDs\": [\"gid://shopify/Collection/443980579057\"]\n}",
+							"raw": "{\n    \"title\": \"FREEDISCOUNT 2\",\n    \"percentage\": 20,\n    \"code\": \"FREEDISCOUNT20%\",\n    \"startsAt\": \"2025-05-01\",\n    \"endsAt\": \"2025-05-10\",\n    \"usageLimit\": 20,\n    \"customerGets\": {\n        \"quantity\": \"5\",\n        \"collectionIDs\": [],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -115,7 +115,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&id=26",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&id=26",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -126,7 +126,7 @@
 							"query": [
 								{
 									"key": "shop",
-									"value": "local-sparkfitness.myshopify.com"
+									"value": "{{shopForDiscountApp}}"
 								},
 								{
 									"key": "id",
@@ -143,7 +143,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&orderByCode=asc",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&orderByCode=asc",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -154,7 +154,7 @@
 							"query": [
 								{
 									"key": "shop",
-									"value": "local-sparkfitness.myshopify.com"
+									"value": "{{shopForDiscountApp}}"
 								},
 								{
 									"key": "orderByCode",
@@ -171,7 +171,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&id=1981493674225&discountType=PRODUCT",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&id=1981493674225&discountType=PRODUCT",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -182,7 +182,7 @@
 							"query": [
 								{
 									"key": "shop",
-									"value": "local-sparkfitness.myshopify.com"
+									"value": "{{shopForDiscountApp}}"
 								},
 								{
 									"key": "id",
@@ -212,7 +212,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -223,7 +223,35 @@
 							"query": [
 								{
 									"key": "shop",
-									"value": "local-sparkfitness.myshopify.com"
+									"value": "{{shopForDiscountApp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteAllDiscountCode",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&type=all_code_delete",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"discount"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "{{shopForDiscountApp}}"
+								},
+								{
+									"key": "type",
+									"value": "all_code_delete"
 								}
 							]
 						}
@@ -237,7 +265,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 20,\n    \"code\": \"TEST30%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-01\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"2\",\n        \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"]\n    },\n    \"customerGets\": {\n        \"quantity\": \"4\",\n        \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"]\n    }\n}",
+							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 20,\n    \"code\": \"TEST30%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-01\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"2\",\n        \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    },\n    \"customerGets\": {\n        \"quantity\": \"4\",\n        \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -245,7 +273,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&type=buyxgety",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&type=buyXgetY",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -256,11 +284,11 @@
 							"query": [
 								{
 									"key": "shop",
-									"value": "local-sparkfitness.myshopify.com"
+									"value": "{{shopForDiscountApp}}"
 								},
 								{
 									"key": "type",
-									"value": "buyxgety"
+									"value": "buyXgetY"
 								}
 							]
 						}
@@ -274,7 +302,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"BuyXGetYTest\",\n    \"percentage\": 45,\n    \"code\": \"BOGO45%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-02\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"5\"\n        // \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"]\n    },\n    \"customerGets\": {\n        \"quantity\": \"5\"\n        // \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"]\n    }\n}",
+							"raw": "{\n    \"title\": \"BuyXGetYTest\",\n    \"percentage\": 45,\n    \"code\": \"BOGO45%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-02\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"5\",\n        \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"],\n        \"removeCollectionIDs\": [],\n        \"removeProductIDs\": [],\n        \"productIDs\": []\n    },\n    \"customerGets\": {\n        \"quantity\": \"5\",\n        \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"],\n        \"removeProductIDs\": [\"gid://shopify/ProductVariant/45898240360689\"],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -282,7 +310,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop=local-sparkfitness.myshopify.com&type=buyxgety&id=2",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&type=buyXgetY&id=47",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -293,15 +321,15 @@
 							"query": [
 								{
 									"key": "shop",
-									"value": "local-sparkfitness.myshopify.com"
+									"value": "{{shopForDiscountApp}}"
 								},
 								{
 									"key": "type",
-									"value": "buyxgety"
+									"value": "buyXgetY"
 								},
 								{
 									"key": "id",
-									"value": "2"
+									"value": "47"
 								}
 							]
 						}

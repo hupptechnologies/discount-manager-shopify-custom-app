@@ -8,14 +8,14 @@ interface DeleteResponse {
 
 const DELETE_DISCOUNT_CODE_QUERY = `
 mutation DeleteDiscountCode($id: ID!) {
-  discountCodeDelete(id: $id) {
-    deletedCodeDiscountId
-    userErrors {
-      field
-      code
-      message
-    }
-  }
+	discountCodeDelete(id: $id) {
+		deletedCodeDiscountId
+		userErrors {
+			field
+			code
+			message
+		}
+	}
 }`;
 
 interface DeleteDiscountCodeInput {

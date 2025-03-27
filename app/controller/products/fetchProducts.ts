@@ -3,45 +3,45 @@ import { ProductVariant } from 'app/routes/api.products/route';
 import { getDetailUsingGraphQL } from '../../service/product';
 
 const PRODUCT_VARIANTS_QUERY = `
-    query GetProductVariants($first: Int, $last: Int,  $after: String, $before: String, $query: String) {
-        productVariants(first: $first, last: $last, after: $after, before: $before, query: $query) {
-            pageInfo {
-                endCursor
-                hasNextPage
-                hasPreviousPage
-                startCursor
-            }
-            edges {
-                node {
-                    id
-                    title
-                    price
-                    inventoryQuantity
-                    product {
+	query GetProductVariants($first: Int, $last: Int,  $after: String, $before: String, $query: String) {
+		productVariants(first: $first, last: $last, after: $after, before: $before, query: $query) {
+			pageInfo {
+				endCursor
+				hasNextPage
+				hasPreviousPage
+				startCursor
+			}
+			edges {
+				node {
+					id
+					title
+					price
+					inventoryQuantity
+					product {
 						title
 						variantsCount {
 							count
 						}
-                        featuredMedia {
-                            preview {
-                                image {
-                                    url
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+						featuredMedia {
+							preview {
+								image {
+									url
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 `;
 
 const PRODUCT_VARIANTS_COUNT_QUERY = `
-    query ProductVariantsCount {
-        productVariantsCount {
-            count
-        }
-    }
+	query ProductVariantsCount {
+		productVariantsCount {
+			count
+		}
+	}
 `;
 
 interface PageInfo {

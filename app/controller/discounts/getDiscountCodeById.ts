@@ -419,7 +419,7 @@ export const getDiscountCodeById = async (
 				discountCode: [discountCode],
 				discountScope: getCodeObj?.discountScope || '',
 				advancedRule: (getCodeObj?.advancedRule as object | null),
-				message: 'Fetch discount code successfuly',
+				message: 'Fetch discount code successfully',
 			};
 		}
 
