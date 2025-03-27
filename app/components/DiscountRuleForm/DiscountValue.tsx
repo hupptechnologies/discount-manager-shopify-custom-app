@@ -9,29 +9,22 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
-import type { ItemsList } from 'app/redux/discount/slice';
 import EditItemsList from './EditItemsList';
 import { QueryType } from 'app/routes/app.create-discount';
 import { DiscountRule } from './DiscountRuleForm';
-
-export interface EditObj {
-	type: 'product' | 'collection';
-	isEdit: boolean;
-	items: ItemsList[];
-};
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	handleSearchChange: React.Dispatch<any>;
 	handleOpen: any;
 	newRule: DiscountRule;
-	editObj: EditObj;
+	isEdit: boolean;
 	queryType: QueryType;
 	handleSaveBarOpen: any;
 };
 
 const DiscountValue: React.FC<DiscountValueProps> = ({
-	editObj,
+	isEdit,
 	newRule,
 	setNewRule,
 	handleOpen,
@@ -83,12 +76,12 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 									{ label: 'Specific collections', value: 'collection' },
 									{ label: 'Specific products', value: 'product' },
 								]}
-								value={newRule.appliesTo}
+								value={newRule.getItemFrom}
 								onChange={(value) => {
 									handleSaveBarOpen();
 									setNewRule({
 										...newRule,
-										appliesTo: value as 'collection' | 'product',
+										getItemFrom: value as 'collection' | 'product',
 										searchOne: '',
 									});
 								}}
@@ -119,19 +112,19 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 								onChange={handleSearchChange}
 								autoComplete="off"
 								prefix={<Icon source={SearchIcon} />}
-								placeholder={`Search ${newRule.appliesTo === 'collection' ? 'collection' : 'product'}`}
+								placeholder={`Search ${newRule.getItemFrom === 'collection' ? 'collection' : 'product'}`}
 							/>
 							<Button
-								onClick={() => handleOpen('none', newRule.appliesTo)}
+								onClick={() => handleOpen('none', newRule.getItemFrom)}
 								variant="secondary"
 							>
 								Browse
 							</Button>
 						</FormLayout.Group>
 					)}
-					{editObj?.isEdit && queryType === 'products' && newRule?.customerGets?.items?.length > 0 && (
+					{isEdit && queryType === 'products' && newRule?.customerGets?.items?.length > 0 && (
 						<FormLayout.Group>
-							<EditItemsList type={editObj.type} items={newRule?.customerGets?.items} />
+							<EditItemsList type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
 						</FormLayout.Group>
 					)}
 				</FormLayout>

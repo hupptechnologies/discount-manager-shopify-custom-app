@@ -14,8 +14,12 @@ import {
 	OrderIcon,
 	DeliveryIcon,
 } from '@shopify/polaris-icons';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'app/redux/store';
+import { handleResetGetDiscountCode } from 'app/redux/discount/slice';
 
 const DiscountTypeList = () => {
+	const dispatch = useDispatch<AppDispatch>()
 	const navigate = useNavigate();
 	const discountTypes = [
 		{
@@ -59,7 +63,10 @@ const DiscountTypeList = () => {
 					<ResourceItem
 						id={id}
 						accessibilityLabel={`View details for ${title}`}
-						onClick={() => navigate(url)}
+						onClick={() => {
+							dispatch(handleResetGetDiscountCode());
+							navigate(url);
+						}}
 					>
 						<InlineStack align="space-between" blockAlign="center" gap="200">
 							<Box>

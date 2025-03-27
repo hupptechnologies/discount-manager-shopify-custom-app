@@ -146,6 +146,9 @@ const discountSlice = createSlice({
 	reducers: {
 		handleUpdateDiscountCodeId: (state, { payload }) => {
 			state.updateDiscountCodeId = payload.id;
+		},
+		handleResetGetDiscountCode: (state) => {
+			state.getDiscountCode = [];
 		}
 	},
 	extraReducers: (builder) => {
@@ -235,7 +238,7 @@ const discountSlice = createSlice({
 	},
 });
 
-export const { handleUpdateDiscountCodeId } = discountSlice.actions;
+export const { handleUpdateDiscountCodeId, handleResetGetDiscountCode } = discountSlice.actions;
 
 export const getAllDiscountCodeDetail = (state: { discount: discountState }) =>
 	state.discount;

@@ -12,7 +12,6 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
-import type { EditObj } from './DiscountValue';
 import type { DiscountRule } from './DiscountRuleForm';
 import type { QueryType } from 'app/routes/app.create-discount';
 import EditItemsList from './EditItemsList';
@@ -23,12 +22,12 @@ interface DiscountBuyXGetYProps {
 	newRule: DiscountRule;
 	handleSearchOneChange: React.Dispatch<any>;
 	handleSearchTwoChange: React.Dispatch<any>;
-	editObj: EditObj;
+	isEdit: boolean;
 	queryType: QueryType;
 };
 
 const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
-	editObj,
+	isEdit,
 	newRule,
 	setNewRule,
 	handleOpen,
@@ -131,7 +130,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{editObj?.isEdit && queryType === 'buyXgetY' && newRule.customerBuys?.items?.length > 0 && (
+				{isEdit && queryType === 'buyXgetY' && newRule.customerBuys?.items?.length > 0 && (
 					<FormLayout.Group>
 						<EditItemsList type={newRule?.buyItemFrom} items={newRule.customerBuys?.items} />
 					</FormLayout.Group>
@@ -194,7 +193,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{editObj?.isEdit && queryType === 'buyXgetY' && newRule?.customerGets?.items?.length > 0 && (
+				{isEdit && queryType === 'buyXgetY' && newRule?.customerGets?.items?.length > 0 && (
 					<FormLayout.Group>
 						<EditItemsList type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
 					</FormLayout.Group>

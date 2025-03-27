@@ -55,8 +55,6 @@ export interface DiscountRule {
 	isRandom: boolean;
 	isMinQuantityItem: boolean;
 	isMinPurchaseAmount: boolean;
-	minBuyQuantity: string;
-	minGetQuantity: string;
 	isPercentage: boolean;
 	isAmountOfEach: boolean;
 	isFree: boolean;
@@ -77,8 +75,6 @@ export interface DiscountRule {
 	onePerCustomer: boolean;
 	totalLimitValue: string;
 	dicountCodePrefix: string;
-	collectionIDs: string[];
-	productIDs: string[];
 	customerBuys: {
 		quantity: string;
 		items: ItemsList[] | any;
@@ -116,15 +112,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const [rules, setRules] = useState<DiscountRule[]>([]);
 	const [selected, setSelected] = useState<number>(0);
 	const [run, setRun] = useState<boolean>(false);
-	const [editObj, setEditObj] = useState<{
-		type: 'product' | 'collection';
-		isEdit: boolean;
-		items: ItemsList[];
-	}>({
-		type: 'product',
-		isEdit: false,
-		items: [],
-	});
+	const [isEdit, setIsEdit] = useState<boolean>(false);
 	const [newRule, setNewRule] = useState<DiscountRule>({
 		selectedDiscountType: queryType,
 		selectedMethod: 'code',
@@ -151,8 +139,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		searchTwo: '',
 		isMinPurchaseAmount: false,
 		isMinQuantityItem: true,
-		minBuyQuantity: '',
-		minGetQuantity: '',
 		isPercentage: true,
 		isAmountOfEach: false,
 		isFree: false,
@@ -173,8 +159,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		onePerCustomer: false,
 		totalLimitValue: '',
 		dicountCodePrefix: '',
-		collectionIDs: [],
-		productIDs: [],
 		customerBuys: {
 			items: [],
 			productIDs: [],
@@ -202,11 +186,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			const items = productVariantsExistForGet ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
 				: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges ?? [];
 			const { selectedStartDates, selectedEndDates,selectedEndTime, selectedStartTime } = convertToLocalTime(getDiscountCode[0]?.codeDiscount?.startsAt, getDiscountCode[0]?.codeDiscount?.endsAt);
-			setEditObj({
-				type: productVariantsExistForGet ? 'product' : 'collection',
-				isEdit: true,
-				items: []
-			});
+			setIsEdit(true);
 			setNewRule({
 				...newRule,
 				appliesTo: productVariantsExistForGet ? 'product' : 'collection',
@@ -321,8 +301,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			searchTwo: '',
 			isMinPurchaseAmount: false,
 			isMinQuantityItem: false,
-			minBuyQuantity: '',
-			minGetQuantity: '',
 			isPercentage: true,
 			isAmountOfEach: false,
 			isFree: false,
@@ -343,8 +321,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			onePerCustomer: false,
 			totalLimitValue: '',
 			dicountCodePrefix: '',
-			collectionIDs: [],
-			productIDs: [],
 			customerBuys: {
 				items: [],
 				productIDs: [],
@@ -363,11 +339,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				removeProductIDs: []
 			}
 		});
-		setEditObj({
-			type: 'product',
-			isEdit: false,
-			items: [],
-		});
+		setIsEdit(false);
 	};
 
 	const handleOpen = (type: string | null, value: string) => {
@@ -391,14 +363,14 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleSave = () => {
-		if (editObj?.isEdit) {
+		if (isEdit) {
 			return handleUpdate();
 		}
 		handleSubmit();
 	};
 
 	const handleDiscard = () => {
-		if (editObj?.isEdit) {
+		if (isEdit) {
 			setRun(!run);
 		}
 		handleAddRule();
@@ -536,7 +508,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			}),
 		);
 	}
-	console.log(newRule);
 	
 	return (
 		<Layout>
@@ -564,7 +535,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						setNewRule={setNewRule}
 						handleSearchOneChange={handleSearchOneChange}
 						handleSearchTwoChange={handleSearchTwoChange}
-						editObj={editObj}
+						isEdit={isEdit}
 						queryType={queryType}
 					/>
 				) : (
@@ -573,7 +544,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						newRule={newRule}
 						setNewRule={setNewRule}
 						handleSearchChange={handleSearchOneChange}
-						editObj={editObj}
+						isEdit={isEdit}
 						queryType={queryType}
 						handleSaveBarOpen={handleSaveBarOpen}
 					/>
