@@ -18,6 +18,18 @@ mutation DeleteDiscountCode($id: ID!) {
 	}
 }`;
 
+const DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY = `
+mutation DeleteDiscountCode($id: ID!) {
+	discountAutomaticDelete(id: $id) {
+		deletedAutomaticDiscountId
+		userErrors {
+			field
+			code
+			message
+		}
+	}
+}`;
+
 export const deleteAllDiscountCodes = async (shop: string): Promise<DeleteResponse> => {
 	try {
 		const discountCodes = await prisma.discountCode.findMany({
@@ -46,7 +58,7 @@ export const deleteAllDiscountCodes = async (shop: string): Promise<DeleteRespon
 
 		for (const discountCode of discountCodes) {
 			const data = {
-				query: DELETE_DISCOUNT_CODE_QUERY,
+				query: discountCode.discountId.includes('DiscountCodeNode') ? DELETE_DISCOUNT_CODE_QUERY : DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY,
 				variables: {
 					id: discountCode.discountId
 				},

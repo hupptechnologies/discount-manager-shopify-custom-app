@@ -18,6 +18,18 @@ mutation DeleteDiscountCode($id: ID!) {
 	}
 }`;
 
+const DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY = `
+mutation DeleteDiscountCode($id: ID!) {
+	discountAutomaticDelete(id: $id) {
+		deletedAutomaticDiscountId
+		userErrors {
+			field
+			code
+			message
+		}
+	}
+}`;
+
 interface DeleteDiscountCodeInput {
 	id: number;
 	code: string;
@@ -58,7 +70,7 @@ export const deleteDiscountCode = async (
 		}
 
 		const data = {
-			query: DELETE_DISCOUNT_CODE_QUERY,
+			query: discountId.includes('DiscountCodeNode') ? DELETE_DISCOUNT_CODE_QUERY: DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY,
 			variables: {
 				id: discountId,
 			},

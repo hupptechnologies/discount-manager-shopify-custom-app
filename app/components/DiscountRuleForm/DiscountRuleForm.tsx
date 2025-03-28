@@ -401,7 +401,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						advancedRule
 					},
 					type: queryType,
-					method: activeButtonIndex === 0 ? 'custom' : 'auto',
+					method: newRule?.selectedMethod === 'code' ? 'custom' : 'auto',
 					callback (success) {
 						if (success) {
 							handleAddRule();
@@ -427,7 +427,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					advancedRule
 				},
 				type: queryType,
-				method: activeButtonIndex === 0 ? 'custom' : 'auto',
+				method: newRule?.selectedMethod === 'code' ? 'custom' : 'auto',
 				callback (success) {
 					if (success) {
 						handleAddRule();

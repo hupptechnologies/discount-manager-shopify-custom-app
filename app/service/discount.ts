@@ -191,16 +191,16 @@ export const deleteAllDiscountCode = (params: DeleteAllDiscountCodeParams) => {
 
 export const createDiscountCode = (params: CreateDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { shopName, data, type = 'product' } = params;
-	return requestInstance.post(`discount?shop=${shopName}&type=${type}`, data);
+	const { shopName, data, type = 'product', method } = params;
+	return requestInstance.post(`discount?shop=${shopName}&type=${type}&method=${method}`, data);
 };
 
 export const createBuyXGetYDiscountCode = (
 	params: CreateBuyXGetYDiscountCodeParams,
 ) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { shopName, data, type = 'buyXgetY' } = params;
-	return requestInstance.post(`discount?shop=${shopName}&type=${type}`, data);
+	const { shopName, data, type = 'buyXgetY', method } = params;
+	return requestInstance.post(`discount?shop=${shopName}&type=${type}&method=${method}`, data);
 };
 
 export const getDiscountCodeById = (params: GetDiscountCodeByIdParams) => {
