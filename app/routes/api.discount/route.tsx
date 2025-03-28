@@ -81,6 +81,7 @@ export const action = async ({
 	const url = new URL(request.url);
 	const shop = url.searchParams.get('shop') ?? '';
 	const type = url.searchParams.get('type') ?? '';
+	const method = url.searchParams.get('method') ?? '';
 	const id = Number(url.searchParams.get('id'));
 	if (request.method === 'PUT') {
 		if (!id) {
@@ -121,7 +122,7 @@ export const action = async ({
 			);
 			return json<ActionResponse>(buyXGetYResponse);
 		}
-		const discountCodeResponse = await createDiscountCode(shop, request, type);
+		const discountCodeResponse = await createDiscountCode(shop, request, type, method);
 		return json<ActionResponse>(discountCodeResponse);
 	}
 	return json<ActionResponse>({
