@@ -17,7 +17,7 @@ interface DiscountStats {
 
 const getDiscountStats = async (): Promise<DiscountStats> => {
 	const activeDiscountsCount = await prisma.discountCode.count({
-		where: { isActive: true },
+		where: { isActive: true, endDate: { gt: new Date() } },
 	});
 
 	const usedDiscountsCount = await prisma.discountCode.count({

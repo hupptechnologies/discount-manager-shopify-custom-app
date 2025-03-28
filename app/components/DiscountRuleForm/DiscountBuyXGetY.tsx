@@ -90,7 +90,10 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 								...newRule,
 								buyItemFrom: value as 'collection' | 'product',
 								searchOne: '',
-								customerBuys: { ...newRule.customerBuys, items: [] }
+								customerBuys: {
+									...newRule.customerBuys,
+									items: [],
+								}
 							})
 						}
 					/>

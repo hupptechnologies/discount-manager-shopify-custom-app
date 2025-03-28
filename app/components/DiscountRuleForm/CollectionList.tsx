@@ -120,6 +120,52 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 		setNewRule({ ...newRule, searchOne: '', searchTwo: '' });
 	};
 
+	const handleSelectionChange = (value: string[]) => {
+		const selectedObjects = rowsCollection.filter((row) => value.includes(row.id))
+			.map((row) => ({
+				node: {
+					id: row.id,
+					title: row.title,
+					productsCount: {
+						count: row.productCount || 0,
+					},
+					image: {
+						url: row.image
+					}
+				},
+			}
+		));
+		if (selected === 0) {
+			setNewRule({
+				...newRule,
+				customerGets: {
+					...newRule.customerGets,
+					collectionIDs: value,
+					...(newRule.customerGets.productIDs.length > 0 && {
+						removeProductIDs: newRule.customerGets.productIDs,
+					}),
+					productIDs: [],
+					items: selectedObjects
+				}
+			});
+		}
+		if (selected === 1) {
+			setNewRule({
+				...newRule,
+				customerBuys: {
+					...newRule.customerBuys,
+					collectionIDs: value,
+					...(newRule.customerBuys.productIDs.length > 0 && {
+						removeProductIDs: newRule.customerBuys.productIDs,
+					}),
+					productIDs: [],
+					items: selectedObjects
+				}
+			});
+		}
+		setSelectedItems(value);
+	};
+	
 	const filterControl = (
 		<Filters
 			queryValue={
@@ -142,29 +188,7 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 				items={rowsCollection}
 				selectable
 				selectedItems={selectedItems}
-				onSelectionChange={(value) => {
-					const selectedObjects = rowsCollection.filter((row) => value.includes(row.id))
-						.map((row) => ({
-							node: {
-								id: row.id,
-								title: row.title,
-								productsCount: {
-									count: row.productCount || 0,
-								},
-								image: {
-									url: row.image
-								}
-							},
-						}
-					));
-					if (selected === 0) {
-						setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: value, productIDs: [], items: selectedObjects } });
-					}
-					if (selected === 1) {
-						setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, collectionIDs: value, productIDs: [], items: selectedObjects  } });
-					}
-					setSelectedItems(value);
-				}}
+				onSelectionChange={handleSelectionChange}
 				renderItem={(item) => {
 					const { id, image, title, productCount } = item;
 					return (
