@@ -83,6 +83,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 										...newRule,
 										getItemFrom: value as 'collection' | 'product',
 										searchOne: '',
+										customerGets: { ...newRule.customerGets, items: [] }
 									});
 								}}
 							/>

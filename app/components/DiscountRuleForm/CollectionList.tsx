@@ -28,9 +28,10 @@ interface CollectionProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	selected: number;
+	selectedItemsArray: string[];
 };
 
-const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, selected }) => {
+const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, selected, selectedItemsArray }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
 	const {
@@ -70,6 +71,12 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 			setPrevCursor(collectionPageInfo.startCursor);
 		}
 	}, [collectionPageInfo]);
+
+	useEffect(() => {
+		if (selectedItemsArray.length > 0) {
+			setSelectedItems(selectedItemsArray);
+		}
+	}, [selectedItemsArray]);
 
 	const loadMoreNext = () => {
 		if (collectionPageInfo?.hasNextPage) {

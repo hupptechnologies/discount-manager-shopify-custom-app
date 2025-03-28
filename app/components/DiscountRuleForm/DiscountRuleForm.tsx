@@ -183,6 +183,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			const productVariantsExistForBuy = getDiscountCode[0]?.codeDiscount?.customerBuys?.items.productVariants?.edges?.length > 0;
 			const items = productVariantsExistForGet ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
 				: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges ?? [];
+			const buyItems = productVariantsExistForBuy ? getDiscountCode[0]?.codeDiscount?.customerBuys?.items?.productVariants?.edges ?? []
+				: getDiscountCode[0]?.codeDiscount?.customerBuys?.items?.collections?.edges ?? [];
 			const { selectedStartDates, selectedEndDates,selectedEndTime, selectedStartTime } = convertToLocalTime(getDiscountCode[0]?.codeDiscount?.startsAt, getDiscountCode[0]?.codeDiscount?.endsAt);
 			setIsEdit(true);
 			setNewRule({
@@ -198,13 +200,16 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						Math.round((ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage : getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect?.percentage) * 100),
 					),
 					quantity: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.quantity?.quantity,
-					items: items
+					items: items,
+					productIDs: productVariantsExistForGet ? items.map(item => item.node.id) : [],
+					collectionIDs: !productVariantsExistForGet ? items.map(item => item.node.id) : []
 				},
 				customerBuys: {
 					...newRule.customerBuys,
 					quantity: getDiscountCode[0]?.codeDiscount?.customerBuys?.value?.quantity,
-					items: productVariantsExistForBuy ? getDiscountCode[0]?.codeDiscount?.customerBuys?.items?.productVariants?.edges ?? []
-						: getDiscountCode[0]?.codeDiscount?.customerBuys?.items?.collections?.edges ?? []
+					items: buyItems,
+					productIDs: productVariantsExistForBuy ? buyItems.map(item => item.node.id) : [],
+					collectionIDs: !productVariantsExistForBuy ? buyItems.map(item => item.node.id) : [],
 				},
 				totalUsageLimit: true,
 				totalLimitValue: ifExist
@@ -501,7 +506,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			}),
 		);
 	}
-	
+
 	return (
 		<Layout>
 			<Layout.Section>
@@ -559,13 +564,13 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			</Layout.Section>
 			<Modal id="product-collection-modal">
 				{newRule?.buyItemFrom === 'collection' && selected === 1 && (
-					<CollectionList selected={selected} newRule={newRule} setNewRule={setNewRule} />
+					<CollectionList selectedItemsArray={newRule?.customerBuys?.collectionIDs} selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				{newRule?.buyItemFrom === 'product' && selected === 1 && (
 					<ProductsList selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				{newRule?.getItemFrom === 'collection' && selected === 0 && (
-					<CollectionList selected={selected} newRule={newRule} setNewRule={setNewRule} />
+					<CollectionList selectedItemsArray={newRule?.customerGets?.collectionIDs} selected={selected} newRule={newRule} setNewRule={setNewRule} />
 				)}
 				{newRule?.getItemFrom === 'product' && selected === 0 && (
 					<ProductsList selected={selected} newRule={newRule} setNewRule={setNewRule} />

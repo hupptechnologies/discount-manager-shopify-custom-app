@@ -14,7 +14,7 @@ import type { ItemsList } from 'app/redux/discount/slice';
 
 export interface EditItemsListProps {
 	type: string;
-	items: ItemsList[]
+	items: ItemsList[];
 };
 
 const EditItemsList: React.FC<EditItemsListProps> = ({ type, items }) => {
