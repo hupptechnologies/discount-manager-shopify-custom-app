@@ -187,6 +187,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 		discountId: number,
 		id: number,
 		type: string,
+		isCustom: boolean
 	): void => {
 		e.stopPropagation();
 		setIsLoadingUpdate(true);
@@ -196,6 +197,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				shopName: shopify.config.shop || '',
 				id: discountId,
 				discountType: type,
+				method: isCustom ? 'custom' : 'auto',
 				callback (success) {
 					if (success) {
 						setIsLoadingUpdate(false);
@@ -277,6 +279,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 											parseInt(discountId.split('/').pop() as string),
 											id,
 											discountScope,
+											discountId.includes('DiscountCodeNode') as boolean
 										)
 									}
 									variant="secondary"

@@ -19,6 +19,7 @@ export interface getDiscountCodeResponse {
 	advancedRule: object | null;
 	discountScope: string | null;
 	message: string;
+	method: string;
 }
 
 interface LoaderResponse {
@@ -50,12 +51,14 @@ export const loader = async ({
 	const orderByCode = url.searchParams.get('orderByCode') as 'asc' | 'desc';
 	const id = Number(url.searchParams.get('id'));
 	const discountType = url.searchParams.get('discountType') ?? '';
+	const method = url.searchParams.get('method');
 
-	if (id && discountType) {
+	if (id && discountType && method) {
 		const getDiscountCodeResponse = await getDiscountCodeById(
 			id,
 			shop,
 			discountType,
+			method
 		);
 		return json<getDiscountCodeResponse>(getDiscountCodeResponse);
 	}

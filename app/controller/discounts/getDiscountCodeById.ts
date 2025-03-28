@@ -198,6 +198,180 @@ query getDiscountcode($ID: ID!) {
 	}
 }`;
 
+const GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY = `
+query getDiscountcode($ID: ID!) {
+	automaticDiscountNode(id: $ID) {
+		id
+		automaticDiscount {
+			... on DiscountAutomaticBxgy {
+				status
+				title
+				startsAt
+				endsAt
+				usesPerOrderLimit
+				customerBuys {
+					value {
+						... on DiscountQuantity {
+							quantity
+						}
+					}
+					items {
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
+							}
+						}
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										title
+										id
+										product {
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				customerGets {
+					value {
+						... on DiscountOnQuantity {
+							effect {
+								... on DiscountPercentage {
+									percentage
+								}
+							}
+							quantity {
+								quantity
+							}
+						}
+					}
+					items {
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
+							}
+						}
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										title
+										id
+										product {
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}`;
+
+const GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY = `
+query getDiscountCode($ID: ID!) {
+	automaticDiscountNode(id: $ID) {
+		id
+		automaticDiscount {
+			... on DiscountAutomaticBasic {
+				title
+				customerGets {
+					value {
+						... on DiscountPercentage {
+							percentage
+						}
+					}
+					items {
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										title
+										id
+										product {
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										id
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}`;
+
 interface DiscountCodeBxgy {
 	__typename: 'DiscountCodeBxgy';
 	status: string;
@@ -365,6 +539,10 @@ interface BasicDiscountQueryResponse {
 				id: string;
 				codeDiscount: DiscountCodeBasic | DiscountCodeBxgy;
 			};
+			automaticDiscountNode: {
+				id: string;
+				automaticDiscount: DiscountCodeBasic | DiscountCodeBxgy;
+			}
 		};
 	};
 }
@@ -373,6 +551,7 @@ export const getDiscountCodeById = async (
 	id: number,
 	shop: string,
 	discountType: string,
+	method: string
 ): Promise<getDiscountCodeResponse> => {
 	try {
 		if (!shop || !id || !discountType) {
@@ -381,7 +560,8 @@ export const getDiscountCodeById = async (
 				message: 'Required fields id, discountType and shop',
 				discountCode: null,
 				discountScope: '',
-				advancedRule: null
+				advancedRule: null,
+				method
 			}
 		}
 		const response = await prisma.session.findMany({
@@ -396,10 +576,10 @@ export const getDiscountCodeById = async (
 		const data = {
 			query:
 				discountType === 'BUYXGETY'
-					? GET_BUYXGETY_DISCOUNT_CODE_QUERY
-					: GET_BASIC_DISCOUNT_CODE_QUERY,
+					? method === 'custom' ? GET_BUYXGETY_DISCOUNT_CODE_QUERY: GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY
+					: method === 'custom' ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
-				ID: `gid://shopify/DiscountCodeNode/${id}`,
+				ID: method === 'custom' ? `gid://shopify/DiscountCodeNode/${id}` : `gid://shopify/DiscountAutomaticNode/${id}`,
 			},
 		};
 		const getDiscountCodeByIdFromShopify: BasicDiscountQueryResponse =
@@ -408,18 +588,18 @@ export const getDiscountCodeById = async (
 		const getCodeObj = await prisma.discountCode.findFirst({
 			where: {
 				shop,
-				discountId: `gid://shopify/DiscountCodeNode/${id}`,
+				discountId: method === 'custom' ? `gid://shopify/DiscountCodeNode/${id}` : `gid://shopify/DiscountAutomaticNode/${id}`,
 			},
-		});
-		const discountCode =
-			getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode || null;
-		if (getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode) {
+		});		
+		const discountCode = method === 'custom' ? getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode : getDiscountCodeByIdFromShopify.data?.data?.automaticDiscountNode;
+		if (getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode || getDiscountCodeByIdFromShopify.data?.data?.automaticDiscountNode) {
 			return {
 				success: true,
 				discountCode: [discountCode],
 				discountScope: getCodeObj?.discountScope || '',
 				advancedRule: (getCodeObj?.advancedRule as object | null),
 				message: 'Fetch discount code successfully',
+				method: method
 			};
 		}
 
@@ -428,7 +608,8 @@ export const getDiscountCodeById = async (
 			message: 'Record not found!',
 			discountCode: null,
 			discountScope: '',
-			advancedRule: null
+			advancedRule: null,
+			method
 		};
 	} catch (error) {
 		// eslint-disable-next-line no-console
@@ -441,7 +622,8 @@ export const getDiscountCodeById = async (
 			discountCode: [],
 			message: 'Something went wrong',
 			discountScope: '',
-			advancedRule: null
+			advancedRule: null,
+			method
 		};
 	}
 };
