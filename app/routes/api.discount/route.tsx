@@ -119,6 +119,7 @@ export const action = async ({
 				shop,
 				request,
 				type,
+				method
 			);
 			return json<ActionResponse>(buyXGetYResponse);
 		}

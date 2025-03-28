@@ -72,6 +72,7 @@ export interface CreateBuyXGetYDiscountCodeParams {
 	};
 	shopName: string;
 	type: string | null;
+	method: string;
 	callback?: (success: boolean) => void;
 }
 
