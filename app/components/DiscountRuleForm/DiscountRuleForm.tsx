@@ -103,7 +103,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const { debounce } = pkg;
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const { getDiscountCode, discountScope, updateDiscountCodeId, advancedRule } = useSelector((state: RootState) =>
+	const { getDiscountCode, discountScope, updateDiscountCodeId, advancedRule, method } = useSelector((state: RootState) =>
 		getAllDiscountCodeDetail(state),
 	);
 	const navigate = useNavigate();
@@ -179,41 +179,48 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	useEffect(() => {
 		if (getDiscountCode?.length > 0) {
 			const ifExist = ['PRODUCT', 'ORDER', 'SHIPPING'].includes(discountScope);
+			const isCustomMethod = method === 'custom';
 			const productVariantsExistForGet = getDiscountCode[0]?.codeDiscount?.customerGets?.items.productVariants?.edges?.length > 0;
 			const productVariantsExistForBuy = getDiscountCode[0]?.codeDiscount?.customerBuys?.items.productVariants?.edges?.length > 0;
 			const items = productVariantsExistForGet ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
 				: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges ?? [];
+			const automaticItems = productVariantsExistForGet ? getDiscountCode[0]?.automaticDiscount?.customerGets?.items?.productVariants?.edges ?? []
+				: getDiscountCode[0]?.automaticDiscount?.customerGets?.items?.collections?.edges ?? [];
 			const buyItems = productVariantsExistForBuy ? getDiscountCode[0]?.codeDiscount?.customerBuys?.items?.productVariants?.edges ?? []
 				: getDiscountCode[0]?.codeDiscount?.customerBuys?.items?.collections?.edges ?? [];
-			const { selectedStartDates, selectedEndDates,selectedEndTime, selectedStartTime } = convertToLocalTime(getDiscountCode[0]?.codeDiscount?.startsAt, getDiscountCode[0]?.codeDiscount?.endsAt);
+			const automaticBuyItems = productVariantsExistForBuy ? getDiscountCode[0]?.automaticDiscount?.customerBuys?.items?.productVariants?.edges ?? []
+				: getDiscountCode[0]?.automaticDiscount?.customerBuys?.items?.collections?.edges ?? [];
+			const { selectedStartDates, selectedEndDates,selectedEndTime, selectedStartTime } = isCustomMethod ? convertToLocalTime(getDiscountCode[0]?.codeDiscount?.startsAt, getDiscountCode[0]?.codeDiscount?.endsAt) : convertToLocalTime(getDiscountCode[0]?.automaticDiscount?.startsAt, getDiscountCode[0]?.automaticDiscount?.endsAt);
 			setIsEdit(true);
 			setNewRule({
 				...newRule,
 				getItemFrom: productVariantsExistForGet ? 'product' : 'collection',
 				buyItemFrom: productVariantsExistForBuy ? 'product' : 'collection',
-				title: getDiscountCode[0]?.codeDiscount?.title || '',
+				title: isCustomMethod ? getDiscountCode[0]?.codeDiscount?.title : getDiscountCode[0]?.automaticDiscount?.title || '',
 				checkoutDiscountCode:
-					getDiscountCode[0]?.codeDiscount?.codes?.edges[0].node?.code || '',
+					isCustomMethod ? getDiscountCode[0]?.codeDiscount?.codes?.edges[0].node?.code : getDiscountCode[0]?.automaticDiscount?.title || '',
 				customerGets: {
 					...newRule.customerGets,
-					percentage: String(
+					percentage: isCustomMethod ? String(
 						Math.round((ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage : getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect?.percentage) * 100),
+					) : String(
+						Math.round((ifExist ? getDiscountCode[0]?.automaticDiscount?.customerGets?.value?.percentage : getDiscountCode[0]?.automaticDiscount?.customerGets?.value?.effect?.percentage) * 100),
 					),
-					quantity: getDiscountCode[0]?.codeDiscount?.customerGets?.value?.quantity?.quantity,
-					items: items,
-					productIDs: productVariantsExistForGet ? items.map(item => item.node.id) : [],
-					collectionIDs: !productVariantsExistForGet ? items.map(item => item.node.id) : []
+					quantity: isCustomMethod ? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.quantity?.quantity : getDiscountCode[0]?.automaticDiscount?.customerGets?.value?.quantity?.quantity,
+					items: isCustomMethod ? items: automaticItems,
+					productIDs: productVariantsExistForGet ? isCustomMethod ? items.map(item => item.node.id) : automaticItems.map(item => item.node.id) : [],
+					collectionIDs: !productVariantsExistForGet ? isCustomMethod ? items.map(item => item.node.id) : automaticItems.map(item => item.node.id) : []
 				},
 				customerBuys: {
 					...newRule.customerBuys,
-					quantity: getDiscountCode[0]?.codeDiscount?.customerBuys?.value?.quantity,
-					items: buyItems,
-					productIDs: productVariantsExistForBuy ? buyItems.map(item => item.node.id) : [],
-					collectionIDs: !productVariantsExistForBuy ? buyItems.map(item => item.node.id) : [],
+					quantity: isCustomMethod ? getDiscountCode[0]?.codeDiscount?.customerBuys?.value?.quantity : getDiscountCode[0]?.automaticDiscount?.customerBuys?.value?.quantity,
+					items: isCustomMethod ? buyItems: automaticBuyItems,
+					productIDs: productVariantsExistForBuy ? isCustomMethod ? buyItems.map(item => item.node.id) : automaticBuyItems.map(item => item.node.id) : [],
+					collectionIDs: !productVariantsExistForBuy ? isCustomMethod ? buyItems.map(item => item.node.id) : automaticBuyItems.map(item => item.node.id) : [],
 				},
-				totalUsageLimit: true,
+				totalUsageLimit: isCustomMethod ? true : false,
 				totalLimitValue: ifExist
-					? getDiscountCode[0]?.codeDiscount?.usageLimit
+					? isCustomMethod ? getDiscountCode[0]?.codeDiscount?.usageLimit : getDiscountCode[0]?.automaticDiscount?.usageLimit
 					: getDiscountCode[0]?.codeDiscount?.usesPerOrderLimit,
 				onePerCustomer:
 					getDiscountCode[0]?.codeDiscount?.appliesOncePerCustomer,
@@ -228,7 +235,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				customerType: advancedRule?.customerType ?? 'all',
 				productCategory: advancedRule?.productCategory ?? '',
 				isAI: advancedRule?.isAI ?? false,
-				isStockBased: advancedRule?.isStockBased ?? false
+				isStockBased: advancedRule?.isStockBased ?? false,
+				selectedMethod: isCustomMethod ? 'code' : 'automatic'
 			});
 		}
 	}, [getDiscountCode, discountScope, advancedRule, run]);
@@ -544,7 +552,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						newRule={newRule}
 						setNewRule={setNewRule}
 						handleSearchChange={handleSearchOneChange}
-						isEdit={isEdit}
 						queryType={queryType}
 						handleSaveBarOpen={handleSaveBarOpen}
 					/>

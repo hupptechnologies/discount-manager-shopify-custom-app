@@ -319,7 +319,10 @@ query getDiscountCode($ID: ID!) {
 		id
 		automaticDiscount {
 			... on DiscountAutomaticBasic {
+				status
 				title
+				startsAt
+				endsAt
 				customerGets {
 					value {
 						... on DiscountPercentage {

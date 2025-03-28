@@ -18,13 +18,11 @@ interface DiscountValueProps {
 	handleSearchChange: React.Dispatch<any>;
 	handleOpen: any;
 	newRule: DiscountRule;
-	isEdit: boolean;
 	queryType: QueryType;
 	handleSaveBarOpen: any;
 };
 
 const DiscountValue: React.FC<DiscountValueProps> = ({
-	isEdit,
 	newRule,
 	setNewRule,
 	handleOpen,

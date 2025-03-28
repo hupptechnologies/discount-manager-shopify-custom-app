@@ -93,6 +93,49 @@ export interface GetDiscountCodeList {
 			};
 		}
 	};
+	automaticDiscount: {
+		title: string;
+		usageLimit: string;
+		startsAt: string;
+		endsAt: string;
+		appliesOncePerCustomer: boolean;
+		codes: {
+			edges: nodeList[];
+		};
+		usesPerOrderLimit: string;
+		customerGets: {
+			value: {
+				effect: {
+					percentage: number;
+				}
+				quantity: {
+					quantity: string;
+				}
+				percentage: number;
+			};
+			items: {
+				productVariants: {
+					edges: ItemsList[];
+				};
+				collections: {
+					edges: ItemsList[];
+				}
+			};
+		};
+		customerBuys: {
+			value: {
+				quantity: string;
+			};
+			items: {
+				productVariants: {
+					edges: ItemsList[];
+				};
+				collections: {
+					edges: ItemsList[];
+				}
+			};
+		}
+	};
 }
 
 interface discountState {
@@ -115,6 +158,7 @@ interface discountState {
 	discountScope: string;
 	advancedRule: AdvancedRuleObject | null;
 	updateDiscountCodeId: number | null;
+	method: string;
 }
 
 const initialState: discountState = {
@@ -140,7 +184,8 @@ const initialState: discountState = {
 	getDiscountCode: [],
 	discountScope: '',
 	updateDiscountCodeId: null,
-	advancedRule: null
+	advancedRule: null,
+	method: ''
 };
 
 const discountSlice = createSlice({
@@ -227,6 +272,7 @@ const discountSlice = createSlice({
 				state.getDiscountCode = payload.discountCode;
 				state.discountScope = payload.discountScope;
 				state.advancedRule = payload.advancedRule;
+				state.method = payload.method;
 			},
 		);
 		builder.addCase(getDiscountCodeByIdAsync.rejected, (state) => {
@@ -234,6 +280,7 @@ const discountSlice = createSlice({
 			state.getDiscountCode = [];
 			state.discountScope = '';
 			state.advancedRule = null;
+			state.method = '';
 		});
 		builder.addCase(updateDiscountCodeAsync.pending, (state) => {
 			state.isUpdateDiscountCode = true;

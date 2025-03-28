@@ -59,6 +59,7 @@ interface GetDiscountCodeByIdReturnValue {
 	discountCode: GetDiscountCodeList[];
 	discountScope: string;
 	advancedRule: AdvancedRuleObject | null;
+	method: string;
 }
 
 export const fetchAllDiscountCodesAsync = createAsyncThunk<
@@ -216,7 +217,7 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 		try {
 			const response = await getDiscountCodeById(params);
 			if (response.data) {
-				const { success, discountCode, message, discountScope, advancedRule } = response.data;
+				const { success, discountCode, message, discountScope, advancedRule, method } = response.data;
 				if (success && params.callback) {
 					params.callback(success);
 				}
@@ -225,7 +226,8 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 					discountCode,
 					message,
 					discountScope,
-					advancedRule
+					advancedRule,
+					method
 				});
 			}
 			return fulfillWithValue({
@@ -233,7 +235,8 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 				discountCode: null,
 				message: '',
 				discountScope: '',
-				advancedRule: null
+				advancedRule: null,
+				method: ''
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;
