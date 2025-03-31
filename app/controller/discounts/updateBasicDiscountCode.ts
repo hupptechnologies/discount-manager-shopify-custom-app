@@ -15,6 +15,19 @@ mutation discountCodeBasicUpdate($id: ID!, $basicCodeDiscount: DiscountCodeBasic
 	}
 }`;
 
+const UPDATE_BASIC_AUTOMATIC_DISCOUNT_CODE_QUERY = `
+mutation discountAutomaticBasicUpdate($automaticBasicDiscount: DiscountAutomaticBasicInput!, $id: ID!) {
+	discountAutomaticBasicUpdate(automaticBasicDiscount: $automaticBasicDiscount, id: $id) {
+		automaticDiscountNode {
+			id
+		}
+		userErrors {
+			field
+			message
+		}
+	}
+}`;
+
 type DiscountCodeItems =
 	| { all: boolean }
 	| { products: { productVariantsToAdd: string[] } }
@@ -22,8 +35,22 @@ type DiscountCodeItems =
 
 type DiscountCodeBasicInput = {
 	code: string;
+	startsAt: string;
+	endsAt: string;
 	appliesOncePerCustomer: boolean;
 	usageLimit: number;
+	customerGets: {
+		value: {
+			percentage: number;
+		};
+		items: DiscountCodeItems;
+	};
+};
+
+type DiscountCodeBasicAutomaticInput = {
+	title: string;
+	startsAt: string;
+	endsAt: string;
 	customerGets: {
 		value: {
 			percentage: number;
@@ -37,6 +64,16 @@ type GraphQLResponse = {
 		data: {
 			discountCodeBasicUpdate: {
 				codeDiscountNode: {
+					id: string;
+				};
+				userErrors: Array<{
+					field: string;
+					code: string;
+					message: string;
+				}>;
+			};
+			discountAutomaticBasicUpdate: {
+				automaticDiscountNode: {
 					id: string;
 				};
 				userErrors: Array<{
@@ -75,7 +112,7 @@ interface CreateDiscountCodeInput {
 export const updateBasicDiscountCode = async (
 	shop: string,
 	request: Request,
-	id: number,
+	id: number
 ): Promise<UpdateBasicDiscountCodeResponse> => {
 	const {
 		title,
@@ -97,6 +134,8 @@ export const updateBasicDiscountCode = async (
 		const findDiscountExist = await prisma.discountCode.findFirst({
 			where: { shop, id },
 		});
+
+		const isCustom = findDiscountExist?.discountId.includes('DiscountCodeNode');
 
 		if (findDiscountExist) {
 			const response = await prisma.session.findMany({
@@ -129,46 +168,69 @@ export const updateBasicDiscountCode = async (
 				},
 			};
 
-			if (customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) {
-				data.variables.basicCodeDiscount.customerGets.items = {
-					products: {
-						...(customerGets.productIDs.length > 0 && {
-							productVariantsToAdd: customerGets.productIDs,
-						}),
-						...(customerGets.removeProductIDs.length > 0 && {
-							productVariantsToRemove: customerGets.removeProductIDs,
-						}),
-					},
-				} as DiscountCodeItems;
-			} else if (customerGets.collectionIDs?.length > 0 || customerGets.removeCollectionIDs.length > 0) {
-				data.variables.basicCodeDiscount.customerGets.items = {
-					collections: {
-						...(customerGets.collectionIDs.length > 0 && {
-							add: customerGets.collectionIDs
-						}),
-						...(customerGets.removeCollectionIDs.length > 0 && {
-							remove: customerGets.removeCollectionIDs
-						})
-					},
-				} as DiscountCodeItems;
-			} else {
-				data.variables.basicCodeDiscount.customerGets.items = {
-					all: true,
-				} as DiscountCodeItems;
+			const dataAuto = {
+				query: UPDATE_BASIC_AUTOMATIC_DISCOUNT_CODE_QUERY,
+				variables: {
+					id: findDiscountExist?.discountId,
+					automaticBasicDiscount: {
+						title: title,
+						startsAt: startsAt,
+						endsAt: endsAt,
+						customerGets: {
+							value: {
+								percentage: Number(customerGets.percentage) / 100,
+							},
+							items: {} as DiscountCodeItems,
+						},
+					} as DiscountCodeBasicAutomaticInput,
+				}
 			}
 
-			const updateDiscountCodeFromShopify: GraphQLResponse =
-				await getDetailUsingGraphQL(shop, accessToken, data);
+			if (customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) {
+				const productData = {
+					productVariantsToAdd: customerGets.productIDs,
+					productVariantsToRemove: customerGets.removeProductIDs,
+				};
+				if (isCustom) {
+					data.variables.basicCodeDiscount.customerGets.items = {
+						products: productData,
+					};
+				} else {
+					dataAuto.variables.automaticBasicDiscount.customerGets.items = {
+						products: productData,
+					};
+				}
+			} else if (customerGets.collectionIDs.length > 0 || customerGets.removeCollectionIDs.length > 0) {
+				const collectionData = {
+					add: customerGets.collectionIDs,
+					remove: customerGets.removeCollectionIDs,
+				};
+				if (isCustom) {
+					data.variables.basicCodeDiscount.customerGets.items = {
+						collections: collectionData,
+					};
+				} else {
+					dataAuto.variables.automaticBasicDiscount.customerGets.items = {
+						collections: collectionData,
+					};
+				}
+			} else {
+				if (isCustom) {
+					data.variables.basicCodeDiscount.customerGets.items = { all: true };
+				} else {
+					dataAuto.variables.automaticBasicDiscount.customerGets.items = { all: true };
+				}
+			}
+
+			const updateDiscountCodeFromShopify: GraphQLResponse = await getDetailUsingGraphQL(shop, accessToken, isCustom ? data : dataAuto);
 
 			if (
-				updateDiscountCodeFromShopify.data.data?.discountCodeBasicUpdate
-					.userErrors.length > 0
+				updateDiscountCodeFromShopify.data.data?.discountCodeBasicUpdate?.userErrors.length > 0 ||
+				updateDiscountCodeFromShopify.data.data?.discountAutomaticBasicUpdate?.userErrors.length > 0
 			) {
-				const errors =
-					updateDiscountCodeFromShopify.data.data?.discountCodeBasicUpdate.userErrors
-						.map((error) => `${error.field}: ${error.message}`)
-						.join(', ');
-				throw new Error(`GraphQL errors: ${errors}`);
+				const errorsBasicQuery = updateDiscountCodeFromShopify.data.data?.discountCodeBasicUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
+				const errorsAutomaticBasicQuery = updateDiscountCodeFromShopify.data.data?.discountAutomaticBasicUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
+				throw new Error(`GraphQL errors: ${isCustom ? errorsBasicQuery: errorsAutomaticBasicQuery}`);
 			}
 
 			await prisma.discountCode.update({
@@ -177,15 +239,13 @@ export const updateBasicDiscountCode = async (
 					code: code,
 					title: title,
 					shop,
-					discountId:
-						updateDiscountCodeFromShopify?.data?.data?.discountCodeBasicUpdate
-							?.codeDiscountNode.id,
+					discountId: findDiscountExist?.discountId,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
 					discountAmount: Number(customerGets.percentage),
 					discountType: 'PERCENT',
 					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
-					usageLimit,
+					usageLimit: usageLimit ? usageLimit : 0,
 					isActive: true,
 				},
 			});
