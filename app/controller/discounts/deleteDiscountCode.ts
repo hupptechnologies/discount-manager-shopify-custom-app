@@ -38,10 +38,10 @@ interface DeleteDiscountCodeInput {
 
 export const deleteDiscountCode = async (
 	shop: string,
-	request: Request,
+	dataPayload: DeleteDiscountCodeInput,
 ): Promise<DeleteResponse> => {
-	const { id, code, discountId }: DeleteDiscountCodeInput =
-		await request.json();
+	const { id, code, discountId }: DeleteDiscountCodeInput = dataPayload;
+
 	try {
 		if (!id || !code || !discountId) {
 			return {

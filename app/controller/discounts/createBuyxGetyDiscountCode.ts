@@ -208,20 +208,11 @@ interface CreateBuyxGetYDiscountCodeInput {
 
 export const createBuyXGetYDiscountCode = async (
 	shop: string,
-	request: Request,
+	dataPayload: CreateBuyxGetYDiscountCodeInput,
 	type: string,
 	method: string
 ): Promise<{ success: boolean; message: string }> => {
-	const {
-		title,
-		code,
-		startsAt,
-		endsAt,
-		usageLimit,
-		customerBuys,
-		customerGets,
-		advancedRule
-	}: CreateBuyxGetYDiscountCodeInput = await request.json();
+	const { title, code, startsAt, endsAt, usageLimit, customerBuys, customerGets, advancedRule } = dataPayload;
 
 	try {
 		if (!customerGets.percentage || !code) {

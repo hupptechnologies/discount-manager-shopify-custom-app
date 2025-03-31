@@ -144,21 +144,12 @@ interface CreateDiscountCodeInput {
 
 export const createDiscountCode = async (
 	shop: string,
-	request: Request,
+	dataPayload: CreateDiscountCodeInput,
 	type: string,
 	method: string
 ): Promise<{ success: boolean; message: string }> => {
-	const {
-		title,
-		code,
-		startsAt,
-		endsAt,
-		usageLimit,
-		appliesOncePerCustomer,
-		customerGets,
-		advancedRule
-	}: CreateDiscountCodeInput = await request.json();
-	
+	const { title, code, startsAt, endsAt, usageLimit, appliesOncePerCustomer, customerGets, advancedRule } = dataPayload;
+
 	try {
 		if (!customerGets.percentage || !code) {
 			return {

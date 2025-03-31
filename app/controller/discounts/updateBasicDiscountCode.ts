@@ -111,19 +111,11 @@ interface CreateDiscountCodeInput {
 
 export const updateBasicDiscountCode = async (
 	shop: string,
-	request: Request,
+	dataPayload: CreateDiscountCodeInput,
 	id: number
 ): Promise<UpdateBasicDiscountCodeResponse> => {
-	const {
-		title,
-		code,
-		startsAt,
-		endsAt,
-		usageLimit,
-		appliesOncePerCustomer,
-		customerGets,
-		advancedRule
-	}: CreateDiscountCodeInput = await request.json();
+	const { title, code, startsAt, endsAt, usageLimit, appliesOncePerCustomer, customerGets, advancedRule } = dataPayload;
+
 	try {
 		if (!shop || !id) {
 			return {

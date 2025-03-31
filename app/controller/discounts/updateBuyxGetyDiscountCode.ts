@@ -163,19 +163,11 @@ interface CreateBuyxGetYDiscountCodeInput {
 
 export const updateBuyXGetYDiscountCode = async (
 	shop: string,
-	request: Request,
+	dataPayload: CreateBuyxGetYDiscountCodeInput,
 	id: number,
 ): Promise<UpdateBuyXGetYDiscountCodeResponse> => {
-	const {
-		title,
-		code,
-		startsAt,
-		endsAt,
-		usageLimit,
-		customerBuys,
-		customerGets,
-		advancedRule
-	}: CreateBuyxGetYDiscountCodeInput = await request.json();
+	const { title, code, startsAt, endsAt, usageLimit, customerBuys, customerGets, advancedRule } = dataPayload;
+
 	try {
 		if (!shop || !id) {
 			return {
