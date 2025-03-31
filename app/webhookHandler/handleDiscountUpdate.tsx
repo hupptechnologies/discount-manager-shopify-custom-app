@@ -68,11 +68,18 @@ interface GraphQLResponse {
 	};
 }
 
-export const handleDiscountCreate = async (
+export const handleDiscountUpdate = async (
 	payload: PayloadDiscountCreate,
 	shop: string
 ): Promise<void> => {
 	try {
+		const discountCodeResponse = await prisma.discountCode.findFirst({
+			where: { shop, discountId: payload.admin_graphql_api_id },
+		});
+
+		if (!discountCodeResponse) {
+			return;
+		}
 		const response = await prisma.session.findMany({
 			where: { shop },
 		});
@@ -81,6 +88,7 @@ export const handleDiscountCreate = async (
 		if (!accessToken) {
 			throw new Error('Access token not found');
 		}
+
 		const data = {
 			query: GET_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
@@ -99,23 +107,29 @@ export const handleDiscountCreate = async (
 			customerGets: { value },
 		} = graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount;
 
-		await prisma.discountCode.create({
+		if (!edges.length) {
+			throw new Error('No discount code found');
+		}
+
+		const discountCode = edges[0]?.node?.code;
+
+		await prisma.discountCode.update({
+			where: { shop, id: discountCodeResponse?.id, discountId: payload.admin_graphql_api_id },
 			data: {
-				code: edges[0]?.node?.code,
-				title,
+				code: discountCode,
+				title: title,
 				shop,
 				discountId: payload.admin_graphql_api_id,
 				startDate: new Date(startsAt),
 				endDate: new Date(endsAt),
-				discountAmount: Number(value?.percentage) * 100,
+				discountAmount: Number(value.percentage) * 100,
 				discountType: 'PERCENT',
-				usageLimit: usageLimit ? usageLimit : 0,
-				isActive: true,
-				discountMethod: 'CUSTOM',
 				discountScope: discountClass === 'PRODUCT' ? 'PRODUCT' : discountClass === 'ORDER' ? 'ORDER' : discountClass === 'SHIPPING' ? 'SHIPPING' : 'BUYXGETY' ,
+				usageLimit: usageLimit || 0,
+				isActive: true,
 			},
 		});
 	} catch (error) {
-		console.error('Error in discount create webhook handler', error);
+		console.error('Error in discount update webhook handler', error);
 	}
 };

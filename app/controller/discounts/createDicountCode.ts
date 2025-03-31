@@ -280,6 +280,7 @@ export const createDiscountCode = async (
 					discountType: 'PERCENT',
 					usageLimit,
 					isActive: true,
+					discountMethod: method === 'custom' ? 'CUSTOM' : 'AUTOMATIC',
 					discountScope: type === 'products' ? 'PRODUCT' : type === 'order' ? 'ORDER' : 'SHIPPING',
 				},
 			});

@@ -377,6 +377,7 @@ export const createBuyXGetYDiscountCode = async (
 					discountAmount: Number(customerGets.percentage),
 					usageLimit: usageLimit,
 					discountType: 'PERCENT',
+					discountMethod: method === 'custom' ? 'CUSTOM' : 'AUTOMATIC',
 					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
 					isActive: true,
 					discountScope: type === 'buyXgetY' ? 'BUYXGETY' : 'PRODUCT',
