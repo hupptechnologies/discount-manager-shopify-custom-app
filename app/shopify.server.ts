@@ -2,6 +2,7 @@ import '@shopify/shopify-app-remix/adapters/node';
 import {
 	ApiVersion,
 	AppDistribution,
+	DeliveryMethod,
 	shopifyApp,
 } from '@shopify/shopify-app-remix/server';
 import { PrismaSessionStorage } from '@shopify/shopify-app-session-storage-prisma';
@@ -23,6 +24,29 @@ const shopify = shopifyApp({
 	...(process.env.SHOP_CUSTOM_DOMAIN
 		? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] }
 		: {}),
+	hooks: {
+		afterAuth: async ({ session }) => {
+			shopify.registerWebhooks({session});
+		},
+	},
+	webhooks: {
+		APP_UNINSTALLED: {
+		  deliveryMethod: DeliveryMethod.Http,
+		  callbackUrl: '/webhooks/app/uninstalled'
+		},
+		DISCOUNTS_CREATE: {
+		  deliveryMethod: DeliveryMethod.Http,
+		  callbackUrl: '/webhooks/app/discounts/create'
+		},
+		DISCOUNTS_UPDATE: {
+		  deliveryMethod: DeliveryMethod.Http,
+		  callbackUrl: '/webhooks/app/discounts/update'
+		},
+		DISCOUNTS_DELETE: {
+			deliveryMethod: DeliveryMethod.Http,
+			callbackUrl: '/webhooks/app/discounts/delete'
+		},
+	}
 });
 
 export default shopify;

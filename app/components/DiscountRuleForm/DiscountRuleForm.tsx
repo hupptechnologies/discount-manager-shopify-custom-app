@@ -180,8 +180,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		if (getDiscountCode?.length > 0) {
 			const ifExist = ['PRODUCT', 'ORDER', 'SHIPPING'].includes(discountScope);
 			const isCustomMethod = method === 'custom';
-			const productVariantsExistForGet = getDiscountCode[0]?.codeDiscount?.customerGets?.items.productVariants?.edges?.length > 0;
-			const productVariantsExistForBuy = getDiscountCode[0]?.codeDiscount?.customerBuys?.items.productVariants?.edges?.length > 0;
+			const productVariantsExistForGet = getDiscountCode[0]?.codeDiscount?.customerGets?.items.productVariants?.edges?.length > 0 || getDiscountCode[0]?.automaticDiscount?.customerGets?.items.productVariants?.edges?.length > 0;
+			const productVariantsExistForBuy = getDiscountCode[0]?.codeDiscount?.customerBuys?.items.productVariants?.edges?.length > 0 || getDiscountCode[0]?.automaticDiscount?.customerBuys?.items.productVariants?.edges?.length;
 			const items = productVariantsExistForGet ? getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants?.edges ?? []
 				: getDiscountCode[0]?.codeDiscount?.customerGets?.items?.collections?.edges ?? [];
 			const automaticItems = productVariantsExistForGet ? getDiscountCode[0]?.automaticDiscount?.customerGets?.items?.productVariants?.edges ?? []

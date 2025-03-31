@@ -28,8 +28,8 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ type, items }) => {
 						renderItem={(item) => {
 							const {
 								id,
-								title,
 								product: {
+									title,
 									variantsCount: { count },
 									featuredMedia: {
 										preview: {

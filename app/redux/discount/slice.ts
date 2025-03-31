@@ -29,6 +29,7 @@ export interface ItemsList {
 		title: string;
 		id: string;
 		product: {
+			title: string;
 			variantsCount: {
 				count: number;
 			};
