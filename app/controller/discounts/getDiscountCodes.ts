@@ -77,7 +77,7 @@ export const getDiscountCodes = async (
 	status?: 'active' | 'pending' | 'expired',
 	usedCountGreaterThan: number = 0,
 	searchQuery?: string,
-	orderByCode?: 'asc' | 'desc',
+	orderByCreatedAt?: 'asc' | 'desc',
 ): Promise<{
 	success: boolean;
 	message: string;
@@ -122,7 +122,7 @@ export const getDiscountCodes = async (
 			skip: (page - 1) * pageSize,
 			take: pageSize,
 			orderBy: {
-				code: orderByCode,
+				createdAt: orderByCreatedAt,
 			},
 		});
 

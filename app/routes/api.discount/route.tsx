@@ -48,7 +48,7 @@ export const loader = async ({
 		10,
 	);
 	const searchQuery = url.searchParams.get('searchQuery') ?? '';
-	const orderByCode = url.searchParams.get('orderByCode') as 'asc' | 'desc';
+	const orderByCreatedAt = url.searchParams.get('orderByCreatedAt') as 'asc' | 'desc';
 	const id = Number(url.searchParams.get('id'));
 	const discountType = url.searchParams.get('discountType') ?? '';
 	const method = url.searchParams.get('method');
@@ -70,7 +70,7 @@ export const loader = async ({
 		status,
 		usedCountGreaterThan,
 		searchQuery,
-		orderByCode,
+		orderByCreatedAt,
 	);
 
 	return json<LoaderResponse>(fetchDiscountCodes);

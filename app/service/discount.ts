@@ -6,7 +6,7 @@ export interface FetchAllDiscountCodesParams {
 	pageSize?: string;
 	searchQuery?: string;
 	status?: 'active' | 'pending' | 'expired' | null;
-	orderByCode?: 'asc' | 'desc' | null;
+	orderByCreatedAt?: 'asc' | 'desc' | null;
 	usedCountGreaterThan?: number | null;
 	shopName: string;
 	callback?: (success: boolean) => void;
@@ -152,7 +152,7 @@ export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
 		status,
 		searchQuery = '',
 		usedCountGreaterThan,
-		orderByCode,
+		orderByCreatedAt,
 	} = params;
 
 	let url = `discount?shop=${shopName}`;
@@ -171,8 +171,8 @@ export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
 	if (usedCountGreaterThan) {
 		url += '&usedCountGreaterThan=1';
 	}
-	if (orderByCode) {
-		url += `&orderByCode=${orderByCode}`;
+	if (orderByCreatedAt) {
+		url += `&orderByCreatedAt=${orderByCreatedAt}`;
 	}
 
 	return requestInstance.get(url);

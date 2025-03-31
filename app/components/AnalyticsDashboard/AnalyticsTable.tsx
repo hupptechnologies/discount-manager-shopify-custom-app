@@ -63,7 +63,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 	];
 	const [selected, setSelected] = useState(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
-	const [sortSelected, setSortSelected] = useState(['discountCode asc']);
+	const [sortSelected, setSortSelected] = useState(['createdAt asc']);
 	const [deleteData, setDeleteData] = useState<DeleteDataList>({
 		id: null,
 		code: '',
@@ -74,13 +74,13 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 	const limit = 10;
 	const sortOptions: IndexFiltersProps['sortOptions'] = [
 		{
-			label: 'Discount Code',
-			value: 'discountCode asc',
+			label: 'Created At',
+			value: 'createdAt asc',
 			directionLabel: 'Ascending',
 		},
 		{
-			label: 'Discount Code',
-			value: 'discountCode desc',
+			label: 'Created At',
+			value: 'createdAt desc',
 			directionLabel: 'Descending',
 		},
 	];
@@ -94,7 +94,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					shopName: shopify.config.shop || '',
 					searchQuery: queryValue,
 					usedCountGreaterThan: (selected === 4 && 1) || null,
-					orderByCode: sortSelected.includes('discountCode asc')
+					orderByCreatedAt: sortSelected.includes('createdAt asc')
 						? 'asc'
 						: 'desc',
 					status:
