@@ -9,7 +9,7 @@ import {
 import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
 
-type DiscountRuleFormProps = {
+interface DiscountRuleFormProps {
 	queryType: QueryType;
 	newRule: DiscountRule;
 };

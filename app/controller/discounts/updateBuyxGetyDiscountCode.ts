@@ -34,7 +34,7 @@ mutation UpdateBxgyDiscount($id: ID!, $automaticBxgyDiscount: DiscountAutomaticB
 	}
 }`;
 
-type DiscountCodeBxgyInput = {
+interface DiscountCodeBxgyInput {
 	code: string;
 	endsAt: string;
 	startsAt: string;
@@ -69,7 +69,7 @@ type DiscountCodeBxgyInput = {
 	};
 };
 
-type DiscountCodeAutomaticBxgyInput = {
+interface DiscountCodeAutomaticBxgyInput {
 	code: string;
 	endsAt: string;
 	startsAt: string;
@@ -104,7 +104,7 @@ type DiscountCodeAutomaticBxgyInput = {
 	};
 };
 
-type GraphQLResponse = {
+interface GraphQLResponse {
 	data: {
 		data: {
 			discountCodeBxgyUpdate: {
@@ -131,7 +131,7 @@ type GraphQLResponse = {
 	};
 };
 
-type UpdateBuyXGetYDiscountCodeResponse = {
+interface UpdateBuyXGetYDiscountCodeResponse {
 	success: boolean;
 	message: string;
 };

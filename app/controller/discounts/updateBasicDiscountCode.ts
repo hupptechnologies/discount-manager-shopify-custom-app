@@ -33,7 +33,7 @@ type DiscountCodeItems =
 	| { products: { productVariantsToAdd: string[] } }
 	| { collections: { add: string[] } };
 
-type DiscountCodeBasicInput = {
+interface DiscountCodeBasicInput {
 	code: string;
 	startsAt: string;
 	endsAt: string;
@@ -47,7 +47,7 @@ type DiscountCodeBasicInput = {
 	};
 };
 
-type DiscountCodeBasicAutomaticInput = {
+interface DiscountCodeBasicAutomaticInput {
 	title: string;
 	startsAt: string;
 	endsAt: string;
@@ -59,7 +59,7 @@ type DiscountCodeBasicAutomaticInput = {
 	};
 };
 
-type GraphQLResponse = {
+interface GraphQLResponse {
 	data: {
 		data: {
 			discountCodeBasicUpdate: {
@@ -86,7 +86,7 @@ type GraphQLResponse = {
 	};
 };
 
-type UpdateBasicDiscountCodeResponse = {
+interface UpdateBasicDiscountCodeResponse {
 	success: boolean;
 	message: string;
 };

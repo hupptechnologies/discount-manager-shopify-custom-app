@@ -41,6 +41,7 @@ model DiscountCode {
   discountAmount  Float
   discountType    DiscountType
   discountScope   DiscountScope
+  discountMethod  DiscountMethod
   isActive        Boolean       @default(true)
   startDate       DateTime
   endDate         DateTime
@@ -60,4 +61,9 @@ enum DiscountScope {
   ORDER
   BUYXGETY
   SHIPPING
+}
+
+enum DiscountMethod {
+  CUSTOM
+  AUTOMATIC
 }
