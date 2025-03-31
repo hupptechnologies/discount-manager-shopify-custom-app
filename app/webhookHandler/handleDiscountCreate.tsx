@@ -109,7 +109,7 @@ export const handleDiscountCreate = async (
 				endDate: new Date(endsAt),
 				discountAmount: Number(value?.percentage * 100),
 				discountType: 'PERCENT',
-				usageLimit,
+				usageLimit: usageLimit ? usageLimit : 0,
 				isActive: true,
 				discountMethod: 'CUSTOM',
 				discountScope: discountClass === 'PRODUCT' ? 'PRODUCT' : discountClass === 'ORDER' ? 'ORDER' : discountClass === 'SHIPPING' ? 'SHIPPING' : 'BUYXGETY' ,

@@ -6,7 +6,7 @@ interface DeleteResponse {
 	message: string;
 }
 
-const DELETE_DISCOUNT_CODE_QUERY = `
+export const DELETE_DISCOUNT_CODE_QUERY = `
 mutation DeleteDiscountCode($id: ID!) {
 	discountCodeDelete(id: $id) {
 		deletedCodeDiscountId
@@ -18,7 +18,7 @@ mutation DeleteDiscountCode($id: ID!) {
 	}
 }`;
 
-const DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY = `
+export const DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY = `
 mutation DeleteDiscountCode($id: ID!) {
 	discountAutomaticDelete(id: $id) {
 		deletedAutomaticDiscountId
