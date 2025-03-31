@@ -14,12 +14,67 @@ mutation discountCodeBxgyUpdate($id: ID!, $bxgyCodeDiscount: DiscountCodeBxgyInp
 	}
 }`;
 
+const UPDATE_BUY_X_GET_Y_AUTOMATIC_DISCOUNT_CODE_QUERY = `
+mutation UpdateBxgyDiscount($id: ID!, $automaticBxgyDiscount: DiscountAutomaticBxgyInput!) {
+	discountAutomaticBxgyUpdate(id: $id, automaticBxgyDiscount: $automaticBxgyDiscount) {
+		automaticDiscountNode {
+			id
+			automaticDiscount {
+				... on DiscountAutomaticBxgy {
+					title
+					startsAt
+					endsAt
+				}
+			}
+		}
+		userErrors {
+			field
+			message
+		}
+	}
+}`;
+
 type DiscountCodeBxgyInput = {
 	code: string;
 	endsAt: string;
 	startsAt: string;
 	title: string;
-	usesPerOrderLimit: number;
+	usesPerOrderLimit: string;
+	customerBuys: {
+		items: {
+			collections: {
+				add: string[];
+				remove: string[];
+			};
+		};
+		value: {
+			quantity: string;
+		};
+	};
+	customerGets: {
+		items: {
+			collections: {
+				add: string[];
+				remove: string[];
+			};
+		};
+		value: {
+			discountOnQuantity: {
+				effect: {
+					percentage: number;
+				};
+				quantity: string;
+			};
+		};
+	};
+};
+
+type DiscountCodeAutomaticBxgyInput = {
+	code: string;
+	endsAt: string;
+	startsAt: string;
+	title: string;
+	usesPerOrderLimit: string;
 	customerBuys: {
 		items: {
 			collections: {
@@ -54,6 +109,16 @@ type GraphQLResponse = {
 		data: {
 			discountCodeBxgyUpdate: {
 				codeDiscountNode: {
+					id: string;
+				};
+				userErrors: Array<{
+					field: string;
+					code: string;
+					message: string;
+				}>;
+			};
+			discountAutomaticBxgyUpdate: {
+				automaticDiscountNode: {
 					id: string;
 				};
 				userErrors: Array<{
@@ -122,6 +187,8 @@ export const updateBuyXGetYDiscountCode = async (
 			where: { shop, id },
 		});
 
+		const isCustom = findDiscountExist?.discountId.includes('DiscountCodeNode');
+
 		if (findDiscountExist) {
 			const response = await prisma.session.findMany({
 				where: { shop },
@@ -141,7 +208,7 @@ export const updateBuyXGetYDiscountCode = async (
 						endsAt,
 						startsAt,
 						title,
-						usesPerOrderLimit: usageLimit,
+						usesPerOrderLimit: String(usageLimit),
 						customerBuys: {
 							items: {
 								...((customerBuys.collectionIDs.length > 0 || customerBuys.removeCollectionIDs.length > 0) && {
@@ -204,19 +271,85 @@ export const updateBuyXGetYDiscountCode = async (
 					} as DiscountCodeBxgyInput,
 				},
 			};
-			
-			const updateDiscountCodeFromShopify: GraphQLResponse =
-				await getDetailUsingGraphQL(shop, accessToken, data);
 
-			if (
-				updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate
-					.userErrors.length > 0
-			) {
-				const errors =
-					updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate.userErrors
-						.map((error) => `${error.field}: ${error.message}`)
-						.join(', ');
-				throw new Error(`GraphQL errors: ${errors}`);
+			const dataAuto = {
+				query: UPDATE_BUY_X_GET_Y_AUTOMATIC_DISCOUNT_CODE_QUERY,
+				variables: {
+					id: findDiscountExist.discountId,
+					automaticBxgyDiscount: {
+						endsAt,
+						startsAt,
+						title,
+						usesPerOrderLimit: String(usageLimit),
+						customerBuys: {
+							items: {
+								...((customerBuys.collectionIDs.length > 0 || customerBuys.removeCollectionIDs.length > 0) && {
+									collections: {
+										...(customerBuys.collectionIDs.length > 0 && {
+											add: customerBuys.collectionIDs
+										}),
+										...(customerBuys.removeCollectionIDs.length > 0 && {
+											remove: customerBuys.removeCollectionIDs
+										}),
+									}
+								}),
+								...((customerBuys.productIDs.length > 0 || customerBuys.removeProductIDs.length > 0) && {
+									products: {
+										...(customerBuys.productIDs.length > 0 && {
+											productVariantsToAdd: customerBuys.productIDs,
+										}),
+										...(customerBuys.removeProductIDs.length > 0 && {
+											productVariantsToRemove: customerBuys.removeProductIDs,
+										}),
+									}
+								})
+							},
+							value: {
+								quantity: customerBuys.quantity,
+							},
+						},
+						customerGets: {
+							items: {
+								...((customerGets.collectionIDs.length > 0 || customerGets.removeCollectionIDs.length > 0) && {
+									collections: {
+										...(customerGets.collectionIDs.length > 0 && {
+											add: customerGets.collectionIDs
+										}),
+										...(customerGets.removeCollectionIDs.length > 0 && {
+											remove: customerGets.removeCollectionIDs
+										}),
+									}
+								}),
+								...((customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) && {
+									products: {
+										...(customerGets.productIDs.length > 0 && {
+											productVariantsToAdd: customerGets.productIDs,
+										}),
+										...(customerGets.removeProductIDs.length > 0 && {
+											productVariantsToRemove: customerGets.removeProductIDs,
+										}),
+									}
+								})
+							},
+							value: {
+								discountOnQuantity: {
+									effect: {
+										percentage: Number(customerGets.percentage) / 100,
+									},
+									quantity: customerGets.quantity,
+								},
+							},
+						},
+					} as DiscountCodeAutomaticBxgyInput,
+				},
+			};
+			
+			const updateDiscountCodeFromShopify: GraphQLResponse = await getDetailUsingGraphQL(shop, accessToken, isCustom ? data : dataAuto);
+			
+			if (updateDiscountCodeFromShopify?.data?.data?.discountCodeBxgyUpdate?.userErrors.length > 0 || updateDiscountCodeFromShopify?.data?.data?.discountAutomaticBxgyUpdate?.userErrors?.length > 0) {
+				const errorsBasicQuery = updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
+				const errorsAutomaticBasicQuery = updateDiscountCodeFromShopify.data.data?.discountAutomaticBxgyUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
+				throw new Error(`GraphQL errors: ${isCustom ? errorsBasicQuery : errorsAutomaticBasicQuery}`);
 			}
 
 			await prisma.discountCode.update({
@@ -225,15 +358,13 @@ export const updateBuyXGetYDiscountCode = async (
 					code,
 					title,
 					shop,
-					discountId:
-						updateDiscountCodeFromShopify?.data?.data?.discountCodeBxgyUpdate
-							?.codeDiscountNode?.id,
+					discountId: findDiscountExist?.discountId,
 					startDate: new Date(startsAt),
 					endDate: new Date(endsAt),
 					discountAmount: Number(customerGets.percentage),
 					discountType: 'PERCENT',
 					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
-					usageLimit,
+					usageLimit: usageLimit ? usageLimit : 0,
 					isActive: true,
 				},
 			});

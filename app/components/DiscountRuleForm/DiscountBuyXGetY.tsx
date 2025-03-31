@@ -22,12 +22,10 @@ interface DiscountBuyXGetYProps {
 	newRule: DiscountRule;
 	handleSearchOneChange: React.Dispatch<any>;
 	handleSearchTwoChange: React.Dispatch<any>;
-	isEdit: boolean;
 	queryType: QueryType;
 };
 
 const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
-	isEdit,
 	newRule,
 	setNewRule,
 	handleOpen,
@@ -134,7 +132,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{isEdit && queryType === 'buyXgetY' && newRule.customerBuys?.items?.length > 0 && (
+				{queryType === 'buyXgetY' && newRule.customerBuys?.items?.length > 0 && (
 					<FormLayout.Group>
 						<EditItemsList type={newRule?.buyItemFrom} items={newRule.customerBuys?.items} />
 					</FormLayout.Group>
@@ -198,7 +196,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						Browse
 					</Button>
 				</FormLayout.Group>
-				{isEdit && queryType === 'buyXgetY' && newRule?.customerGets?.items?.length > 0 && (
+				{queryType === 'buyXgetY' && newRule?.customerGets?.items?.length > 0 && (
 					<FormLayout.Group>
 						<EditItemsList type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
 					</FormLayout.Group>
