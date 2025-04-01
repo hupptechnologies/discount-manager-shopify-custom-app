@@ -560,7 +560,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			return prevState;
 		});
 	};
-	
+
 	return (
 		<Layout>
 			<Layout.Section>

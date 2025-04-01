@@ -172,8 +172,8 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 				.map((row) => ({
 					node: {
 						id: row.id,
-						title: row.title,
 						product: {
+							title: row.title,
 							variantsCount: row.variantsCount,
 							featuredMedia: {
 								preview: {

@@ -75,15 +75,29 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 									{ label: 'Specific products', value: 'product' },
 								]}
 								value={newRule.getItemFrom}
-								onChange={(value) => {
-									handleSaveBarOpen();
-									setNewRule({
-										...newRule,
-										getItemFrom: value as 'collection' | 'product',
-										searchOne: '',
-										customerGets: { ...newRule.customerGets, items: [] }
-									});
-								}}
+								onChange={(value) =>
+									setNewRule((prevState: any) => {
+										if (prevState.getItemFrom === 'collection' && value === 'product') {
+											return {
+												...prevState,
+												getItemFrom: value as 'collection' | 'product',
+												searchTwo: '',
+												customerGets: {
+													...prevState.customerGets,
+													items: [],
+													removeCollectionIDs: [...prevState.customerGets.collectionIDs],
+													collectionIDs: [],
+												},
+											};
+										}
+										return {
+											...prevState,
+											getItemFrom: value as 'collection' | 'product',
+											searchTwo: '',
+											customerGets: { ...prevState.customerGets, items: [] },
+										};
+									})
+								}
 							/>
 						)}
 						<Select

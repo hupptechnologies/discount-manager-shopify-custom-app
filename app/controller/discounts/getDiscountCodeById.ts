@@ -105,6 +105,7 @@ query getDiscountcode($ID: ID!) {
 							collections(first: 10) {
 								edges {
 									node {
+										id
 										title
 										productsCount {
 											count
@@ -160,6 +161,7 @@ query getDiscountcode($ID: ID!) {
 							collections(first: 10) {
 								edges {
 									node {
+										id
 										title
 										productsCount {
 											count
@@ -226,6 +228,7 @@ query getDiscountcode($ID: ID!) {
 							collections(first: 10) {
 								edges {
 									node {
+										id
 										title
 										productsCount {
 											count
@@ -281,6 +284,7 @@ query getDiscountcode($ID: ID!) {
 							collections(first: 10) {
 								edges {
 									node {
+										id
 										title
 										productsCount {
 											count
@@ -408,6 +412,7 @@ interface DiscountCodeBxgy {
 			collections: {
 				edges: {
 					node: {
+						id: string;
 						title: string;
 						productsCount: {
 							count: number;
@@ -455,6 +460,7 @@ interface DiscountCodeBxgy {
 			collections: {
 				edges: {
 					node: {
+						id: string;
 						title: string;
 						productsCount: {
 							count: number;
@@ -492,7 +498,6 @@ interface DiscountCodeBxgy {
 	usesPerOrderLimit: number | null;
 	appliesOncePerCustomer: boolean;
 }
-
 interface DiscountCodeBasic {
 	__typename: string;
 	status: string;

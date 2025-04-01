@@ -118,14 +118,26 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							]}
 							value={newRule.buyItemFrom}
 							onChange={(value) =>
-								setNewRule({
-									...newRule,
-									buyItemFrom: value as 'collection' | 'product',
-									searchOne: '',
-									customerBuys: {
-										...newRule.customerBuys,
-										items: [],
+								setNewRule((prevState: any) => {
+									if (prevState.buyItemFrom === 'collection' && value === 'product') {
+										return {
+											...prevState,
+											buyItemFrom: value as 'collection' | 'product',
+											searchOne: '',
+											customerBuys: {
+												...prevState.customerBuys,
+												items: [],
+												removeCollectionIDs: [...prevState.customerBuys.collectionIDs],
+												collectionIDs: [],
+											},
+										};
 									}
+									return {
+										...prevState,
+										buyItemFrom: value as 'collection' | 'product',
+										searchOne: '',
+										customerBuys: { ...prevState.customerBuys, items: [] },
+									};
 								})
 							}
 						/>
@@ -200,11 +212,26 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							]}
 							value={newRule.getItemFrom}
 							onChange={(value) =>
-								setNewRule({
-									...newRule,
-									getItemFrom: value as 'collection' | 'product',
-									searchTwo: '',
-									customerGets: { ...newRule.customerGets, items: [] }
+								setNewRule((prevState: any) => {
+									if (prevState.getItemFrom === 'collection' && value === 'product') {
+										return {
+											...prevState,
+											getItemFrom: value as 'collection' | 'product',
+											searchTwo: '',
+											customerGets: {
+												...prevState.customerGets,
+												items: [],
+												removeCollectionIDs: [...prevState.customerGets.collectionIDs],
+												collectionIDs: [],
+											},
+										};
+									}
+									return {
+										...prevState,
+										getItemFrom: value as 'collection' | 'product',
+										searchTwo: '',
+										customerGets: { ...prevState.customerGets, items: [] },
+									};
 								})
 							}
 						/>
