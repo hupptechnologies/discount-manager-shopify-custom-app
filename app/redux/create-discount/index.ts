@@ -7,7 +7,13 @@ interface FetchAllProductsParams {
 	before?: string;
 	query?: string;
 	shopName: string;
+	id: string;
 	callback?: (success: boolean) => void;
+}
+
+interface FetchProductVariantParams {
+	shopName: string;
+	id: string;
 }
 
 interface FetchAllCollectionsParams {
@@ -38,6 +44,10 @@ interface FetchAllCollectionReturnValue {
 		startCursor: string;
 	};
 	totalCount: number;
+}
+
+interface FetchProductsVariantValue {
+	variants: any[];
 }
 
 export const fetchAllProductsAsync = createAsyncThunk<
@@ -100,6 +110,36 @@ export const fetchAllCollectionsAsync = createAsyncThunk<
 					startCursor: '',
 				},
 				totalCount: 0,
+			});
+		} catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	},
+);
+
+export const fetchProductVariantsAsync = createAsyncThunk<
+	FetchProductsVariantValue,
+	FetchProductVariantParams,
+	{ rejectValue: string }
+>(
+	'createDiscount/fetchProductVariants',
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await fetchAllProducts(params);
+			if (response.data) {
+				const { variants, success } = response.data;
+				if (success) {
+					return fulfillWithValue({ variants: variants?.variants?.edges });
+				}
+				return fulfillWithValue({
+					variants: []
+				});
+			}
+			return fulfillWithValue({
+				variants: []
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;

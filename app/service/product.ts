@@ -20,6 +20,7 @@ interface FetchAllProductsParams {
 	before?: string;
 	query?: string;
 	shopName: string;
+	id: string;
 }
 
 interface FetchAllCollectionsParams {
@@ -31,7 +32,7 @@ interface FetchAllCollectionsParams {
 
 export const fetchAllProducts = (params: FetchAllProductsParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { after, before, query, shopName } = params;
+	const { after, before, query, shopName, id } = params;
 
 	let url = `products?shop=${shopName}`;
 	if (query) {
@@ -42,6 +43,9 @@ export const fetchAllProducts = (params: FetchAllProductsParams) => {
 	}
 	if (before) {
 		url += `&before=${before}`;
+	}
+	if (id) {
+		url += `&id=${id}`;
 	}
 
 	return requestInstance.get(url);

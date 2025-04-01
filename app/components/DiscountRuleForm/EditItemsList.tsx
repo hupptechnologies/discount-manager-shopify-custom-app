@@ -28,9 +28,9 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVarian
 						items={items}
 						renderItem={(item) => {
 							const {
-								id,
 								product: {
 									title,
+									id,
 									variantsCount: { count },
 									featuredMedia: {
 										preview: {
@@ -60,7 +60,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVarian
 										{type === 'product' && (
 											<Box>
 												<InlineStack align="space-between" blockAlign="center">
-													<Button variant="plain" onClick={handleVariantListOpen}>Edit</Button>
+													<Button variant="plain" onClick={() => handleVariantListOpen(id)}>Edit</Button>
 													&nbsp;&nbsp;&nbsp;
 													<div className="edit-item-cancel-icon">
 														<Icon source={XIcon} tone="subdued" />

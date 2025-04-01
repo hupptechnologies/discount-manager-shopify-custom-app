@@ -13,6 +13,10 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'app/redux/store';
+import { fetchProductVariantsAsync } from 'app/redux/create-discount';
+import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 import type { DiscountRule } from './DiscountRuleForm';
 import type { QueryType } from 'app/routes/app.create-discount';
 import EditItemsList from './EditItemsList';
@@ -35,12 +39,24 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	handleSearchTwoChange,
 	queryType,
 }) => {
-	const handleVariantListOpen = () => {
+
+	const dispatch = useDispatch<AppDispatch>();
+	const { variants, isFetchProductVariants } = useSelector((state: RootState) => getCreateDiscountDetail(state));
+
+	const handleVariantListOpen = (id: string) => {
 		shopify.modal.show('variant-list');
+		handleFetchProductVariants(id);
 	};
 
 	const handleVariantListClose = () => {
 		shopify.modal.hide('variant-list');
+	};
+
+	const handleFetchProductVariants = (id: string) => {
+		dispatch(fetchProductVariantsAsync({
+			shopName: shopify.config.shop || '',
+			id: id
+		}));
 	};
 
 	return (
@@ -297,7 +313,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 				</FormLayout>
 			</Card>
 			<Modal id='variant-list'>
-				<EditVariantList />
+				<EditVariantList isFetchProductVariants={isFetchProductVariants} variants={variants} />
 				<TitleBar title='Edit variants'>
 					<button variant="primary" onClick={handleVariantListClose}>Done</button>
 					<button onClick={handleVariantListClose}>Cancel</button>

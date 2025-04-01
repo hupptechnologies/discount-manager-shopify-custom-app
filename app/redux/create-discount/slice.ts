@@ -1,5 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchAllCollectionsAsync, fetchAllProductsAsync } from './index';
+import { fetchAllCollectionsAsync, fetchAllProductsAsync, fetchProductVariantsAsync } from './index';
+
+export interface VariantItem {
+	node: {
+		id: string;
+		title: string;
+		price: string;
+		inventoryQuantity: number;
+		image: {
+			url: string;
+		}
+	}
+}
 
 interface PageInfo {
 	endCursor: string;
@@ -17,6 +29,8 @@ interface CreateDiscountState {
 	collectionPageInfo: PageInfo | null;
 	totalProductCount: number;
 	totalCollectionCount: number;
+	variants: VariantItem[];
+	isFetchProductVariants: boolean;
 }
 
 const initialState: CreateDiscountState = {
@@ -28,6 +42,8 @@ const initialState: CreateDiscountState = {
 	collectionPageInfo: null,
 	totalProductCount: 0,
 	totalCollectionCount: 0,
+	variants: [],
+	isFetchProductVariants: false
 };
 
 const createDiscountSlice = createSlice({
@@ -67,6 +83,17 @@ const createDiscountSlice = createSlice({
 			state.collections = [];
 			state.collectionPageInfo = null;
 			state.totalCollectionCount = 0;
+		});
+		builder.addCase(fetchProductVariantsAsync.pending, (state) => {
+			state.isFetchProductVariants = true;
+		});
+		builder.addCase(fetchProductVariantsAsync.fulfilled, (state, { payload }) => {
+			state.isFetchProductVariants = false;
+			state.variants = payload.variants;
+		});
+		builder.addCase(fetchProductVariantsAsync.rejected, (state) => {
+			state.isFetchProductVariants = false;
+			state.variants = [];
 		});
 	},
 });

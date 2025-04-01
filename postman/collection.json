@@ -10,6 +10,34 @@
 			"name": "product",
 			"item": [
 				{
+					"name": "fetchProductVariantsById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/products?shop={{shopForDiscountApp}}&id=gid://shopify/Product/8712783495409",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "{{shopForDiscountApp}}"
+								},
+								{
+									"key": "id",
+									"value": "gid://shopify/Product/8712783495409"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "fetchProducts",
 					"request": {
 						"method": "GET",
@@ -74,7 +102,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 18,\n    \"code\": \"TESTFREE18%\",\n    \"startsAt\": \"2025-03-25T21:00:31Z\",\n    \"endsAt\": \"2025-03-28T00:30:00Z\",\n    \"usageLimit\": 15,\n    \"appliesOncePerCustomer\": false,\n    \"customerGets\": {\n        \"quantity\": \"5\",\n        \"collectionIDs\": [],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    }\n}",
+							"raw": "{\n    \"title\": \"Test14\",\n    \"code\": \"TESTFREE14%\",\n    \"startsAt\": \"2025-03-28T21:00:31Z\",\n    \"endsAt\": \"2025-03-29T00:30:00Z\",\n    \"usageLimit\": 15,\n    \"appliesOncePerCustomer\": true,\n    \"customerGets\": {\n        \"percentage\": 14,\n        \"quantity\": \"5\",\n        \"collectionIDs\": [],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": [\"gid://shopify/ProductVariant/45807212429553\"]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -82,7 +110,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&method=auto",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -94,6 +122,10 @@
 								{
 									"key": "shop",
 									"value": "{{shopForDiscountApp}}"
+								},
+								{
+									"key": "method",
+									"value": "auto"
 								}
 							]
 						}
@@ -171,7 +203,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&id=1981493674225&discountType=PRODUCT",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&id=1981994303729&discountType=PRODUCT&method=auto",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -186,11 +218,15 @@
 								},
 								{
 									"key": "id",
-									"value": "1981493674225"
+									"value": "1981994303729"
 								},
 								{
 									"key": "discountType",
 									"value": "PRODUCT"
+								},
+								{
+									"key": "method",
+									"value": "auto"
 								}
 							]
 						}
@@ -265,7 +301,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Test\",\n    \"percentage\": 20,\n    \"code\": \"TEST30%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-01\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"2\",\n        \"collectionIDs\": [\"gid://shopify/Collection/446505353457\"],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    },\n    \"customerGets\": {\n        \"quantity\": \"4\",\n        \"collectionIDs\": [\"gid://shopify/Collection/444497264881\"],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    }\n}",
+							"raw": "{\n    \"title\": \"TestFREE\",\n    \"code\": \"TESTFREE%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-01\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"2\",\n        \"collectionIDs\": [\n            \"gid://shopify/Collection/446505353457\"\n        ],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    },\n    \"customerGets\": {\n        \"percentage\": 34,\n        \"quantity\": \"4\",\n        \"collectionIDs\": [\n            \"gid://shopify/Collection/444497264881\"\n        ],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -273,7 +309,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&type=buyXgetY",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&type=buyXgetY&method=auto",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -289,6 +325,10 @@
 								{
 									"key": "type",
 									"value": "buyXgetY"
+								},
+								{
+									"key": "method",
+									"value": "auto"
 								}
 							]
 						}
@@ -337,6 +377,38 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "shopifyAPI",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Shopify-Access-Token",
+						"value": "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",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://local-sparkfitness.myshopify.com/admin/api/2024-10/webhooks.json",
+					"protocol": "https",
+					"host": [
+						"local-sparkfitness",
+						"myshopify",
+						"com"
+					],
+					"path": [
+						"admin",
+						"api",
+						"2024-10",
+						"webhooks.json"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
