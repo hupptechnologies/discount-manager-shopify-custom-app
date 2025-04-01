@@ -1,5 +1,6 @@
 import { json } from '@remix-run/node';
 import { fetchProducts } from '../../controller/products/fetchProducts';
+import { FetchProductVariantsResult, fetchProductVariants } from 'app/controller/products/fetchProductVariants';
 
 export interface ProductVariant {
 	id: string;
@@ -34,12 +35,19 @@ export const loader = async ({
 	const before = url.searchParams.get('before') ?? null;
 	const query = url.searchParams.get('query') ?? '';
 
-	const response = await fetchProducts(shop, after, before, query);
+	const id = url.searchParams.get('id');
 
-	return json<LoaderResponse>({
-		products: response.products,
-		pageInfo: response.pageInfo,
-		success: true,
-		totalCount: response?.totalCount ?? 0,
-	});
+	if (id) {
+		const response = await fetchProductVariants(shop, id);
+		return json<FetchProductVariantsResult>(response)
+	} else {
+		const response = await fetchProducts(shop, after, before, query);
+	
+		return json<LoaderResponse>({
+			products: response.products,
+			pageInfo: response.pageInfo,
+			success: true,
+			totalCount: response?.totalCount ?? 0,
+		});
+	}
 };
