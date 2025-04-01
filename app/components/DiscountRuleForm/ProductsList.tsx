@@ -76,10 +76,8 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 		dispatch(
 			fetchAllProductsAsync({
 				shopName: shopify.config.shop || '',
-				query:
-					newRule?.searchType === 'one'
-						? newRule?.searchOne
-						: newRule?.searchTwo,
+				query: newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo,
+				id: ''
 			}),
 		);
 	}, [newRule?.searchOne, newRule?.searchTwo]);
@@ -101,6 +99,7 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 							? newRule?.searchOne
 							: newRule?.searchTwo,
 					after: cursor,
+					id: ''
 				}),
 			);
 			setCurrentPage((prevPage) => prevPage + 1);
@@ -117,6 +116,7 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 							? newRule?.searchOne
 							: newRule?.searchTwo,
 					before: prevCursor,
+					id: ''
 				}),
 			);
 			setCurrentPage((prevPage) => prevPage - 1);

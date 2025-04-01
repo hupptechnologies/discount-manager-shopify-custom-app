@@ -44,7 +44,7 @@ export const fetchAllProducts = (params: FetchAllProductsParams) => {
 	if (before) {
 		url += `&before=${before}`;
 	}
-	if (id) {
+	if (id !== '') {
 		url += `&id=${id}`;
 	}
 

@@ -29,6 +29,8 @@ interface DiscountBuyXGetYProps {
 	newRule: DiscountRule;
 	handleSearchOneChange: React.Dispatch<any>;
 	handleSearchTwoChange: React.Dispatch<any>;
+	handleCustomerGetCancelProduct: React.Dispatch<any>;
+	handleCustomerBuyCancelProduct: React.Dispatch<any>;
 	queryType: QueryType;
 };
 
@@ -38,6 +40,8 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	handleOpen,
 	handleSearchOneChange,
 	handleSearchTwoChange,
+	handleCustomerGetCancelProduct,
+	handleCustomerBuyCancelProduct,
 	queryType,
 }) => {
 
@@ -164,7 +168,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 					</FormLayout.Group>
 					{queryType === 'buyXgetY' && newRule.customerBuys?.items?.length > 0 && (
 						<FormLayout.Group>
-							<EditItemsList handleVariantListOpen={handleVariantListOpen} type={newRule?.buyItemFrom} items={newRule.customerBuys?.items} />
+							<EditItemsList handleCancelProduct={handleCustomerBuyCancelProduct} handleVariantListOpen={handleVariantListOpen} type={newRule?.buyItemFrom} items={newRule.customerBuys?.items} />
 						</FormLayout.Group>
 					)}
 					<Divider borderColor="border" />
@@ -228,7 +232,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 					</FormLayout.Group>
 					{queryType === 'buyXgetY' && newRule?.customerGets?.items?.length > 0 && (
 						<FormLayout.Group>
-							<EditItemsList handleVariantListOpen={handleVariantListOpen} type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
+							<EditItemsList handleCancelProduct={handleCustomerGetCancelProduct} handleVariantListOpen={handleVariantListOpen} type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
 						</FormLayout.Group>
 					)}
 					<Text variant="bodyMd" fontWeight="bold" as="h4">

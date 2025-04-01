@@ -16,9 +16,10 @@ export interface EditItemsListProps {
 	type: string;
 	items: ItemsList[];
 	handleVariantListOpen: any;
+	handleCancelProduct: React.Dispatch<any>;
 };
 
-const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVariantListOpen }) => {
+const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVariantListOpen, handleCancelProduct }) => {
 	return (
 		<div className='edit-item-list'>
 			<Card>
@@ -63,7 +64,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVarian
 												<InlineStack align="space-between" blockAlign="center">
 													<Button variant="plain" onClick={() => handleVariantListOpen(id, variantId)}>Edit</Button>
 													&nbsp;&nbsp;&nbsp;
-													<div className="edit-item-cancel-icon">
+													<div onClick={() => handleCancelProduct(variantId)} className="edit-item-cancel-icon">
 														<Icon source={XIcon} tone="subdued" />
 													</div>
 												</InlineStack>

@@ -513,8 +513,54 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				},
 			}),
 		);
-	}
+	};
 
+	const handleCustomerGetCancelProduct = (productId: string) => {
+		setNewRule((prevState) => {
+			const updatedItems = prevState.customerGets.items.filter(
+				(item: any) => item.node.id !== productId
+			);
+			const updatedProductIDs = prevState.customerGets.productIDs.filter(
+				(id) => id !== productId
+			);
+			if (!prevState.customerGets.removeProductIDs.includes(productId)) {
+				return {
+					...prevState,
+					customerGets: {
+						...prevState.customerGets,
+						productIDs: updatedProductIDs,
+						items: updatedItems,
+						removeProductIDs: [...prevState.customerGets.removeProductIDs, productId],
+					},
+				};
+			}
+			return prevState;
+		});
+	};
+
+	const handleCustomerBuyCancelProduct = (productId: string) => {
+		setNewRule((prevState) => {
+			const updatedItems = prevState.customerBuys.items.filter(
+				(item: any) => item.node.id !== productId
+			);
+			const updatedProductIDs = prevState.customerBuys.productIDs.filter(
+				(id) => id !== productId
+			);
+			if (!prevState.customerBuys.removeProductIDs.includes(productId)) {
+				return {
+					...prevState,
+					customerBuys: {
+						...prevState.customerBuys,
+						productIDs: updatedProductIDs,
+						items: updatedItems,
+						removeProductIDs: [...prevState.customerBuys.removeProductIDs, productId],
+					},
+				};
+			}
+			return prevState;
+		});
+	};
+	
 	return (
 		<Layout>
 			<Layout.Section>
@@ -542,6 +588,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						handleSearchOneChange={handleSearchOneChange}
 						handleSearchTwoChange={handleSearchTwoChange}
 						queryType={queryType}
+						handleCustomerGetCancelProduct={handleCustomerGetCancelProduct}
+						handleCustomerBuyCancelProduct={handleCustomerBuyCancelProduct}
 					/>
 				) : (
 					<DiscountValue

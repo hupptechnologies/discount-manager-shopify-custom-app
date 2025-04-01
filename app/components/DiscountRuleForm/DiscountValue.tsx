@@ -123,7 +123,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 					)}
 					{queryType === 'products' && newRule?.customerGets?.items?.length > 0 && (
 						<FormLayout.Group>
-							<EditItemsList type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
+							<EditItemsList handleCancelProduct={() => {}} handleVariantListOpen={() => {}} type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
 						</FormLayout.Group>
 					)}
 				</FormLayout>
