@@ -24,7 +24,7 @@ const GET_COLLECTIONS_QUERY = `
 				}
 			}
 		}
-	}  
+	}
 `;
 
 const COLLECTION_COUNT_QUERY = `

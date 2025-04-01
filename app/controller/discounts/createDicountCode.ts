@@ -253,7 +253,7 @@ export const createDiscountCode = async (
 				dataAuto.variables.automaticBasicDiscount.customerGets.items = { all: true };
 			}
 		}
-		
+
 		const createDiscountResponse: DiscountCodeResponse = await getDetailUsingGraphQL(shop, accessToken, method === 'custom' ? data : dataAuto);
 
 		if (createDiscountResponse.data.errors) {
@@ -265,7 +265,7 @@ export const createDiscountCode = async (
 		const discountCodeData = method === 'custom'
 			? createDiscountResponse.data?.data?.discountCodeBasicCreate?.codeDiscountNode
 			: createDiscountResponse.data?.data?.discountAutomaticBasicCreate?.automaticDiscountNode;
-		
+
 		if (discountCodeData) {
 			await prisma.discountCode.create({
 				data: {

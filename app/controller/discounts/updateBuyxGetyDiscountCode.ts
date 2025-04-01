@@ -335,9 +335,9 @@ export const updateBuyXGetYDiscountCode = async (
 					} as DiscountCodeAutomaticBxgyInput,
 				},
 			};
-			
+
 			const updateDiscountCodeFromShopify: GraphQLResponse = await getDetailUsingGraphQL(shop, accessToken, isCustom ? data : dataAuto);
-			
+
 			if (updateDiscountCodeFromShopify?.data?.data?.discountCodeBxgyUpdate?.userErrors.length > 0 || updateDiscountCodeFromShopify?.data?.data?.discountAutomaticBxgyUpdate?.userErrors?.length > 0) {
 				const errorsBasicQuery = updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
 				const errorsAutomaticBasicQuery = updateDiscountCodeFromShopify.data.data?.discountAutomaticBxgyUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
