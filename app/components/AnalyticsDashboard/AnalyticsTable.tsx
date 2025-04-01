@@ -234,7 +234,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					code,
 					discountId,
 					discountAmount,
-					usageLimit,
+					asyncUsageCount,
 					isActive,
 					startDate,
 					endDate,
@@ -258,7 +258,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					<IndexTable.Cell>{discountScope}</IndexTable.Cell>
 					<IndexTable.Cell>
 						<Text as="span" alignment="start">
-							{usageLimit}
+							{asyncUsageCount}
 						</Text>
 					</IndexTable.Cell>
 					<IndexTable.Cell>
@@ -342,7 +342,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					{ title: 'Discount Code' },
 					{ title: 'Discount Percentage' },
 					{ title: 'Applicable Scope' },
-					{ title: 'Usage Limit' },
+					{ title: 'Usage Count' },
 					{ title: 'Status' },
 					{ title: 'Start Date' },
 					{ title: 'End Date' },

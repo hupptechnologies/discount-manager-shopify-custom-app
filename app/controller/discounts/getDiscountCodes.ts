@@ -1,4 +1,16 @@
 import prisma from 'app/db.server';
+import { getDetailUsingGraphQL } from 'app/service/product';
+
+const GET_BASIC_DISCOUNT_CODE_USAGE_COUNT_QUERY = `
+query getDiscountCode($ID: ID!) {
+	codeDiscountNode(id: $ID) {
+		codeDiscount {
+			... on DiscountCodeBasic {
+				asyncUsageCount
+			}
+		}
+	}
+}`;
 
 interface DiscountStats {
 	activeDiscount: {
@@ -130,9 +142,34 @@ export const getDiscountCodes = async (
 
 		const discountStatsData = await getDiscountStats();
 
+		const response = await prisma.session.findMany({
+			where: { shop },
+		});
+		const accessToken = response[0]?.accessToken;
+
+		if (!accessToken) {
+			throw new Error('Access token not found');
+		}
+
+		const discountCodesWithUsageCount = await Promise.all(
+			discountCodes.map(async (discountCode) => {
+				const data = {
+					query: GET_BASIC_DISCOUNT_CODE_USAGE_COUNT_QUERY,
+					variables: {
+						ID: discountCode.discountId
+					}
+				}
+				const usageCount = await getDetailUsingGraphQL(shop, accessToken, data);
+				return {
+					...discountCode,
+					asyncUsageCount: usageCount?.data?.data?.codeDiscountNode?.codeDiscount?.asyncUsageCount || 0
+				};
+			})
+		);
+
 		return {
 			success: true,
-			discountCodes,
+			discountCodes: discountCodesWithUsageCount,
 			discountStats: discountStatsData,
 			message: 'Fetch discount codes successfully',
 			pagination: {

@@ -26,6 +26,7 @@ export interface DiscountCode {
 	discountId: string;
 	code: string;
 	discountAmount: number;
+	asyncUsageCount: number;
 	usageLimit: number;
 	isActive: boolean;
 	startDate: string;
