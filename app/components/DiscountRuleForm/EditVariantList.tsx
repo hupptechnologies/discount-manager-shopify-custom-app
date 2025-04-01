@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	ResourceList,
 	ResourceItem,
@@ -13,6 +13,8 @@ import { VariantItem } from 'app/redux/create-discount/slice';
 interface EditVariantListProps {
 	variants: VariantItem[];
 	isFetchProductVariants: boolean;
+	selectedVariantId: string[];
+	setSelectedVariantId: any;
 }
 
 interface ResourceName {
@@ -20,7 +22,7 @@ interface ResourceName {
 	plural: string;
 }
 
-const EditVariantList: React.FC<EditVariantListProps> = ({ variants, isFetchProductVariants }) => {
+const EditVariantList: React.FC<EditVariantListProps> = ({ variants, isFetchProductVariants, selectedVariantId, setSelectedVariantId }) => {
 
 	const [selectedItems, setSelectedItems] = useState<
 		ResourceListProps['selectedItems']
@@ -31,8 +33,15 @@ const EditVariantList: React.FC<EditVariantListProps> = ({ variants, isFetchProd
 		plural: 'variants',
 	};
 
+    useEffect(() => {
+        if (selectedItems && selectedVariantId.length > 0 && !selectedItems.includes(selectedVariantId[0])) {
+            setSelectedItems(selectedVariantId);
+			setSelectedVariantId([]);
+        }
+    }, [selectedVariantId, selectedItems]);
+
 	return (
-		<Scrollable style={{height: '400px'}} focusable>
+		<Scrollable style={{ height: '400px' }}>
 			<ResourceList
 				resourceName={resourceName}
 				items={variants?.length > 0 ? variants : []}

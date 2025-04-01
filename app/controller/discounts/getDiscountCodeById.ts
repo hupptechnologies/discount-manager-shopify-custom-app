@@ -31,6 +31,7 @@ query getDiscountCode($ID: ID!) {
 							productVariants(first: 10) {
 								edges {
 									node {
+										id
 										title
 										product {
 											id
@@ -119,6 +120,7 @@ query getDiscountcode($ID: ID!) {
 							productVariants(first: 10) {
 								edges {
 									node {
+										id
 										title
 										product {
 											id
@@ -173,6 +175,7 @@ query getDiscountcode($ID: ID!) {
 							productVariants(first: 10) {
 								edges {
 									node {
+										id
 										title
 										product {
 											id
@@ -238,6 +241,7 @@ query getDiscountcode($ID: ID!) {
 							productVariants(first: 10) {
 								edges {
 									node {
+										id
 										title
 										product {
 											id
@@ -292,6 +296,7 @@ query getDiscountcode($ID: ID!) {
 							productVariants(first: 10) {
 								edges {
 									node {
+										id
 										title
 										product {
 											id
@@ -339,6 +344,7 @@ query getDiscountCode($ID: ID!) {
 							productVariants(first: 10) {
 								edges {
 									node {
+										id
 										title
 										product {
 											id
@@ -415,6 +421,7 @@ interface DiscountCodeBxgy {
 			productVariants: {
 				edges: {
 					node: {
+						id: string;
 						title: string;
 						product: {
 							id: string;
@@ -461,6 +468,7 @@ interface DiscountCodeBxgy {
 			productVariants: {
 				edges: {
 					node: {
+						id: string;
 						title: string;
 						product: {
 							id: string;
@@ -506,6 +514,7 @@ interface DiscountCodeBasic {
 			productVariants: {
 				edges: {
 					node: {
+						id: string;
 						title: string;
 						product: {
 							id: string;

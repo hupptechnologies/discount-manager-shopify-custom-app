@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Modal, TitleBar } from '@shopify/app-bridge-react';
 import {
 	BlockStack,
@@ -42,9 +43,11 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { variants, isFetchProductVariants } = useSelector((state: RootState) => getCreateDiscountDetail(state));
+	const [selectedVariantId, setSelectedVariantId] = useState<any>([]);
 
-	const handleVariantListOpen = (id: string) => {
+	const handleVariantListOpen = (id: string, variantId: string) => {
 		shopify.modal.show('variant-list');
+		setSelectedVariantId([variantId]);
 		handleFetchProductVariants(id);
 	};
 
@@ -313,7 +316,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 				</FormLayout>
 			</Card>
 			<Modal id='variant-list'>
-				<EditVariantList isFetchProductVariants={isFetchProductVariants} variants={variants} />
+				<EditVariantList selectedVariantId={selectedVariantId} setSelectedVariantId={setSelectedVariantId} isFetchProductVariants={isFetchProductVariants} variants={variants} />
 				<TitleBar title='Edit variants'>
 					<button variant="primary" onClick={handleVariantListClose}>Done</button>
 					<button onClick={handleVariantListClose}>Cancel</button>

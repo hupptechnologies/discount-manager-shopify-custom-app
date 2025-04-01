@@ -10,6 +10,7 @@ query GetProduct($ID: ID!) {
 		variants(first: 10) {
 			edges{
 				node {
+					id
 					title
 					price
 					inventoryQuantity
@@ -23,6 +24,7 @@ query GetProduct($ID: ID!) {
 }`;
 
 interface ProductVariant {
+	id: string;
 	title: string;
 	price: string;
 	inventoryQuantity: number;
