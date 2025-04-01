@@ -174,8 +174,8 @@ query getDiscountcode($ID: ID!) {
 								edges {
 									node {
 										title
-										id
 										product {
+											id
 											title
 											variantsCount {
 												count
@@ -293,8 +293,8 @@ query getDiscountcode($ID: ID!) {
 								edges {
 									node {
 										title
-										id
 										product {
+											id
 											title
 											variantsCount {
 												count
@@ -342,6 +342,7 @@ query getDiscountCode($ID: ID!) {
 										title
 										product {
 											id
+											title
 											variantsCount {
 												count
 											}
