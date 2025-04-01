@@ -15,9 +15,10 @@ import type { ItemsList } from 'app/redux/discount/slice';
 export interface EditItemsListProps {
 	type: string;
 	items: ItemsList[];
+	handleVariantListOpen: any;
 };
 
-const EditItemsList: React.FC<EditItemsListProps> = ({ type, items }) => {
+const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVariantListOpen }) => {
 	return (
 		<div className='edit-item-list'>
 			<Card>
@@ -59,7 +60,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ type, items }) => {
 										{type === 'product' && (
 											<Box>
 												<InlineStack align="space-between" blockAlign="center">
-													<Button variant="plain">Edit</Button>
+													<Button variant="plain" onClick={handleVariantListOpen}>Edit</Button>
 													&nbsp;&nbsp;&nbsp;
 													<div className="edit-item-cancel-icon">
 														<Icon source={XIcon} tone="subdued" />
