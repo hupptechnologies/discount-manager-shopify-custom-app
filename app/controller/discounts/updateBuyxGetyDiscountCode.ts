@@ -39,7 +39,7 @@ interface DiscountCodeBxgyInput {
 	endsAt: string;
 	startsAt: string;
 	title: string;
-	usesPerOrderLimit: number;
+	usesPerOrderLimit: string;
 	customerBuys: {
 		items: {
 			collections: {
@@ -74,7 +74,7 @@ interface DiscountCodeAutomaticBxgyInput {
 	endsAt: string;
 	startsAt: string;
 	title: string;
-	usesPerOrderLimit: number;
+	usesPerOrderLimit: string;
 	customerBuys: {
 		items: {
 			collections: {
@@ -141,7 +141,7 @@ interface CreateBuyxGetYDiscountCodeInput {
 	code: string;
 	startsAt: string;
 	endsAt: string;
-	usageLimit: number;
+	usageLimit: String;
 	appliesOncePerCustomer: boolean;
 	customerBuys: {
 		quantity: string;
@@ -178,7 +178,7 @@ export const updateBuyXGetYDiscountCode = async (
 		const findDiscountExist = await prisma.discountCode.findFirst({
 			where: { shop, id },
 		});
-
+		
 		const isCustom = findDiscountExist?.discountMethod === 'CUSTOM';
 
 		if (findDiscountExist) {
@@ -200,7 +200,7 @@ export const updateBuyXGetYDiscountCode = async (
 						endsAt,
 						startsAt,
 						title,
-						usesPerOrderLimit: usageLimit,
+						usesPerOrderLimit: String(usageLimit),
 						customerBuys: {
 							items: {
 								...((customerBuys.collectionIDs.length > 0 || customerBuys.removeCollectionIDs.length > 0) && {
@@ -272,7 +272,7 @@ export const updateBuyXGetYDiscountCode = async (
 						endsAt,
 						startsAt,
 						title,
-						usesPerOrderLimit: usageLimit,
+						usesPerOrderLimit: String(usageLimit),
 						customerBuys: {
 							items: {
 								...((customerBuys.collectionIDs.length > 0 || customerBuys.removeCollectionIDs.length > 0) && {
@@ -356,7 +356,7 @@ export const updateBuyXGetYDiscountCode = async (
 					discountAmount: Number(customerGets.percentage),
 					discountType: 'PERCENT',
 					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
-					usageLimit: usageLimit ? usageLimit : 0,
+					usageLimit: Number(usageLimit) ? Number(usageLimit) : 0,
 					isActive: true,
 				},
 			});

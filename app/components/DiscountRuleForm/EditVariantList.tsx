@@ -8,13 +8,19 @@ import {
 	ResourceListProps,
 	Scrollable,
 } from '@shopify/polaris';
-import { VariantItem } from 'app/redux/create-discount/slice';
+import type { VariantItem } from 'app/redux/create-discount/slice';
+import type { DiscountRule } from './DiscountRuleForm';
 
 interface EditVariantListProps {
 	variants: VariantItem[];
 	isFetchProductVariants: boolean;
 	selectedVariantId: string[];
 	setSelectedVariantId: any;
+	setNewRule: React.Dispatch<any>;
+	newRule: DiscountRule;
+	productUrl: string;
+	productTitle: string;
+	productId: string;
 }
 
 interface ResourceName {
@@ -22,7 +28,15 @@ interface ResourceName {
 	plural: string;
 }
 
-const EditVariantList: React.FC<EditVariantListProps> = ({ variants, isFetchProductVariants, selectedVariantId, setSelectedVariantId }) => {
+const EditVariantList: React.FC<EditVariantListProps> = ({
+	variants,
+	isFetchProductVariants,
+	selectedVariantId,
+	setSelectedVariantId,
+	setNewRule,
+	newRule,
+	productId
+}) => {
 
 	const [selectedItems, setSelectedItems] = useState<
 		ResourceListProps['selectedItems']
@@ -33,20 +47,42 @@ const EditVariantList: React.FC<EditVariantListProps> = ({ variants, isFetchProd
 		plural: 'variants',
 	};
 
-    useEffect(() => {
-        if (selectedItems && selectedVariantId.length > 0 && !selectedItems.includes(selectedVariantId[0])) {
-            setSelectedItems(selectedVariantId);
-			setSelectedVariantId([]);
-        }
-    }, [selectedVariantId, selectedItems]);
+	useEffect(() => {
+		if (selectedVariantId.length > 0) {
+			setSelectedItems(selectedVariantId);
+		}
+	}, [selectedVariantId]);
+
+	const handleSelectionChange = (value: string[]) => {
+		setNewRule({
+			...newRule,
+			customerBuys: {
+				...newRule.customerBuys,
+				productIDs: value,
+				items: newRule.customerBuys.items.map((item: any) => {
+					if (item?.node?.product?.id === productId) {
+						return {
+							...item,
+							node: {
+								...item.node,
+								id: value
+							},
+						};
+					}
+					return item;
+				}),
+			},
+		});
+		setSelectedItems(value);
+	};
 
 	return (
 		<Scrollable style={{ height: '400px' }}>
 			<ResourceList
-				resourceName={resourceName}
+				resourceName={{ singular: 'variant', plural: 'variants' }}
 				items={variants?.length > 0 ? variants : []}
 				selectedItems={selectedItems}
-				onSelectionChange={setSelectedItems}
+				onSelectionChange={handleSelectionChange}
 				selectable
 				loading={isFetchProductVariants}
 				renderItem={(item) => {

@@ -55,14 +55,14 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVarian
 											</Text>
 											{type === 'product' && (
 												<Text as="p" tone="subdued">
-													(1 of {count} variants selected)
+													({Array.isArray(variantId) && variantId.length > 0 ? variantId.length : (variantId === "" ? 0 : 1)} of {count} variants selected)
 												</Text>
 											)}
 										</Box>
 										{type === 'product' && (
 											<Box>
 												<InlineStack align="space-between" blockAlign="center">
-													<Button variant="plain" onClick={() => handleVariantListOpen(id, variantId)}>Edit</Button>
+													<Button variant="plain" onClick={() => handleVariantListOpen(id, variantId, title, url)}>Edit</Button>
 													&nbsp;&nbsp;&nbsp;
 													<div onClick={() => handleCancelProduct(variantId)} className="edit-item-cancel-icon">
 														<Icon source={XIcon} tone="subdued" />

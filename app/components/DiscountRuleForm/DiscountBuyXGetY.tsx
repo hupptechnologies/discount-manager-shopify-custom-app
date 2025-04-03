@@ -48,10 +48,20 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	const dispatch = useDispatch<AppDispatch>();
 	const { variants, isFetchProductVariants } = useSelector((state: RootState) => getCreateDiscountDetail(state));
 	const [selectedVariantId, setSelectedVariantId] = useState<any>([]);
+	const [productUrl, setProductUrl] = useState('');
+	const [productId, setProductId] = useState('');
+	const [productTitle, setProductTitle] = useState('');
 
-	const handleVariantListOpen = (id: string, variantId: string) => {
+	const handleVariantListOpen = (id: string, variantId: string, pTitle: string, pUrl: string) => {
 		shopify.modal.show('variant-list');
-		setSelectedVariantId([variantId]);
+		if (Array.isArray(variantId)) {
+			setSelectedVariantId(variantId);
+		} else {
+			setSelectedVariantId([variantId]);
+		}
+		setProductId(id);
+		setProductUrl(pUrl);
+		setProductTitle(pTitle);
 		handleFetchProductVariants(id);
 	};
 
@@ -347,7 +357,17 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 				</FormLayout>
 			</Card>
 			<Modal id='variant-list'>
-				<EditVariantList selectedVariantId={selectedVariantId} setSelectedVariantId={setSelectedVariantId} isFetchProductVariants={isFetchProductVariants} variants={variants} />
+				<EditVariantList
+					selectedVariantId={selectedVariantId}
+					setSelectedVariantId={setSelectedVariantId}
+					isFetchProductVariants={isFetchProductVariants}
+					variants={variants}
+					setNewRule={setNewRule}
+					newRule={newRule}
+					productUrl={productUrl}
+					productTitle={productTitle}
+					productId={productId}
+				/>
 				<TitleBar title='Edit variants'>
 					<button variant="primary" onClick={handleVariantListClose}>Done</button>
 					<button onClick={handleVariantListClose}>Cancel</button>
