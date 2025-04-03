@@ -1,5 +1,10 @@
 import { DateTime } from 'luxon';
 
+interface DateRange {
+	start: Date | null;
+	end?: Date | null;
+};
+
 export const generateTimeList = (): string[] => {
 	const timeList: string[] = [];
 	let hour = 1;
@@ -52,7 +57,7 @@ export const formatDateWithTimeZone = (dateString: any, timeString: string): str
 export const convertToLocalTime = (startsAt: string, endsAt: string) => {
 	const startDateTime = DateTime.fromISO(startsAt, { zone: 'utc' }).setZone('Asia/Kolkata');
 	const endDateTime = DateTime.fromISO(endsAt, { zone: 'utc' }).setZone('Asia/Kolkata');
-  	return {
+	return {
 		selectedStartDates: {
 			start: startDateTime.toJSDate(),
 			end: startDateTime.toJSDate(),
@@ -71,4 +76,24 @@ export const generateDiscountCode = (length: number = 8): string => {
 	const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
 	const randomPercentage = Math.floor(Math.random() * 100) + 1;
 	return `${randomPrefix}${randomPercentage}%`;
+};
+
+export const formatDateRange = (selectedStartDates: DateRange, selectedEndDates: DateRange) => {
+	const formatDate = (date: Date): string => {
+		const day = date.getDate();
+		const month = date.toLocaleString('en-GB', { month: 'short' });
+		return `${day} ${month}`;
+	};
+	const formattedStartDate = selectedStartDates.start ? formatDate(selectedStartDates.start) : '';
+	const formattedEndDate = selectedEndDates.start ? formatDate(selectedEndDates.start) : '';
+	if (formattedStartDate === formattedEndDate) {
+		return formattedStartDate;
+	} else {
+		return `${formattedStartDate} to ${formattedEndDate}`;
+	}
+};
+
+export const isToday = (date: any): boolean => {
+	const today = new Date();
+	return date.toDateString() === today.toDateString();
 };
