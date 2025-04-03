@@ -22,11 +22,6 @@ interface EditVariantListProps {
 	productId: string;
 }
 
-interface ResourceName {
-	singular: string;
-	plural: string;
-}
-
 const EditVariantList: React.FC<EditVariantListProps> = ({
 	variants,
 	isFetchProductVariants,
