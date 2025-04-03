@@ -1,6 +1,7 @@
 import { json } from '@remix-run/node';
 import { fetchProducts } from '../../controller/products/fetchProducts';
-import { FetchProductVariantsResult, fetchProductVariants } from 'app/controller/products/fetchProductVariants';
+import type { FetchProductVariantsResult } from 'app/controller/products/fetchProductVariants';
+import { fetchProductVariants } from 'app/controller/products/fetchProductVariants';
 
 export interface ProductVariant {
 	id: string;
@@ -39,10 +40,10 @@ export const loader = async ({
 
 	if (id) {
 		const response = await fetchProductVariants(shop, id);
-		return json<FetchProductVariantsResult>(response)
+		return json<FetchProductVariantsResult>(response);
 	} else {
 		const response = await fetchProducts(shop, after, before, query);
-	
+
 		return json<LoaderResponse>({
 			products: response.products,
 			pageInfo: response.pageInfo,

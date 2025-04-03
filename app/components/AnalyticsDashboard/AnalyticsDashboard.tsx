@@ -8,14 +8,14 @@ import { useSelector } from 'react-redux';
 
 interface AnalyticsDashboardProps {
 	handleOpen: any;
-};
+}
 
 const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 	handleOpen,
 }) => {
 	const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
-	const { isGetDiscountCodeById, isDeleteAllDiscountCode } = useSelector((state: RootState) =>
-		getAllDiscountCodeDetail(state),
+	const { isGetDiscountCodeById, isDeleteAllDiscountCode } = useSelector(
+		(state: RootState) => getAllDiscountCodeDetail(state),
 	);
 	return (
 		<Layout>
@@ -23,7 +23,9 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 			<Layout.Section>
 				<AnalyticsTable setIsLoadingUpdate={setIsLoadingUpdate} />
 			</Layout.Section>
-			{(isGetDiscountCodeById || isLoadingUpdate || isDeleteAllDiscountCode) && (
+			{(isGetDiscountCodeById ||
+				isLoadingUpdate ||
+				isDeleteAllDiscountCode) && (
 				<div className="spinner-container">
 					<Spinner size="large" />
 				</div>

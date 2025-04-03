@@ -17,16 +17,40 @@ export interface EditItemsListProps {
 	items: ItemsList[];
 	handleVariantListOpen: any;
 	handleCancelProduct: React.Dispatch<any>;
-};
+}
 
-const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVariantListOpen, handleCancelProduct }) => {
+const EditItemsList: React.FC<EditItemsListProps> = ({
+	type,
+	items,
+	handleVariantListOpen,
+	handleCancelProduct,
+}) => {
+	const groupedItems = items?.reduce(
+		(acc, edge) => {
+			const productId = edge.node.product.id;
+			if (!acc[productId]) {
+				acc[productId] = {
+					node: {
+						id: [],
+						product: edge.node.product,
+					},
+				} as any;
+			}
+			acc[productId].node.id.push(edge.node.id);
+			return acc;
+		},
+		{} as { [key: string]: any },
+	);
+
+	const consolidatedItems = Object.values(groupedItems);
+
 	return (
-		<div className='edit-item-list'>
+		<div className="edit-item-list">
 			<Card>
 				{type === 'product' && (
 					<ResourceList
 						resourceName={{ singular: 'item', plural: 'items' }}
-						items={items}
+						items={consolidatedItems}
 						renderItem={(item) => {
 							const {
 								id: variantId,
@@ -55,16 +79,32 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVarian
 											</Text>
 											{type === 'product' && (
 												<Text as="p" tone="subdued">
-													({Array.isArray(variantId) && variantId.length > 0 ? variantId.length : (variantId === "" ? 0 : 1)} of {count} variants selected)
+													(
+													{Array.isArray(variantId) && variantId.length > 0
+														? variantId.length
+														: variantId === ''
+															? 0
+															: 1}{' '}
+													of {count} variants selected)
 												</Text>
 											)}
 										</Box>
 										{type === 'product' && (
 											<Box>
 												<InlineStack align="space-between" blockAlign="center">
-													<Button variant="plain" onClick={() => handleVariantListOpen(id, variantId, title, url)}>Edit</Button>
+													<Button
+														variant="plain"
+														onClick={() =>
+															handleVariantListOpen(id, variantId, title, url)
+														}
+													>
+														Edit
+													</Button>
 													&nbsp;&nbsp;&nbsp;
-													<div onClick={() => handleCancelProduct(variantId)} className="edit-item-cancel-icon">
+													<div
+														onClick={() => handleCancelProduct(variantId)}
+														className="edit-item-cancel-icon"
+													>
 														<Icon source={XIcon} tone="subdued" />
 													</div>
 												</InlineStack>
@@ -79,7 +119,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({ type, items, handleVarian
 				{type === 'collection' && (
 					<ResourceList
 						resourceName={{ singular: 'item', plural: 'items' }}
-						items={items}
+						items={consolidatedItems}
 						renderItem={(item) => {
 							const {
 								id,

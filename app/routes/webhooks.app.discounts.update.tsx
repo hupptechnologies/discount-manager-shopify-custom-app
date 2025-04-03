@@ -10,7 +10,9 @@ interface WebhookPayload {
 	updated_at: string;
 }
 
-export const action = async ({ request }: ActionFunctionArgs): Promise<Response> => {
+export const action = async ({
+	request,
+}: ActionFunctionArgs): Promise<Response> => {
 	const { shop, topic, payload } = await authenticate.webhook(request);
 	const typedPayload = payload as WebhookPayload;
 	console.log(`Received ${topic} webhook for ${shop}`);

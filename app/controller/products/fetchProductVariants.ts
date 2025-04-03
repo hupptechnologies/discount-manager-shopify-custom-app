@@ -52,7 +52,7 @@ export interface FetchProductVariantsResult {
 
 export const fetchProductVariants = async (
 	shop: string,
-	id: string
+	id: string,
 ): Promise<FetchProductVariantsResult> => {
 	try {
 		const response = await prisma.session.findMany({
@@ -69,10 +69,17 @@ export const fetchProductVariants = async (
 				ID: id,
 			},
 		};
-		const productResponse = await getDetailUsingGraphQL(shop, accessToken, data);
+		const productResponse = await getDetailUsingGraphQL(
+			shop,
+			accessToken,
+			data,
+		);
 		return { success: true, variants: productResponse?.data?.data?.product };
 	} catch (error) {
 		console.log(error, 'Error in fetching product variants');
-		return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+		return {
+			success: false,
+			message: error instanceof Error ? error.message : 'Unknown error',
+		};
 	}
 };

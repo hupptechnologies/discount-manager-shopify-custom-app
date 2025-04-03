@@ -9,7 +9,7 @@ export interface FetchAllDiscountCodesParams {
 	orderByCreatedAt?: 'asc' | 'desc' | null;
 	usedCountGreaterThan?: number | null;
 	shopName: string;
-	callback?: (success: boolean) => void;
+	callback?: () => void;
 }
 
 export interface DeleteDiscountCodeParams {
@@ -19,13 +19,13 @@ export interface DeleteDiscountCodeParams {
 		discountId: string;
 	};
 	shopName: string;
-	callback?: (success: boolean) => void;
+	callback?: () => void;
 }
 
 export interface DeleteAllDiscountCodeParams {
 	type: string;
 	shopName: string;
-	callback?: (success: boolean) => void;
+	callback?: () => void;
 }
 
 export interface CreateDiscountCodeParams {
@@ -47,7 +47,7 @@ export interface CreateDiscountCodeParams {
 	shopName: string;
 	type: string | null;
 	method: string;
-	callback?: (success: boolean) => void;
+	callback?: () => void;
 }
 
 export interface CreateBuyXGetYDiscountCodeParams {
@@ -73,7 +73,7 @@ export interface CreateBuyXGetYDiscountCodeParams {
 	shopName: string;
 	type: string | null;
 	method: string;
-	callback?: (success: boolean) => void;
+	callback?: () => void;
 }
 
 export interface GetDiscountCodeByIdParams {
@@ -81,7 +81,7 @@ export interface GetDiscountCodeByIdParams {
 	id: number;
 	discountType: string;
 	method: string;
-	callback?: (success: boolean) => void;
+	callback?: () => void;
 }
 
 export interface AdvancedRuleObject {
@@ -114,7 +114,7 @@ export interface UpdateDiscountCodeParams {
 	shopName: string;
 	id: number | null;
 	type: string | null;
-	callback?: (success: boolean) => void;
+	callback?: () => void;
 }
 
 export interface UpdateBuyXGetYDiscountCodeParams {
@@ -140,7 +140,7 @@ export interface UpdateBuyXGetYDiscountCodeParams {
 	shopName: string;
 	id: number | null;
 	type: string | null;
-	callback?: (success: boolean) => void;
+	callback?: () => void;
 }
 
 export const fetchAllDiscountCodes = (params: FetchAllDiscountCodesParams) => {
@@ -193,7 +193,10 @@ export const deleteAllDiscountCode = (params: DeleteAllDiscountCodeParams) => {
 export const createDiscountCode = (params: CreateDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, data, type = 'product', method } = params;
-	return requestInstance.post(`discount?shop=${shopName}&type=${type}&method=${method}`, data);
+	return requestInstance.post(
+		`discount?shop=${shopName}&type=${type}&method=${method}`,
+		data,
+	);
 };
 
 export const createBuyXGetYDiscountCode = (
@@ -201,7 +204,10 @@ export const createBuyXGetYDiscountCode = (
 ) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, data, type = 'buyXgetY', method } = params;
-	return requestInstance.post(`discount?shop=${shopName}&type=${type}&method=${method}`, data);
+	return requestInstance.post(
+		`discount?shop=${shopName}&type=${type}&method=${method}`,
+		data,
+	);
 };
 
 export const getDiscountCodeById = (params: GetDiscountCodeByIdParams) => {
@@ -212,12 +218,13 @@ export const getDiscountCodeById = (params: GetDiscountCodeByIdParams) => {
 	);
 };
 
-export const updateDiscountCode = (
-	params: UpdateDiscountCodeParams,
-) => {
+export const updateDiscountCode = (params: UpdateDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, id, type = 'products', data } = params;
-	return requestInstance.put(`discount?shop=${shopName}&id=${id}&type=${type}`, data);
+	return requestInstance.put(
+		`discount?shop=${shopName}&id=${id}&type=${type}`,
+		data,
+	);
 };
 
 export const updateBuyXGetYDiscountCode = (
@@ -225,5 +232,8 @@ export const updateBuyXGetYDiscountCode = (
 ) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, id, type = 'buyXgetY', data } = params;
-	return requestInstance.put(`discount?shop=${shopName}&id=${id}&type=${type}`, data);
+	return requestInstance.put(
+		`discount?shop=${shopName}&id=${id}&type=${type}`,
+		data,
+	);
 };

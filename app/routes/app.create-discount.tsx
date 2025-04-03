@@ -16,11 +16,14 @@ export default function CreateDiscountPage () {
 
 	return (
 		<Page
-			backAction={{ url: '/app/manage-discount', onAction: () => shopify.saveBar.hide('save-bar')}}
+			backAction={{
+				url: '/app/manage-discount',
+				onAction: () => shopify.saveBar.hide('save-bar'),
+			}}
 			title="Create discount"
 		>
 			{queryType && <DiscountRuleForm queryType={queryType} />}
-			<Placeholder height='5px' />
+			<Placeholder height="5px" />
 		</Page>
 	);
 }

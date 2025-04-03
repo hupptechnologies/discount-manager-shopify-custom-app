@@ -10,8 +10,8 @@ import {
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
 import EditItemsList from './EditItemsList';
-import { QueryType } from 'app/routes/app.create-discount';
-import { DiscountRule } from './DiscountRuleForm';
+import type { QueryType } from 'app/routes/app.create-discount';
+import type { DiscountRule } from './DiscountRuleForm';
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -20,7 +20,7 @@ interface DiscountValueProps {
 	newRule: DiscountRule;
 	queryType: QueryType;
 	handleSaveBarOpen: any;
-};
+}
 
 const DiscountValue: React.FC<DiscountValueProps> = ({
 	newRule,
@@ -28,8 +28,8 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 	handleOpen,
 	handleSearchChange,
 	queryType,
-	handleSaveBarOpen
-}) => {	
+	handleSaveBarOpen,
+}) => {
 	return (
 		<Card>
 			<BlockStack>
@@ -58,7 +58,13 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							value={newRule.customerGets.percentage}
 							onChange={(value) => {
 								handleSaveBarOpen();
-								setNewRule({ ...newRule,  customerGets: { ...newRule.customerGets, percentage: Number(value) }});
+								setNewRule({
+									...newRule,
+									customerGets: {
+										...newRule.customerGets,
+										percentage: Number(value),
+									},
+								});
 							}}
 							autoComplete="off"
 							prefix={newRule.discountType === 'fixed' ? '$' : ''}
@@ -77,7 +83,10 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 								value={newRule.getItemFrom}
 								onChange={(value) =>
 									setNewRule((prevState: any) => {
-										if (prevState.getItemFrom === 'collection' && value === 'product') {
+										if (
+											prevState.getItemFrom === 'collection' &&
+											value === 'product'
+										) {
 											return {
 												...prevState,
 												getItemFrom: value as 'collection' | 'product',
@@ -85,7 +94,9 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 												customerGets: {
 													...prevState.customerGets,
 													items: [],
-													removeCollectionIDs: [...prevState.customerGets.collectionIDs],
+													removeCollectionIDs: [
+														...prevState.customerGets.collectionIDs,
+													],
 													collectionIDs: [],
 												},
 											};
@@ -135,11 +146,17 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							</Button>
 						</FormLayout.Group>
 					)}
-					{queryType === 'products' && newRule?.customerGets?.items?.length > 0 && (
-						<FormLayout.Group>
-							<EditItemsList handleCancelProduct={() => {}} handleVariantListOpen={() => {}} type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
-						</FormLayout.Group>
-					)}
+					{queryType === 'products' &&
+						newRule?.customerGets?.items?.length > 0 && (
+							<FormLayout.Group>
+								<EditItemsList
+									handleCancelProduct={() => {}}
+									handleVariantListOpen={() => {}}
+									type={newRule?.getItemFrom}
+									items={newRule?.customerGets?.items}
+								/>
+							</FormLayout.Group>
+						)}
 				</FormLayout>
 			</BlockStack>
 		</Card>

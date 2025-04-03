@@ -568,7 +568,7 @@ interface BasicDiscountQueryResponse {
 			automaticDiscountNode: {
 				id: string;
 				automaticDiscount: DiscountCodeBasic | DiscountCodeBxgy;
-			}
+			};
 		};
 	};
 }
@@ -577,7 +577,7 @@ export const getDiscountCodeById = async (
 	id: number,
 	shop: string,
 	discountType: string,
-	method: string
+	method: string,
 ): Promise<getDiscountCodeResponse> => {
 	try {
 		if (!shop || !id || !discountType) {
@@ -587,8 +587,8 @@ export const getDiscountCodeById = async (
 				discountCode: null,
 				discountScope: '',
 				advancedRule: null,
-				method
-			}
+				method,
+			};
 		}
 		const response = await prisma.session.findMany({
 			where: { shop },
@@ -602,10 +602,17 @@ export const getDiscountCodeById = async (
 		const data = {
 			query:
 				discountType === 'BUYXGETY'
-					? method === 'custom' ? GET_BUYXGETY_DISCOUNT_CODE_QUERY: GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY
-					: method === 'custom' ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
+					? method === 'custom'
+						? GET_BUYXGETY_DISCOUNT_CODE_QUERY
+						: GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY
+					: method === 'custom'
+						? GET_BASIC_DISCOUNT_CODE_QUERY
+						: GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
-				ID: method === 'custom' ? `gid://shopify/DiscountCodeNode/${id}` : `gid://shopify/DiscountAutomaticNode/${id}`,
+				ID:
+					method === 'custom'
+						? `gid://shopify/DiscountCodeNode/${id}`
+						: `gid://shopify/DiscountAutomaticNode/${id}`,
 			},
 		};
 		const getDiscountCodeByIdFromShopify: BasicDiscountQueryResponse =
@@ -614,18 +621,27 @@ export const getDiscountCodeById = async (
 		const getCodeObj = await prisma.discountCode.findFirst({
 			where: {
 				shop,
-				discountId: method === 'custom' ? `gid://shopify/DiscountCodeNode/${id}` : `gid://shopify/DiscountAutomaticNode/${id}`,
+				discountId:
+					method === 'custom'
+						? `gid://shopify/DiscountCodeNode/${id}`
+						: `gid://shopify/DiscountAutomaticNode/${id}`,
 			},
-		});		
-		const discountCode = method === 'custom' ? getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode : getDiscountCodeByIdFromShopify.data?.data?.automaticDiscountNode;
-		if (getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode || getDiscountCodeByIdFromShopify.data?.data?.automaticDiscountNode) {
+		});
+		const discountCode =
+			method === 'custom'
+				? getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode
+				: getDiscountCodeByIdFromShopify.data?.data?.automaticDiscountNode;
+		if (
+			getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode ||
+			getDiscountCodeByIdFromShopify.data?.data?.automaticDiscountNode
+		) {
 			return {
 				success: true,
 				discountCode: [discountCode],
 				discountScope: getCodeObj?.discountScope || '',
-				advancedRule: (getCodeObj?.advancedRule as object | null),
+				advancedRule: getCodeObj?.advancedRule as object | null,
 				message: 'Fetch discount code successfully',
-				method: method
+				method: method,
 			};
 		}
 
@@ -635,7 +651,7 @@ export const getDiscountCodeById = async (
 			discountCode: null,
 			discountScope: '',
 			advancedRule: null,
-			method
+			method,
 		};
 	} catch (error) {
 		// eslint-disable-next-line no-console
@@ -649,7 +665,7 @@ export const getDiscountCodeById = async (
 			message: 'Something went wrong',
 			discountScope: '',
 			advancedRule: null,
-			method
+			method,
 		};
 	}
 };

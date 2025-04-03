@@ -46,8 +46,8 @@ export const deleteDiscountCode = async (
 		if (!id || !code || !discountId) {
 			return {
 				success: false,
-				message: 'Required fields id, code, discountId'
-			}
+				message: 'Required fields id, code, discountId',
+			};
 		}
 		const discountCode = await prisma.discountCode.findFirst({
 			where: { shop, code, id, discountId },
@@ -70,7 +70,9 @@ export const deleteDiscountCode = async (
 		}
 
 		const data = {
-			query: discountId.includes('DiscountCodeNode') ? DELETE_DISCOUNT_CODE_QUERY: DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY,
+			query: discountId.includes('DiscountCodeNode')
+				? DELETE_DISCOUNT_CODE_QUERY
+				: DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY,
 			variables: {
 				id: discountId,
 			},

@@ -1,5 +1,5 @@
 import prisma from '../../db.server';
-import { ProductVariant } from 'app/routes/api.products/route';
+import type { ProductVariant } from 'app/routes/api.products/route';
 import { getDetailUsingGraphQL } from '../../service/product';
 
 const PRODUCT_VARIANTS_QUERY = `

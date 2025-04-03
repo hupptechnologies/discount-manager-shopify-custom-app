@@ -30,7 +30,9 @@ mutation DeleteDiscountCode($id: ID!) {
 	}
 }`;
 
-export const deleteAllDiscountCodes = async (shop: string): Promise<DeleteResponse> => {
+export const deleteAllDiscountCodes = async (
+	shop: string,
+): Promise<DeleteResponse> => {
 	try {
 		const discountCodes = await prisma.discountCode.findMany({
 			where: { shop },
@@ -58,9 +60,11 @@ export const deleteAllDiscountCodes = async (shop: string): Promise<DeleteRespon
 
 		for (const discountCode of discountCodes) {
 			const data = {
-				query: discountCode.discountId.includes('DiscountCodeNode') ? DELETE_DISCOUNT_CODE_QUERY : DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY,
+				query: discountCode.discountId.includes('DiscountCodeNode')
+					? DELETE_DISCOUNT_CODE_QUERY
+					: DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY,
 				variables: {
-					id: discountCode.discountId
+					id: discountCode.discountId,
 				},
 			};
 			const responseFromShopify = await getDetailUsingGraphQL(
@@ -82,7 +86,10 @@ export const deleteAllDiscountCodes = async (shop: string): Promise<DeleteRespon
 
 		return {
 			success: successCount > 0,
-			message: successCount > 0 ? `Successfully deleted ${successCount} discount codes.` : `Failed to delete ${failureCount} discount codes.`,
+			message:
+				successCount > 0
+					? `Successfully deleted ${successCount} discount codes.`
+					: `Failed to delete ${failureCount} discount codes.`,
 		};
 	} catch (error) {
 		// eslint-disable-next-line no-console

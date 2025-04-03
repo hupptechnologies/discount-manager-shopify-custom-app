@@ -15,7 +15,7 @@ import {
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'app/redux/store';
+import type { AppDispatch, RootState } from 'app/redux/store';
 import { fetchProductVariantsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 import type { DiscountRule } from './DiscountRuleForm';
@@ -32,7 +32,7 @@ interface DiscountBuyXGetYProps {
 	handleCustomerGetCancelProduct: React.Dispatch<any>;
 	handleCustomerBuyCancelProduct: React.Dispatch<any>;
 	queryType: QueryType;
-};
+}
 
 const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	newRule,
@@ -44,15 +44,21 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	handleCustomerBuyCancelProduct,
 	queryType,
 }) => {
-
 	const dispatch = useDispatch<AppDispatch>();
-	const { variants, isFetchProductVariants } = useSelector((state: RootState) => getCreateDiscountDetail(state));
+	const { variants, isFetchProductVariants } = useSelector((state: RootState) =>
+		getCreateDiscountDetail(state),
+	);
 	const [selectedVariantId, setSelectedVariantId] = useState<any>([]);
 	const [productUrl, setProductUrl] = useState('');
 	const [productId, setProductId] = useState('');
 	const [productTitle, setProductTitle] = useState('');
 
-	const handleVariantListOpen = (id: string, variantId: string, pTitle: string, pUrl: string) => {
+	const handleVariantListOpen = (
+		id: string,
+		variantId: string,
+		pTitle: string,
+		pUrl: string,
+	) => {
 		shopify.modal.show('variant-list');
 		if (Array.isArray(variantId)) {
 			setSelectedVariantId(variantId);
@@ -70,10 +76,12 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	};
 
 	const handleFetchProductVariants = (id: string) => {
-		dispatch(fetchProductVariantsAsync({
-			shopName: shopify.config.shop || '',
-			id: id
-		}));
+		dispatch(
+			fetchProductVariantsAsync({
+				shopName: shopify.config.shop || '',
+				id: id,
+			}),
+		);
 	};
 
 	return (
@@ -114,7 +122,10 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							min={0}
 							value={newRule.customerBuys.quantity}
 							onChange={(value) =>
-								setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, quantity: value } })
+								setNewRule({
+									...newRule,
+									customerBuys: { ...newRule.customerBuys, quantity: value },
+								})
 							}
 							autoComplete="off"
 							placeholder={newRule?.isMinPurchaseAmount ? '0.00' : ''}
@@ -129,7 +140,10 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							value={newRule.buyItemFrom}
 							onChange={(value) =>
 								setNewRule((prevState: any) => {
-									if (prevState.buyItemFrom === 'collection' && value === 'product') {
+									if (
+										prevState.buyItemFrom === 'collection' &&
+										value === 'product'
+									) {
 										return {
 											...prevState,
 											buyItemFrom: value as 'collection' | 'product',
@@ -137,7 +151,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 											customerBuys: {
 												...prevState.customerBuys,
 												items: [],
-												removeCollectionIDs: [...prevState.customerBuys.collectionIDs],
+												removeCollectionIDs: [
+													...prevState.customerBuys.collectionIDs,
+												],
 												collectionIDs: [],
 											},
 										};
@@ -180,7 +196,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							onClick={() =>
 								handleOpen(
 									'buy',
-									newRule.buyItemFrom === 'collection' ? 'collection' : 'product',
+									newRule.buyItemFrom === 'collection'
+										? 'collection'
+										: 'product',
 								)
 							}
 							variant="secondary"
@@ -188,11 +206,17 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							Browse
 						</Button>
 					</FormLayout.Group>
-					{queryType === 'buyXgetY' && newRule.customerBuys?.items?.length > 0 && (
-						<FormLayout.Group>
-							<EditItemsList handleCancelProduct={handleCustomerBuyCancelProduct} handleVariantListOpen={handleVariantListOpen} type={newRule?.buyItemFrom} items={newRule.customerBuys?.items} />
-						</FormLayout.Group>
-					)}
+					{queryType === 'buyXgetY' &&
+						newRule.customerBuys?.items?.length > 0 && (
+							<FormLayout.Group>
+								<EditItemsList
+									handleCancelProduct={handleCustomerBuyCancelProduct}
+									handleVariantListOpen={handleVariantListOpen}
+									type={newRule?.buyItemFrom}
+									items={newRule.customerBuys?.items}
+								/>
+							</FormLayout.Group>
+						)}
 					<Divider borderColor="border" />
 					<BlockStack gap="300">
 						<Text variant="headingMd" fontWeight="semibold" as="h6">
@@ -210,7 +234,10 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							min={0}
 							value={newRule.customerGets.quantity}
 							onChange={(value) =>
-								setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, quantity: value } })
+								setNewRule({
+									...newRule,
+									customerGets: { ...newRule.customerGets, quantity: value },
+								})
 							}
 							autoComplete="off"
 						/>
@@ -223,7 +250,10 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							value={newRule.getItemFrom}
 							onChange={(value) =>
 								setNewRule((prevState: any) => {
-									if (prevState.getItemFrom === 'collection' && value === 'product') {
+									if (
+										prevState.getItemFrom === 'collection' &&
+										value === 'product'
+									) {
 										return {
 											...prevState,
 											getItemFrom: value as 'collection' | 'product',
@@ -231,7 +261,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 											customerGets: {
 												...prevState.customerGets,
 												items: [],
-												removeCollectionIDs: [...prevState.customerGets.collectionIDs],
+												removeCollectionIDs: [
+													...prevState.customerGets.collectionIDs,
+												],
 												collectionIDs: [],
 											},
 										};
@@ -259,7 +291,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							onClick={() =>
 								handleOpen(
 									'get',
-									newRule.getItemFrom === 'collection' ? 'collection' : 'product',
+									newRule.getItemFrom === 'collection'
+										? 'collection'
+										: 'product',
 								)
 							}
 							variant="secondary"
@@ -267,11 +301,17 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							Browse
 						</Button>
 					</FormLayout.Group>
-					{queryType === 'buyXgetY' && newRule?.customerGets?.items?.length > 0 && (
-						<FormLayout.Group>
-							<EditItemsList handleCancelProduct={handleCustomerGetCancelProduct} handleVariantListOpen={handleVariantListOpen} type={newRule?.getItemFrom} items={newRule?.customerGets?.items} />
-						</FormLayout.Group>
-					)}
+					{queryType === 'buyXgetY' &&
+						newRule?.customerGets?.items?.length > 0 && (
+							<FormLayout.Group>
+								<EditItemsList
+									handleCancelProduct={handleCustomerGetCancelProduct}
+									handleVariantListOpen={handleVariantListOpen}
+									type={newRule?.getItemFrom}
+									items={newRule?.customerGets?.items}
+								/>
+							</FormLayout.Group>
+						)}
 					<Text variant="bodyMd" fontWeight="bold" as="h4">
 						At a discounted value
 					</Text>
@@ -296,7 +336,13 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 											min={0}
 											value={newRule.customerGets.percentage}
 											onChange={(value) =>
-												setNewRule({ ...newRule,  customerGets: { ...newRule.customerGets, percentage: Number(value) }})
+												setNewRule({
+													...newRule,
+													customerGets: {
+														...newRule.customerGets,
+														percentage: Number(value),
+													},
+												})
 											}
 											autoComplete="off"
 											suffix="%"
@@ -356,7 +402,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 					</BlockStack>
 				</FormLayout>
 			</Card>
-			<Modal id='variant-list'>
+			<Modal id="variant-list">
 				<EditVariantList
 					selectedVariantId={selectedVariantId}
 					setSelectedVariantId={setSelectedVariantId}
@@ -368,8 +414,10 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 					productTitle={productTitle}
 					productId={productId}
 				/>
-				<TitleBar title='Edit variants'>
-					<button variant="primary" onClick={handleVariantListClose}>Done</button>
+				<TitleBar title="Edit variants">
+					<button variant="primary" onClick={handleVariantListClose}>
+						Done
+					</button>
 					<button onClick={handleVariantListClose}>Cancel</button>
 				</TitleBar>
 			</Modal>

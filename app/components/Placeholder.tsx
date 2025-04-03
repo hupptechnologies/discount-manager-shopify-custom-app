@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-const Placeholder: React.FC<{ height: string; }> = ({ height = 'auto' }) => {
+const Placeholder: React.FC<{ height: string }> = ({ height = 'auto' }) => {
 	return (
 		<div
-		  style={{
+			style={{
 				padding: '14px var(--p-space-200)',
 				height: height,
-		  }}
+			}}
 		/>
 	);
 };

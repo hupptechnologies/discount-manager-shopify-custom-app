@@ -111,7 +111,8 @@ export const getDiscountCodes = async (
 					lt: new Date(),
 				};
 			} else {
-				where.isActive = (status === 'active' && true) || (status === 'pending' && false);
+				where.isActive =
+					(status === 'active' && true) || (status === 'pending' && false);
 				where.endDate = {
 					gt: new Date(),
 				};
@@ -158,17 +159,23 @@ export const getDiscountCodes = async (
 					const data = {
 						query: GET_BASIC_DISCOUNT_CODE_USAGE_COUNT_QUERY,
 						variables: {
-							ID: discountCode.discountId
-						}
-					}
-					const usageCount = await getDetailUsingGraphQL(shop, accessToken, data);
-					asyncUsageCount = usageCount?.data?.data?.codeDiscountNode?.codeDiscount?.asyncUsageCount || 0;
+							ID: discountCode.discountId,
+						},
+					};
+					const usageCount = await getDetailUsingGraphQL(
+						shop,
+						accessToken,
+						data,
+					);
+					asyncUsageCount =
+						usageCount?.data?.data?.codeDiscountNode?.codeDiscount
+							?.asyncUsageCount || 0;
 				}
 				return {
 					...discountCode,
 					asyncUsageCount,
 				};
-			})
+			}),
 		);
 
 		return {

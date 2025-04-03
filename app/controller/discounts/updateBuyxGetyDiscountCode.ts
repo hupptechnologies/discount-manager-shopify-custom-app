@@ -67,7 +67,7 @@ interface DiscountCodeBxgyInput {
 			};
 		};
 	};
-};
+}
 
 interface DiscountCodeAutomaticBxgyInput {
 	code: string;
@@ -102,7 +102,7 @@ interface DiscountCodeAutomaticBxgyInput {
 			};
 		};
 	};
-};
+}
 
 interface GraphQLResponse {
 	data: {
@@ -129,12 +129,12 @@ interface GraphQLResponse {
 			};
 		};
 	};
-};
+}
 
 interface UpdateBuyXGetYDiscountCodeResponse {
 	success: boolean;
 	message: string;
-};
+}
 
 interface CreateBuyxGetYDiscountCodeInput {
 	title: string;
@@ -166,19 +166,28 @@ export const updateBuyXGetYDiscountCode = async (
 	dataPayload: CreateBuyxGetYDiscountCodeInput,
 	id: number,
 ): Promise<UpdateBuyXGetYDiscountCodeResponse> => {
-	const { title, code, startsAt, endsAt, usageLimit, customerBuys, customerGets, advancedRule } = dataPayload;
+	const {
+		title,
+		code,
+		startsAt,
+		endsAt,
+		usageLimit,
+		customerBuys,
+		customerGets,
+		advancedRule,
+	} = dataPayload;
 
 	try {
 		if (!shop || !id) {
 			return {
 				success: false,
-				message: 'Required fields id and shop'
-			}
+				message: 'Required fields id and shop',
+			};
 		}
 		const findDiscountExist = await prisma.discountCode.findFirst({
 			where: { shop, id },
 		});
-		
+
 		const isCustom = findDiscountExist?.discountMethod === 'CUSTOM';
 
 		if (findDiscountExist) {
@@ -203,17 +212,19 @@ export const updateBuyXGetYDiscountCode = async (
 						usesPerOrderLimit: String(usageLimit),
 						customerBuys: {
 							items: {
-								...((customerBuys.collectionIDs.length > 0 || customerBuys.removeCollectionIDs.length > 0) && {
+								...((customerBuys.collectionIDs.length > 0 ||
+									customerBuys.removeCollectionIDs.length > 0) && {
 									collections: {
 										...(customerBuys.collectionIDs.length > 0 && {
-											add: customerBuys.collectionIDs
+											add: customerBuys.collectionIDs,
 										}),
 										...(customerBuys.removeCollectionIDs.length > 0 && {
-											remove: customerBuys.removeCollectionIDs
+											remove: customerBuys.removeCollectionIDs,
 										}),
-									}
+									},
 								}),
-								...((customerBuys.productIDs.length > 0 || customerBuys.removeProductIDs.length > 0) && {
+								...((customerBuys.productIDs.length > 0 ||
+									customerBuys.removeProductIDs.length > 0) && {
 									products: {
 										...(customerBuys.productIDs.length > 0 && {
 											productVariantsToAdd: customerBuys.productIDs,
@@ -221,8 +232,8 @@ export const updateBuyXGetYDiscountCode = async (
 										...(customerBuys.removeProductIDs.length > 0 && {
 											productVariantsToRemove: customerBuys.removeProductIDs,
 										}),
-									}
-								})
+									},
+								}),
 							},
 							value: {
 								quantity: customerBuys.quantity,
@@ -230,17 +241,19 @@ export const updateBuyXGetYDiscountCode = async (
 						},
 						customerGets: {
 							items: {
-								...((customerGets.collectionIDs.length > 0 || customerGets.removeCollectionIDs.length > 0) && {
+								...((customerGets.collectionIDs.length > 0 ||
+									customerGets.removeCollectionIDs.length > 0) && {
 									collections: {
 										...(customerGets.collectionIDs.length > 0 && {
-											add: customerGets.collectionIDs
+											add: customerGets.collectionIDs,
 										}),
 										...(customerGets.removeCollectionIDs.length > 0 && {
-											remove: customerGets.removeCollectionIDs
+											remove: customerGets.removeCollectionIDs,
 										}),
-									}
+									},
 								}),
-								...((customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) && {
+								...((customerGets.productIDs.length > 0 ||
+									customerGets.removeProductIDs.length > 0) && {
 									products: {
 										...(customerGets.productIDs.length > 0 && {
 											productVariantsToAdd: customerGets.productIDs,
@@ -248,8 +261,8 @@ export const updateBuyXGetYDiscountCode = async (
 										...(customerGets.removeProductIDs.length > 0 && {
 											productVariantsToRemove: customerGets.removeProductIDs,
 										}),
-									}
-								})
+									},
+								}),
 							},
 							value: {
 								discountOnQuantity: {
@@ -275,17 +288,19 @@ export const updateBuyXGetYDiscountCode = async (
 						usesPerOrderLimit: String(usageLimit),
 						customerBuys: {
 							items: {
-								...((customerBuys.collectionIDs.length > 0 || customerBuys.removeCollectionIDs.length > 0) && {
+								...((customerBuys.collectionIDs.length > 0 ||
+									customerBuys.removeCollectionIDs.length > 0) && {
 									collections: {
 										...(customerBuys.collectionIDs.length > 0 && {
-											add: customerBuys.collectionIDs
+											add: customerBuys.collectionIDs,
 										}),
 										...(customerBuys.removeCollectionIDs.length > 0 && {
-											remove: customerBuys.removeCollectionIDs
+											remove: customerBuys.removeCollectionIDs,
 										}),
-									}
+									},
 								}),
-								...((customerBuys.productIDs.length > 0 || customerBuys.removeProductIDs.length > 0) && {
+								...((customerBuys.productIDs.length > 0 ||
+									customerBuys.removeProductIDs.length > 0) && {
 									products: {
 										...(customerBuys.productIDs.length > 0 && {
 											productVariantsToAdd: customerBuys.productIDs,
@@ -293,8 +308,8 @@ export const updateBuyXGetYDiscountCode = async (
 										...(customerBuys.removeProductIDs.length > 0 && {
 											productVariantsToRemove: customerBuys.removeProductIDs,
 										}),
-									}
-								})
+									},
+								}),
 							},
 							value: {
 								quantity: customerBuys.quantity,
@@ -302,17 +317,19 @@ export const updateBuyXGetYDiscountCode = async (
 						},
 						customerGets: {
 							items: {
-								...((customerGets.collectionIDs.length > 0 || customerGets.removeCollectionIDs.length > 0) && {
+								...((customerGets.collectionIDs.length > 0 ||
+									customerGets.removeCollectionIDs.length > 0) && {
 									collections: {
 										...(customerGets.collectionIDs.length > 0 && {
-											add: customerGets.collectionIDs
+											add: customerGets.collectionIDs,
 										}),
 										...(customerGets.removeCollectionIDs.length > 0 && {
-											remove: customerGets.removeCollectionIDs
+											remove: customerGets.removeCollectionIDs,
 										}),
-									}
+									},
 								}),
-								...((customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) && {
+								...((customerGets.productIDs.length > 0 ||
+									customerGets.removeProductIDs.length > 0) && {
 									products: {
 										...(customerGets.productIDs.length > 0 && {
 											productVariantsToAdd: customerGets.productIDs,
@@ -320,8 +337,8 @@ export const updateBuyXGetYDiscountCode = async (
 										...(customerGets.removeProductIDs.length > 0 && {
 											productVariantsToRemove: customerGets.removeProductIDs,
 										}),
-									}
-								})
+									},
+								}),
 							},
 							value: {
 								discountOnQuantity: {
@@ -336,12 +353,30 @@ export const updateBuyXGetYDiscountCode = async (
 				},
 			};
 
-			const updateDiscountCodeFromShopify: GraphQLResponse = await getDetailUsingGraphQL(shop, accessToken, isCustom ? data : dataAuto);
+			const updateDiscountCodeFromShopify: GraphQLResponse =
+				await getDetailUsingGraphQL(
+					shop,
+					accessToken,
+					isCustom ? data : dataAuto,
+				);
 
-			if (updateDiscountCodeFromShopify?.data?.data?.discountCodeBxgyUpdate?.userErrors.length > 0 || updateDiscountCodeFromShopify?.data?.data?.discountAutomaticBxgyUpdate?.userErrors?.length > 0) {
-				const errorsBasicQuery = updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
-				const errorsAutomaticBasicQuery = updateDiscountCodeFromShopify.data.data?.discountAutomaticBxgyUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
-				throw new Error(`GraphQL errors: ${isCustom ? errorsBasicQuery : errorsAutomaticBasicQuery}`);
+			if (
+				updateDiscountCodeFromShopify?.data?.data?.discountCodeBxgyUpdate
+					?.userErrors.length > 0 ||
+				updateDiscountCodeFromShopify?.data?.data?.discountAutomaticBxgyUpdate
+					?.userErrors?.length > 0
+			) {
+				const errorsBasicQuery =
+					updateDiscountCodeFromShopify.data?.data?.discountCodeBxgyUpdate?.userErrors
+						.map((error) => `${error.field}: ${error.message}`)
+						.join(', ');
+				const errorsAutomaticBasicQuery =
+					updateDiscountCodeFromShopify.data.data?.discountAutomaticBxgyUpdate?.userErrors
+						.map((error) => `${error.field}: ${error.message}`)
+						.join(', ');
+				throw new Error(
+					`GraphQL errors: ${isCustom ? errorsBasicQuery : errorsAutomaticBasicQuery}`,
+				);
 			}
 
 			await prisma.discountCode.update({
@@ -355,7 +390,10 @@ export const updateBuyXGetYDiscountCode = async (
 					endDate: new Date(endsAt),
 					discountAmount: Number(customerGets.percentage),
 					discountType: 'PERCENT',
-					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
+					advancedRule:
+						advancedRule !== null && advancedRule !== undefined
+							? advancedRule
+							: undefined,
 					usageLimit: Number(usageLimit) ? Number(usageLimit) : 0,
 					isActive: true,
 				},

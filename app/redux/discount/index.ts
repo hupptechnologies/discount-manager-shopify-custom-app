@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import {
+import type {
 	AdvancedRuleObject,
 	CreateBuyXGetYDiscountCodeParams,
 	CreateDiscountCodeParams,
@@ -10,6 +10,8 @@ import {
 	GetDiscountCodeByIdParams,
 	UpdateBuyXGetYDiscountCodeParams,
 	UpdateDiscountCodeParams,
+} from 'app/service/discount';
+import {
 	createBuyXGetYDiscountCode,
 	createDiscountCode,
 	deleteAllDiscountCode,
@@ -218,7 +220,14 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 		try {
 			const response = await getDiscountCodeById(params);
 			if (response.data) {
-				const { success, discountCode, message, discountScope, advancedRule, method } = response.data;
+				const {
+					success,
+					discountCode,
+					message,
+					discountScope,
+					advancedRule,
+					method,
+				} = response.data;
 				if (success && params.callback) {
 					params.callback(success);
 				}
@@ -228,7 +237,7 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 					message,
 					discountScope,
 					advancedRule,
-					method
+					method,
 				});
 			}
 			return fulfillWithValue({
@@ -237,7 +246,7 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 				message: '',
 				discountScope: '',
 				advancedRule: null,
-				method: ''
+				method: '',
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;

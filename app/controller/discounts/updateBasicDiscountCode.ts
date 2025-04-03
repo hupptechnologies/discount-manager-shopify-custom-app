@@ -45,7 +45,7 @@ interface DiscountCodeBasicInput {
 		};
 		items: DiscountCodeItems;
 	};
-};
+}
 
 interface DiscountCodeBasicAutomaticInput {
 	title: string;
@@ -57,7 +57,7 @@ interface DiscountCodeBasicAutomaticInput {
 		};
 		items: DiscountCodeItems;
 	};
-};
+}
 
 interface GraphQLResponse {
 	data: {
@@ -84,12 +84,12 @@ interface GraphQLResponse {
 			};
 		};
 	};
-};
+}
 
 interface UpdateBasicDiscountCodeResponse {
 	success: boolean;
 	message: string;
-};
+}
 
 interface CreateDiscountCodeInput {
 	title: string;
@@ -112,16 +112,25 @@ interface CreateDiscountCodeInput {
 export const updateBasicDiscountCode = async (
 	shop: string,
 	dataPayload: CreateDiscountCodeInput,
-	id: number
+	id: number,
 ): Promise<UpdateBasicDiscountCodeResponse> => {
-	const { title, code, startsAt, endsAt, usageLimit, appliesOncePerCustomer, customerGets, advancedRule } = dataPayload;
+	const {
+		title,
+		code,
+		startsAt,
+		endsAt,
+		usageLimit,
+		appliesOncePerCustomer,
+		customerGets,
+		advancedRule,
+	} = dataPayload;
 
 	try {
 		if (!shop || !id) {
 			return {
 				success: false,
-				message: 'Required fields id and shop'
-			}
+				message: 'Required fields id and shop',
+			};
 		}
 		const findDiscountExist = await prisma.discountCode.findFirst({
 			where: { shop, id },
@@ -175,10 +184,13 @@ export const updateBasicDiscountCode = async (
 							items: {} as DiscountCodeItems,
 						},
 					} as DiscountCodeBasicAutomaticInput,
-				}
-			}
+				},
+			};
 
-			if (customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) {
+			if (
+				customerGets.productIDs.length > 0 ||
+				customerGets.removeProductIDs.length > 0
+			) {
 				const productData = {
 					productVariantsToAdd: customerGets.productIDs,
 					productVariantsToRemove: customerGets.removeProductIDs,
@@ -192,7 +204,10 @@ export const updateBasicDiscountCode = async (
 						products: productData,
 					};
 				}
-			} else if (customerGets.collectionIDs.length > 0 || customerGets.removeCollectionIDs.length > 0) {
+			} else if (
+				customerGets.collectionIDs.length > 0 ||
+				customerGets.removeCollectionIDs.length > 0
+			) {
 				const collectionData = {
 					add: customerGets.collectionIDs,
 					remove: customerGets.removeCollectionIDs,
@@ -210,19 +225,36 @@ export const updateBasicDiscountCode = async (
 				if (isCustom) {
 					data.variables.basicCodeDiscount.customerGets.items = { all: true };
 				} else {
-					dataAuto.variables.automaticBasicDiscount.customerGets.items = { all: true };
+					dataAuto.variables.automaticBasicDiscount.customerGets.items = {
+						all: true,
+					};
 				}
 			}
 
-			const updateDiscountCodeFromShopify: GraphQLResponse = await getDetailUsingGraphQL(shop, accessToken, isCustom ? data : dataAuto);
+			const updateDiscountCodeFromShopify: GraphQLResponse =
+				await getDetailUsingGraphQL(
+					shop,
+					accessToken,
+					isCustom ? data : dataAuto,
+				);
 
 			if (
-				updateDiscountCodeFromShopify.data.data?.discountCodeBasicUpdate?.userErrors.length > 0 ||
-				updateDiscountCodeFromShopify.data.data?.discountAutomaticBasicUpdate?.userErrors.length > 0
+				updateDiscountCodeFromShopify.data.data?.discountCodeBasicUpdate
+					?.userErrors.length > 0 ||
+				updateDiscountCodeFromShopify.data.data?.discountAutomaticBasicUpdate
+					?.userErrors.length > 0
 			) {
-				const errorsBasicQuery = updateDiscountCodeFromShopify.data.data?.discountCodeBasicUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
-				const errorsAutomaticBasicQuery = updateDiscountCodeFromShopify.data.data?.discountAutomaticBasicUpdate?.userErrors.map((error) => `${error.field}: ${error.message}`).join(', ');
-				throw new Error(`GraphQL errors: ${isCustom ? errorsBasicQuery: errorsAutomaticBasicQuery}`);
+				const errorsBasicQuery =
+					updateDiscountCodeFromShopify.data.data?.discountCodeBasicUpdate?.userErrors
+						.map((error) => `${error.field}: ${error.message}`)
+						.join(', ');
+				const errorsAutomaticBasicQuery =
+					updateDiscountCodeFromShopify.data.data?.discountAutomaticBasicUpdate?.userErrors
+						.map((error) => `${error.field}: ${error.message}`)
+						.join(', ');
+				throw new Error(
+					`GraphQL errors: ${isCustom ? errorsBasicQuery : errorsAutomaticBasicQuery}`,
+				);
 			}
 
 			await prisma.discountCode.update({
@@ -236,7 +268,10 @@ export const updateBasicDiscountCode = async (
 					endDate: new Date(endsAt),
 					discountAmount: Number(customerGets.percentage),
 					discountType: 'PERCENT',
-					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
+					advancedRule:
+						advancedRule !== null && advancedRule !== undefined
+							? advancedRule
+							: undefined,
 					usageLimit: usageLimit ? usageLimit : 0,
 					isActive: true,
 				},

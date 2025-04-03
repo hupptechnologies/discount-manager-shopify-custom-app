@@ -65,7 +65,12 @@ mutation discountAutomaticBasicCreate($automaticBasicDiscount: DiscountAutomatic
 
 type DiscountCodeItems =
 	| { all: boolean }
-	| { products: { productVariantsToAdd: string[]; productVariantsToRemove: string[] } }
+	| {
+			products: {
+				productVariantsToAdd: string[];
+				productVariantsToRemove: string[];
+			};
+	  }
 	| { collections: { add: string[]; remove: string[] } };
 
 interface DiscountCodeBasicInput {
@@ -146,9 +151,18 @@ export const createDiscountCode = async (
 	shop: string,
 	dataPayload: CreateDiscountCodeInput,
 	type: string,
-	method: string
+	method: string,
 ): Promise<{ success: boolean; message: string }> => {
-	const { title, code, startsAt, endsAt, usageLimit, appliesOncePerCustomer, customerGets, advancedRule } = dataPayload;
+	const {
+		title,
+		code,
+		startsAt,
+		endsAt,
+		usageLimit,
+		appliesOncePerCustomer,
+		customerGets,
+		advancedRule,
+	} = dataPayload;
 
 	try {
 		if (!customerGets.percentage || !code) {
@@ -197,7 +211,7 @@ export const createDiscountCode = async (
 					},
 					usageLimit,
 					appliesOncePerCustomer,
-				} as DiscountCodeBasicInput
+				} as DiscountCodeBasicInput,
 			},
 		};
 
@@ -214,11 +228,14 @@ export const createDiscountCode = async (
 						},
 						items: {} as DiscountCodeItems,
 					},
-				} as DiscountAutomaticBasicInput
+				} as DiscountAutomaticBasicInput,
 			},
 		};
 
-		if (customerGets.productIDs.length > 0 || customerGets.removeProductIDs.length > 0) {
+		if (
+			customerGets.productIDs.length > 0 ||
+			customerGets.removeProductIDs.length > 0
+		) {
 			const productData = {
 				productVariantsToAdd: customerGets.productIDs,
 				productVariantsToRemove: customerGets.removeProductIDs,
@@ -232,7 +249,10 @@ export const createDiscountCode = async (
 					products: productData,
 				};
 			}
-		} else if (customerGets.collectionIDs.length > 0 || customerGets.removeCollectionIDs.length > 0) {
+		} else if (
+			customerGets.collectionIDs.length > 0 ||
+			customerGets.removeCollectionIDs.length > 0
+		) {
 			const collectionData = {
 				add: customerGets.collectionIDs,
 				remove: customerGets.removeCollectionIDs,
@@ -250,21 +270,31 @@ export const createDiscountCode = async (
 			if (method === 'custom') {
 				data.variables.basicCodeDiscount.customerGets.items = { all: true };
 			} else {
-				dataAuto.variables.automaticBasicDiscount.customerGets.items = { all: true };
+				dataAuto.variables.automaticBasicDiscount.customerGets.items = {
+					all: true,
+				};
 			}
 		}
 
-		const createDiscountResponse: DiscountCodeResponse = await getDetailUsingGraphQL(shop, accessToken, method === 'custom' ? data : dataAuto);
+		const createDiscountResponse: DiscountCodeResponse =
+			await getDetailUsingGraphQL(
+				shop,
+				accessToken,
+				method === 'custom' ? data : dataAuto,
+			);
 
 		if (createDiscountResponse.data.errors) {
 			throw new Error(
-				createDiscountResponse.data.errors.map((e) => e.message).join(', ')
+				createDiscountResponse.data.errors.map((e) => e.message).join(', '),
 			);
 		}
 
-		const discountCodeData = method === 'custom'
-			? createDiscountResponse.data?.data?.discountCodeBasicCreate?.codeDiscountNode
-			: createDiscountResponse.data?.data?.discountAutomaticBasicCreate?.automaticDiscountNode;
+		const discountCodeData =
+			method === 'custom'
+				? createDiscountResponse.data?.data?.discountCodeBasicCreate
+						?.codeDiscountNode
+				: createDiscountResponse.data?.data?.discountAutomaticBasicCreate
+						?.automaticDiscountNode;
 
 		if (discountCodeData) {
 			await prisma.discountCode.create({
@@ -281,7 +311,12 @@ export const createDiscountCode = async (
 					usageLimit,
 					isActive: true,
 					discountMethod: method === 'custom' ? 'CUSTOM' : 'AUTOMATIC',
-					discountScope: type === 'products' ? 'PRODUCT' : type === 'order' ? 'ORDER' : 'SHIPPING',
+					discountScope:
+						type === 'products'
+							? 'PRODUCT'
+							: type === 'order'
+								? 'ORDER'
+								: 'SHIPPING',
 				},
 			});
 			return { success: true, message: 'Discount code created successfully' };

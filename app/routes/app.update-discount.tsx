@@ -19,7 +19,7 @@ export default function UpdateDiscountPage () {
 			title="Update discount"
 		>
 			{queryType && <DiscountRuleForm queryType={queryType} />}
-			<Placeholder height='5px' />
+			<Placeholder height="5px" />
 		</Page>
 	);
 }

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
+	type ResourceListProps,
 	ResourceList,
 	ResourceItem,
 	Text,
 	InlineStack,
 	Thumbnail,
-	ResourceListProps,
 	Scrollable,
 } from '@shopify/polaris';
 import type { VariantItem } from 'app/redux/create-discount/slice';
@@ -15,7 +15,6 @@ interface EditVariantListProps {
 	variants: VariantItem[];
 	isFetchProductVariants: boolean;
 	selectedVariantId: string[];
-	setSelectedVariantId: any;
 	setNewRule: React.Dispatch<any>;
 	newRule: DiscountRule;
 	productUrl: string;
@@ -32,20 +31,13 @@ const EditVariantList: React.FC<EditVariantListProps> = ({
 	variants,
 	isFetchProductVariants,
 	selectedVariantId,
-	setSelectedVariantId,
 	setNewRule,
 	newRule,
-	productId
+	productId,
 }) => {
-
 	const [selectedItems, setSelectedItems] = useState<
 		ResourceListProps['selectedItems']
 	>([]);
-
-	const resourceName: ResourceName = {
-		singular: 'variant',
-		plural: 'variants',
-	};
 
 	useEffect(() => {
 		if (selectedVariantId.length > 0) {
@@ -65,7 +57,7 @@ const EditVariantList: React.FC<EditVariantListProps> = ({
 							...item,
 							node: {
 								...item.node,
-								id: value
+								id: value,
 							},
 						};
 					}
@@ -88,10 +80,21 @@ const EditVariantList: React.FC<EditVariantListProps> = ({
 				renderItem={(item) => {
 					const { id, title, image, inventoryQuantity, price } = item.node;
 					return (
-						<ResourceItem id={id} url='' accessibilityLabel={`View details for ${title}`}>
-							<div style={{ padding: "10px 10px" }}>
+						<ResourceItem
+							id={id}
+							url=""
+							accessibilityLabel={`View details for ${title}`}
+						>
+							<div style={{ padding: '10px 10px' }}>
 								<InlineStack align="space-between" blockAlign="center">
-									<Thumbnail size="small" alt="" source={image?.url || 'https://cdn.shopify.com/s/files/1/0723/3277/1569/files/images_4e34079b-8a8a-4e98-89a2-6c53923e2264.jpg?v=1738837951'} />
+									<Thumbnail
+										size="small"
+										alt=""
+										source={
+											image?.url ||
+											'https://cdn.shopify.com/s/files/1/0723/3277/1569/files/images_4e34079b-8a8a-4e98-89a2-6c53923e2264.jpg?v=1738837951'
+										}
+									/>
 									<Text fontWeight="bold" as="span">
 										{title}
 									</Text>

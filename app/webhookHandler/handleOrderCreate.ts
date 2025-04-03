@@ -1,6 +1,9 @@
-import prisma from "app/db.server";
+import prisma from 'app/db.server';
 
-export const handleOrderCreate = async (shop: string, discount_codes: any[]) => {
+export const handleOrderCreate = async (
+	shop: string,
+	discount_codes: any[],
+) => {
 	try {
 		for (const application of discount_codes) {
 			const discountCode = application.code;
@@ -14,8 +17,8 @@ export const handleOrderCreate = async (shop: string, discount_codes: any[]) => 
 					},
 					data: {
 						usedCount: {
-							increment: 1
-						}
+							increment: 1,
+						},
 					},
 				});
 			}

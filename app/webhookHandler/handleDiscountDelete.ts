@@ -20,8 +20,8 @@ export const handleDiscountDelete = async (
 
 		if (!discountCode) {
 			return {
-			success: false,
-			message: 'Discount code not found with the provided criteria',
+				success: false,
+				message: 'Discount code not found with the provided criteria',
 			};
 		}
 

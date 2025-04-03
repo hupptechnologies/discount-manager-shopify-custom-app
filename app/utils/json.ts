@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 interface DateRange {
 	start: Date | null;
 	end?: Date | null;
-};
+}
 
 export const generateTimeList = (): string[] => {
 	const timeList: string[] = [];
@@ -36,7 +36,10 @@ export const formatDateWithTime = (dateString: string): string => {
 	return `${year}-${month}-${day}`;
 };
 
-export const formatDateWithTimeZone = (dateString: any, timeString: string): string | null => {
+export const formatDateWithTimeZone = (
+	dateString: any,
+	timeString: string,
+): string | null => {
 	const date = DateTime.fromJSDate(dateString);
 	const timeParts = timeString.match(/(\d{1,2}):(\d{2})\s([APM]{2})/);
 	if (!timeParts) {
@@ -55,8 +58,12 @@ export const formatDateWithTimeZone = (dateString: any, timeString: string): str
 };
 
 export const convertToLocalTime = (startsAt: string, endsAt: string) => {
-	const startDateTime = DateTime.fromISO(startsAt, { zone: 'utc' }).setZone('Asia/Kolkata');
-	const endDateTime = DateTime.fromISO(endsAt, { zone: 'utc' }).setZone('Asia/Kolkata');
+	const startDateTime = DateTime.fromISO(startsAt, { zone: 'utc' }).setZone(
+		'Asia/Kolkata',
+	);
+	const endDateTime = DateTime.fromISO(endsAt, { zone: 'utc' }).setZone(
+		'Asia/Kolkata',
+	);
 	return {
 		selectedStartDates: {
 			start: startDateTime.toJSDate(),
@@ -71,21 +78,36 @@ export const convertToLocalTime = (startsAt: string, endsAt: string) => {
 	};
 };
 
-export const generateDiscountCode = (length: number = 8): string => {
-	const prefixes = ['FREE', 'EVENT', 'STANDARD', 'SUMMER', 'WINTER', 'FESTIVAL', 'HOLIDAY'];
+export const generateDiscountCode = (): string => {
+	const prefixes = [
+		'FREE',
+		'EVENT',
+		'STANDARD',
+		'SUMMER',
+		'WINTER',
+		'FESTIVAL',
+		'HOLIDAY',
+	];
 	const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
 	const randomPercentage = Math.floor(Math.random() * 100) + 1;
 	return `${randomPrefix}${randomPercentage}%`;
 };
 
-export const formatDateRange = (selectedStartDates: DateRange, selectedEndDates: DateRange) => {
+export const formatDateRange = (
+	selectedStartDates: DateRange,
+	selectedEndDates: DateRange,
+) => {
 	const formatDate = (date: Date): string => {
 		const day = date.getDate();
 		const month = date.toLocaleString('en-GB', { month: 'short' });
 		return `${day} ${month}`;
 	};
-	const formattedStartDate = selectedStartDates.start ? formatDate(selectedStartDates.start) : '';
-	const formattedEndDate = selectedEndDates.start ? formatDate(selectedEndDates.start) : '';
+	const formattedStartDate = selectedStartDates.start
+		? formatDate(selectedStartDates.start)
+		: '';
+	const formattedEndDate = selectedEndDates.start
+		? formatDate(selectedEndDates.start)
+		: '';
 	if (formattedStartDate === formattedEndDate) {
 		return formattedStartDate;
 	} else {

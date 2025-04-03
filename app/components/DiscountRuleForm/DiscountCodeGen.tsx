@@ -25,7 +25,7 @@ interface DiscountCodeGenProps {
 	heading: string;
 	newRule: DiscountRule;
 	isEdit: boolean;
-};
+}
 
 const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 	heading,
@@ -35,7 +35,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 	setNewRule,
 	queryType,
 	handleSaveBarOpen,
-	isEdit
+	isEdit,
 }) => {
 	return (
 		<Card>
@@ -45,14 +45,14 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 				</Text>
 				<Text as="p">{queryType} discount</Text>
 			</InlineStack>
-			<Placeholder height='5px' />
+			<Placeholder height="5px" />
 			<BlockStack gap="200">
-				{!isEdit &&
+				{!isEdit && (
 					<Text variant="bodyMd" as="h3">
 						Method
 					</Text>
-				}
-				{!isEdit &&
+				)}
+				{!isEdit && (
 					<ButtonGroup variant="segmented">
 						<Button
 							variant={activeButtonIndex === 0 ? 'primary' : 'secondary'}
@@ -67,7 +67,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 							Automatic discount
 						</Button>
 					</ButtonGroup>
-				}
+				)}
 				<TextField
 					label="Title"
 					helpText="The name of the discount the codes will be grouped under."
@@ -81,7 +81,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					}
 				/>
 			</BlockStack>
-			<Placeholder height='5px' />
+			<Placeholder height="5px" />
 			<BlockStack gap="100">
 				<RadioButton
 					label="Generate random code"
@@ -106,7 +106,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					}
 				/>
 			</BlockStack>
-			<Placeholder height='5px' />
+			<Placeholder height="5px" />
 			{newRule.isCustom && (
 				<Box>
 					<InlineStack align="space-between" blockAlign="center" gap="200">
@@ -116,7 +116,10 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						<Link
 							onClick={() => {
 								handleSaveBarOpen();
-								setNewRule({ ...newRule, checkoutDiscountCode: generateDiscountCode(8) })
+								setNewRule({
+									...newRule,
+									checkoutDiscountCode: generateDiscountCode(8),
+								});
 							}}
 							removeUnderline
 						>

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { DiscountCode } from './index';
 import {
+	type DiscountCode,
 	createBuyXGetYDiscountCodeAsync,
 	createDiscountCodeAsync,
 	deleteAllDiscountCodeAsync,
@@ -10,7 +10,7 @@ import {
 	updateBuyXGetYDiscountCodeAsync,
 	updateDiscountCodeAsync,
 } from './index';
-import { AdvancedRuleObject } from 'app/service/discount';
+import type { AdvancedRuleObject } from 'app/service/discount';
 
 interface Pagination {
 	totalCount: number;
@@ -47,7 +47,7 @@ export interface ItemsList {
 		};
 		image: {
 			url: string;
-		}
+		};
 	};
 }
 
@@ -66,10 +66,10 @@ export interface GetDiscountCodeList {
 			value: {
 				effect: {
 					percentage: number;
-				}
+				};
 				quantity: {
 					quantity: string;
-				}
+				};
 				percentage: number;
 			};
 			items: {
@@ -78,7 +78,7 @@ export interface GetDiscountCodeList {
 				};
 				collections: {
 					edges: ItemsList[];
-				}
+				};
 			};
 		};
 		customerBuys: {
@@ -91,9 +91,9 @@ export interface GetDiscountCodeList {
 				};
 				collections: {
 					edges: ItemsList[];
-				}
+				};
 			};
-		}
+		};
 	};
 	automaticDiscount: {
 		title: string;
@@ -109,10 +109,10 @@ export interface GetDiscountCodeList {
 			value: {
 				effect: {
 					percentage: number;
-				}
+				};
 				quantity: {
 					quantity: string;
-				}
+				};
 				percentage: number;
 			};
 			items: {
@@ -121,7 +121,7 @@ export interface GetDiscountCodeList {
 				};
 				collections: {
 					edges: ItemsList[];
-				}
+				};
 			};
 		};
 		customerBuys: {
@@ -134,9 +134,9 @@ export interface GetDiscountCodeList {
 				};
 				collections: {
 					edges: ItemsList[];
-				}
+				};
 			};
-		}
+		};
 	};
 }
 
@@ -187,7 +187,7 @@ const initialState: discountState = {
 	discountScope: '',
 	updateDiscountCodeId: null,
 	advancedRule: null,
-	method: ''
+	method: '',
 };
 
 const discountSlice = createSlice({
@@ -199,7 +199,7 @@ const discountSlice = createSlice({
 		},
 		handleResetGetDiscountCode: (state) => {
 			state.getDiscountCode = [];
-		}
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchAllDiscountCodesAsync.pending, (state) => {
@@ -299,7 +299,8 @@ const discountSlice = createSlice({
 	},
 });
 
-export const { handleUpdateDiscountCodeId, handleResetGetDiscountCode } = discountSlice.actions;
+export const { handleUpdateDiscountCodeId, handleResetGetDiscountCode } =
+	discountSlice.actions;
 
 export const getAllDiscountCodeDetail = (state: { discount: discountState }) =>
 	state.discount;

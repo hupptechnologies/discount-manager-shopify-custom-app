@@ -22,16 +22,21 @@ interface Collection {
 	productCount: number;
 	title: string;
 	image: string;
-};
+}
 
 interface CollectionProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	selected: number;
 	selectedItemsArray: string[];
-};
+}
 
-const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, selected, selectedItemsArray }) => {
+const CollectionList: React.FC<CollectionProps> = ({
+	newRule,
+	setNewRule,
+	selected,
+	selectedItemsArray,
+}) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
 	const {
@@ -121,7 +126,8 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 	};
 
 	const handleSelectionChange = (value: string[]) => {
-		const selectedObjects = rowsCollection.filter((row) => value.includes(row.id))
+		const selectedObjects = rowsCollection
+			.filter((row) => value.includes(row.id))
 			.map((row) => ({
 				node: {
 					id: row.id,
@@ -130,11 +136,10 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 						count: row.productCount || 0,
 					},
 					image: {
-						url: row.image
-					}
+						url: row.image,
+					},
 				},
-			}
-		));
+			}));
 		if (selected === 0) {
 			setNewRule({
 				...newRule,
@@ -145,8 +150,8 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 						removeProductIDs: newRule.customerGets.productIDs,
 					}),
 					productIDs: [],
-					items: selectedObjects
-				}
+					items: selectedObjects,
+				},
 			});
 		}
 		if (selected === 1) {
@@ -159,13 +164,13 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 						removeProductIDs: newRule.customerBuys.productIDs,
 					}),
 					productIDs: [],
-					items: selectedObjects
-				}
+					items: selectedObjects,
+				},
 			});
 		}
 		setSelectedItems(value);
 	};
-	
+
 	const filterControl = (
 		<Filters
 			queryValue={
@@ -179,7 +184,7 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 			onClearAll={handleClearAll}
 		/>
 	);
-	
+
 	return (
 		<Scrollable style={{ height: '471px' }}>
 			<ResourceList
@@ -195,7 +200,7 @@ const CollectionList: React.FC<CollectionProps> = ({ newRule, setNewRule, select
 						<ResourceItem
 							id={id}
 							accessibilityLabel={`View details for ${title}`}
-							url=''
+							url=""
 						>
 							<InlineStack gap="200" align="start" blockAlign="center">
 								<Thumbnail size="small" alt="" source={image} />

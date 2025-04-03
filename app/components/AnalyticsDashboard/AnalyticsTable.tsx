@@ -20,7 +20,10 @@ import {
 import { EditIcon, DeleteIcon } from '@shopify/polaris-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from 'app/redux/store';
-import { getAllDiscountCodeDetail, handleUpdateDiscountCodeId } from 'app/redux/discount/slice';
+import {
+	getAllDiscountCodeDetail,
+	handleUpdateDiscountCodeId,
+} from 'app/redux/discount/slice';
 import {
 	deleteAllDiscountCodeAsync,
 	deleteDiscountCodeAsync,
@@ -32,7 +35,7 @@ import { formatDateWithTime } from 'app/utils/json';
 
 interface AnalyticsTableProps {
 	setIsLoadingUpdate: any;
-};
+}
 
 interface DeleteDataList {
 	id: null | number;
@@ -188,7 +191,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 		discountId: number,
 		id: number,
 		type: string,
-		isCustom: boolean
+		isCustom: boolean,
 	): void => {
 		e.stopPropagation();
 		setIsLoadingUpdate(true);
@@ -263,8 +266,20 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 						</Text>
 					</IndexTable.Cell>
 					<IndexTable.Cell>
-						<Badge tone={new Date(endDate) < new Date() ? 'warning' : isActive ? 'success' : 'attention'}>
-							{new Date(endDate) < new Date() ? 'Expired' : isActive ? 'Active' : 'Pending'}
+						<Badge
+							tone={
+								new Date(endDate) < new Date()
+									? 'warning'
+									: isActive
+										? 'success'
+										: 'attention'
+							}
+						>
+							{new Date(endDate) < new Date()
+								? 'Expired'
+								: isActive
+									? 'Active'
+									: 'Pending'}
 						</Badge>
 					</IndexTable.Cell>
 					<IndexTable.Cell>{formatDateWithTime(startDate)}</IndexTable.Cell>
@@ -280,7 +295,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 											parseInt(discountId.split('/').pop() as string),
 											id,
 											discountScope,
-											discountId.includes('DiscountCodeNode') as boolean
+											discountId.includes('DiscountCodeNode') as boolean,
 										)
 									}
 									variant="secondary"
@@ -338,7 +353,9 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					allResourcesSelected ? 'All' : selectedResources.length
 				}
 				onSelectionChange={handleSelectionChange}
-				bulkActions={selectedResources?.length === discountCodes?.length ? bulkActions : []}
+				bulkActions={
+					selectedResources?.length === discountCodes?.length ? bulkActions : []
+				}
 				headings={[
 					{ title: 'Discount Code' },
 					{ title: 'Discount Percentage' },
@@ -367,7 +384,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 						code? this will remove all related data.
 					</Text>
 				</Layout.Section>
-				<Placeholder height='5px' />
+				<Placeholder height="5px" />
 				<TitleBar title="Delete Confirmation">
 					<button onClick={handleDelete} variant="primary" tone="critical">
 						Confirm Delete

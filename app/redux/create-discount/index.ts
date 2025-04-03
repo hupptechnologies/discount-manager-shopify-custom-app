@@ -135,11 +135,11 @@ export const fetchProductVariantsAsync = createAsyncThunk<
 					return fulfillWithValue({ variants: variants?.variants?.edges });
 				}
 				return fulfillWithValue({
-					variants: []
+					variants: [],
 				});
 			}
 			return fulfillWithValue({
-				variants: []
+				variants: [],
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;

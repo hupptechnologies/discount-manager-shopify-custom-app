@@ -15,13 +15,13 @@ export interface AdvanceDiscountRuleProps {
 	queryType: QueryType;
 	newRule: DiscountRule;
 	handleSaveBarOpen: any;
-};
+}
 
 const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	newRule,
 	setNewRule,
 	queryType,
-	handleSaveBarOpen
+	handleSaveBarOpen,
 }) => {
 	return (
 		<Card>

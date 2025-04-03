@@ -116,15 +116,21 @@ interface CreateBxgyDiscountResponse {
 						endsAt: string;
 						customerBuys: {
 							items: {
-								products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; }
-								collections: { add: string[]; remove: string[]; }
+								products: {
+									productVariantsToAdd: string[];
+									productVariantsToRemove: string[];
+								};
+								collections: { add: string[]; remove: string[] };
 							}[];
 							value: { quantity: string };
 						};
 						customerGets: {
 							items: {
-								products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; }
-								collections: { add: string[]; remove: string[]; }
+								products: {
+									productVariantsToAdd: string[];
+									productVariantsToRemove: string[];
+								};
+								collections: { add: string[]; remove: string[] };
 							}[];
 							value: {
 								discountOnQuantity: {
@@ -152,15 +158,21 @@ interface CreateBxgyDiscountResponse {
 						endsAt: string;
 						customerBuys: {
 							items: {
-								products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; }
-								collections: { add: string[]; remove: string[]; }
+								products: {
+									productVariantsToAdd: string[];
+									productVariantsToRemove: string[];
+								};
+								collections: { add: string[]; remove: string[] };
 							}[];
 							value: { quantity: string };
 						};
 						customerGets: {
 							items: {
-								products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; }
-								collections: { add: string[]; remove: string[]; }
+								products: {
+									productVariantsToAdd: string[];
+									productVariantsToRemove: string[];
+								};
+								collections: { add: string[]; remove: string[] };
 							}[];
 							value: {
 								discountOnQuantity: {
@@ -210,16 +222,25 @@ export const createBuyXGetYDiscountCode = async (
 	shop: string,
 	dataPayload: CreateBuyxGetYDiscountCodeInput,
 	type: string,
-	method: string
+	method: string,
 ): Promise<{ success: boolean; message: string }> => {
-	const { title, code, startsAt, endsAt, usageLimit, customerBuys, customerGets, advancedRule } = dataPayload;
+	const {
+		title,
+		code,
+		startsAt,
+		endsAt,
+		usageLimit,
+		customerBuys,
+		customerGets,
+		advancedRule,
+	} = dataPayload;
 
 	try {
 		if (!customerGets.percentage || !code) {
 			return {
 				success: false,
-				message: 'Required fields percentage, code'
-			}
+				message: 'Required fields percentage, code',
+			};
 		}
 		const checkCodeExist = await prisma.discountCode.count({
 			where: { shop, code },
@@ -254,24 +275,24 @@ export const createBuyXGetYDiscountCode = async (
 						items: {
 							...(customerBuys.collectionIDs.length > 0 && {
 								collections: {
-									add: customerBuys.collectionIDs
-								}
+									add: customerBuys.collectionIDs,
+								},
 							}),
 							...(customerBuys.removeCollectionIDs.length > 0 && {
 								collections: {
-									remove: customerBuys.removeCollectionIDs
-								}
+									remove: customerBuys.removeCollectionIDs,
+								},
 							}),
 							...(customerBuys.productIDs.length > 0 && {
 								products: {
 									productVariantsToAdd: customerBuys.productIDs,
-								}
+								},
 							}),
 							...(customerBuys.removeProductIDs.length > 0 && {
 								products: {
-									productVariantsToRemove: customerBuys.removeProductIDs
-								}
-							})
+									productVariantsToRemove: customerBuys.removeProductIDs,
+								},
+							}),
 						},
 						value: {
 							quantity: customerBuys.quantity,
@@ -281,24 +302,24 @@ export const createBuyXGetYDiscountCode = async (
 						items: {
 							...(customerGets.collectionIDs.length > 0 && {
 								collections: {
-									add: customerGets.collectionIDs
-								}
+									add: customerGets.collectionIDs,
+								},
 							}),
 							...(customerGets.removeCollectionIDs.length > 0 && {
 								collections: {
-									remove: customerGets.removeCollectionIDs
-								}
+									remove: customerGets.removeCollectionIDs,
+								},
 							}),
 							...(customerGets.productIDs.length > 0 && {
 								products: {
-									productVariantsToAdd: customerGets.productIDs
-								}
+									productVariantsToAdd: customerGets.productIDs,
+								},
 							}),
 							...(customerGets.removeProductIDs.length > 0 && {
 								products: {
-									productVariantsToRemove: customerGets.removeProductIDs
-								}
-							})
+									productVariantsToRemove: customerGets.removeProductIDs,
+								},
+							}),
 						},
 						value: {
 							discountOnQuantity: {
@@ -328,24 +349,24 @@ export const createBuyXGetYDiscountCode = async (
 						items: {
 							...(customerBuys.collectionIDs.length > 0 && {
 								collections: {
-									add: customerBuys.collectionIDs
-								}
+									add: customerBuys.collectionIDs,
+								},
 							}),
 							...(customerBuys.removeCollectionIDs.length > 0 && {
 								collections: {
-									remove: customerBuys.removeCollectionIDs
-								}
+									remove: customerBuys.removeCollectionIDs,
+								},
 							}),
 							...(customerBuys.productIDs.length > 0 && {
 								products: {
 									productVariantsToAdd: customerBuys.productIDs,
-								}
+								},
 							}),
 							...(customerBuys.removeProductIDs.length > 0 && {
 								products: {
-									productVariantsToRemove: customerBuys.removeProductIDs
-								}
-							})
+									productVariantsToRemove: customerBuys.removeProductIDs,
+								},
+							}),
 						},
 						value: {
 							quantity: customerBuys.quantity,
@@ -355,24 +376,24 @@ export const createBuyXGetYDiscountCode = async (
 						items: {
 							...(customerGets.collectionIDs.length > 0 && {
 								collections: {
-									add: customerGets.collectionIDs
-								}
+									add: customerGets.collectionIDs,
+								},
 							}),
 							...(customerGets.removeCollectionIDs.length > 0 && {
 								collections: {
-									remove: customerGets.removeCollectionIDs
-								}
+									remove: customerGets.removeCollectionIDs,
+								},
 							}),
 							...(customerGets.productIDs.length > 0 && {
 								products: {
-									productVariantsToAdd: customerGets.productIDs
-								}
+									productVariantsToAdd: customerGets.productIDs,
+								},
 							}),
 							...(customerGets.removeProductIDs.length > 0 && {
 								products: {
-									productVariantsToRemove: customerGets.removeProductIDs
-								}
-							})
+									productVariantsToRemove: customerGets.removeProductIDs,
+								},
+							}),
 						},
 						value: {
 							discountOnQuantity: {
@@ -382,12 +403,17 @@ export const createBuyXGetYDiscountCode = async (
 								quantity: customerGets.quantity,
 							},
 						},
-					}
+					},
 				},
 			},
 		};
 
-		const responseBuyxGetY: CreateBxgyDiscountResponse = await getDetailUsingGraphQL(shop, accessToken, method === 'custom' ? data: dataAuto);
+		const responseBuyxGetY: CreateBxgyDiscountResponse =
+			await getDetailUsingGraphQL(
+				shop,
+				accessToken,
+				method === 'custom' ? data : dataAuto,
+			);
 
 		if (responseBuyxGetY.data.errors) {
 			throw new Error(
@@ -395,7 +421,11 @@ export const createBuyXGetYDiscountCode = async (
 			);
 		}
 
-		const discountCodeData = method === 'custom' ? responseBuyxGetY.data?.data?.discountCodeBxgyCreate?.codeDiscountNode : responseBuyxGetY.data?.data?.discountAutomaticBxgyCreate?.automaticDiscountNode;
+		const discountCodeData =
+			method === 'custom'
+				? responseBuyxGetY.data?.data?.discountCodeBxgyCreate?.codeDiscountNode
+				: responseBuyxGetY.data?.data?.discountAutomaticBxgyCreate
+						?.automaticDiscountNode;
 
 		if (discountCodeData) {
 			await prisma.discountCode.create({
@@ -410,7 +440,10 @@ export const createBuyXGetYDiscountCode = async (
 					usageLimit: usageLimit,
 					discountType: 'PERCENT',
 					discountMethod: method === 'custom' ? 'CUSTOM' : 'AUTOMATIC',
-					advancedRule: advancedRule !== null && advancedRule !== undefined ? advancedRule : undefined,
+					advancedRule:
+						advancedRule !== null && advancedRule !== undefined
+							? advancedRule
+							: undefined,
 					isActive: true,
 					discountScope: type === 'buyXgetY' ? 'BUYXGETY' : 'PRODUCT',
 				},

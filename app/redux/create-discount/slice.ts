@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchAllCollectionsAsync, fetchAllProductsAsync, fetchProductVariantsAsync } from './index';
+import {
+	fetchAllCollectionsAsync,
+	fetchAllProductsAsync,
+	fetchProductVariantsAsync,
+} from './index';
 
 export interface VariantItem {
 	node: {
@@ -9,8 +13,8 @@ export interface VariantItem {
 		inventoryQuantity: number;
 		image: {
 			url: string;
-		}
-	}
+		};
+	};
 }
 
 interface PageInfo {
@@ -43,7 +47,7 @@ const initialState: CreateDiscountState = {
 	totalProductCount: 0,
 	totalCollectionCount: 0,
 	variants: [],
-	isFetchProductVariants: false
+	isFetchProductVariants: false,
 };
 
 const createDiscountSlice = createSlice({
@@ -87,10 +91,13 @@ const createDiscountSlice = createSlice({
 		builder.addCase(fetchProductVariantsAsync.pending, (state) => {
 			state.isFetchProductVariants = true;
 		});
-		builder.addCase(fetchProductVariantsAsync.fulfilled, (state, { payload }) => {
-			state.isFetchProductVariants = false;
-			state.variants = payload.variants;
-		});
+		builder.addCase(
+			fetchProductVariantsAsync.fulfilled,
+			(state, { payload }) => {
+				state.isFetchProductVariants = false;
+				state.variants = payload.variants;
+			},
+		);
 		builder.addCase(fetchProductVariantsAsync.rejected, (state) => {
 			state.isFetchProductVariants = false;
 			state.variants = [];

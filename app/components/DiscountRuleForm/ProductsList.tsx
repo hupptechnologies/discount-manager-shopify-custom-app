@@ -27,29 +27,33 @@ interface Product {
 	image?: string;
 	disabled?: boolean;
 	variantsCount: object | null;
-};
+}
 
 interface ProductRow extends Product {
 	position: number;
-};
+}
 
 interface ProductGroup {
 	id: string;
 	position: number;
 	products: ProductRow[];
-};
+}
 
 interface Groups {
 	[key: string]: ProductGroup;
-};
+}
 
 interface ProductProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	selected: number;
-};
+}
 
-const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected }) => {
+const ProductsList: React.FC<ProductProps> = ({
+	newRule,
+	setNewRule,
+	selected,
+}) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
 	const { products, pageInfo, totalProductCount, isLoading } = useSelector(
@@ -76,8 +80,11 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 		dispatch(
 			fetchAllProductsAsync({
 				shopName: shopify.config.shop || '',
-				query: newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo,
-				id: ''
+				query:
+					newRule?.searchType === 'one'
+						? newRule?.searchOne
+						: newRule?.searchTwo,
+				id: '',
 			}),
 		);
 	}, [newRule?.searchOne, newRule?.searchTwo]);
@@ -99,7 +106,7 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 							? newRule?.searchOne
 							: newRule?.searchTwo,
 					after: cursor,
-					id: ''
+					id: '',
 				}),
 			);
 			setCurrentPage((prevPage) => prevPage + 1);
@@ -116,7 +123,7 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 							? newRule?.searchOne
 							: newRule?.searchTwo,
 					before: prevCursor,
-					id: ''
+					id: '',
 				}),
 			);
 			setCurrentPage((prevPage) => prevPage - 1);
@@ -168,7 +175,8 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 		);
 	useEffect(() => {
 		if (selectedResources.length > 0) {
-			const selectedObjects = rowsProduct.filter((row) => selectedResources.includes(row.id))
+			const selectedObjects = rowsProduct
+				.filter((row) => selectedResources.includes(row.id))
 				.map((row) => ({
 					node: {
 						id: row.id,
@@ -182,13 +190,28 @@ const ProductsList: React.FC<ProductProps> = ({ newRule, setNewRule, selected })
 							},
 						},
 					},
-				}
-			));
+				}));
 			if (selected === 0) {
-				setNewRule({ ...newRule, customerGets: { ...newRule.customerGets, collectionIDs: [], productIDs: selectedResources, items: selectedObjects } });
+				setNewRule({
+					...newRule,
+					customerGets: {
+						...newRule.customerGets,
+						collectionIDs: [],
+						productIDs: selectedResources,
+						items: selectedObjects,
+					},
+				});
 			}
 			if (selected === 1) {
-				setNewRule({ ...newRule, customerBuys: { ...newRule.customerBuys, collectionIDs: [], productIDs: selectedResources, items: selectedObjects } });
+				setNewRule({
+					...newRule,
+					customerBuys: {
+						...newRule.customerBuys,
+						collectionIDs: [],
+						productIDs: selectedResources,
+						items: selectedObjects,
+					},
+				});
 			}
 		}
 	}, [selectedResources, selected]);

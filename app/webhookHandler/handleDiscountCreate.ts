@@ -70,7 +70,7 @@ interface GraphQLResponse {
 
 export const handleDiscountCreate = async (
 	payload: PayloadDiscountCreate,
-	shop: string
+	shop: string,
 ): Promise<void> => {
 	try {
 		const response = await prisma.session.findMany({
@@ -87,7 +87,11 @@ export const handleDiscountCreate = async (
 				ID: payload.admin_graphql_api_id,
 			},
 		};
-		const graphQlResponse: GraphQLResponse = await getDetailUsingGraphQL(shop, accessToken, data);
+		const graphQlResponse: GraphQLResponse = await getDetailUsingGraphQL(
+			shop,
+			accessToken,
+			data,
+		);
 
 		const {
 			discountClass,
@@ -112,7 +116,14 @@ export const handleDiscountCreate = async (
 				usageLimit: usageLimit ? usageLimit : 0,
 				isActive: true,
 				discountMethod: 'CUSTOM',
-				discountScope: discountClass === 'PRODUCT' ? 'PRODUCT' : discountClass === 'ORDER' ? 'ORDER' : discountClass === 'SHIPPING' ? 'SHIPPING' : 'BUYXGETY' ,
+				discountScope:
+					discountClass === 'PRODUCT'
+						? 'PRODUCT'
+						: discountClass === 'ORDER'
+							? 'ORDER'
+							: discountClass === 'SHIPPING'
+								? 'SHIPPING'
+								: 'BUYXGETY',
 			},
 		});
 	} catch (error) {

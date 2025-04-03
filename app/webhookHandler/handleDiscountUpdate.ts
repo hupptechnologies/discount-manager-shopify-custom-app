@@ -70,7 +70,7 @@ interface GraphQLResponse {
 
 export const handleDiscountUpdate = async (
 	payload: PayloadDiscountCreate,
-	shop: string
+	shop: string,
 ): Promise<void> => {
 	try {
 		const discountCodeResponse = await prisma.discountCode.findFirst({
@@ -95,7 +95,11 @@ export const handleDiscountUpdate = async (
 				ID: payload.admin_graphql_api_id,
 			},
 		};
-		const graphQlResponse: GraphQLResponse = await getDetailUsingGraphQL(shop, accessToken, data);
+		const graphQlResponse: GraphQLResponse = await getDetailUsingGraphQL(
+			shop,
+			accessToken,
+			data,
+		);
 
 		const {
 			discountClass,
@@ -114,7 +118,11 @@ export const handleDiscountUpdate = async (
 		const discountCode = edges[0]?.node?.code;
 
 		await prisma.discountCode.update({
-			where: { shop, id: discountCodeResponse?.id, discountId: payload.admin_graphql_api_id },
+			where: {
+				shop,
+				id: discountCodeResponse?.id,
+				discountId: payload.admin_graphql_api_id,
+			},
 			data: {
 				code: discountCode,
 				title: title,
@@ -124,7 +132,14 @@ export const handleDiscountUpdate = async (
 				endDate: new Date(endsAt),
 				discountAmount: Number(value.percentage) * 100,
 				discountType: 'PERCENT',
-				discountScope: discountClass === 'PRODUCT' ? 'PRODUCT' : discountClass === 'ORDER' ? 'ORDER' : discountClass === 'SHIPPING' ? 'SHIPPING' : 'BUYXGETY' ,
+				discountScope:
+					discountClass === 'PRODUCT'
+						? 'PRODUCT'
+						: discountClass === 'ORDER'
+							? 'ORDER'
+							: discountClass === 'SHIPPING'
+								? 'SHIPPING'
+								: 'BUYXGETY',
 				usageLimit: usageLimit || 0,
 				isActive: true,
 			},

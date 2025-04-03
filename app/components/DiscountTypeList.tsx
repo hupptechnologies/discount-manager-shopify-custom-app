@@ -15,11 +15,11 @@ import {
 	DeliveryIcon,
 } from '@shopify/polaris-icons';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'app/redux/store';
+import type { AppDispatch } from 'app/redux/store';
 import { handleResetGetDiscountCode } from 'app/redux/discount/slice';
 
 const DiscountTypeList = () => {
-	const dispatch = useDispatch<AppDispatch>()
+	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 	const discountTypes = [
 		{

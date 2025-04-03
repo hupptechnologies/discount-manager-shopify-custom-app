@@ -16,7 +16,7 @@ import { getYearMonthDay } from 'app/utils/json';
 interface ActiveDatesProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	newRule: DiscountRule;
-};
+}
 
 const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 	const [popoverStartDateActive, setPopoverStartDateActive] = useState(true);
@@ -40,7 +40,9 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 								}
 								autoComplete="off"
 								prefix={<Icon source={CalendarIcon} tone="base" />}
-								onFocus={() => setPopoverStartDateActive(!popoverStartDateActive)}
+								onFocus={() =>
+									setPopoverStartDateActive(!popoverStartDateActive)
+								}
 							/>
 						}
 						popoverActive={popoverStartDateActive}
@@ -70,7 +72,9 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule }) => {
 								}
 								autoComplete="off"
 								prefix={<Icon source={ClockIcon} tone="base" />}
-								onFocus={() => setPopoverStartTimeActive(!popoverStartTimeActive)}
+								onFocus={() =>
+									setPopoverStartTimeActive(!popoverStartTimeActive)
+								}
 							/>
 						}
 						popoverActive={popoverStartTimeActive}

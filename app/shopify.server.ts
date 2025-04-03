@@ -26,31 +26,31 @@ const shopify = shopifyApp({
 		: {}),
 	hooks: {
 		afterAuth: async ({ session }) => {
-			shopify.registerWebhooks({session});
+			shopify.registerWebhooks({ session });
 		},
 	},
 	webhooks: {
 		APP_UNINSTALLED: {
-		  deliveryMethod: DeliveryMethod.Http,
-		  callbackUrl: '/webhooks/app/uninstalled'
+			deliveryMethod: DeliveryMethod.Http,
+			callbackUrl: '/webhooks/app/uninstalled',
 		},
 		DISCOUNTS_CREATE: {
-		  deliveryMethod: DeliveryMethod.Http,
-		  callbackUrl: '/webhooks/app/discounts/create'
+			deliveryMethod: DeliveryMethod.Http,
+			callbackUrl: '/webhooks/app/discounts/create',
 		},
 		DISCOUNTS_UPDATE: {
-		  deliveryMethod: DeliveryMethod.Http,
-		  callbackUrl: '/webhooks/app/discounts/update'
+			deliveryMethod: DeliveryMethod.Http,
+			callbackUrl: '/webhooks/app/discounts/update',
 		},
 		DISCOUNTS_DELETE: {
 			deliveryMethod: DeliveryMethod.Http,
-			callbackUrl: '/webhooks/app/discounts/delete'
+			callbackUrl: '/webhooks/app/discounts/delete',
 		},
 		ORDERS_CREATE: {
 			deliveryMethod: DeliveryMethod.Http,
-			callbackUrl: '/webhooks/app/orders/create'
-		}
-	}
+			callbackUrl: '/webhooks/app/orders/create',
+		},
+	},
 });
 
 export default shopify;

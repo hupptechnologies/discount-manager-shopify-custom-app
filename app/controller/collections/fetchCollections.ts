@@ -1,5 +1,5 @@
 import prisma from '../../db.server';
-import { Collection } from 'app/routes/api.collections/route';
+import type { Collection } from 'app/routes/api.collections/route';
 import { getDetailUsingGraphQL } from 'app/service/product';
 
 const GET_COLLECTIONS_QUERY = `

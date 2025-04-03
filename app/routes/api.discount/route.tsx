@@ -42,13 +42,18 @@ export const loader = async ({
 	const shop = url.searchParams.get('shop') ?? '';
 	const page = parseInt(url.searchParams.get('page') ?? '1', 10);
 	const pageSize = parseInt(url.searchParams.get('pageSize') ?? '10', 10);
-	const status = url.searchParams.get('status') as 'active' | 'pending' | 'expired';
+	const status = url.searchParams.get('status') as
+		| 'active'
+		| 'pending'
+		| 'expired';
 	const usedCountGreaterThan = parseInt(
 		url.searchParams.get('usedCountGreaterThan') ?? '0',
 		10,
 	);
 	const searchQuery = url.searchParams.get('searchQuery') ?? '';
-	const orderByCreatedAt = url.searchParams.get('orderByCreatedAt') as 'asc' | 'desc';
+	const orderByCreatedAt = url.searchParams.get('orderByCreatedAt') as
+		| 'asc'
+		| 'desc';
 	const id = Number(url.searchParams.get('id'));
 	const discountType = url.searchParams.get('discountType') ?? '';
 	const method = url.searchParams.get('method');
@@ -58,7 +63,7 @@ export const loader = async ({
 			id,
 			shop,
 			discountType,
-			method
+			method,
 		);
 		return json<getDiscountCodeResponse>(getDiscountCodeResponse);
 	}
@@ -95,13 +100,21 @@ export const action = async ({
 			});
 		}
 		if (type === 'buyXgetY') {
-			const buyXGetYResponse = await updateBuyXGetYDiscountCode(shop, dataPayload, id);
+			const buyXGetYResponse = await updateBuyXGetYDiscountCode(
+				shop,
+				dataPayload,
+				id,
+			);
 			return json<ActionResponse>(buyXGetYResponse);
 		}
-		const updateBasicDiscountCodeResponse = await updateBasicDiscountCode(shop, dataPayload, id);
+		const updateBasicDiscountCodeResponse = await updateBasicDiscountCode(
+			shop,
+			dataPayload,
+			id,
+		);
 		return json<ActionResponse>(updateBasicDiscountCodeResponse);
 	}
-	if (request.method === 'DELETE') {		
+	if (request.method === 'DELETE') {
 		if (type === 'all_code_delete') {
 			const deleteAllDiscountCode = await deleteAllDiscountCodes(shop);
 			return json<ActionResponse>(deleteAllDiscountCode);
@@ -111,10 +124,20 @@ export const action = async ({
 	}
 	if (request.method === 'POST') {
 		if (type === 'buyXgetY') {
-			const buyXGetYResponse = await createBuyXGetYDiscountCode(shop, dataPayload, type, method);
+			const buyXGetYResponse = await createBuyXGetYDiscountCode(
+				shop,
+				dataPayload,
+				type,
+				method,
+			);
 			return json<ActionResponse>(buyXGetYResponse);
 		}
-		const discountCodeResponse = await createDiscountCode(shop, dataPayload, type, method);
+		const discountCodeResponse = await createDiscountCode(
+			shop,
+			dataPayload,
+			type,
+			method,
+		);
 		return json<ActionResponse>(discountCodeResponse);
 	}
 	return json<ActionResponse>({
