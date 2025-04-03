@@ -11,9 +11,10 @@ import {
 	Text,
 	TextField,
 } from '@shopify/polaris';
-import { generateDiscountCode } from 'app/utils/json';
+import Placeholder from '../Placeholder';
 import type { DiscountRule } from './DiscountRuleForm';
 import type { QueryType } from 'app/routes/app.create-discount';
+import { generateDiscountCode } from 'app/utils/json';
 
 interface DiscountCodeGenProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -23,6 +24,7 @@ interface DiscountCodeGenProps {
 	queryType: QueryType;
 	heading: string;
 	newRule: DiscountRule;
+	isEdit: boolean;
 };
 
 const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
@@ -33,6 +35,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 	setNewRule,
 	queryType,
 	handleSaveBarOpen,
+	isEdit
 }) => {
 	return (
 		<Card>
@@ -42,25 +45,29 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 				</Text>
 				<Text as="p">{queryType} discount</Text>
 			</InlineStack>
-			<br />
+			<Placeholder height='5px' />
 			<BlockStack gap="200">
-				<Text variant="bodyMd" as="h3">
-					Method
-				</Text>
-				<ButtonGroup variant="segmented">
-					<Button
-						variant={activeButtonIndex === 0 ? 'primary' : 'secondary'}
-						onClick={() => handleButtonClick(0)}
-					>
-						Discount code
-					</Button>
-					<Button
-						variant={activeButtonIndex === 1 ? 'primary' : 'secondary'}
-						onClick={() => handleButtonClick(1)}
-					>
-						Automatic discount
-					</Button>
-				</ButtonGroup>
+				{!isEdit &&
+					<Text variant="bodyMd" as="h3">
+						Method
+					</Text>
+				}
+				{!isEdit &&
+					<ButtonGroup variant="segmented">
+						<Button
+							variant={activeButtonIndex === 0 ? 'primary' : 'secondary'}
+							onClick={() => handleButtonClick(0)}
+						>
+							Discount code
+						</Button>
+						<Button
+							variant={activeButtonIndex === 1 ? 'primary' : 'secondary'}
+							onClick={() => handleButtonClick(1)}
+						>
+							Automatic discount
+						</Button>
+					</ButtonGroup>
+				}
 				<TextField
 					label="Title"
 					helpText="The name of the discount the codes will be grouped under."
@@ -74,7 +81,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					}
 				/>
 			</BlockStack>
-			<br />
+			<Placeholder height='5px' />
 			<BlockStack gap="100">
 				<RadioButton
 					label="Generate random code"
@@ -99,7 +106,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					}
 				/>
 			</BlockStack>
-			<br />
+			<Placeholder height='5px' />
 			{newRule.isCustom && (
 				<Box>
 					<InlineStack align="space-between" blockAlign="center" gap="200">

@@ -27,6 +27,7 @@ import {
 	fetchAllDiscountCodesAsync,
 	getDiscountCodeByIdAsync,
 } from 'app/redux/discount';
+import Placeholder from '../Placeholder';
 import { formatDateWithTime } from 'app/utils/json';
 
 interface AnalyticsTableProps {
@@ -366,7 +367,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 						code? this will remove all related data.
 					</Text>
 				</Layout.Section>
-				<br />
+				<Placeholder height='5px' />
 				<TitleBar title="Delete Confirmation">
 					<button onClick={handleDelete} variant="primary" tone="critical">
 						Confirm Delete

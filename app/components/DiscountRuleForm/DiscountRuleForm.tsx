@@ -27,6 +27,7 @@ import CollectionList from './CollectionList';
 import ProductsList from './ProductsList';
 import DiscountBuyXGetY from './DiscountBuyXGetY';
 import UsageLimit from './UsageLimit';
+import Placeholder from '../Placeholder';
 import { convertToLocalTime, formatDateWithTimeZone } from 'app/utils/json';
 
 export interface DiscountRule {
@@ -578,8 +579,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					handleButtonClick={handleButtonClick}
 					queryType={queryType}
 					handleSaveBarOpen={handleSaveBarOpen}
+					isEdit={isEdit}
 				/>
-				<br />
+				<Placeholder height='5px' />
 				{['buyXgetY'].includes(queryType as string) ? (
 					<DiscountBuyXGetY
 						handleOpen={handleOpen}
@@ -601,16 +603,16 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						handleSaveBarOpen={handleSaveBarOpen}
 					/>
 				)}
-				<br />
+				<Placeholder height='5px' />
 				<AdvanceDiscountRules
 					queryType={queryType}
 					newRule={newRule}
 					setNewRule={setNewRule}
 					handleSaveBarOpen={handleSaveBarOpen}
 				/>
-				<br />
+				<Placeholder height='5px' />
 				<UsageLimit newRule={newRule} setNewRule={setNewRule} />
-				<br />
+				<Placeholder height='5px' />
 				<ActiveDates newRule={newRule} setNewRule={setNewRule} />
 			</Layout.Section>
 			<Layout.Section variant="oneThird">
