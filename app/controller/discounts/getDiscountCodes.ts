@@ -153,16 +153,20 @@ export const getDiscountCodes = async (
 
 		const discountCodesWithUsageCount = await Promise.all(
 			discountCodes.map(async (discountCode) => {
-				const data = {
-					query: GET_BASIC_DISCOUNT_CODE_USAGE_COUNT_QUERY,
-					variables: {
-						ID: discountCode.discountId
+				let asyncUsageCount = 0;
+				if (discountCode.discountId.includes('DiscountCodeNode')) {
+					const data = {
+						query: GET_BASIC_DISCOUNT_CODE_USAGE_COUNT_QUERY,
+						variables: {
+							ID: discountCode.discountId
+						}
 					}
+					const usageCount = await getDetailUsingGraphQL(shop, accessToken, data);
+					asyncUsageCount = usageCount?.data?.data?.codeDiscountNode?.codeDiscount?.asyncUsageCount || 0;
 				}
-				const usageCount = await getDetailUsingGraphQL(shop, accessToken, data);
 				return {
 					...discountCode,
-					asyncUsageCount: usageCount?.data?.data?.codeDiscountNode?.codeDiscount?.asyncUsageCount || 0
+					asyncUsageCount,
 				};
 			})
 		);

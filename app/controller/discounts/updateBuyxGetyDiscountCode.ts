@@ -39,7 +39,7 @@ interface DiscountCodeBxgyInput {
 	endsAt: string;
 	startsAt: string;
 	title: string;
-	usesPerOrderLimit: string;
+	usesPerOrderLimit: number;
 	customerBuys: {
 		items: {
 			collections: {
@@ -74,7 +74,7 @@ interface DiscountCodeAutomaticBxgyInput {
 	endsAt: string;
 	startsAt: string;
 	title: string;
-	usesPerOrderLimit: string;
+	usesPerOrderLimit: number;
 	customerBuys: {
 		items: {
 			collections: {
@@ -179,7 +179,7 @@ export const updateBuyXGetYDiscountCode = async (
 			where: { shop, id },
 		});
 
-		const isCustom = findDiscountExist?.discountId.includes('DiscountCodeNode');
+		const isCustom = findDiscountExist?.discountMethod === 'CUSTOM';
 
 		if (findDiscountExist) {
 			const response = await prisma.session.findMany({
@@ -200,7 +200,7 @@ export const updateBuyXGetYDiscountCode = async (
 						endsAt,
 						startsAt,
 						title,
-						usesPerOrderLimit: String(usageLimit),
+						usesPerOrderLimit: usageLimit,
 						customerBuys: {
 							items: {
 								...((customerBuys.collectionIDs.length > 0 || customerBuys.removeCollectionIDs.length > 0) && {
@@ -272,7 +272,7 @@ export const updateBuyXGetYDiscountCode = async (
 						endsAt,
 						startsAt,
 						title,
-						usesPerOrderLimit: String(usageLimit),
+						usesPerOrderLimit: usageLimit,
 						customerBuys: {
 							items: {
 								...((customerBuys.collectionIDs.length > 0 || customerBuys.removeCollectionIDs.length > 0) && {

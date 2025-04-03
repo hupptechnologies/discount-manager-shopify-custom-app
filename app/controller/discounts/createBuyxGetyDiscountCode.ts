@@ -254,13 +254,21 @@ export const createBuyXGetYDiscountCode = async (
 						items: {
 							...(customerBuys.collectionIDs.length > 0 && {
 								collections: {
-									add: customerBuys.collectionIDs,
+									add: customerBuys.collectionIDs
+								}
+							}),
+							...(customerBuys.removeCollectionIDs.length > 0 && {
+								collections: {
 									remove: customerBuys.removeCollectionIDs
 								}
 							}),
 							...(customerBuys.productIDs.length > 0 && {
 								products: {
 									productVariantsToAdd: customerBuys.productIDs,
+								}
+							}),
+							...(customerBuys.removeProductIDs.length > 0 && {
+								products: {
 									productVariantsToRemove: customerBuys.removeProductIDs
 								}
 							})
@@ -273,13 +281,21 @@ export const createBuyXGetYDiscountCode = async (
 						items: {
 							...(customerGets.collectionIDs.length > 0 && {
 								collections: {
-									add: customerGets.collectionIDs,
+									add: customerGets.collectionIDs
+								}
+							}),
+							...(customerGets.removeCollectionIDs.length > 0 && {
+								collections: {
 									remove: customerGets.removeCollectionIDs
 								}
 							}),
 							...(customerGets.productIDs.length > 0 && {
 								products: {
-									productVariantsToAdd: customerGets.productIDs,
+									productVariantsToAdd: customerGets.productIDs
+								}
+							}),
+							...(customerGets.removeProductIDs.length > 0 && {
+								products: {
 									productVariantsToRemove: customerGets.removeProductIDs
 								}
 							})
@@ -312,13 +328,21 @@ export const createBuyXGetYDiscountCode = async (
 						items: {
 							...(customerBuys.collectionIDs.length > 0 && {
 								collections: {
-									add: customerBuys.collectionIDs,
+									add: customerBuys.collectionIDs
+								}
+							}),
+							...(customerBuys.removeCollectionIDs.length > 0 && {
+								collections: {
 									remove: customerBuys.removeCollectionIDs
 								}
 							}),
 							...(customerBuys.productIDs.length > 0 && {
 								products: {
 									productVariantsToAdd: customerBuys.productIDs,
+								}
+							}),
+							...(customerBuys.removeProductIDs.length > 0 && {
+								products: {
 									productVariantsToRemove: customerBuys.removeProductIDs
 								}
 							})
@@ -331,13 +355,21 @@ export const createBuyXGetYDiscountCode = async (
 						items: {
 							...(customerGets.collectionIDs.length > 0 && {
 								collections: {
-									add: customerGets.collectionIDs,
+									add: customerGets.collectionIDs
+								}
+							}),
+							...(customerGets.removeCollectionIDs.length > 0 && {
+								collections: {
 									remove: customerGets.removeCollectionIDs
 								}
 							}),
 							...(customerGets.productIDs.length > 0 && {
 								products: {
-									productVariantsToAdd: customerGets.productIDs,
+									productVariantsToAdd: customerGets.productIDs
+								}
+							}),
+							...(customerGets.removeProductIDs.length > 0 && {
+								products: {
 									productVariantsToRemove: customerGets.removeProductIDs
 								}
 							})

@@ -107,8 +107,8 @@ export const handleDiscountUpdate = async (
 			customerGets: { value },
 		} = graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount;
 
-		if (!edges.length) {
-			throw new Error('No discount code found');
+		if (!edges) {
+			return;
 		}
 
 		const discountCode = edges[0]?.node?.code;
