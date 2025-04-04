@@ -498,12 +498,13 @@ interface DiscountCodeBxgy {
 	usesPerOrderLimit: number | null;
 	appliesOncePerCustomer: boolean;
 }
-interface DiscountCodeBasic {
+export interface DiscountCodeBasic {
 	__typename: string;
 	status: string;
 	title: string;
 	startsAt: string;
 	endsAt: string;
+	discountClass: string;
 	codes: {
 		edges: {
 			node: {

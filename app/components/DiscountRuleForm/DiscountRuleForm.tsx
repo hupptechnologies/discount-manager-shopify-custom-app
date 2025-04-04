@@ -807,7 +807,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			<Layout.Section variant="oneThird">
 				<Summary newRule={newRule} queryType={queryType} />
 			</Layout.Section>
-			<Modal id="product-collection-modal">
+			{(queryType === 'buyXgetY' || queryType === 'products') && <Modal id="product-collection-modal">
 				{newRule?.buyItemFrom === 'collection' && selected === 1 && (
 					<CollectionList
 						selectedItemsArray={newRule?.customerBuys?.collectionIDs}
@@ -846,7 +846,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					</button>
 					<button onClick={handleClose}>Cancel</button>
 				</TitleBar>
-			</Modal>
+			</Modal>}
 			<SaveBar id="save-bar">
 				<button variant="primary" onClick={handleSave}></button>
 				<button onClick={handleDiscard}></button>

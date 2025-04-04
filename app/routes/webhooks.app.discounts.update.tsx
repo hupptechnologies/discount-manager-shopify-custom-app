@@ -16,8 +16,6 @@ export const action = async ({
 	const { shop, topic, payload } = await authenticate.webhook(request);
 	const typedPayload = payload as WebhookPayload;
 	console.log(`Received ${topic} webhook for ${shop}`);
-	if (!payload?.admin_graphql_api_id?.includes('DiscountCodeNode')) {
-		handleDiscountUpdate(typedPayload, shop);
-	}
+	handleDiscountUpdate(typedPayload, shop);
 	return new Response();
 };

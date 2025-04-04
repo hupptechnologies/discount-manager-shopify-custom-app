@@ -1,3 +1,4 @@
+import { DiscountCodeBasic } from 'app/controller/discounts/getDiscountCodeById';
 import prisma from '../db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
 
@@ -32,6 +33,29 @@ query getDiscountCode($ID: ID!) {
 	}
 }`;
 
+const GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY = `
+query getDiscountCode($ID: ID!) {
+	automaticDiscountNode(id: $ID) {
+		id
+		automaticDiscount {
+			... on DiscountAutomaticBasic {
+				status
+				title
+				startsAt
+				endsAt
+				discountClass
+				customerGets {
+					value {
+						... on DiscountPercentage {
+							percentage
+						}
+					}
+				}
+			}
+		}
+	}
+}`;
+
 interface PayloadDiscountCreate {
 	admin_graphql_api_id: string;
 	title: string;
@@ -44,25 +68,12 @@ interface GraphQLResponse {
 	data: {
 		data: {
 			codeDiscountNode: {
-				codeDiscount: {
-					discountClass: string;
-					usageLimit: number;
-					title: string;
-					codes: {
-						edges: Array<{
-							node: {
-								code: string;
-							};
-						}>;
-					};
-					startsAt: string;
-					endsAt: string;
-					customerGets: {
-						value: {
-							percentage: number;
-						};
-					};
-				};
+				id: string;
+				codeDiscount: DiscountCodeBasic;
+			};
+			automaticDiscountNode: {
+				id: string;
+				automaticDiscount: DiscountCodeBasic;
 			};
 		};
 	};
@@ -73,6 +84,8 @@ export const handleDiscountUpdate = async (
 	shop: string,
 ): Promise<void> => {
 	try {
+		const isCustom = payload?.admin_graphql_api_id?.includes('DiscountCodeNode');
+
 		const discountCodeResponse = await prisma.discountCode.findFirst({
 			where: { shop, discountId: payload.admin_graphql_api_id },
 		});
@@ -90,7 +103,7 @@ export const handleDiscountUpdate = async (
 		}
 
 		const data = {
-			query: GET_BASIC_DISCOUNT_CODE_QUERY,
+			query: payload?.admin_graphql_api_id?.includes('DiscountCodeNode') ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
 				ID: payload.admin_graphql_api_id,
 			},
@@ -100,26 +113,20 @@ export const handleDiscountUpdate = async (
 			accessToken,
 			data,
 		);
+		
 		const {
 			discountClass,
-			usageLimit,
 			title,
-			codes: { edges },
 			startsAt,
 			endsAt,
 			customerGets: { value },
-		} = graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount;
-
-		if (!edges || edges.length === 0) {
-			console.error('No discount codes found in response', graphQlResponse);
-			return;
-		}
+		} = isCustom ? graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount : graphQlResponse?.data?.data?.automaticDiscountNode?.automaticDiscount;
 
 		if (!discountClass) {
 			console.error('Discount class is missing', graphQlResponse);
 		}
 
-		const discountCode = edges[0]?.node?.code;
+		const discountCode = graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount?.codes?.edges[0]?.node?.code;
 
 		await prisma.discountCode.update({
 			where: {
@@ -128,7 +135,7 @@ export const handleDiscountUpdate = async (
 				discountId: payload.admin_graphql_api_id,
 			},
 			data: {
-				code: discountCode,
+				code: isCustom ? discountCode : title,
 				title: title,
 				shop,
 				discountId: payload.admin_graphql_api_id,
@@ -144,7 +151,7 @@ export const handleDiscountUpdate = async (
 							: discountClass === 'SHIPPING'
 								? 'SHIPPING'
 								: 'BUYXGETY',
-				usageLimit: usageLimit || 0,
+				usageLimit: graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount?.usageLimit || 0,
 				isActive: true,
 			},
 		});
