@@ -100,7 +100,6 @@ export const handleDiscountUpdate = async (
 			accessToken,
 			data,
 		);
-
 		const {
 			discountClass,
 			usageLimit,
@@ -111,8 +110,13 @@ export const handleDiscountUpdate = async (
 			customerGets: { value },
 		} = graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount;
 
-		if (!edges) {
+		if (!edges || edges.length === 0) {
+			console.error('No discount codes found in response', graphQlResponse);
 			return;
+		}
+
+		if (!discountClass) {
+			console.error('Discount class is missing', graphQlResponse);
 		}
 
 		const discountCode = edges[0]?.node?.code;

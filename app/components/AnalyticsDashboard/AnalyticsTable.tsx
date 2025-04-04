@@ -159,10 +159,8 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				deleteAllDiscountCodeAsync({
 					shopName: shopify.config.shop || '',
 					type: deleteData.code,
-					callback (success) {
-						if (success) {
-							setCall(!call);
-						}
+					callback () {
+						setCall(!call);
 					},
 				}),
 			);
@@ -175,10 +173,8 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 						code: deleteData.code,
 						discountId: deleteData.discountId,
 					},
-					callback (success) {
-						if (success) {
-							setCall(!call);
-						}
+					callback () {
+						setCall(!call);
 					},
 				}),
 			);
@@ -202,13 +198,11 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				id: discountId,
 				discountType: type,
 				method: isCustom ? 'custom' : 'auto',
-				callback (success) {
-					if (success) {
-						setIsLoadingUpdate(false);
-						navigate(
-							`/app/update-discount?type=${type === 'BUYXGETY' ? 'buyXgetY' : type === 'PRODUCT' ? 'products' : type === 'ORDER' ? 'order' : 'shipping'}`,
-						);
-					}
+				callback () {
+					setIsLoadingUpdate(false);
+					navigate(
+						`/app/update-discount?type=${type === 'BUYXGETY' ? 'buyXgetY' : type === 'PRODUCT' ? 'products' : type === 'ORDER' ? 'order' : 'shipping'}`,
+					);
 				},
 			}),
 		);

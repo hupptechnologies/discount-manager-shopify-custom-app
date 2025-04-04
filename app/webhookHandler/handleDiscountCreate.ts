@@ -73,6 +73,18 @@ export const handleDiscountCreate = async (
 	shop: string,
 ): Promise<void> => {
 	try {
+		const existingDiscountCode = await prisma.discountCode.findFirst({
+			where: {
+				shop,
+				discountId: payload?.admin_graphql_api_id
+			},
+		});
+
+		if (existingDiscountCode) {
+			console.log('Discount code already exists:', existingDiscountCode);
+			return;
+		}
+
 		const response = await prisma.session.findMany({
 			where: { shop },
 		});
