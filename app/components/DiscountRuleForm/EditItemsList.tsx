@@ -25,7 +25,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 	handleVariantListOpen,
 	handleCancelProduct,
 }) => {
-	const groupedItems = items?.reduce(
+	const groupedItems = type === 'product' && items?.reduce(
 		(acc, edge) => {
 			const productId = edge.node.product.id;
 			if (!acc[productId]) {
@@ -119,7 +119,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 				{type === 'collection' && (
 					<ResourceList
 						resourceName={{ singular: 'item', plural: 'items' }}
-						items={consolidatedItems}
+						items={items}
 						renderItem={(item) => {
 							const {
 								id,

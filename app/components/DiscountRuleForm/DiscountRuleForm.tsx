@@ -502,12 +502,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					},
 					type: queryType,
 					method: newRule?.selectedMethod === 'code' ? 'custom' : 'auto',
-					callback (success) {
-						if (success) {
-							handleAddRule();
-							shopify.saveBar.hide('save-bar');
-							navigate('/app/manage-discount');
-						}
+					callback () {
+						handleAddRule();
+						shopify.saveBar.hide('save-bar');
+						navigate('/app/manage-discount');
 					},
 				}),
 			);
@@ -534,12 +532,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				},
 				type: queryType,
 				method: newRule?.selectedMethod === 'code' ? 'custom' : 'auto',
-				callback (success) {
-					if (success) {
-						handleAddRule();
-						shopify.saveBar.hide('save-bar');
-						navigate('/app/manage-discount');
-					}
+				callback () {
+					handleAddRule();
+					shopify.saveBar.hide('save-bar');
+					navigate('/app/manage-discount');
 				},
 			}),
 		);
@@ -584,12 +580,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					},
 					type: queryType,
 					id: updateDiscountCodeId,
-					callback (success) {
-						if (success) {
-							handleAddRule();
-							shopify.saveBar.hide('save-bar');
-							navigate('/app/manage-discount');
-						}
+					callback () {
+						handleAddRule();
+						shopify.saveBar.hide('save-bar');
+						navigate('/app/manage-discount');
 					},
 				}),
 			);
@@ -616,26 +610,30 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				},
 				type: queryType,
 				id: updateDiscountCodeId,
-				callback (success) {
-					if (success) {
-						handleAddRule();
-						shopify.saveBar.hide('save-bar');
-						navigate('/app/manage-discount');
-					}
+				callback () {
+					handleAddRule();
+					shopify.saveBar.hide('save-bar');
+					navigate('/app/manage-discount');
 				},
 			}),
 		);
 	};
 
-	const handleCustomerGetCancelProduct = (productId: string) => {
+	const handleCustomerGetCancelProduct = (productIds: string[]) => {
 		setNewRule((prevState) => {
 			const updatedItems = prevState.customerGets.items.filter(
-				(item: any) => item.node.id !== productId,
+				(item: any) => !productIds.includes(item.node.id)
 			);
+
 			const updatedProductIDs = prevState.customerGets.productIDs.filter(
-				(id) => id !== productId,
+				(id) => !productIds.includes(id)
 			);
-			if (!prevState.customerGets.removeProductIDs.includes(productId)) {
+
+			const newRemoveProductIDs = productIds.filter(
+				(productId) => !prevState.customerGets.removeProductIDs.includes(productId)
+			);
+
+			if (newRemoveProductIDs.length > 0) {
 				return {
 					...prevState,
 					customerGets: {
@@ -644,7 +642,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						items: updatedItems,
 						removeProductIDs: [
 							...prevState.customerGets.removeProductIDs,
-							productId,
+							...newRemoveProductIDs,
 						],
 					},
 				};
@@ -653,15 +651,21 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		});
 	};
 
-	const handleCustomerBuyCancelProduct = (productId: string) => {
+	const handleCustomerBuyCancelProduct = (productIds: string[]) => {
 		setNewRule((prevState) => {
 			const updatedItems = prevState.customerBuys.items.filter(
-				(item: any) => item.node.id !== productId,
+				(item: any) => !productIds.includes(item.node.id)
 			);
+
 			const updatedProductIDs = prevState.customerBuys.productIDs.filter(
-				(id) => id !== productId,
+				(id) => !productIds.includes(id)
 			);
-			if (!prevState.customerBuys.removeProductIDs.includes(productId)) {
+
+			const newRemoveProductIDs = productIds.filter(
+				(productId) => !prevState.customerBuys.removeProductIDs.includes(productId)
+			);
+
+			if (newRemoveProductIDs.length > 0) {
 				return {
 					...prevState,
 					customerBuys: {
@@ -670,11 +674,12 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						items: updatedItems,
 						removeProductIDs: [
 							...prevState.customerBuys.removeProductIDs,
-							productId,
+							...newRemoveProductIDs,
 						],
 					},
 				};
 			}
+
 			return prevState;
 		});
 	};

@@ -197,8 +197,8 @@ const ProductsList: React.FC<ProductProps> = ({
 					customerGets: {
 						...newRule.customerGets,
 						collectionIDs: [],
-						productIDs: selectedResources,
-						items: selectedObjects,
+						productIDs: [...newRule?.customerGets?.productIDs, ...selectedResources],
+						items: [...newRule?.customerGets?.items, ...selectedObjects],
 					},
 				});
 			}
@@ -208,8 +208,8 @@ const ProductsList: React.FC<ProductProps> = ({
 					customerBuys: {
 						...newRule.customerBuys,
 						collectionIDs: [],
-						productIDs: selectedResources,
-						items: selectedObjects,
+						productIDs: [...newRule?.customerBuys?.productIDs, ...selectedResources],
+						items: [...newRule?.customerBuys?.items, ...selectedObjects],
 					},
 				});
 			}
