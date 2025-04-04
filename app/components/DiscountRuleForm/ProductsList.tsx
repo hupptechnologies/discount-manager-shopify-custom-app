@@ -175,43 +175,73 @@ const ProductsList: React.FC<ProductProps> = ({
 		);
 	useEffect(() => {
 		if (selectedResources.length > 0) {
-			const selectedObjects = rowsProduct
-				.filter((row) => selectedResources.includes(row.id))
-				.map((row) => ({
-					node: {
-						id: row.id,
-						product: {
-							title: row.title,
-							variantsCount: row.variantsCount,
-							featuredMedia: {
-								preview: {
-									image: { url: row.image },
-								},
+			const selectedObjects = rowsProduct.filter((row) => selectedResources.includes(row.id)).map((row) => ({
+				node: {
+					id: row.id,
+					product: {
+						title: row.title,
+						variantsCount: row.variantsCount,
+						featuredMedia: {
+							preview: {
+								image: { url: row.image },
 							},
 						},
 					},
-				}));
+				},
+			}));
+			const isIdAlreadyAdded = (id: string) => {
+				return (
+					newRule.customerGets.productIDs.includes(id) ||
+					newRule.customerGets.items.some((item: any) => item.node.id === id) ||
+					newRule.customerGets.removeProductIDs.includes(id) ||
+					newRule.customerBuys.productIDs.includes(id) ||
+					newRule.customerBuys.items.some((item: any) => item.node.id === id) ||
+					newRule.customerBuys.removeProductIDs.includes(id)
+				);
+			};
 			if (selected === 0) {
-				setNewRule({
-					...newRule,
-					customerGets: {
-						...newRule.customerGets,
-						collectionIDs: [],
-						productIDs: [...newRule?.customerGets?.productIDs, ...selectedResources],
-						items: [...newRule?.customerGets?.items, ...selectedObjects],
-					},
-				});
+				const newProductIDs = selectedResources.filter(
+					(id) => !isIdAlreadyAdded(id)
+				);
+				const newSelectedObjects = selectedObjects.filter((obj) =>
+					newProductIDs.includes(obj.node.id)
+				);
+				if (newProductIDs.length > 0) {
+					setNewRule({
+						...newRule,
+						customerGets: {
+							...newRule.customerGets,
+							collectionIDs: [],
+							productIDs: [
+								...newRule.customerGets.productIDs,
+								...newProductIDs,
+							],
+							items: [...newRule.customerGets.items, ...newSelectedObjects],
+						},
+					});
+				}
 			}
 			if (selected === 1) {
-				setNewRule({
-					...newRule,
-					customerBuys: {
-						...newRule.customerBuys,
-						collectionIDs: [],
-						productIDs: [...newRule?.customerBuys?.productIDs, ...selectedResources],
-						items: [...newRule?.customerBuys?.items, ...selectedObjects],
-					},
-				});
+				const newProductIDs = selectedResources.filter(
+					(id) => !isIdAlreadyAdded(id)
+				);
+				const newSelectedObjects = selectedObjects.filter((obj) =>
+					newProductIDs.includes(obj.node.id)
+				);
+				if (newProductIDs.length > 0) {
+					setNewRule({
+						...newRule,
+						customerBuys: {
+							...newRule.customerBuys,
+							collectionIDs: [],
+							productIDs: [
+								...newRule.customerBuys.productIDs,
+								...newProductIDs,
+							],
+							items: [...newRule.customerBuys.items, ...newSelectedObjects],
+						},
+					});
+				}
 			}
 		}
 	}, [selectedResources, selected]);

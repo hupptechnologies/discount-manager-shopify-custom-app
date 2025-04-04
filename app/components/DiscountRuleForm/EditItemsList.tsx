@@ -17,6 +17,7 @@ export interface EditItemsListProps {
 	items: ItemsList[];
 	handleVariantListOpen: any;
 	handleCancelProduct: React.Dispatch<any>;
+	handleCancelCollection: React.Dispatch<any>;
 }
 
 const EditItemsList: React.FC<EditItemsListProps> = ({
@@ -24,6 +25,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 	items,
 	handleVariantListOpen,
 	handleCancelProduct,
+	handleCancelCollection
 }) => {
 	const groupedItems = type === 'product' && items?.reduce(
 		(acc, edge) => {
@@ -145,7 +147,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 												</Text>
 											)}
 										</Box>
-										<div className="edit-item-cancel-icon">
+										<div onClick={() => handleCancelCollection(id)} className="edit-item-cancel-icon">
 											<Icon source={XIcon} tone="subdued" />
 										</div>
 									</InlineStack>

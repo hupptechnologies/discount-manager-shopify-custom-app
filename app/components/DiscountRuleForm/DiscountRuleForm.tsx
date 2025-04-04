@@ -552,10 +552,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			isAI: newRule?.isAI,
 			isStockBased: newRule?.isStockBased,
 		};
-		if (newRule.customerGets.items.length > 0) {
+		if (newRule?.customerGets?.items?.length > 0) {
 			delete newRule.customerGets.items;
 		}
-		if (newRule.customerBuys.items.length > 0) {
+		if (newRule?.customerBuys?.items?.length > 0) {
 			delete newRule.customerBuys.items;
 		}
 		if (queryType === 'buyXgetY') {
@@ -684,6 +684,69 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		});
 	};
 
+	const handleCustomerGetCancelCollection = (collectionId: string) => {
+		setNewRule((prevState) => {
+		  const updatedCollectionIDs = prevState.customerGets.collectionIDs.filter(
+			(id) => id !== collectionId
+		  );
+	  
+		  const updatedItems = prevState.customerGets.items.filter(
+			(item: any) => item.node?.id !== collectionId
+		  );
+	  
+		  const newRemoveCollectionIDs = prevState.customerGets.removeCollectionIDs.includes(collectionId)
+			? []
+			: [collectionId];
+	  
+		  if (newRemoveCollectionIDs.length > 0) {
+			return {
+			  ...prevState,
+			  customerGets: {
+				...prevState.customerGets,
+				collectionIDs: updatedCollectionIDs,
+				items: updatedItems,
+				removeCollectionIDs: [
+				  ...prevState.customerGets.removeCollectionIDs,
+				  ...newRemoveCollectionIDs,
+				],
+			  },
+			};
+		  }
+	  
+		  return prevState;
+		});
+	};
+
+	const handleCustomerBuyCancelCollection = (collectionId: string) => {
+		setNewRule((prevState) => {
+			const updatedCollectionIDs = prevState.customerBuys.collectionIDs.filter(
+				(id) => id !== collectionId
+			);
+			const updatedItems = prevState.customerBuys.items.filter(
+				(item: any) => item.node?.id !== collectionId
+			);
+			const newRemoveCollectionIDs = prevState.customerBuys.removeCollectionIDs.includes(collectionId)
+				? []
+				: [collectionId];
+	  
+			if (newRemoveCollectionIDs.length > 0) {
+				return {
+					...prevState,
+					customerBuys: {
+						...prevState.customerBuys,
+						collectionIDs: updatedCollectionIDs,
+						items: updatedItems,
+						removeCollectionIDs: [
+						...prevState.customerBuys.removeCollectionIDs,
+						...newRemoveCollectionIDs,
+						],
+					},
+				};
+			}
+		  	return prevState;
+		});
+	};
+
 	return (
 		<Layout>
 			<Layout.Section>
@@ -714,6 +777,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						queryType={queryType}
 						handleCustomerGetCancelProduct={handleCustomerGetCancelProduct}
 						handleCustomerBuyCancelProduct={handleCustomerBuyCancelProduct}
+						handleCustomerBuyCancelCollection={handleCustomerBuyCancelCollection}
+						handleCustomerGetCancelCollection={handleCustomerGetCancelCollection}
 					/>
 				) : (
 					<DiscountValue
@@ -723,6 +788,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						handleSearchChange={handleSearchOneChange}
 						queryType={queryType}
 						handleSaveBarOpen={handleSaveBarOpen}
+						handleCustomerGetCancelCollection={handleCustomerGetCancelCollection}
+						handleCustomerGetCancelProduct={handleCustomerGetCancelProduct}
 					/>
 				)}
 				<Placeholder height="5px" />

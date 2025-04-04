@@ -31,6 +31,8 @@ interface DiscountBuyXGetYProps {
 	handleSearchTwoChange: React.Dispatch<any>;
 	handleCustomerGetCancelProduct: React.Dispatch<any>;
 	handleCustomerBuyCancelProduct: React.Dispatch<any>;
+	handleCustomerBuyCancelCollection: React.Dispatch<any>;
+	handleCustomerGetCancelCollection: React.Dispatch<any>;
 	queryType: QueryType;
 }
 
@@ -42,6 +44,8 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 	handleSearchTwoChange,
 	handleCustomerGetCancelProduct,
 	handleCustomerBuyCancelProduct,
+	handleCustomerBuyCancelCollection,
+	handleCustomerGetCancelCollection,
 	queryType,
 }) => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -211,6 +215,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							<FormLayout.Group>
 								<EditItemsList
 									handleCancelProduct={handleCustomerBuyCancelProduct}
+									handleCancelCollection={handleCustomerBuyCancelCollection}
 									handleVariantListOpen={handleVariantListOpen}
 									type={newRule?.buyItemFrom}
 									items={newRule.customerBuys?.items}
@@ -305,6 +310,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						newRule?.customerGets?.items?.length > 0 && (
 							<FormLayout.Group>
 								<EditItemsList
+									handleCancelCollection={handleCustomerGetCancelCollection}
 									handleCancelProduct={handleCustomerGetCancelProduct}
 									handleVariantListOpen={handleVariantListOpen}
 									type={newRule?.getItemFrom}
@@ -405,7 +411,6 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 			<Modal id="variant-list">
 				<EditVariantList
 					selectedVariantId={selectedVariantId}
-					setSelectedVariantId={setSelectedVariantId}
 					isFetchProductVariants={isFetchProductVariants}
 					variants={variants}
 					setNewRule={setNewRule}

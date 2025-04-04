@@ -30,8 +30,8 @@ mutation discountAutomaticBasicUpdate($automaticBasicDiscount: DiscountAutomatic
 
 type DiscountCodeItems =
 	| { all: boolean }
-	| { products: { productVariantsToAdd: string[] } }
-	| { collections: { add: string[] } };
+	| { products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; } }
+	| { collections: { add: string[]; remove: string[]; } };
 
 interface DiscountCodeBasicInput {
 	code: string;
@@ -163,7 +163,30 @@ export const updateBasicDiscountCode = async (
 							value: {
 								percentage: Number(customerGets.percentage) / 100,
 							},
-							items: {} as DiscountCodeItems,
+							items: {
+								...((customerGets.collectionIDs.length > 0 ||
+									customerGets.removeCollectionIDs.length > 0) && {
+									collections: {
+										...(customerGets.collectionIDs.length > 0 && {
+											add: customerGets.collectionIDs,
+										}),
+										...(customerGets.removeCollectionIDs.length > 0 && {
+											remove: customerGets.removeCollectionIDs,
+										}),
+									},
+								}),
+								...((customerGets.productIDs.length > 0 ||
+									customerGets.removeProductIDs.length > 0) && {
+									products: {
+										...(customerGets.productIDs.length > 0 && {
+											productVariantsToAdd: customerGets.productIDs,
+										}),
+										...(customerGets.removeProductIDs.length > 0 && {
+											productVariantsToRemove: customerGets.removeProductIDs,
+										}),
+									},
+								}),
+							},
 						},
 					} as DiscountCodeBasicInput,
 				},
@@ -181,47 +204,36 @@ export const updateBasicDiscountCode = async (
 							value: {
 								percentage: Number(customerGets.percentage) / 100,
 							},
-							items: {} as DiscountCodeItems,
+							items: {
+								...((customerGets.collectionIDs.length > 0 ||
+									customerGets.removeCollectionIDs.length > 0) && {
+									collections: {
+										...(customerGets.collectionIDs.length > 0 && {
+											add: customerGets.collectionIDs,
+										}),
+										...(customerGets.removeCollectionIDs.length > 0 && {
+											remove: customerGets.removeCollectionIDs,
+										}),
+									},
+								}),
+								...((customerGets.productIDs.length > 0 ||
+									customerGets.removeProductIDs.length > 0) && {
+									products: {
+										...(customerGets.productIDs.length > 0 && {
+											productVariantsToAdd: customerGets.productIDs,
+										}),
+										...(customerGets.removeProductIDs.length > 0 && {
+											productVariantsToRemove: customerGets.removeProductIDs,
+										}),
+									},
+								}),
+							},
 						},
 					} as DiscountCodeBasicAutomaticInput,
 				},
 			};
 
-			if (
-				customerGets.productIDs.length > 0 ||
-				customerGets.removeProductIDs.length > 0
-			) {
-				const productData = {
-					productVariantsToAdd: customerGets.productIDs,
-					productVariantsToRemove: customerGets.removeProductIDs,
-				};
-				if (isCustom) {
-					data.variables.basicCodeDiscount.customerGets.items = {
-						products: productData,
-					};
-				} else {
-					dataAuto.variables.automaticBasicDiscount.customerGets.items = {
-						products: productData,
-					};
-				}
-			} else if (
-				customerGets.collectionIDs.length > 0 ||
-				customerGets.removeCollectionIDs.length > 0
-			) {
-				const collectionData = {
-					add: customerGets.collectionIDs,
-					remove: customerGets.removeCollectionIDs,
-				};
-				if (isCustom) {
-					data.variables.basicCodeDiscount.customerGets.items = {
-						collections: collectionData,
-					};
-				} else {
-					dataAuto.variables.automaticBasicDiscount.customerGets.items = {
-						collections: collectionData,
-					};
-				}
-			} else {
+			if (customerGets?.productIDs?.length === 0 && customerGets?.removeProductIDs?.length === 0 && customerGets.collectionIDs.length > 0 && customerGets.removeCollectionIDs.length === 0) {
 				if (isCustom) {
 					data.variables.basicCodeDiscount.customerGets.items = { all: true };
 				} else {
