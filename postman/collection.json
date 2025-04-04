@@ -175,7 +175,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&orderByCode=asc",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&orderByCreatedAt=asc",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -189,7 +189,7 @@
 									"value": "{{shopForDiscountApp}}"
 								},
 								{
-									"key": "orderByCode",
+									"key": "orderByCreatedAt",
 									"value": "asc"
 								}
 							]
@@ -379,21 +379,57 @@
 			]
 		},
 		{
+			"name": "themes",
+			"item": [
+				{
+					"name": "fetchAppEmbedStatus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/appEmbedStatus?shop={{shopForDiscountApp}}",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"appEmbedStatus"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "{{shopForDiscountApp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "shopifyAPI",
 			"request": {
 				"auth": {
 					"type": "noauth"
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
 						"key": "X-Shopify-Access-Token",
-						"value": "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",
+						"value": "{{accessToken}}",
 						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query {\n  themes(first: 10) {\n    edges {\n      node {\n        name\n        id\n        role\n      }\n    }\n  }\n}",
+						"variables": ""
+					}
+				},
 				"url": {
-					"raw": "https://local-sparkfitness.myshopify.com/admin/api/2024-10/webhooks.json",
+					"raw": "https://local-sparkfitness.myshopify.com/admin/api/2024-10/graphql.json",
 					"protocol": "https",
 					"host": [
 						"local-sparkfitness",
@@ -404,7 +440,7 @@
 						"admin",
 						"api",
 						"2024-10",
-						"webhooks.json"
+						"graphql.json"
 					]
 				}
 			},
