@@ -1,5 +1,5 @@
-import { DiscountCodeBasic } from 'app/controller/discounts/getDiscountCodeById';
 import prisma from '../db.server';
+import { DiscountCodeBasic, DiscountCodeBxgy } from 'app/controller/discounts/getDiscountCodeById';
 import { getDetailUsingGraphQL } from 'app/service/product';
 
 const GET_BASIC_DISCOUNT_CODE_QUERY = `
@@ -56,6 +56,70 @@ query getDiscountCode($ID: ID!) {
 	}
 }`;
 
+const GET_BUYXGETY_DISCOUNT_CODE_QUERY = `
+query getDiscountcode($ID: ID!) {
+	codeDiscountNode(id: $ID) {
+		id
+		codeDiscount {
+			__typename
+			... on DiscountCodeBxgy {
+				status
+				title
+				startsAt
+				endsAt
+				discountClass
+				usesPerOrderLimit
+				codes(first: 1) {
+					edges {
+						node {
+							code
+						}
+					}
+				}
+				customerGets {
+					value {
+						... on DiscountOnQuantity {
+							effect {
+								... on DiscountPercentage {
+									percentage
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}`;
+
+const GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY = `
+query getDiscountcode($ID: ID!) {
+	automaticDiscountNode(id: $ID) {
+		id
+		automaticDiscount {
+			... on DiscountAutomaticBxgy {
+				status
+				title
+				startsAt
+				endsAt
+				discountClass
+				usesPerOrderLimit
+				customerGets {
+					value {
+						... on DiscountOnQuantity {
+							effect {
+								... on DiscountPercentage {
+									percentage
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}`;
+
 interface PayloadDiscountCreate {
 	admin_graphql_api_id: string;
 	title: string;
@@ -69,11 +133,11 @@ interface GraphQLResponse {
 		data: {
 			codeDiscountNode: {
 				id: string;
-				codeDiscount: DiscountCodeBasic;
+				codeDiscount: DiscountCodeBasic | DiscountCodeBxgy;
 			};
 			automaticDiscountNode: {
 				id: string;
-				automaticDiscount: DiscountCodeBasic;
+				automaticDiscount: DiscountCodeBasic | DiscountCodeBxgy;
 			};
 		};
 	};
@@ -90,9 +154,12 @@ export const handleDiscountUpdate = async (
 			where: { shop, discountId: payload.admin_graphql_api_id },
 		});
 
+		const discountScope = discountCodeResponse?.discountScope;
+
 		if (!discountCodeResponse) {
 			return;
 		}
+
 		const response = await prisma.session.findMany({
 			where: { shop },
 		});
@@ -103,31 +170,37 @@ export const handleDiscountUpdate = async (
 		}
 
 		const data = {
-			query: payload?.admin_graphql_api_id?.includes('DiscountCodeNode') ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
+			query: discountScope === 'BUYXGETY' ? isCustom ? GET_BUYXGETY_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY : isCustom ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
 				ID: payload.admin_graphql_api_id,
 			},
 		};
+
 		const graphQlResponse: GraphQLResponse = await getDetailUsingGraphQL(
 			shop,
 			accessToken,
 			data,
 		);
-		
+
 		const {
 			discountClass,
 			title,
 			startsAt,
 			endsAt,
-			customerGets: { value },
+			customerGets,
 		} = isCustom ? graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount : graphQlResponse?.data?.data?.automaticDiscountNode?.automaticDiscount;
 
-		if (!discountClass) {
-			console.error('Discount class is missing', graphQlResponse);
+		if (!discountClass || !title || !startsAt || !endsAt) {
+			console.error('Missing required discount data', graphQlResponse);
+			return;
 		}
-
-		const discountCode = graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount?.codes?.edges[0]?.node?.code;
-
+		const discountCodeData = isCustom ? graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount : graphQlResponse?.data?.data?.automaticDiscountNode?.automaticDiscount;
+		const discountCode = isCustom ? discountCodeData?.codes?.edges[0]?.node?.code : title;
+		const discountAmount = discountScope === 'BUYXGETY' ? (customerGets?.value && 'effect' in customerGets.value ? Number(customerGets.value.effect.percentage) * 100 : 0)
+			: (customerGets?.value && 'percentage' in customerGets.value ? Number(customerGets.value.percentage) * 100 : 0);
+		const usageLimit = 'usageLimit' in discountCodeData ? discountCodeData.usageLimit ?? 0 : 0;
+		const usesPerOrderLimit = 'usesPerOrderLimit' in discountCodeData ? discountCodeData.usesPerOrderLimit ?? 0 : 0;
+	  
 		await prisma.discountCode.update({
 			where: {
 				shop,
@@ -135,23 +208,15 @@ export const handleDiscountUpdate = async (
 				discountId: payload.admin_graphql_api_id,
 			},
 			data: {
-				code: isCustom ? discountCode : title,
+				code: discountCode,
 				title: title,
 				shop,
 				discountId: payload.admin_graphql_api_id,
 				startDate: new Date(startsAt),
 				endDate: new Date(endsAt),
-				discountAmount: Number(value.percentage) * 100,
+				discountAmount: discountAmount,
 				discountType: 'PERCENT',
-				discountScope:
-					discountClass === 'PRODUCT'
-						? 'PRODUCT'
-						: discountClass === 'ORDER'
-							? 'ORDER'
-							: discountClass === 'SHIPPING'
-								? 'SHIPPING'
-								: 'BUYXGETY',
-				usageLimit: graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount?.usageLimit || 0,
+				usageLimit: isCustom ? usageLimit : usesPerOrderLimit,
 				isActive: true,
 			},
 		});

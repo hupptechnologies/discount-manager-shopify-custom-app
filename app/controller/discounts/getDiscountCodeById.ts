@@ -391,12 +391,13 @@ query getDiscountCode($ID: ID!) {
 	}
 }`;
 
-interface DiscountCodeBxgy {
+export interface DiscountCodeBxgy {
 	__typename: 'DiscountCodeBxgy';
 	status: string;
 	title: string;
 	startsAt: string;
 	endsAt: string;
+	discountClass: string;
 	codes: {
 		edges: {
 			node: {
