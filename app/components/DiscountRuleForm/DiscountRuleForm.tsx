@@ -31,7 +31,7 @@ import ProductsList from './ProductsList';
 import DiscountBuyXGetY from './DiscountBuyXGetY';
 import UsageLimit from './UsageLimit';
 import Placeholder from '../Placeholder';
-import { convertToLocalTime, formatDateWithTimeZone } from 'app/utils/json';
+import { convertToLocalTime, formatDateWithTimeZone, generateDiscountCodes } from 'app/utils/json';
 
 export interface DiscountRule {
 	selectedDiscountType: string | null;
@@ -120,12 +120,13 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const [selected, setSelected] = useState<number>(0);
 	const [run, setRun] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
+	const [generateList, setGenerateList] = useState<string[]>(['No Codes Founds']);
 	const [newRule, setNewRule] = useState<DiscountRule>({
 		selectedDiscountType: queryType,
 		selectedMethod: 'code',
 		title: '',
-		noOfCodeCount: '1',
-		codeLength: '2',
+		noOfCodeCount: '10',
+		codeLength: '5',
 		checkoutDiscountCode: '',
 		condition: '',
 		discount: '',
@@ -164,7 +165,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		totalUsageLimit: false,
 		onePerCustomer: false,
 		totalLimitValue: '',
-		dicountCodePrefix: '',
+		dicountCodePrefix: 'ST',
 		customerBuys: {
 			items: [],
 			productIDs: [],
@@ -747,6 +748,11 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		});
 	};
 
+	const handleGenerateCodeList = () => {
+		setGenerateList(['No Codes Found']);
+		setGenerateList(generateDiscountCodes(Number(newRule?.noOfCodeCount), Number(newRule?.codeLength), newRule?.dicountCodePrefix));
+	};
+
 	return (
 		<Layout>
 			<Layout.Section>
@@ -765,6 +771,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					queryType={queryType}
 					handleSaveBarOpen={handleSaveBarOpen}
 					isEdit={isEdit}
+					generateList={generateList}
+					handleGenerateCodeList={handleGenerateCodeList}
 				/>
 				<Placeholder height="5px" />
 				{['buyXgetY'].includes(queryType as string) ? (

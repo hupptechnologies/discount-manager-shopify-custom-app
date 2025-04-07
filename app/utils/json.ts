@@ -119,3 +119,20 @@ export const isToday = (date: any): boolean => {
 	const today = new Date();
 	return date.toDateString() === today.toDateString();
 };
+
+export const generateDiscountCodes = (numberOfCodes: number, codeLength: number, prefix: string): string[] => {
+	const codes: string[] = [];
+	const characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+	const generateCode = (length: number): string => {
+		let code: string = prefix;
+		for (let i = 0; i < length - prefix.length; i++) {
+			const randomChar: string = characters.charAt(Math.floor(Math.random() * characters.length));
+			code += randomChar;
+		}
+		return code;
+	};
+	for (let i = 0; i < numberOfCodes; i++) {
+		codes.push(generateCode(codeLength));
+	}
+	return codes;
+};

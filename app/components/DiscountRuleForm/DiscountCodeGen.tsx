@@ -8,6 +8,7 @@ import {
 	InlineStack,
 	Link,
 	RadioButton,
+	Select,
 	Text,
 	TextField,
 } from '@shopify/polaris';
@@ -19,12 +20,14 @@ import { generateDiscountCode } from 'app/utils/json';
 interface DiscountCodeGenProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	handleButtonClick: React.Dispatch<React.SetStateAction<any>>;
+	handleGenerateCodeList: any;
 	handleSaveBarOpen: any;
 	activeButtonIndex: number;
 	queryType: QueryType;
 	heading: string;
 	newRule: DiscountRule;
 	isEdit: boolean;
+	generateList: string[];
 }
 
 const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
@@ -36,6 +39,8 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 	queryType,
 	handleSaveBarOpen,
 	isEdit,
+	handleGenerateCodeList,
+	generateList
 }) => {
 	return (
 		<Card>
@@ -118,7 +123,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 								handleSaveBarOpen();
 								setNewRule({
 									...newRule,
-									checkoutDiscountCode: generateDiscountCode(8),
+									checkoutDiscountCode: generateDiscountCode(),
 								});
 							}}
 							removeUnderline
@@ -166,6 +171,19 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						autoComplete="off"
 					/>
 				</FormLayout.Group>
+			)}
+			{newRule?.isRandom && (
+				<div className='generate-discount-codes-list'>
+					<FormLayout.Group condensed>
+							<Select
+								label="Generated Codes"
+								options={generateList}
+							/>
+							<Button onClick={handleGenerateCodeList} variant='secondary'>
+								Generate codes
+							</Button>
+					</FormLayout.Group>
+				</div>
 			)}
 		</Card>
 	);

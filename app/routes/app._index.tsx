@@ -8,7 +8,7 @@ import { fetchAppEmbedStatusAsync } from 'app/redux/store/index';
 import { getAllStoreDetail } from 'app/redux/store/slice';
 
 export default function Index () {
-	const { appEmbedID, appEmbedStatus } = useSelector((state: RootState) => getAllStoreDetail(state));
+	const { appEmbedID, appEmbedStatus, isAppEmbedLoading } = useSelector((state: RootState) => getAllStoreDetail(state));
 	const dispatch = useDispatch<AppDispatch>();
 	const [shop, setShop] = useState<string | null>(null);
 	const deepLink = `https://${shop || ''}/admin/themes/current/editor?context=apps&template=body&activateAppId=${appEmbedID}/discount_manager`
@@ -35,7 +35,7 @@ export default function Index () {
 										<Text as="h2" variant="headingMd">
 											Welcome to Smart Discount Manager 🎉  <Badge tone={appEmbedStatus ? 'success' : 'critical'} size='small'>{appEmbedStatus ? 'Active' : 'Inactive'}</Badge>
 										</Text>
-										<Button disabled={appEmbedStatus} variant='primary' icon={ComposeIcon} onClick={() => window.parent.location.href = deepLink}>
+										<Button loading={isAppEmbedLoading} disabled={appEmbedStatus} variant='primary' icon={ComposeIcon} onClick={() => window.parent.location.href = deepLink}>
 											App Embed
 										</Button>
 									</InlineStack>
