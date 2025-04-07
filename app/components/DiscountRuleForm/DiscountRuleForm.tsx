@@ -487,7 +487,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					shopName: shopify.config.shop || '',
 					data: {
 						title: newRule?.title,
-						code: newRule?.checkoutDiscountCode,
+						codes: newRule?.isCustom ? [newRule?.checkoutDiscountCode] : generateList,
 						startsAt: formatDateWithTimeZone(
 							newRule?.selectedStartDates?.start,
 							newRule?.selectedStartTime,
@@ -517,7 +517,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				shopName: shopify.config.shop || '',
 				data: {
 					title: newRule?.title,
-					code: newRule?.checkoutDiscountCode,
+					codes: newRule?.isCustom ? [newRule?.checkoutDiscountCode] : generateList,
 					startsAt: formatDateWithTimeZone(
 						newRule?.selectedStartDates?.start,
 						newRule?.selectedStartTime,

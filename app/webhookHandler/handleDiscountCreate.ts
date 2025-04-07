@@ -81,7 +81,7 @@ export const handleDiscountCreate = async (
 		});
 
 		if (existingDiscountCode) {
-			console.log('Discount code already exists:', existingDiscountCode);
+			console.log('Discount code already exists:', existingDiscountCode?.code);
 			return;
 		}
 

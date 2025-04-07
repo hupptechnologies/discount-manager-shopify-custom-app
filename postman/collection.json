@@ -102,7 +102,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Test14\",\n    \"code\": \"TESTFREE14%\",\n    \"startsAt\": \"2025-03-28T21:00:31Z\",\n    \"endsAt\": \"2025-03-29T00:30:00Z\",\n    \"usageLimit\": 15,\n    \"appliesOncePerCustomer\": true,\n    \"customerGets\": {\n        \"percentage\": 14,\n        \"quantity\": \"5\",\n        \"collectionIDs\": [],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": [\"gid://shopify/ProductVariant/45807212429553\"]\n    }\n}",
+							"raw": "{\n    \"title\": \"TESTST\",\n    \"codes\": [\"ST12_ONE%\", \"ST12_TWO%\"],\n    \"startsAt\": \"2025-03-28T21:00:31Z\",\n    \"endsAt\": \"2025-03-29T00:30:00Z\",\n    \"usageLimit\": 2,\n    \"appliesOncePerCustomer\": true,\n    \"customerGets\": {\n        \"percentage\": 12,\n        \"quantity\": \"2\",\n        \"collectionIDs\": [],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": [\"gid://shopify/ProductVariant/45807212429553\"]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -110,7 +110,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&method=auto",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&method=custom",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -125,7 +125,7 @@
 								},
 								{
 									"key": "method",
-									"value": "auto"
+									"value": "custom"
 								}
 							]
 						}
@@ -301,7 +301,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"TestFREE\",\n    \"code\": \"TESTFREE%\",\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-01\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"2\",\n        \"collectionIDs\": [\n            \"gid://shopify/Collection/446505353457\"\n        ],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    },\n    \"customerGets\": {\n        \"percentage\": 34,\n        \"quantity\": \"4\",\n        \"collectionIDs\": [\n            \"gid://shopify/Collection/444497264881\"\n        ],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    }\n}",
+							"raw": "{\n    \"title\": \"ST_ONE\",\n    \"codes\": [\"ST_12_1\", \"ST_12_2\"],\n    \"startsAt\": \"2025-04-01\",\n    \"endsAt\": \"2025-04-01\",\n    \"usageLimit\": 3,\n    \"customerBuys\": {\n        \"quantity\": \"2\",\n        \"collectionIDs\": [\n            \"gid://shopify/Collection/446505353457\"\n        ],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    },\n    \"customerGets\": {\n        \"percentage\": 12,\n        \"quantity\": \"4\",\n        \"collectionIDs\": [\n            \"gid://shopify/Collection/444497264881\"\n        ],\n        \"removeProductIDs\": [],\n        \"removeCollectionIDs\": [],\n        \"productIDs\": []\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -31,7 +31,7 @@ export interface DeleteAllDiscountCodeParams {
 export interface CreateDiscountCodeParams {
 	data: {
 		title: string;
-		code: string;
+		codes: string[];
 		startsAt: string | null;
 		endsAt: string | null;
 		usageLimit: number;
@@ -53,7 +53,7 @@ export interface CreateDiscountCodeParams {
 export interface CreateBuyXGetYDiscountCodeParams {
 	data: {
 		title: string;
-		code: string;
+		codes: string[];
 		startsAt: string | null;
 		endsAt: string | null;
 		usageLimit: number;
