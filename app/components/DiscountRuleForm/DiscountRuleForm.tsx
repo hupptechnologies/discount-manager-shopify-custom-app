@@ -832,8 +832,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		setGenerateList(generateDiscountCodes(Number(newRule?.noOfCodeCount), Number(newRule?.codeLength), newRule?.dicountCodePrefix));
 	};
 
-	console.log(newRule, 'New Rule Main');
-
 	return (
 		<Layout>
 			<Layout.Section>

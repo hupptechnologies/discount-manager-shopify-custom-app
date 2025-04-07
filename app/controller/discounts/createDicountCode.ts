@@ -1,5 +1,6 @@
 import prisma from '../../db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
+import { DiscountCodeCustomerSelection } from './updateBasicDiscountCode';
 
 const CREATE_BASIC_DISCOUNT_CODE_QUERY = `
 mutation CreateDiscountCode($basicCodeDiscount: DiscountCodeBasicInput!) {
@@ -65,12 +66,7 @@ mutation discountAutomaticBasicCreate($automaticBasicDiscount: DiscountAutomatic
 
 type DiscountCodeItems =
 	| { all: boolean }
-	| {
-			products: {
-				productVariantsToAdd: string[];
-				productVariantsToRemove: string[];
-			};
-	  }
+	| { products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; } }
 	| { collections: { add: string[]; remove: string[] } };
 
 interface DiscountCodeBasicInput {
@@ -78,13 +74,7 @@ interface DiscountCodeBasicInput {
 	code: string;
 	startsAt: string;
 	endsAt: string;
-	customerSelection: {
-		all: boolean;
-		customers: {
-			add: string[];
-			remove: string[];
-		}
-	};
+	customerSelection: DiscountCodeCustomerSelection;
 	customerGets: {
 		value: {
 			percentage: number;
@@ -215,7 +205,7 @@ export const createDiscountCode = async (
 										add: customers.customerIDs
 									}),
 									...((customers.removeCustomersIDs?.length > 0 && type === 'custom') && {
-										add: customers.removeCustomersIDs
+										remove: customers.removeCustomersIDs
 									}),
 								},
 								...((customers.customerIDs?.length == 0 && customers.removeCustomersIDs.length == 0) && {

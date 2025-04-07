@@ -33,12 +33,17 @@ type DiscountCodeItems =
 	| { products: { productVariantsToAdd: string[]; productVariantsToRemove: string[]; } }
 	| { collections: { add: string[]; remove: string[]; } };
 
+export type DiscountCodeCustomerSelection =
+	| { all: boolean }
+	| { customers: { add: string[]; remove: string[]; } }
+
 interface DiscountCodeBasicInput {
 	code: string;
 	startsAt: string;
 	endsAt: string;
 	appliesOncePerCustomer: boolean;
 	usageLimit: number;
+	customerSelection: DiscountCodeCustomerSelection;
 	customerGets: {
 		value: {
 			percentage: number;
@@ -98,6 +103,10 @@ interface CreateDiscountCodeInput {
 	endsAt: string;
 	usageLimit: number;
 	appliesOncePerCustomer: boolean;
+	customers: {
+		customerIDs: string[];
+		removeCustomersIDs: string[];
+	}
 	customerGets: {
 		percentage: string;
 		quantity: string;
@@ -123,6 +132,7 @@ export const updateBasicDiscountCode = async (
 		appliesOncePerCustomer,
 		customerGets,
 		advancedRule,
+		customers
 	} = dataPayload;
 
 	try {
@@ -159,6 +169,19 @@ export const updateBasicDiscountCode = async (
 						endsAt: endsAt,
 						appliesOncePerCustomer: appliesOncePerCustomer,
 						usageLimit: usageLimit,
+						customerSelection: {
+							customers: {
+								...((customers.customerIDs?.length > 0 && isCustom) && {
+									add: customers.customerIDs
+								}),
+								...((customers.removeCustomersIDs?.length > 0 && isCustom) && {
+									remove: customers.removeCustomersIDs
+								}),
+							},
+							...((customers.customerIDs?.length == 0 && customers.removeCustomersIDs.length == 0) && {
+								all: true
+							}),
+						},
 						customerGets: {
 							value: {
 								percentage: Number(customerGets.percentage) / 100,
