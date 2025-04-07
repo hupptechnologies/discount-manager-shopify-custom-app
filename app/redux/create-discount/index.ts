@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosError } from 'axios';
 import { fetchAllCollections, fetchAllProducts } from 'app/service/product';
+import { fetchAllCustomers } from 'app/service/customer';
 
 interface FetchAllProductsParams {
 	after?: string;
@@ -37,6 +38,17 @@ interface FetchAllProductReturnValue {
 
 interface FetchAllCollectionReturnValue {
 	collections: any[];
+	pageInfo: {
+		endCursor: string;
+		hasNextPage: boolean;
+		hasPreviousPage: boolean;
+		startCursor: string;
+	};
+	totalCount: number;
+}
+
+interface FetchAllCustomerReturnValue {
+	customers: any[];
 	pageInfo: {
 		endCursor: string;
 		hasNextPage: boolean;
@@ -103,6 +115,41 @@ export const fetchAllCollectionsAsync = createAsyncThunk<
 			}
 			return fulfillWithValue({
 				collections: [],
+				pageInfo: {
+					endCursor: '',
+					hasNextPage: false,
+					hasPreviousPage: false,
+					startCursor: '',
+				},
+				totalCount: 0,
+			});
+		} catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	},
+);
+
+export const fetchAllCustomersAsync = createAsyncThunk<
+	FetchAllCustomerReturnValue,
+	FetchAllCollectionsParams,
+	{ rejectValue: string }
+>(
+	'createDiscount/fetchAllCustomers',
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await fetchAllCustomers(params);
+			if (response.data) {
+				const { customers, success, pageInfo, totalCount } = response.data;
+				if (success && params?.callback) {
+					params.callback(success);
+				}
+				return fulfillWithValue({ customers, pageInfo, totalCount });
+			}
+			return fulfillWithValue({
+				customers: [],
 				pageInfo: {
 					endCursor: '',
 					hasNextPage: false,

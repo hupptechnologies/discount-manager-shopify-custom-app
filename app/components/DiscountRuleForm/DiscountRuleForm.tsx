@@ -31,6 +31,7 @@ import ProductsList from './ProductsList';
 import DiscountBuyXGetY from './DiscountBuyXGetY';
 import UsageLimit from './UsageLimit';
 import Placeholder from '../Placeholder';
+import CustomersList from './CustomerList';
 import { convertToLocalTime, formatDateWithTimeZone, generateDiscountCodes } from 'app/utils/json';
 
 export interface DiscountRule {
@@ -436,6 +437,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleOpen = (type: string | null, value: string) => {
+		if (type === 'customer') {
+			shopify.modal.show('customers-modal');
+			return;
+		}
 		if (type === 'buy') {
 			setSelected(1);
 			setNewRule({ ...newRule, buyItemFrom: value });
@@ -449,6 +454,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 
 	const handleClose = () => {
 		shopify.modal.hide('product-collection-modal');
+		shopify.modal.hide('customers-modal');
 	};
 
 	const handleSaveBarOpen = () => {
@@ -806,6 +812,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					newRule={newRule}
 					setNewRule={setNewRule}
 					handleSaveBarOpen={handleSaveBarOpen}
+					handleOpen={handleOpen}
 				/>
 				<Placeholder height="5px" />
 				<UsageLimit newRule={newRule} setNewRule={setNewRule} />
@@ -855,6 +862,20 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					<button onClick={handleClose}>Cancel</button>
 				</TitleBar>
 			</Modal>}
+			{queryType === 'order' &&
+				<Modal id='customers-modal'>
+					<CustomersList
+						newRule={newRule}
+						setNewRule={setNewRule}
+					/>
+					<TitleBar title='Add customers'>
+						<button variant="primary" onClick={handleClose}>
+							Add
+						</button>
+						<button onClick={handleClose}>Cancel</button>
+					</TitleBar>
+				</Modal>
+			}
 			<SaveBar id="save-bar">
 				<button variant="primary" onClick={handleSave}></button>
 				<button onClick={handleDiscard}></button>

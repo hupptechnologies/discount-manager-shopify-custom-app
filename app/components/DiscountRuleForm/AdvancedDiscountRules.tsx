@@ -1,12 +1,15 @@
 import {
 	BlockStack,
+	Button,
 	Card,
 	Checkbox,
 	FormLayout,
+	Icon,
 	Select,
 	Text,
 	TextField,
 } from '@shopify/polaris';
+import { SearchIcon } from '@shopify/polaris-icons';
 import type { DiscountRule } from './DiscountRuleForm';
 import type { QueryType } from 'app/routes/app.create-discount';
 
@@ -15,6 +18,7 @@ export interface AdvanceDiscountRuleProps {
 	queryType: QueryType;
 	newRule: DiscountRule;
 	handleSaveBarOpen: any;
+	handleOpen: any;
 }
 
 const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
@@ -22,6 +26,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	setNewRule,
 	queryType,
 	handleSaveBarOpen,
+	handleOpen
 }) => {
 	return (
 		<Card>
@@ -141,6 +146,19 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 							setNewRule({ ...newRule, isAI: !newRule.isAI });
 						}}
 					/>
+					{newRule.customerType === 'vip' && (
+							<FormLayout.Group>
+								<TextField
+									label=""
+									autoComplete="off"
+									prefix={<Icon source={SearchIcon} />}
+									placeholder='Search Customer'
+								/>
+								<Button onClick={() => handleOpen('customer', '')} variant="secondary">
+									Browse
+								</Button>
+							</FormLayout.Group>
+						)}
 				</FormLayout>
 			</BlockStack>
 		</Card>

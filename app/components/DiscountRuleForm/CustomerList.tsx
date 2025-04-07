@@ -14,36 +14,32 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from 'app/redux/store';
 import type { DiscountRule } from './DiscountRuleForm';
-import { fetchAllCollectionsAsync } from 'app/redux/create-discount';
+import { fetchAllCustomersAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 
-interface Collection {
+interface Customer {
 	id: string;
-	productCount: number;
-	title: string;
+	name: string;
+	email: string;
 	image: string;
 }
 
-interface CollectionProps {
+interface CustomerProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
-	selected: number;
-	selectedItemsArray: string[];
 }
 
-const CollectionList: React.FC<CollectionProps> = ({
+const CustomersList: React.FC<CustomerProps> = ({
 	newRule,
-	setNewRule,
-	selected,
-	selectedItemsArray,
+	setNewRule
 }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
 	const {
-		collections,
-		collectionPageInfo,
-		totalCollectionCount,
-		isCollectionLoading,
+		customers,
+		customerPageInfo,
+		totalCustomerCount,
+		isCustomersLoading,
 	} = useSelector((state: RootState) => getCreateDiscountDetail(state));
 	const [selectedItems, setSelectedItems] = useState<
 		ResourceListProps['selectedItems']
@@ -53,42 +49,35 @@ const CollectionList: React.FC<CollectionProps> = ({
 	const [prevCursor, setPrevCursor] = useState<string | undefined>(undefined);
 
 	const resourceName = {
-		singular: 'collection',
-		plural: 'collections',
+		singular: 'customer',
+		plural: 'customers',
 	};
 
-	const rowsCollection: Collection[] =
-		collections?.length > 0 ? collections : [];
+	const rowsCustomers: Customer[] =
+		customers?.length > 0 ? customers : [];
 
 	useEffect(() => {
 		dispatch(
-			fetchAllCollectionsAsync({
+			fetchAllCustomersAsync({
 				shopName: shopify.config.shop || '',
-				query:
-					newRule?.searchOne === '' ? newRule?.searchTwo : newRule?.searchOne,
+				query: '',
 			}),
 		);
-	}, [newRule?.searchOne, newRule?.searchTwo]);
+	}, []);
 
 	useEffect(() => {
-		if (collectionPageInfo) {
-			setCursor(collectionPageInfo.endCursor);
-			setPrevCursor(collectionPageInfo.startCursor);
+		if (customerPageInfo) {
+			setCursor(customerPageInfo.endCursor);
+			setPrevCursor(customerPageInfo.startCursor);
 		}
-	}, [collectionPageInfo]);
-
-	useEffect(() => {
-		if (selectedItemsArray.length > 0) {
-			setSelectedItems(selectedItemsArray);
-		}
-	}, [selectedItemsArray]);
+	}, [customerPageInfo]);
 
 	const loadMoreNext = () => {
-		if (collectionPageInfo?.hasNextPage) {
+		if (customerPageInfo?.hasNextPage) {
 			dispatch(
-				fetchAllCollectionsAsync({
+				fetchAllCustomersAsync({
 					shopName: shopify.config.shop || '',
-					query: newRule?.searchOne,
+					query: '',
 					after: cursor,
 				}),
 			);
@@ -97,11 +86,11 @@ const CollectionList: React.FC<CollectionProps> = ({
 	};
 
 	const loadMorePrevious = () => {
-		if (collectionPageInfo?.hasPreviousPage) {
+		if (customerPageInfo?.hasPreviousPage) {
 			dispatch(
-				fetchAllCollectionsAsync({
+				fetchAllCustomersAsync({
 					shopName: shopify.config.shop || '',
-					query: newRule?.searchOne,
+					query: '',
 					before: prevCursor,
 				}),
 			);
@@ -112,8 +101,6 @@ const CollectionList: React.FC<CollectionProps> = ({
 	const handleQueryChange = (value: string, type: string) => {
 		setNewRule({
 			...newRule,
-			searchOne: type === 'one' ? value : '',
-			searchTwo: type === 'two' ? value : '',
 		});
 	};
 
@@ -126,48 +113,6 @@ const CollectionList: React.FC<CollectionProps> = ({
 	};
 
 	const handleSelectionChange = (value: string[]) => {
-		const selectedObjects = rowsCollection
-			.filter((row) => value.includes(row.id))
-			.map((row) => ({
-				node: {
-					id: row.id,
-					title: row.title,
-					productsCount: {
-						count: row.productCount || 0,
-					},
-					image: {
-						url: row.image,
-					},
-				},
-			}));
-		if (selected === 0) {
-			setNewRule({
-				...newRule,
-				customerGets: {
-					...newRule.customerGets,
-					collectionIDs: value,
-					...(newRule.customerGets.productIDs.length > 0 && {
-						removeProductIDs: newRule.customerGets.productIDs,
-					}),
-					productIDs: [],
-					items: selectedObjects,
-				},
-			});
-		}
-		if (selected === 1) {
-			setNewRule({
-				...newRule,
-				customerBuys: {
-					...newRule.customerBuys,
-					collectionIDs: value,
-					...(newRule.customerBuys.productIDs.length > 0 && {
-						removeProductIDs: newRule.customerBuys.productIDs,
-					}),
-					productIDs: [],
-					items: selectedObjects,
-				},
-			});
-		}
 		setSelectedItems(value);
 	};
 
@@ -190,41 +135,41 @@ const CollectionList: React.FC<CollectionProps> = ({
 			<ResourceList
 				filterControl={filterControl}
 				resourceName={resourceName}
-				items={rowsCollection}
+				items={rowsCustomers}
 				selectable
 				selectedItems={selectedItems}
 				onSelectionChange={handleSelectionChange}
 				renderItem={(item) => {
-					const { id, image, title, productCount } = item;
+					const { id, image, name, email } = item;
 					return (
 						<ResourceItem
 							id={id}
-							accessibilityLabel={`View details for ${title}`}
+							accessibilityLabel={`View details for ${name}`}
 							url=""
 						>
 							<InlineStack gap="200" align="start" blockAlign="center">
 								<Thumbnail size="small" alt="" source={image} />
 								<Box>
 									<Text fontWeight="bold" as="span">
-										{title}
+										{name}
 									</Text>
-									<Text as="p">{productCount} products</Text>
+									<Text as="p">{email}</Text>
 								</Box>
 							</InlineStack>
 						</ResourceItem>
 					);
 				}}
-				loading={isCollectionLoading}
+				loading={isCustomersLoading}
 				pagination={{
-					hasPrevious: collectionPageInfo?.hasPreviousPage,
-					hasNext: collectionPageInfo?.hasNextPage,
+					hasPrevious: customerPageInfo?.hasPreviousPage,
+					hasNext: customerPageInfo?.hasNextPage,
 					onPrevious: () => loadMorePrevious(),
 					onNext: () => loadMoreNext(),
-					label: `Showing ${collections?.length} to ${currentPage} of ${totalCollectionCount} products`,
+					label: `Showing ${customers?.length} to ${currentPage} of ${totalCustomerCount} customers`,
 				}}
 			/>
 		</Scrollable>
 	);
 };
 
-export default CollectionList;
+export default CustomersList;

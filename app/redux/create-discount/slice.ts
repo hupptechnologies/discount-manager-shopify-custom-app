@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
 	fetchAllCollectionsAsync,
+	fetchAllCustomersAsync,
 	fetchAllProductsAsync,
 	fetchProductVariantsAsync,
 } from './index';
@@ -35,6 +36,10 @@ interface CreateDiscountState {
 	totalCollectionCount: number;
 	variants: VariantItem[];
 	isFetchProductVariants: boolean;
+	customers: any[];
+	isCustomersLoading: boolean;
+	customerPageInfo: PageInfo | null;
+	totalCustomerCount: number;
 }
 
 const initialState: CreateDiscountState = {
@@ -48,6 +53,10 @@ const initialState: CreateDiscountState = {
 	totalCollectionCount: 0,
 	variants: [],
 	isFetchProductVariants: false,
+	customers: [],
+	isCustomersLoading: false,
+	customerPageInfo: null,
+	totalCustomerCount: 0
 };
 
 const createDiscountSlice = createSlice({
@@ -101,6 +110,24 @@ const createDiscountSlice = createSlice({
 		builder.addCase(fetchProductVariantsAsync.rejected, (state) => {
 			state.isFetchProductVariants = false;
 			state.variants = [];
+		});
+		builder.addCase(fetchAllCustomersAsync.pending, (state) => {
+			state.isCustomersLoading = true;
+		});
+		builder.addCase(
+			fetchAllCustomersAsync.fulfilled,
+			(state, { payload }) => {
+				state.isCustomersLoading = false;
+				state.customers = payload.customers;
+				state.customerPageInfo = payload.pageInfo;
+				state.totalCustomerCount = payload.totalCount;
+			},
+		);
+		builder.addCase(fetchAllCustomersAsync.rejected, (state) => {
+			state.isCustomersLoading = false;
+			state.customers = [];
+			state.collectionPageInfo = null;
+			state.totalCustomerCount = 0;
 		});
 	},
 });
