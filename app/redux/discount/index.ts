@@ -77,7 +77,7 @@ export const fetchAllDiscountCodesAsync = createAsyncThunk<
 				const { discountCodes, pagination, success, discountStats } =
 					response.data;
 				if (success && params?.callback) {
-					params.callback(success);
+					params.callback();
 				}
 				return fulfillWithValue({ discountCodes, pagination, discountStats });
 			}
@@ -113,7 +113,7 @@ export const deleteDiscountCodeAsync = createAsyncThunk<
 					shopify.toast.show(message);
 				}
 				if (success && params.callback) {
-					params.callback(success);
+					params.callback();
 				}
 				return fulfillWithValue({ success, message });
 			}
@@ -141,7 +141,7 @@ export const deleteAllDiscountCodeAsync = createAsyncThunk<
 					shopify.toast.show(message);
 				}
 				if (success && params.callback) {
-					params.callback(success);
+					params.callback();
 				}
 				return fulfillWithValue({ success, message });
 			}
@@ -169,7 +169,7 @@ export const createDiscountCodeAsync = createAsyncThunk<
 					shopify.toast.show(message);
 				}
 				if (success && params.callback) {
-					params.callback(success);
+					params.callback();
 				}
 				return fulfillWithValue({ success, message });
 			}
@@ -197,7 +197,7 @@ export const createBuyXGetYDiscountCodeAsync = createAsyncThunk<
 					shopify.toast.show(message);
 				}
 				if (success && params.callback) {
-					params.callback(success);
+					params.callback();
 				}
 				return fulfillWithValue({ success, message });
 			}
@@ -229,7 +229,7 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 					method,
 				} = response.data;
 				if (success && params.callback) {
-					params.callback(success);
+					params.callback();
 				}
 				return fulfillWithValue({
 					success,
@@ -271,7 +271,7 @@ export const updateDiscountCodeAsync = createAsyncThunk<
 					shopify.toast.show(message);
 				}
 				if (success && params.callback) {
-					params.callback(success);
+					params.callback();
 				}
 				return fulfillWithValue({ success, message });
 			}
@@ -299,7 +299,7 @@ export const updateBuyXGetYDiscountCodeAsync = createAsyncThunk<
 					shopify.toast.show(message);
 				}
 				if (success && params.callback) {
-					params.callback(success);
+					params.callback();
 				}
 				return fulfillWithValue({ success, message });
 			}
