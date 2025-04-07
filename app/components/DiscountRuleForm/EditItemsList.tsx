@@ -18,6 +18,7 @@ export interface EditItemsListProps {
 	handleVariantListOpen: any;
 	handleCancelProduct: React.Dispatch<any>;
 	handleCancelCollection: React.Dispatch<any>;
+	handleCustomerCancel: any;
 }
 
 const EditItemsList: React.FC<EditItemsListProps> = ({
@@ -25,7 +26,8 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 	items,
 	handleVariantListOpen,
 	handleCancelProduct,
-	handleCancelCollection
+	handleCancelCollection,
+	handleCustomerCancel
 }) => {
 	const groupedItems = type === 'product' && items?.reduce(
 		(acc, edge) => {
@@ -148,6 +150,42 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 											)}
 										</Box>
 										<div onClick={() => handleCancelCollection(id)} className="edit-item-cancel-icon">
+											<Icon source={XIcon} tone="subdued" />
+										</div>
+									</InlineStack>
+								</ResourceItem>
+							);
+						}}
+					/>
+				)}
+				{type === 'customer' && (
+					<ResourceList
+						resourceName={{ singular: 'item', plural: 'items' }}
+						items={items}
+						renderItem={(item) => {
+							const {
+								id,
+								displayName,
+								email,
+								image,
+							} = item;
+							return (
+								<ResourceItem
+									id={id}
+									url=""
+									media={<Thumbnail size="small" alt="" source={image?.url} />}
+									accessibilityLabel={`View details for ${displayName}`}
+								>
+									<InlineStack align="space-between" blockAlign="center">
+										<Box>
+											<Text variant="bodyMd" fontWeight="bold" as="h3">
+												{displayName}
+											</Text>
+											<Text as="p" tone="subdued">
+												{email}
+											</Text>
+										</Box>
+										<div onClick={() => handleCustomerCancel(id)} className="edit-item-cancel-icon">
 											<Icon source={XIcon} tone="subdued" />
 										</div>
 									</InlineStack>

@@ -10,6 +10,7 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
+import EditItemsList from './EditItemsList';
 import type { DiscountRule } from './DiscountRuleForm';
 import type { QueryType } from 'app/routes/app.create-discount';
 
@@ -20,6 +21,7 @@ export interface AdvanceDiscountRuleProps {
 	handleSaveBarOpen: any;
 	handleOpen: any;
 	handleSearchCustomer: any;
+	handleCustomerCancel: any;
 }
 
 const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
@@ -28,7 +30,8 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	queryType,
 	handleSaveBarOpen,
 	handleOpen,
-	handleSearchCustomer
+	handleSearchCustomer,
+	handleCustomerCancel
 }) => {
 	return (
 		<Card>
@@ -148,7 +151,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 							setNewRule({ ...newRule, isAI: !newRule.isAI });
 						}}
 					/>
-					{newRule.customerType === 'vip' && (
+					{newRule.customerType === 'vip' && newRule?.selectedMethod === 'code' && (
 							<FormLayout.Group>
 								<TextField
 									label=""
@@ -163,6 +166,18 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 								</Button>
 							</FormLayout.Group>
 						)}
+					{queryType === 'order' && newRule?.selectedMethod === 'code' && newRule?.customers?.items?.length > 0 && (
+						<FormLayout.Group>
+							<EditItemsList
+								type={'customer'}
+								items={newRule?.customers?.items}
+								handleCancelCollection={() => ''}
+								handleCancelProduct={() => ''}
+								handleVariantListOpen={() => ''}
+								handleCustomerCancel={handleCustomerCancel}
+							/>
+						</FormLayout.Group>
+					)}
 				</FormLayout>
 			</BlockStack>
 		</Card>

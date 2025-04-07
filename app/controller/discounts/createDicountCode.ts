@@ -80,6 +80,10 @@ interface DiscountCodeBasicInput {
 	endsAt: string;
 	customerSelection: {
 		all: boolean;
+		customers: {
+			add: string[];
+			remove: string[];
+		}
 	};
 	customerGets: {
 		value: {
@@ -206,12 +210,14 @@ export const createDiscountCode = async (
 							startsAt,
 							endsAt,
 							customerSelection: {
-								...(customers.customerIDs?.length > 0 && {
-									add: customers.customerIDs
-								}),
-								...(customers.removeCustomersIDs?.length > 0 && {
-									add: customers.removeCustomersIDs
-								}),
+								customers: {
+									...((customers.customerIDs?.length > 0 && type === 'custom') && {
+										add: customers.customerIDs
+									}),
+									...((customers.removeCustomersIDs?.length > 0 && type === 'custom') && {
+										add: customers.removeCustomersIDs
+									}),
+								},
 								...((customers.customerIDs?.length == 0 && customers.removeCustomersIDs.length == 0) && {
 									all: true
 								}),
@@ -278,7 +284,9 @@ export const createDiscountCode = async (
 						};
 					}
 				} else {
-					if (method !== 'custom') {
+					if (method === 'custom') {
+						data.variables.basicCodeDiscount.customerGets.items = { all: true };
+					} else { 
 						dataAuto.variables.automaticBasicDiscount.customerGets.items = {
 							all: true,
 						};

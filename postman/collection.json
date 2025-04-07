@@ -203,7 +203,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&id=1981994303729&discountType=PRODUCT&method=auto",
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/discount?shop={{shopForDiscountApp}}&id=1984550306033&discountType=ORDER&method=custom",
 							"host": [
 								"{{BASE_URL_DISCOUNT_APP}}"
 							],
@@ -218,15 +218,15 @@
 								},
 								{
 									"key": "id",
-									"value": "1981994303729"
+									"value": "1984550306033"
 								},
 								{
 									"key": "discountType",
-									"value": "PRODUCT"
+									"value": "ORDER"
 								},
 								{
 									"key": "method",
-									"value": "auto"
+									"value": "custom"
 								}
 							]
 						}
@@ -408,6 +408,35 @@
 			]
 		},
 		{
+			"name": "customer",
+			"item": [
+				{
+					"name": "fetchCustomers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/customers?shop={{shopForDiscountApp}}",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "{{shopForDiscountApp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "shopifyAPI",
 			"request": {
 				"auth": {
@@ -424,7 +453,7 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "query {\n  themes(first: 10) {\n    edges {\n      node {\n        name\n        id\n        role\n      }\n    }\n  }\n}",
+						"query": "query getCustomers {\n  customers(first: 5) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    edges {\n      node {\n        id\n        displayName\n        image {\n          url\n        }\n        numberOfOrders\n      }\n    }\n  }\n}",
 						"variables": ""
 					}
 				},

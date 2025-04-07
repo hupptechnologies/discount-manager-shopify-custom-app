@@ -28,12 +28,14 @@ interface CustomerProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	reCallAPI: boolean;
+	selectedItemsArray: string[];
 }
 
 const CustomersList: React.FC<CustomerProps> = ({
 	newRule,
 	setNewRule,
-	reCallAPI
+	reCallAPI,
+	selectedItemsArray
 }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
@@ -72,6 +74,12 @@ const CustomersList: React.FC<CustomerProps> = ({
 			setPrevCursor(customerPageInfo.startCursor);
 		}
 	}, [customerPageInfo]);
+
+	useEffect(() => {
+		if (selectedItemsArray.length > 0) {
+			setSelectedItems(selectedItemsArray);
+		}
+	}, [selectedItemsArray]);
 
 	const loadMoreNext = () => {
 		if (customerPageInfo?.hasNextPage) {
@@ -115,10 +123,19 @@ const CustomersList: React.FC<CustomerProps> = ({
 	};
 
 	const handleSelectionChange = (value: string[]) => {
+		const selectedObjects = rowsCustomers?.filter((row) => value.includes(row.id)).map((row) => ({
+			id: row.id,
+			displayName: row.name,
+			email: row.email,
+			image: {
+				url: row.image,
+			},
+		}));
 		setNewRule({
 			...newRule,
 			customers: {
 				...newRule.customers,
+				items: selectedObjects,
 				customerIDs: value
 			}
 		})

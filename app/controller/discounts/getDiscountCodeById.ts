@@ -20,6 +20,18 @@ query getDiscountCode($ID: ID!) {
 						}
 					}
 				}
+				customerSelection {
+					...on DiscountCustomers {
+						customers {
+							id
+							displayName
+							email
+							image {
+								url
+							}
+						}
+					}
+				}
 				customerGets {
 					value {
 						... on DiscountPercentage {
@@ -511,6 +523,16 @@ export interface DiscountCodeBasic {
 			node: {
 				code: string;
 			};
+		}[];
+	};
+	customerSelection: {
+		customers: {
+			id: string;
+			displayName: string;
+			email: string;
+			image: {
+				url: string;
+			}
 		}[];
 	};
 	customerGets: {

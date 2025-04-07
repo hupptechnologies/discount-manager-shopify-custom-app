@@ -25,6 +25,12 @@ export interface nodeList {
 }
 
 export interface ItemsList {
+	id: string;
+	displayName: string;
+	email: string;
+	image: {
+		url: string;
+	};
 	node: {
 		title: string;
 		id: string;
@@ -62,6 +68,9 @@ export interface GetDiscountCodeList {
 			edges: nodeList[];
 		};
 		usesPerOrderLimit: string;
+		customerSelection: {
+			customers: ItemsList[];
+		}
 		customerGets: {
 			value: {
 				effect: {

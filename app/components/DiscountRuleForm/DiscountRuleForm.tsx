@@ -97,7 +97,7 @@ export interface DiscountRule {
 		removeProductIDs: string[];
 	};
 	customers: {
-		items: any[];
+		items: ItemsList[] | any;
 		customerIDs: string[];
 		removeCustomersIDs: string[];
 	};
@@ -338,6 +338,12 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				isAI: advancedRule?.isAI ?? false,
 				isStockBased: advancedRule?.isStockBased ?? false,
 				selectedMethod: isCustomMethod ? 'code' : 'automatic',
+				customers: {
+					...newRule.customers,
+					items: getDiscountCode[0]?.codeDiscount?.customerSelection?.customers,
+					customerIDs: getDiscountCode[0]?.codeDiscount?.customerSelection?.customers?.length > 0 ? getDiscountCode[0]?.codeDiscount?.customerSelection?.customers?.map(item=>item?.id) : [],
+					removeCustomersIDs: []
+				}
 			});
 		}
 	}, [getDiscountCode, discountScope, advancedRule, run]);
@@ -598,6 +604,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		if (newRule?.customerBuys?.items?.length > 0) {
 			delete newRule.customerBuys.items;
 		}
+		if (newRule?.customers?.items?.length > 0) {
+			delete newRule.customers.items;
+		}
 		if (queryType === 'buyXgetY') {
 			dispatch(
 				updateBuyXGetYDiscountCodeAsync({
@@ -645,6 +654,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					),
 					usageLimit: Number(newRule?.totalLimitValue),
 					customerGets: newRule.customerGets,
+					customers: newRule?.customers,
 					appliesOncePerCustomer: newRule?.onePerCustomer,
 					advancedRule,
 				},
@@ -787,10 +797,42 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		});
 	};
 
+	const handleCustomerCancel = (customerIDs: string) => {
+		setNewRule((prevState) => {
+			const updatedCustomerIDs = prevState.customers.customerIDs.filter(
+				(id) => id !== customerIDs
+			);
+			const updatedItems = prevState.customers.items.filter(
+				(item: any) => item?.id !== customerIDs
+			);
+			const newRemoveCustomerIDs = prevState.customers.removeCustomersIDs.includes(customerIDs)
+				? []
+				: [customerIDs];
+	  
+			if (newRemoveCustomerIDs.length > 0) {
+				return {
+					...prevState,
+					customers: {
+						...prevState.customers,
+						customerIDs: updatedCustomerIDs,
+						items: updatedItems,
+						removeCustomersIDs: [
+							...prevState.customers.removeCustomersIDs,
+							...newRemoveCustomerIDs,
+						],
+					},
+				};
+			}
+		  	return prevState;
+		});
+	};
+
 	const handleGenerateCodeList = () => {
 		setGenerateList(['No Codes Found']);
 		setGenerateList(generateDiscountCodes(Number(newRule?.noOfCodeCount), Number(newRule?.codeLength), newRule?.dicountCodePrefix));
 	};
+
+	console.log(newRule, 'New Rule Main');
 
 	return (
 		<Layout>
@@ -847,6 +889,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					handleSaveBarOpen={handleSaveBarOpen}
 					handleOpen={handleOpen}
 					handleSearchCustomer={handleSearchCustomer}
+					handleCustomerCancel={handleCustomerCancel}
 				/>
 				<Placeholder height="5px" />
 				<UsageLimit newRule={newRule} setNewRule={setNewRule} />
@@ -902,6 +945,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						newRule={newRule}
 						setNewRule={setNewRule}
 						reCallAPI={reCallAPI}
+						selectedItemsArray={newRule?.customers?.customerIDs}
 					/>
 					<TitleBar title='Add customers'>
 						<button variant="primary" onClick={handleClose}>

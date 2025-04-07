@@ -67,7 +67,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 	];
 	const [selected, setSelected] = useState(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
-	const [sortSelected, setSortSelected] = useState(['createdAt asc']);
+	const [sortSelected, setSortSelected] = useState(['createdAt desc']);
 	const [deleteData, setDeleteData] = useState<DeleteDataList>({
 		id: null,
 		code: '',
@@ -208,7 +208,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 		);
 	};
 
-	const bulkActions = [
+	const bulkActions: any[] = [
 		{
 			icon: DeleteIcon,
 			destructive: true,
@@ -217,7 +217,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				setDeleteData({ ...deleteData, code: 'all_code_delete' });
 				shopify.modal.show('delete-comfirmation-modal');
 			},
-		},
+		}
 	];
 
 	const { selectedResources, allResourcesSelected, handleSelectionChange } =
@@ -242,9 +242,9 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				index,
 			) => (
 				<IndexTable.Row
-					id={id}
+					id={id as any}
 					key={id}
-					selected={selectedResources.includes(id)}
+					selected={selectedResources.includes(id as any)}
 					position={index}
 				>
 					<IndexTable.Cell>
@@ -347,9 +347,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					allResourcesSelected ? 'All' : selectedResources.length
 				}
 				onSelectionChange={handleSelectionChange}
-				bulkActions={
-					selectedResources?.length === discountCodes?.length ? bulkActions : []
-				}
+				bulkActions={selectedResources?.length === discountCodes?.length ? bulkActions : []}
 				headings={[
 					{ title: 'Discount Code' },
 					{ title: 'Discount Percentage' },

@@ -113,6 +113,10 @@ export interface UpdateDiscountCodeParams {
 			collectionIDs: string[];
 			productIDs: string[];
 		};
+		customers: {
+			customerIDs: string[];
+			removeCustomersIDs: string[];
+		};
 		advancedRule: AdvancedRuleObject | null;
 	};
 	shopName: string;
