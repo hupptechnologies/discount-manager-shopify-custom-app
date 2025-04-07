@@ -27,11 +27,13 @@ interface Customer {
 interface CustomerProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
+	reCallAPI: boolean;
 }
 
 const CustomersList: React.FC<CustomerProps> = ({
 	newRule,
-	setNewRule
+	setNewRule,
+	reCallAPI
 }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
@@ -53,17 +55,16 @@ const CustomersList: React.FC<CustomerProps> = ({
 		plural: 'customers',
 	};
 
-	const rowsCustomers: Customer[] =
-		customers?.length > 0 ? customers : [];
+	const rowsCustomers: Customer[] = customers?.length > 0 ? customers : [];
 
 	useEffect(() => {
 		dispatch(
 			fetchAllCustomersAsync({
 				shopName: shopify.config.shop || '',
-				query: '',
+				query: newRule?.customerSearch,
 			}),
 		);
-	}, []);
+	}, [reCallAPI, newRule?.customerSearch]);
 
 	useEffect(() => {
 		if (customerPageInfo) {
@@ -77,7 +78,7 @@ const CustomersList: React.FC<CustomerProps> = ({
 			dispatch(
 				fetchAllCustomersAsync({
 					shopName: shopify.config.shop || '',
-					query: '',
+					query: newRule?.customerSearch,
 					after: cursor,
 				}),
 			);
@@ -90,7 +91,7 @@ const CustomersList: React.FC<CustomerProps> = ({
 			dispatch(
 				fetchAllCustomersAsync({
 					shopName: shopify.config.shop || '',
-					query: '',
+					query: newRule?.customerSearch,
 					before: prevCursor,
 				}),
 			);
@@ -98,33 +99,39 @@ const CustomersList: React.FC<CustomerProps> = ({
 		}
 	};
 
-	const handleQueryChange = (value: string, type: string) => {
+	const handleQueryChange = (value: string) => {
 		setNewRule({
 			...newRule,
+			customerSearch: value
 		});
 	};
 
 	const handleQueryClear = () => {
-		setNewRule({ ...newRule, searchOne: '', searchTwo: '' });
+		setNewRule({ ...newRule, customerSearch: '' });
 	};
 
 	const handleClearAll = () => {
-		setNewRule({ ...newRule, searchOne: '', searchTwo: '' });
+		setNewRule({ ...newRule, customerSearch: '' });
 	};
 
 	const handleSelectionChange = (value: string[]) => {
+		setNewRule({
+			...newRule,
+			customers: {
+				...newRule.customers,
+				customerIDs: value
+			}
+		})
 		setSelectedItems(value);
 	};
 
 	const filterControl = (
 		<Filters
-			queryValue={
-				newRule?.searchType === 'one' ? newRule?.searchOne : newRule?.searchTwo
-			}
+			queryValue={newRule?.customerSearch}
 			filters={[]}
 			appliedFilters={[]}
-			queryPlaceholder="Filter collection"
-			onQueryChange={(value) => handleQueryChange(value, newRule?.searchType)}
+			queryPlaceholder="Filter customers"
+			onQueryChange={(value) => handleQueryChange(value)}
 			onQueryClear={handleQueryClear}
 			onClearAll={handleClearAll}
 		/>

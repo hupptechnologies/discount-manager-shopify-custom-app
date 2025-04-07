@@ -19,6 +19,7 @@ export interface AdvanceDiscountRuleProps {
 	newRule: DiscountRule;
 	handleSaveBarOpen: any;
 	handleOpen: any;
+	handleSearchCustomer: any;
 }
 
 const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
@@ -26,7 +27,8 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	setNewRule,
 	queryType,
 	handleSaveBarOpen,
-	handleOpen
+	handleOpen,
+	handleSearchCustomer
 }) => {
 	return (
 		<Card>
@@ -151,6 +153,8 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 								<TextField
 									label=""
 									autoComplete="off"
+									value={newRule?.customerSearch}
+									onChange={handleSearchCustomer}
 									prefix={<Icon source={SearchIcon} />}
 									placeholder='Search Customer'
 								/>

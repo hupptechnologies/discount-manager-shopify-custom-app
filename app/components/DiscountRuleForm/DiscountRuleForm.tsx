@@ -96,6 +96,12 @@ export interface DiscountRule {
 		removeCollectionIDs: string[];
 		removeProductIDs: string[];
 	};
+	customers: {
+		items: any[];
+		customerIDs: string[];
+		removeCustomersIDs: string[];
+	};
+	customerSearch: string;
 }
 
 interface DiscountRuleFormProps {
@@ -122,6 +128,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const [run, setRun] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
 	const [generateList, setGenerateList] = useState<string[]>(['No Codes Founds']);
+	const [reCallAPI, setReCallAPI] = useState(false);
 	const [newRule, setNewRule] = useState<DiscountRule>({
 		selectedDiscountType: queryType,
 		selectedMethod: 'code',
@@ -135,7 +142,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		quantity: '',
 		productCategory: '',
 		region: '',
-		customerType: 'vip',
+		customerType: 'all',
 		isStockBased: false,
 		isAI: false,
 		isEndDate: false,
@@ -184,6 +191,12 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			removeCollectionIDs: [],
 			removeProductIDs: [],
 		},
+		customers: {
+			items: [],
+			customerIDs: [],
+			removeCustomersIDs: []
+		},
+		customerSearch: ''
 	});
 
 	useEffect(() => {
@@ -354,6 +367,14 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		[],
 	);
 
+	const debouncedHandleCustomeOpen = useCallback(
+		debounce(() => {
+			setReCallAPI(!reCallAPI);
+			handleOpen('customer', '');
+		}, 500),
+		[],
+	);
+
 	const handleSearchOneChange = (value: string) => {
 		handleSearchTypeChange('one');
 		setNewRule((prev) => ({ ...prev, searchOne: value }));
@@ -366,6 +387,11 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		setNewRule((prev) => ({ ...prev, searchTwo: value }));
 		setSelected(0);
 		debouncedHandleOpen();
+	};
+
+	const handleSearchCustomer = (value: string) => {
+		setNewRule((prev) => ({ ...prev, customerSearch: value }));
+		debouncedHandleCustomeOpen();
 	};
 
 	const handleAddRule = () => {
@@ -432,6 +458,12 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				removeCollectionIDs: [],
 				removeProductIDs: [],
 			},
+			customers: {
+				items: [],
+				customerIDs: [],
+				removeCustomersIDs: []
+			},
+			customerSearch: ''
 		});
 		setIsEdit(false);
 	};
@@ -534,6 +566,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					),
 					customerGets: newRule.customerGets,
 					usageLimit: Number(newRule?.totalLimitValue),
+					customers: newRule?.customers,
 					appliesOncePerCustomer: newRule?.onePerCustomer,
 					advancedRule,
 				},
@@ -813,6 +846,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					setNewRule={setNewRule}
 					handleSaveBarOpen={handleSaveBarOpen}
 					handleOpen={handleOpen}
+					handleSearchCustomer={handleSearchCustomer}
 				/>
 				<Placeholder height="5px" />
 				<UsageLimit newRule={newRule} setNewRule={setNewRule} />
@@ -867,6 +901,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					<CustomersList
 						newRule={newRule}
 						setNewRule={setNewRule}
+						reCallAPI={reCallAPI}
 					/>
 					<TitleBar title='Add customers'>
 						<button variant="primary" onClick={handleClose}>

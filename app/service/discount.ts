@@ -42,6 +42,10 @@ export interface CreateDiscountCodeParams {
 			collectionIDs: string[];
 			productIDs: string[];
 		};
+		customers: {
+			customerIDs: string[];
+			removeCustomersIDs: string[];
+		};
 		advancedRule: object | null;
 	};
 	shopName: string;

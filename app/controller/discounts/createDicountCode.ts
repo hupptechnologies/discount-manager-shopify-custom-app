@@ -144,6 +144,10 @@ interface CreateDiscountCodeInput {
 		removeCollectionIDs: string[];
 		removeProductIDs: string[];
 	};
+	customers: {
+		customerIDs: string[];
+		removeCustomersIDs: string[];
+	}
 	advancedRule: object | null;
 }
 
@@ -161,6 +165,7 @@ export const createDiscountCode = async (
 		usageLimit,
 		appliesOncePerCustomer,
 		customerGets,
+		customers,
 		advancedRule
 	} = dataPayload;
 
@@ -201,7 +206,15 @@ export const createDiscountCode = async (
 							startsAt,
 							endsAt,
 							customerSelection: {
-								all: true,
+								...(customers.customerIDs?.length > 0 && {
+									add: customers.customerIDs
+								}),
+								...(customers.removeCustomersIDs?.length > 0 && {
+									add: customers.removeCustomersIDs
+								}),
+								...((customers.customerIDs?.length == 0 && customers.removeCustomersIDs.length == 0) && {
+									all: true
+								}),
 							},
 							customerGets: {
 								value: {
@@ -265,9 +278,7 @@ export const createDiscountCode = async (
 						};
 					}
 				} else {
-					if (method === 'custom') {
-						data.variables.basicCodeDiscount.customerGets.items = { all: true };
-					} else {
+					if (method !== 'custom') {
 						dataAuto.variables.automaticBasicDiscount.customerGets.items = {
 							all: true,
 						};

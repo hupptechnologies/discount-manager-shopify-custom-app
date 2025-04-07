@@ -25,9 +25,9 @@ const Summary: React.FC<DiscountRuleFormProps> = ({ queryType, newRule }) => {
 
 	const displayText =
 		newRule?.selectedStartDates?.start &&
-		isToday(newRule.selectedStartDates.start)
+		isToday(newRule.selectedStartDates?.start)
 			? 'Active from today'
-			: `Active from ${formatDateRange({ start: newRule.selectedStartDates.start as Date, end: newRule.selectedStartDates.end as Date }, { start: newRule.selectedEndDates.start as Date, end: newRule.selectedEndDates.end as Date })}`;
+			: `Active from ${formatDateRange({ start: newRule?.selectedStartDates?.start as Date, end: newRule?.selectedStartDates?.end as Date }, { start: newRule?.selectedEndDates?.start as Date, end: newRule?.selectedEndDates?.end as Date })}`;
 	const purchaseText =
 		newRule?.purchaseType === 'one-time'
 			? 'one-time'

@@ -106,7 +106,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							/>
 							<TextField
 								label=""
-								value={newRule.customerGets.percentage}
+								value={newRule?.customerGets?.percentage}
 								onChange={(value) => {
 									handleSaveBarOpen();
 									setNewRule({

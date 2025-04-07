@@ -1,8 +1,8 @@
 import { getDetailUsingGraphQL } from "app/service/product";
 
 const GET_CUSTOMERS_QUERY = `
-query getCustomers {
-	customers(first: 5) {
+query GetCustomers($first: Int, $last: Int, $after: String, $before: String, $query: String) {
+	customers(first: $first, last: $last, after: $after, before: $before, query: $query) {
 		pageInfo {
 			endCursor
 			hasNextPage
