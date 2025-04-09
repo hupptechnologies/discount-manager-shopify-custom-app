@@ -13,7 +13,7 @@ query getDiscountCode($ID: ID!) {
 				title
 				startsAt
 				endsAt
-				codes(first: 1) {
+				codes(first: 100) {
 					edges {
 						node {
 							code

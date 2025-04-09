@@ -164,20 +164,24 @@ export const updateBasicDiscountCode = async (
 					id: findDiscountExist?.discountId,
 					basicCodeDiscount: {
 						title: title,
-						code: code,
+						...(!findDiscountExist?.isMultiple && {
+							code: code,
+						}),
 						startsAt: startsAt,
 						endsAt: endsAt,
 						appliesOncePerCustomer: appliesOncePerCustomer,
 						usageLimit: usageLimit,
 						customerSelection: {
-							customers: {
-								...((customers.customerIDs?.length > 0 && isCustom) && {
-									add: customers.customerIDs
-								}),
-								...((customers.removeCustomersIDs?.length > 0 && isCustom) && {
-									remove: customers.removeCustomersIDs
-								}),
-							},
+							...((customers.customerIDs?.length > 0 || customers.removeCustomersIDs.length > 0) && {
+								customers: {
+									...((customers.customerIDs?.length > 0 && isCustom) && {
+										add: customers.customerIDs
+									}),
+									...((customers.removeCustomersIDs?.length > 0 && isCustom) && {
+										remove: customers.removeCustomersIDs
+									}),
+								},
+							}),
 							...((customers.customerIDs?.length == 0 && customers.removeCustomersIDs.length == 0) && {
 								all: true
 							}),

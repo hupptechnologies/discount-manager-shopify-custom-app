@@ -118,7 +118,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						<Text variant="bodyMd" as="h3">
 							Discount code
 						</Text>
-						<Link
+						{!(generateList?.length > 1) && <Link
 							onClick={() => {
 								handleSaveBarOpen();
 								setNewRule({
@@ -129,7 +129,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 							removeUnderline
 						>
 							Generate code
-						</Link>
+						</Link>}
 					</InlineStack>
 					<TextField
 						label
@@ -140,6 +140,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						}}
 						helpText="Customers must enter this code at checkout."
 						autoComplete="off"
+						readOnly={generateList?.length > 1}
 					/>
 				</Box>
 			)}

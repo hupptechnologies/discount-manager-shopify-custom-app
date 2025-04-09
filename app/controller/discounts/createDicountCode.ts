@@ -318,6 +318,7 @@ export const createDiscountCode = async (
 					discountAmount: Number(customerGets.percentage),
 					discountType: 'PERCENT',
 					usageLimit,
+					isMultiple: codes?.length > 1,
 					isActive: true,
 					discountMethod: method === 'custom' ? 'CUSTOM' : 'AUTOMATIC',
 					discountScope: type === 'products' ? 'PRODUCT' : type === 'order' ? 'ORDER' : 'SHIPPING',

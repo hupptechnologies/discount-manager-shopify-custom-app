@@ -43,6 +43,7 @@ model DiscountCode {
   discountScope   DiscountScope
   discountMethod  DiscountMethod
   isActive        Boolean       @default(true)
+  isMultiple      Boolean       @default(false)
   startDate       DateTime
   endDate         DateTime
   usageLimit      Int
