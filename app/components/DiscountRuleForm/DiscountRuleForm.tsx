@@ -257,7 +257,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					? getDiscountCode[0]?.codeDiscount?.usesPerOrderLimit
 					: getDiscountCode[0]?.automaticDiscount?.usesPerOrderLimit;
 			setIsEdit(true);
-			setCodesList(getDiscountCode[0]?.codeDiscount?.codes?.edges?.length > 0 ? getDiscountCode[0]?.codeDiscount?.codes?.edges : [])
+			if (isCustomMethod && getDiscountCode[0]?.codeDiscount?.codes?.edges?.length > 1) {
+				setCodesList(getDiscountCode[0]?.codeDiscount?.codes?.edges);
+			}
 			setNewRule({
 				...newRule,
 				getItemFrom: productVariantsExistForGet ? 'product' : 'collection',

@@ -3,6 +3,7 @@ import { createBulkDiscountCode } from 'app/controller/discounts/createBulkDisco
 import { createBuyXGetYDiscountCode } from 'app/controller/discounts/createBuyxGetyDiscountCode';
 import { createDiscountCode } from 'app/controller/discounts/createDicountCode';
 import { deleteAllDiscountCodes } from 'app/controller/discounts/deleteAllDiscountCode';
+import { deleteBulkRedeemDiscountCode } from 'app/controller/discounts/deleteBulkRedeemDiscountCode';
 import { deleteDiscountCode } from 'app/controller/discounts/deleteDiscountCode';
 import { getDiscountCodeById } from 'app/controller/discounts/getDiscountCodeById';
 import { getDiscountCodes } from 'app/controller/discounts/getDiscountCodes';
@@ -117,6 +118,10 @@ export const action = async ({
 		return json<ActionResponse>(updateBasicDiscountCodeResponse);
 	}
 	if (request.method === 'DELETE') {
+		if (multiple) {
+			const discountCodeResponse = await deleteBulkRedeemDiscountCode(shop, dataPayload);
+			return json<ActionResponse>(discountCodeResponse);
+		}
 		if (type === 'all_code_delete') {
 			const deleteAllDiscountCode = await deleteAllDiscountCodes(shop);
 			return json<ActionResponse>(deleteAllDiscountCode);
