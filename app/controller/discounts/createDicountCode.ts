@@ -1,6 +1,7 @@
 import prisma from '../../db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
 import { DiscountCodeCustomerSelection } from './updateBasicDiscountCode';
+import { createBulkDiscountCode } from './createBulkDiscountCode';
 
 const CREATE_BASIC_DISCOUNT_CODE_QUERY = `
 mutation CreateDiscountCode($basicCodeDiscount: DiscountCodeBasicInput!) {
@@ -171,156 +172,161 @@ export const createDiscountCode = async (
 			};
 		}
 
-		if (codes.length > 0) {
-			for (const code of codes) {
-				const checkCodeExist = await prisma.discountCode.count({
-					where: { shop, code },
-				});
+		const checkCodeExist = await prisma.discountCode.count({
+			where: { shop, code: codes[0] },
+		});
 
-				if (checkCodeExist > 0) {
-					return {
-						success: false,
-						message: `The discount code "${code}" already exists. Please try using a different code.`,
-					};
-				}
-				const response = await prisma.session.findMany({
-					where: { shop },
-				});
-				const accessToken = response[0]?.accessToken;
+		if (checkCodeExist > 0) {
+			return {
+				success: false,
+				message: `The discount code "${codes[0]}" already exists. Please try using a different code.`,
+			};
+		}
+		const response = await prisma.session.findMany({
+			where: { shop },
+		});
+		const accessToken = response[0]?.accessToken;
 
-				if (!accessToken) {
-					throw new Error('Access token not found');
-				}
-				const data: any = {
-					query: CREATE_BASIC_DISCOUNT_CODE_QUERY,
-					variables: {
-						basicCodeDiscount: {
-							code,
-							title,
-							startsAt,
-							endsAt,
-							customerSelection: {
-								customers: {
-									...((customers.customerIDs?.length > 0 && type === 'custom') && {
-										add: customers.customerIDs
-									}),
-									...((customers.removeCustomersIDs?.length > 0 && type === 'custom') && {
-										remove: customers.removeCustomersIDs
-									}),
-								},
-								...((customers.customerIDs?.length == 0 && customers.removeCustomersIDs.length == 0) && {
-									all: true
+		if (!accessToken) {
+			throw new Error('Access token not found');
+		}
+		const data = {
+			query: CREATE_BASIC_DISCOUNT_CODE_QUERY,
+			variables: {
+				basicCodeDiscount: {
+					code: codes[0],
+					title,
+					startsAt,
+					endsAt,
+					customerSelection: {
+						...((customers.customerIDs?.length > 0 || customers.removeCustomersIDs.length > 0) && {
+							customers: {
+								...((customers.customerIDs?.length > 0 && type === 'custom') && {
+									add: customers.customerIDs
+								}),
+								...((customers.removeCustomersIDs?.length > 0 && type === 'custom') && {
+									remove: customers.removeCustomersIDs
 								}),
 							},
-							customerGets: {
-								value: {
-									percentage: Number(customerGets.percentage) / 100,
-								},
-								items: {} as DiscountCodeItems,
-							},
-							usageLimit,
-							appliesOncePerCustomer,
-						} as DiscountCodeBasicInput,
+						}),
+						...(customers.customerIDs?.length == 0 && customers.removeCustomersIDs.length == 0 && {
+							all: true
+						}),
 					},
-				};
-				const dataAuto: any = {
-					query: CREATE_AUTOMATIC_BASIC_DISCOUNTCODE_QUERY,
-					variables: {
-						automaticBasicDiscount: {
-							title,
-							startsAt,
-							endsAt,
-							customerGets: {
-								value: {
-									percentage: Number(customerGets.percentage) / 100,
-								},
-								items: {} as DiscountCodeItems,
-							},
-						} as DiscountAutomaticBasicInput,
-					},
-				};
-				if (
-					customerGets.productIDs.length > 0 ||
-					customerGets.removeProductIDs.length > 0
-				) {
-					const productData = {
-						productVariantsToAdd: customerGets.productIDs,
-						productVariantsToRemove: customerGets.removeProductIDs,
-					};
-					if (method === 'custom') {
-						data.variables.basicCodeDiscount.customerGets.items = {
-							products: productData,
-						};
-					} else {
-						dataAuto.variables.automaticBasicDiscount.customerGets.items = {
-							products: productData,
-						};
-					}
-				} else if (
-					customerGets.collectionIDs.length > 0 ||
-					customerGets.removeCollectionIDs.length > 0
-				) {
-					const collectionData = {
-						add: customerGets.collectionIDs,
-						remove: customerGets.removeCollectionIDs,
-					};
-					if (method === 'custom') {
-						data.variables.basicCodeDiscount.customerGets.items = {
-							collections: collectionData,
-						};
-					} else {
-						dataAuto.variables.automaticBasicDiscount.customerGets.items = {
-							collections: collectionData,
-						};
-					}
-				} else {
-					if (method === 'custom') {
-						data.variables.basicCodeDiscount.customerGets.items = { all: true };
-					} else { 
-						dataAuto.variables.automaticBasicDiscount.customerGets.items = {
-							all: true,
-						};
-					}
-				}
-				const createDiscountResponse: DiscountCodeResponse = await getDetailUsingGraphQL(shop, accessToken, method === 'custom' ? data : dataAuto);
-
-				if (createDiscountResponse.data.errors) {
-					throw new Error(
-						createDiscountResponse.data.errors.map((e) => e.message).join(', '),
-					);
-				}
-				const discountCodeData =
-					method === 'custom'
-						? createDiscountResponse.data?.data?.discountCodeBasicCreate
-								?.codeDiscountNode
-						: createDiscountResponse.data?.data?.discountAutomaticBasicCreate
-								?.automaticDiscountNode;
-
-				if (discountCodeData) {
-					await prisma.discountCode.create({
-						data: {
-							code,
-							title,
-							shop,
-							discountId: discountCodeData?.id,
-							advancedRule: advancedRule || undefined,
-							startDate: new Date(startsAt),
-							endDate: new Date(endsAt),
-							discountAmount: Number(customerGets.percentage),
-							discountType: 'PERCENT',
-							usageLimit,
-							isActive: true,
-							discountMethod: method === 'custom' ? 'CUSTOM' : 'AUTOMATIC',
-							discountScope: type === 'products' ? 'PRODUCT' : type === 'order' ? 'ORDER' : 'SHIPPING',
+					customerGets: {
+						value: {
+							percentage: Number(customerGets.percentage) / 100,
 						},
-					});
-				} else {
-					return { success: false, message: 'Discount record not added in database' };
-				}
+						items: {} as DiscountCodeItems,
+					},
+					usageLimit,
+					appliesOncePerCustomer,
+				} as DiscountCodeBasicInput,
+			},
+		};
+
+		const dataAuto: any = {
+			query: CREATE_AUTOMATIC_BASIC_DISCOUNTCODE_QUERY,
+			variables: {
+				automaticBasicDiscount: {
+					title,
+					startsAt,
+					endsAt,
+					customerGets: {
+						value: {
+							percentage: Number(customerGets.percentage) / 100,
+						},
+						items: {} as DiscountCodeItems,
+					},
+				} as DiscountAutomaticBasicInput,
+			},
+		};
+		if (
+			customerGets.productIDs.length > 0 ||
+			customerGets.removeProductIDs.length > 0
+		) {
+			const productData = {
+				productVariantsToAdd: customerGets.productIDs,
+				productVariantsToRemove: customerGets.removeProductIDs,
+			};
+			if (method === 'custom') {
+				data.variables.basicCodeDiscount.customerGets.items = {
+					products: productData,
+				};
+			} else {
+				dataAuto.variables.automaticBasicDiscount.customerGets.items = {
+					products: productData,
+				};
 			}
-			return { success: true, message: 'Multiple discount codes created successfully' };
+		} else if (
+			customerGets.collectionIDs.length > 0 ||
+			customerGets.removeCollectionIDs.length > 0
+		) {
+			const collectionData = {
+				add: customerGets.collectionIDs,
+				remove: customerGets.removeCollectionIDs,
+			};
+			if (method === 'custom') {
+				data.variables.basicCodeDiscount.customerGets.items = {
+					collections: collectionData,
+				};
+			} else {
+				dataAuto.variables.automaticBasicDiscount.customerGets.items = {
+					collections: collectionData,
+				};
+			}
+		} else {
+			if (method === 'custom') {
+				data.variables.basicCodeDiscount.customerGets.items = { all: true };
+			} else { 
+				dataAuto.variables.automaticBasicDiscount.customerGets.items = {
+					all: true,
+				};
+			}
 		}
-		return { success: false, message: 'No discount code found' }
+		const createDiscountResponse: DiscountCodeResponse = await getDetailUsingGraphQL(shop, accessToken, method === 'custom' ? data : dataAuto);
+		
+		if (createDiscountResponse.data.errors) {
+			throw new Error(
+				createDiscountResponse.data.errors.map((e) => e.message).join(', '),
+			);
+		}
+		const discountCodeData =
+			method === 'custom'
+				? createDiscountResponse.data?.data?.discountCodeBasicCreate
+						?.codeDiscountNode
+				: createDiscountResponse.data?.data?.discountAutomaticBasicCreate
+						?.automaticDiscountNode;
+		if (codes?.length > 1 && discountCodeData?.id) {
+			const bulkDataPayload = {
+				discountId: discountCodeData?.id,
+				codes
+			};
+			await createBulkDiscountCode(shop, bulkDataPayload);
+		}
+
+		if (discountCodeData) {
+			await prisma.discountCode.create({
+				data: {
+					code: codes[0],
+					title,
+					shop,
+					discountId: discountCodeData?.id,
+					advancedRule: advancedRule || undefined,
+					startDate: new Date(startsAt),
+					endDate: new Date(endsAt),
+					discountAmount: Number(customerGets.percentage),
+					discountType: 'PERCENT',
+					usageLimit,
+					isActive: true,
+					discountMethod: method === 'custom' ? 'CUSTOM' : 'AUTOMATIC',
+					discountScope: type === 'products' ? 'PRODUCT' : type === 'order' ? 'ORDER' : 'SHIPPING',
+				},
+			});
+		} else {
+			return { success: false, message: 'Discount record not added in database' };
+		}
+		return { success: true, message: 'Multiple discount codes created successfully' };
 	} catch (error) {
 		console.error(error, 'Error while creating discount code');
 		return { success: false, message: 'Something went wrong' };

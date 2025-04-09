@@ -1,4 +1,5 @@
 import { json } from '@remix-run/node';
+import { createBulkDiscountCode } from 'app/controller/discounts/createBulkDiscountCode';
 import { createBuyXGetYDiscountCode } from 'app/controller/discounts/createBuyxGetyDiscountCode';
 import { createDiscountCode } from 'app/controller/discounts/createDicountCode';
 import { deleteAllDiscountCodes } from 'app/controller/discounts/deleteAllDiscountCode';
@@ -90,6 +91,7 @@ export const action = async ({
 	const shop = url.searchParams.get('shop') ?? '';
 	const type = url.searchParams.get('type') ?? '';
 	const method = url.searchParams.get('method') ?? '';
+	const multiple = url.searchParams.get('multiple') ?? false;
 	const id = Number(url.searchParams.get('id'));
 	const dataPayload = await request.json();
 	if (request.method === 'PUT') {
@@ -123,6 +125,13 @@ export const action = async ({
 		return json<ActionResponse>(discountCodeResponse);
 	}
 	if (request.method === 'POST') {
+		if (multiple) {
+			const discountCodeResponse = await createBulkDiscountCode(
+				shop,
+				dataPayload
+			);
+			return json(discountCodeResponse);
+		}
 		if (type === 'buyXgetY') {
 			const buyXGetYResponse = await createBuyXGetYDiscountCode(
 				shop,

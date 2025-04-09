@@ -87,7 +87,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 				/>
 			</BlockStack>
 			<Placeholder height="5px" />
-			<BlockStack gap="100">
+			{!isEdit && <BlockStack gap="100">
 				<RadioButton
 					label="Generate random code"
 					checked={newRule.isRandom}
@@ -110,8 +110,8 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						})
 					}
 				/>
-			</BlockStack>
-			<Placeholder height="5px" />
+			</BlockStack>}
+			{!isEdit && <Placeholder height="5px" />}
 			{newRule.isCustom && (
 				<Box>
 					<InlineStack align="space-between" blockAlign="center" gap="200">
