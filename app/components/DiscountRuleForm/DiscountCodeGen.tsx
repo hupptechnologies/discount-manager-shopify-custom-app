@@ -31,6 +31,7 @@ interface DiscountCodeGenProps {
 	isEdit: boolean;
 	generateList: string[];
 	codesList: CodeList[];
+	isMultiple: boolean;
 }
 
 const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
@@ -45,7 +46,8 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 	handleGenerateCodeList,
 	generateList,
 	handleOpenBulkCode,
-	codesList
+	codesList,
+	isMultiple
 }) => {
 	return (
 		<Card>
@@ -123,7 +125,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						<Text variant="bodyMd" as="h3">
 							Discount code
 						</Text>
-						{codesList?.length > 0 ? 
+						{(codesList?.length > 0 && isMultiple) ?
 							<Link removeUnderline onClick={handleOpenBulkCode}>
 								Views all codes
 							</Link> :
@@ -150,7 +152,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						}}
 						helpText="Customers must enter this code at checkout."
 						autoComplete="off"
-						readOnly={codesList?.length > 0}
+						readOnly={codesList?.length > 0 && isMultiple}
 					/>
 				</Box>
 			)}

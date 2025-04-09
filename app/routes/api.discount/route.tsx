@@ -20,6 +20,7 @@ export interface getDiscountCodeResponse {
 	discountCode: object | null;
 	advancedRule: object | null;
 	discountScope: string | null;
+	isMultiple: boolean;
 	message: string;
 	method: string;
 }

@@ -9,6 +9,7 @@ import {
 	getDiscountCodeByIdAsync,
 	updateBuyXGetYDiscountCodeAsync,
 	updateDiscountCodeAsync,
+	deleteBulkRedeemDiscountCodeAsync,
 } from './index';
 import type { AdvancedRuleObject } from 'app/service/discount';
 
@@ -58,6 +59,7 @@ export interface ItemsList {
 }
 
 export interface GetDiscountCodeList {
+	id: string;
 	codeDiscount: {
 		title: string;
 		usageLimit: string;
@@ -159,6 +161,7 @@ interface discountState {
 	isGetDiscountCodeById: boolean;
 	isUpdateDiscountCode: boolean;
 	isUpdateBuyXGetyDiscountCode: boolean;
+	isDeleteBulkRedeemCode: boolean;
 	pagination: Pagination;
 	discountStats: {
 		activeDiscount: { count: number; data: number[] };
@@ -170,6 +173,7 @@ interface discountState {
 	advancedRule: AdvancedRuleObject | null;
 	updateDiscountCodeId: number | null;
 	method: string;
+	isMultiple: boolean;
 }
 
 const initialState: discountState = {
@@ -197,6 +201,8 @@ const initialState: discountState = {
 	updateDiscountCodeId: null,
 	advancedRule: null,
 	method: '',
+	isMultiple: false,
+	isDeleteBulkRedeemCode: false
 };
 
 const discountSlice = createSlice({
@@ -214,15 +220,12 @@ const discountSlice = createSlice({
 		builder.addCase(fetchAllDiscountCodesAsync.pending, (state) => {
 			state.isLoading = true;
 		});
-		builder.addCase(
-			fetchAllDiscountCodesAsync.fulfilled,
-			(state, { payload }) => {
-				state.isLoading = false;
-				state.discountCodes = payload.discountCodes;
-				state.pagination = payload.pagination;
-				state.discountStats = payload.discountStats;
-			},
-		);
+		builder.addCase(fetchAllDiscountCodesAsync.fulfilled, (state, { payload }) => {
+			state.isLoading = false;
+			state.discountCodes = payload.discountCodes;
+			state.pagination = payload.pagination;
+			state.discountStats = payload.discountStats;
+		});
 		builder.addCase(fetchAllDiscountCodesAsync.rejected, (state) => {
 			state.isLoading = false;
 			state.discountCodes = [];
@@ -276,22 +279,21 @@ const discountSlice = createSlice({
 		builder.addCase(getDiscountCodeByIdAsync.pending, (state) => {
 			state.isGetDiscountCodeById = true;
 		});
-		builder.addCase(
-			getDiscountCodeByIdAsync.fulfilled,
-			(state, { payload }) => {
-				state.isGetDiscountCodeById = false;
-				state.getDiscountCode = payload.discountCode;
-				state.discountScope = payload.discountScope;
-				state.advancedRule = payload.advancedRule;
-				state.method = payload.method;
-			},
-		);
+		builder.addCase(getDiscountCodeByIdAsync.fulfilled, (state, { payload }) => {
+			state.isGetDiscountCodeById = false;
+			state.getDiscountCode = payload.discountCode;
+			state.discountScope = payload.discountScope;
+			state.advancedRule = payload.advancedRule;
+			state.method = payload.method;
+			state.isMultiple = payload.isMultiple;
+		});
 		builder.addCase(getDiscountCodeByIdAsync.rejected, (state) => {
 			state.isGetDiscountCodeById = false;
 			state.getDiscountCode = [];
 			state.discountScope = '';
 			state.advancedRule = null;
 			state.method = '';
+			state.isMultiple = false;
 		});
 		builder.addCase(updateDiscountCodeAsync.pending, (state) => {
 			state.isUpdateDiscountCode = true;
@@ -302,16 +304,20 @@ const discountSlice = createSlice({
 		builder.addCase(updateBuyXGetYDiscountCodeAsync.pending, (state) => {
 			state.isUpdateBuyXGetyDiscountCode = true;
 		});
-		builder.addCase(updateBuyXGetYDiscountCodeAsync.rejected, (state) => {
+		builder.addCase(updateBuyXGetYDiscountCodeAsync.fulfilled, (state) => {
 			state.isUpdateBuyXGetyDiscountCode = false;
+		});
+		builder.addCase(deleteBulkRedeemDiscountCodeAsync.pending, (state) => {
+			state.isDeleteBulkRedeemCode = true;
+		});
+		builder.addCase(deleteBulkRedeemDiscountCodeAsync.rejected, (state) => {
+			state.isDeleteBulkRedeemCode = false;
 		});
 	},
 });
 
-export const { handleUpdateDiscountCodeId, handleResetGetDiscountCode } =
-	discountSlice.actions;
+export const { handleUpdateDiscountCodeId, handleResetGetDiscountCode } = discountSlice.actions;
 
-export const getAllDiscountCodeDetail = (state: { discount: discountState }) =>
-	state.discount;
+export const getAllDiscountCodeDetail = (state: { discount: discountState }) => state.discount;
 
 export default discountSlice.reducer;

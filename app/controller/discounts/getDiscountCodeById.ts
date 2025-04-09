@@ -612,6 +612,7 @@ export const getDiscountCodeById = async (
 				message: 'Required fields id, discountType and shop',
 				discountCode: null,
 				discountScope: '',
+				isMultiple: false,
 				advancedRule: null,
 				method,
 			};
@@ -666,6 +667,7 @@ export const getDiscountCodeById = async (
 				discountCode: [discountCode],
 				discountScope: getCodeObj?.discountScope || '',
 				advancedRule: getCodeObj?.advancedRule as object | null,
+				isMultiple: getCodeObj?.isMultiple, 
 				message: 'Fetch discount code successfully',
 				method: method,
 			};
@@ -676,6 +678,7 @@ export const getDiscountCodeById = async (
 			message: 'Record not found!',
 			discountCode: null,
 			discountScope: '',
+			isMultiple: false,
 			advancedRule: null,
 			method,
 		};
@@ -690,6 +693,7 @@ export const getDiscountCodeById = async (
 			discountCode: [],
 			message: 'Something went wrong',
 			discountScope: '',
+			isMultiple: false,
 			advancedRule: null,
 			method,
 		};

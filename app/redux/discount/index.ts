@@ -6,6 +6,7 @@ import type {
 	CreateDiscountCodeParams,
 	DeleteAllDiscountCodeParams,
 	DeleteDiscountCodeParams,
+	DeleteRedeemDiscountCodeParams,
 	FetchAllDiscountCodesParams,
 	GetDiscountCodeByIdParams,
 	UpdateBuyXGetYDiscountCodeParams,
@@ -15,6 +16,7 @@ import {
 	createBuyXGetYDiscountCode,
 	createDiscountCode,
 	deleteAllDiscountCode,
+	deleteBulkRedeemDiscountCode,
 	deleteDiscountCode,
 	fetchAllDiscountCodes,
 	getDiscountCodeById,
@@ -62,6 +64,7 @@ interface GetDiscountCodeByIdReturnValue {
 	discountCode: GetDiscountCodeList[];
 	discountScope: string;
 	advancedRule: AdvancedRuleObject | null;
+	isMultiple: boolean;
 	method: string;
 }
 
@@ -227,6 +230,7 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 					discountScope,
 					advancedRule,
 					method,
+					isMultiple
 				} = response.data;
 				if (success && params.callback) {
 					params.callback();
@@ -238,6 +242,7 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 					discountScope,
 					advancedRule,
 					method,
+					isMultiple
 				});
 			}
 			return fulfillWithValue({
@@ -247,6 +252,7 @@ export const getDiscountCodeByIdAsync = createAsyncThunk<
 				discountScope: '',
 				advancedRule: null,
 				method: '',
+				isMultiple: false
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;
@@ -293,6 +299,34 @@ export const updateBuyXGetYDiscountCodeAsync = createAsyncThunk<
 	async (params, { rejectWithValue, fulfillWithValue }) => {
 		try {
 			const response = await updateBuyXGetYDiscountCode(params);
+			if (response.data) {
+				const { success, message } = response.data;
+				if (message) {
+					shopify.toast.show(message);
+				}
+				if (success && params.callback) {
+					params.callback();
+				}
+				return fulfillWithValue({ success, message });
+			}
+			return fulfillWithValue({ success: false, message: '' });
+		} catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	},
+);
+
+export const deleteBulkRedeemDiscountCodeAsync = createAsyncThunk<
+	ReturnValue,
+	DeleteRedeemDiscountCodeParams
+>(
+	'discount/deleteBulkRedeemDiscountCode',
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await deleteBulkRedeemDiscountCode(params);
 			if (response.data) {
 				const { success, message } = response.data;
 				if (message) {

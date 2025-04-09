@@ -22,6 +22,15 @@ export interface DeleteDiscountCodeParams {
 	callback?: () => void;
 }
 
+export interface DeleteRedeemDiscountCodeParams {
+	data: {
+		discountId: string;
+		ids: string[];
+	};
+	shopName: string;
+	callback?: () => void;
+}
+
 export interface DeleteAllDiscountCodeParams {
 	type: string;
 	shopName: string;
@@ -201,47 +210,35 @@ export const deleteAllDiscountCode = (params: DeleteAllDiscountCodeParams) => {
 export const createDiscountCode = (params: CreateDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, data, type = 'product', method } = params;
-	return requestInstance.post(
-		`discount?shop=${shopName}&type=${type}&method=${method}`,
-		data,
-	);
+	return requestInstance.post(`discount?shop=${shopName}&type=${type}&method=${method}`, data);
 };
 
-export const createBuyXGetYDiscountCode = (
-	params: CreateBuyXGetYDiscountCodeParams,
-) => {
+export const createBuyXGetYDiscountCode = (params: CreateBuyXGetYDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, data, type = 'buyXgetY', method } = params;
-	return requestInstance.post(
-		`discount?shop=${shopName}&type=${type}&method=${method}`,
-		data,
-	);
+	return requestInstance.post(`discount?shop=${shopName}&type=${type}&method=${method}`, data);
 };
 
 export const getDiscountCodeById = (params: GetDiscountCodeByIdParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, id, discountType, method } = params;
-	return requestInstance.get(
-		`discount?shop=${shopName}&id=${id}&discountType=${discountType}&method=${method}`,
-	);
+	return requestInstance.get(`discount?shop=${shopName}&id=${id}&discountType=${discountType}&method=${method}`);
 };
 
 export const updateDiscountCode = (params: UpdateDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, id, type = 'products', data } = params;
-	return requestInstance.put(
-		`discount?shop=${shopName}&id=${id}&type=${type}`,
-		data,
-	);
+	return requestInstance.put(`discount?shop=${shopName}&id=${id}&type=${type}`, data);
 };
 
-export const updateBuyXGetYDiscountCode = (
-	params: UpdateBuyXGetYDiscountCodeParams,
-) => {
+export const updateBuyXGetYDiscountCode = (params: UpdateBuyXGetYDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, id, type = 'buyXgetY', data } = params;
-	return requestInstance.put(
-		`discount?shop=${shopName}&id=${id}&type=${type}`,
-		data,
-	);
+	return requestInstance.put(`discount?shop=${shopName}&id=${id}&type=${type}`, data);
+};
+
+export const deleteBulkRedeemDiscountCode = (params: DeleteRedeemDiscountCodeParams) => {
+	const requestInstance: AxiosInstance = backendAPI();
+	const { shopName, data } = params;
+	return requestInstance.delete(`discount?shop=${shopName}&multiple=true`, { data });
 };
