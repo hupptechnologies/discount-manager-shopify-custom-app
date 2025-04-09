@@ -16,7 +16,9 @@ query getDiscountCode($ID: ID!) {
 				codes(first: 100) {
 					edges {
 						node {
+							id
 							code
+							asyncUsageCount
 						}
 					}
 				}

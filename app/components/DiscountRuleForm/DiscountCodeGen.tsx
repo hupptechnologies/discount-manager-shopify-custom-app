@@ -14,12 +14,14 @@ import {
 } from '@shopify/polaris';
 import Placeholder from '../Placeholder';
 import type { DiscountRule } from './DiscountRuleForm';
+import type { CodeList } from './BulkCodeList';
 import type { QueryType } from 'app/routes/app.create-discount';
 import { generateDiscountCode } from 'app/utils/json';
 
 interface DiscountCodeGenProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	handleButtonClick: React.Dispatch<React.SetStateAction<any>>;
+	handleOpenBulkCode: () => void;
 	handleGenerateCodeList: any;
 	handleSaveBarOpen: any;
 	activeButtonIndex: number;
@@ -28,6 +30,7 @@ interface DiscountCodeGenProps {
 	newRule: DiscountRule;
 	isEdit: boolean;
 	generateList: string[];
+	codesList: CodeList[];
 }
 
 const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
@@ -40,7 +43,9 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 	handleSaveBarOpen,
 	isEdit,
 	handleGenerateCodeList,
-	generateList
+	generateList,
+	handleOpenBulkCode,
+	codesList
 }) => {
 	return (
 		<Card>
@@ -118,18 +123,23 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						<Text variant="bodyMd" as="h3">
 							Discount code
 						</Text>
-						{!(generateList?.length > 1) && <Link
-							onClick={() => {
-								handleSaveBarOpen();
-								setNewRule({
-									...newRule,
-									checkoutDiscountCode: generateDiscountCode(),
-								});
-							}}
-							removeUnderline
-						>
-							Generate code
-						</Link>}
+						{codesList?.length > 0 ? 
+							<Link removeUnderline onClick={handleOpenBulkCode}>
+								Views all codes
+							</Link> :
+							<Link
+								onClick={() => {
+									handleSaveBarOpen();
+									setNewRule({
+										...newRule,
+										checkoutDiscountCode: generateDiscountCode(),
+									});
+								}}
+								removeUnderline
+							>
+								Generate code
+							</Link>
+						}
 					</InlineStack>
 					<TextField
 						label
@@ -140,7 +150,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						}}
 						helpText="Customers must enter this code at checkout."
 						autoComplete="off"
-						readOnly={generateList?.length > 1}
+						readOnly={codesList?.length > 0}
 					/>
 				</Box>
 			)}

@@ -32,6 +32,7 @@ import DiscountBuyXGetY from './DiscountBuyXGetY';
 import UsageLimit from './UsageLimit';
 import Placeholder from '../Placeholder';
 import CustomersList from './CustomerList';
+import BulkCodeList from './BulkCodeList';
 import { convertToLocalTime, formatDateWithTimeZone, generateDiscountCodes } from 'app/utils/json';
 
 export interface DiscountRule {
@@ -128,6 +129,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const [run, setRun] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
 	const [generateList, setGenerateList] = useState<string[]>(['No Codes Founds']);
+	const [codesList, setCodesList] = useState<any[]>([]);
 	const [reCallAPI, setReCallAPI] = useState(false);
 	const [newRule, setNewRule] = useState<DiscountRule>({
 		selectedDiscountType: queryType,
@@ -255,7 +257,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					? getDiscountCode[0]?.codeDiscount?.usesPerOrderLimit
 					: getDiscountCode[0]?.automaticDiscount?.usesPerOrderLimit;
 			setIsEdit(true);
-			setGenerateList(isCustomMethod && getDiscountCode[0]?.codeDiscount?.codes?.edges.length > 1 ? getDiscountCode[0]?.codeDiscount?.codes?.edges?.map(item=>item?.node?.code) : ['No Codes Founds'])
+			setCodesList(getDiscountCode[0]?.codeDiscount?.codes?.edges?.length > 0 ? getDiscountCode[0]?.codeDiscount?.codes?.edges : [])
 			setNewRule({
 				...newRule,
 				getItemFrom: productVariantsExistForGet ? 'product' : 'collection',
@@ -833,6 +835,14 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		setGenerateList(generateDiscountCodes(Number(newRule?.noOfCodeCount), Number(newRule?.codeLength), newRule?.dicountCodePrefix));
 	};
 
+	const handleOpenBulkCode = () => {
+		shopify.modal.show('bulk-codes-modal');
+	};
+
+	const handleCloseBulkCode = () => {
+		shopify.modal.hide('bulk-codes-modal');
+	};
+
 	return (
 		<Layout>
 			<Layout.Section>
@@ -853,6 +863,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					isEdit={isEdit}
 					generateList={generateList}
 					handleGenerateCodeList={handleGenerateCodeList}
+					handleOpenBulkCode={handleOpenBulkCode}
+					codesList={codesList}
 				/>
 				<Placeholder height="5px" />
 				{['buyXgetY'].includes(queryType as string) ? (
@@ -951,6 +963,19 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 							Add
 						</button>
 						<button onClick={handleClose}>Cancel</button>
+					</TitleBar>
+				</Modal>
+			}
+			{codesList?.length > 0 &&
+				<Modal id='bulk-codes-modal'>
+					<BulkCodeList
+						items={codesList}
+					/>
+					<TitleBar title='Codes'>
+						<button variant="primary" onClick={handleCloseBulkCode}>
+							Add
+						</button>
+						<button onClick={handleCloseBulkCode}>Cancel</button>
 					</TitleBar>
 				</Modal>
 			}
