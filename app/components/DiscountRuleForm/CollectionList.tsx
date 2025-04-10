@@ -29,6 +29,7 @@ interface CollectionProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	selected: number;
 	selectedItemsArray: string[];
+	handleSaveBarOpen:any;
 }
 
 const CollectionList: React.FC<CollectionProps> = ({
@@ -36,6 +37,7 @@ const CollectionList: React.FC<CollectionProps> = ({
 	setNewRule,
 	selected,
 	selectedItemsArray,
+	handleSaveBarOpen
 }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
@@ -126,6 +128,7 @@ const CollectionList: React.FC<CollectionProps> = ({
 	};
 
 	const handleSelectionChange = (value: string[]) => {
+		handleSaveBarOpen();
 		const selectedObjects = rowsCollection
 			.filter((row) => value.includes(row.id))
 			.map((row) => ({

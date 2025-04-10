@@ -47,12 +47,14 @@ interface ProductProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
 	selected: number;
+	handleSaveBarOpen: any;
 }
 
 const ProductsList: React.FC<ProductProps> = ({
 	newRule,
 	setNewRule,
 	selected,
+	handleSaveBarOpen
 }) => {
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
@@ -175,6 +177,7 @@ const ProductsList: React.FC<ProductProps> = ({
 		);
 	useEffect(() => {
 		if (selectedResources.length > 0) {
+			handleSaveBarOpen();
 			const selectedObjects = rowsProduct.filter((row) => selectedResources.includes(row.id)).map((row) => ({
 				node: {
 					id: row.id,

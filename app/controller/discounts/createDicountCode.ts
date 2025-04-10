@@ -324,10 +324,9 @@ export const createDiscountCode = async (
 					discountScope: type === 'products' ? 'PRODUCT' : type === 'order' ? 'ORDER' : 'SHIPPING',
 				},
 			});
-		} else {
-			return { success: false, message: 'Discount record not added in database' };
-		}
-		return { success: true, message: 'Multiple discount codes created successfully' };
+			return { success: true, message: 'Multiple discount codes created successfully' };
+		};
+		return { success: false, message: 'Discount record not added in database' };
 	} catch (error) {
 		console.error(error, 'Error while creating discount code');
 		return { success: false, message: 'Something went wrong' };

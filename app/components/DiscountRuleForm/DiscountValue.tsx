@@ -201,6 +201,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							newRule?.customerGets?.items?.length > 0 && (
 								<FormLayout.Group>
 									<EditItemsList
+										handleCustomerCancel={() => {}}
 										handleCancelCollection={handleCustomerGetCancelCollection}
 										handleCancelProduct={handleCustomerGetCancelProduct}
 										handleVariantListOpen={handleVariantListOpen}

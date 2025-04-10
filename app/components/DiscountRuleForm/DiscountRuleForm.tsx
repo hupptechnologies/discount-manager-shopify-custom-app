@@ -681,6 +681,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleCustomerGetCancelProduct = (productIds: string[]) => {
+		handleSaveBarOpen();
 		setNewRule((prevState) => {
 			const updatedItems = prevState.customerGets.items.filter(
 				(item: any) => !productIds.includes(item.node.id)
@@ -713,6 +714,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleCustomerBuyCancelProduct = (productIds: string[]) => {
+		handleSaveBarOpen();
 		setNewRule((prevState) => {
 			const updatedItems = prevState.customerBuys.items.filter(
 				(item: any) => !productIds.includes(item.node.id)
@@ -746,6 +748,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleCustomerGetCancelCollection = (collectionId: string) => {
+		handleSaveBarOpen();
 		setNewRule((prevState) => {
 		  const updatedCollectionIDs = prevState.customerGets.collectionIDs.filter(
 			(id) => id !== collectionId
@@ -779,6 +782,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleCustomerBuyCancelCollection = (collectionId: string) => {
+		handleSaveBarOpen();
 		setNewRule((prevState) => {
 			const updatedCollectionIDs = prevState.customerBuys.collectionIDs.filter(
 				(id) => id !== collectionId
@@ -809,6 +813,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	};
 
 	const handleCustomerCancel = (customerIDs: string) => {
+		handleSaveBarOpen();
 		setNewRule((prevState) => {
 			const updatedCustomerIDs = prevState.customers.customerIDs.filter(
 				(id) => id !== customerIDs
@@ -926,6 +931,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						selected={selected}
 						newRule={newRule}
 						setNewRule={setNewRule}
+						handleSaveBarOpen={handleSaveBarOpen}
 					/>
 				)}
 				{newRule?.buyItemFrom === 'product' && selected === 1 && (
@@ -933,6 +939,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						selected={selected}
 						newRule={newRule}
 						setNewRule={setNewRule}
+						handleSaveBarOpen={handleSaveBarOpen}
 					/>
 				)}
 				{newRule?.getItemFrom === 'collection' && selected === 0 && (
@@ -941,6 +948,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						selected={selected}
 						newRule={newRule}
 						setNewRule={setNewRule}
+						handleSaveBarOpen={handleSaveBarOpen}
 					/>
 				)}
 				{newRule?.getItemFrom === 'product' && selected === 0 && (
@@ -948,6 +956,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 						selected={selected}
 						newRule={newRule}
 						setNewRule={setNewRule}
+						handleSaveBarOpen={handleSaveBarOpen}
 					/>
 				)}
 				<TitleBar

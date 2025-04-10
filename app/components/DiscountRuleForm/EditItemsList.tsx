@@ -96,14 +96,16 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 										{type === 'product' && (
 											<Box>
 												<InlineStack align="space-between" blockAlign="center">
-													<Button
-														variant="plain"
-														onClick={() =>
-															handleVariantListOpen(id, variantId, title, url)
-														}
-													>
-														Edit
-													</Button>
+													{count > 1 &&
+														<Button
+															variant="plain"
+															onClick={() =>
+																handleVariantListOpen(id, variantId, title, url)
+															}
+														>
+															Edit
+														</Button>
+													}
 													&nbsp;&nbsp;&nbsp;
 													<div
 														onClick={() => handleCancelProduct(variantId)}
