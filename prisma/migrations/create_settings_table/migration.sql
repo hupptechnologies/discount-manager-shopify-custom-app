@@ -1,0 +1,8 @@
+CREATE TABLE "Setting" (
+    "id" SERIAL PRIMARY KEY,
+    "shop" VARCHAR(255) NOT NULL,
+    "fields" JSONB NOT NULL,
+    "status" BOOLEAN DEFAULT TRUE,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -204,7 +204,7 @@ export const deleteDiscountCode = (params: DeleteDiscountCodeParams) => {
 export const deleteAllDiscountCode = (params: DeleteAllDiscountCodeParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName, type } = params;
-	return requestInstance.delete(`discount?shop=${shopName}&type=${type}`);
+	return requestInstance.delete(`discount?shop=${shopName}&type=${type}`, { data: {}});
 };
 
 export const createDiscountCode = (params: CreateDiscountCodeParams) => {
