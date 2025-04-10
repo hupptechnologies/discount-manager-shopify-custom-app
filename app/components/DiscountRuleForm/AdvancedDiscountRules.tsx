@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useAppBridge } from '@shopify/app-bridge-react';
+import { useCallback, useState } from 'react';
 import {
+	Autocomplete,
 	BlockStack,
 	Button,
 	Card,
@@ -12,9 +12,8 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'app/redux/store';
-import { fetchAllProductCategoryAsync } from 'app/redux/create-discount';
+import { useSelector } from 'react-redux';
+import { RootState } from 'app/redux/store';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 import EditItemsList from './EditItemsList';
 import type { DiscountRule } from './DiscountRuleForm';
@@ -39,19 +38,48 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	handleSearchCustomer,
 	handleCustomerCancel
 }) => {
-	const dispatch = useDispatch<AppDispatch>();
-	const shopify = useAppBridge();
 	const { categories } = useSelector((state: RootState) => getCreateDiscountDetail(state));
-	useEffect(() => {
-		dispatch(fetchAllProductCategoryAsync({
-			shopName: shopify.config.shop || '',
-			type: 'category'
-		}));
-	}, [dispatch]);
 	const convertedCategories = categories?.length > 0 && categories.map(category => ({
 		label: category?.node?.name,
 		value: category?.node?.name
 	}));
+	const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+	const [options, setOptions] = useState(convertedCategories);
+	const updateText = useCallback(
+		(value: string) => {
+			setNewRule({
+				...newRule,
+				productCategory: value,
+			});
+			if (value === '') {
+				setOptions(convertedCategories);
+				return;
+			}
+			const filterRegex = new RegExp(value, 'i');
+			const resultOptions = Array.isArray(convertedCategories)
+				? convertedCategories.filter((option) => option.label.match(filterRegex) !== null)
+			: [];
+			setOptions(resultOptions);
+		},
+		[convertedCategories],
+	);
+	const updateSelection = useCallback(
+		(selected: string[]) => {
+			const selectedValue = selected.map((selectedItem) => {
+			const matchedOption = Array.isArray(options) ? options.find((option) => {
+				return option.value.match(selectedItem);
+			}) : null;
+				return matchedOption && matchedOption.label;
+			});
+			setSelectedOptions(selected);
+			setNewRule({
+				...newRule,
+				productCategory: selectedValue[0],
+			});
+		},
+		[options],
+	);
+
 	return (
 		<Card>
 			<BlockStack gap="500">
@@ -122,17 +150,17 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
 						{['products', 'buyXgetY'].includes(queryType as string) && (
-							<Select
-								label="Discount by Category"
-								options={convertedCategories || []}
-								value={newRule.productCategory}
-								onChange={(value) => {
-									handleSaveBarOpen();
-									setNewRule({
-										...newRule,
-										productCategory: value,
-									});
-								}}
+							<Autocomplete
+								options={options || []}
+								selected={selectedOptions}
+								onSelect={updateSelection}
+								textField={<Autocomplete.TextField
+									onChange={updateText}
+									label="Discount by Category"
+									value={newRule?.productCategory}
+									placeholder="Category"
+									autoComplete="off"
+								/>}
 							/>
 						)}
 						{['order', 'shipping'].includes(queryType as string) && (
