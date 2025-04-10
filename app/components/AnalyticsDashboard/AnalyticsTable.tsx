@@ -238,6 +238,8 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					endDate,
 					createdAt,
 					discountScope,
+					discountMethod,
+					isMultiple
 				},
 				index,
 			) => (
@@ -253,11 +255,19 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 						</Text>
 					</IndexTable.Cell>
 					<IndexTable.Cell>{discountAmount}%</IndexTable.Cell>
+					<IndexTable.Cell>{discountMethod}</IndexTable.Cell>
 					<IndexTable.Cell>{discountScope}</IndexTable.Cell>
 					<IndexTable.Cell>
 						<Text as="span" alignment="start">
 							{asyncUsageCount}
 						</Text>
+					</IndexTable.Cell>
+					<IndexTable.Cell>
+						<Badge
+							tone={isMultiple ? 'success' : 'info'}
+						>
+							{isMultiple ? 'Yes' : 'No' }
+						</Badge>
 					</IndexTable.Cell>
 					<IndexTable.Cell>
 						<Badge
@@ -350,9 +360,11 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				bulkActions={selectedResources?.length === discountCodes?.length ? bulkActions : []}
 				headings={[
 					{ title: 'Discount Code' },
-					{ title: 'Discount Percentage' },
-					{ title: 'Applicable Scope' },
+					{ title: 'Percentage' },
+					{ title: 'Method' },
+					{ title: 'Discount Type' },
 					{ title: 'Usage Count' },
+					{ title: 'Is Bulk' },
 					{ title: 'Status' },
 					{ title: 'Start Date' },
 					{ title: 'End Date' },

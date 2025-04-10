@@ -226,7 +226,6 @@ export const createBuyXGetYDiscountCode = async (
 ): Promise<{ success: boolean; message: string }> => {
 	const {
 		title,
-		code,
 		startsAt,
 		endsAt,
 		usageLimit,
@@ -234,6 +233,7 @@ export const createBuyXGetYDiscountCode = async (
 		customerGets,
 		advancedRule,
 	} = dataPayload;
+	const code = title;
 
 	try {
 		if (!customerGets.percentage || !code) {

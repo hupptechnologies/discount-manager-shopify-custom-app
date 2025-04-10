@@ -912,9 +912,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					handleCustomerCancel={handleCustomerCancel}
 				/>
 				<Placeholder height="5px" />
-				<UsageLimit newRule={newRule} setNewRule={setNewRule} />
+				<UsageLimit handleSaveBarOpen={handleSaveBarOpen} newRule={newRule} setNewRule={setNewRule} />
 				<Placeholder height="5px" />
-				<ActiveDates newRule={newRule} setNewRule={setNewRule} />
+				<ActiveDates handleSaveBarOpen={handleSaveBarOpen} newRule={newRule} setNewRule={setNewRule} />
 			</Layout.Section>
 			<Layout.Section variant="oneThird">
 				<Summary newRule={newRule} queryType={queryType} />

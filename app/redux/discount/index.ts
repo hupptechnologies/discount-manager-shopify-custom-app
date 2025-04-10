@@ -37,6 +37,8 @@ export interface DiscountCode {
 	endDate: string;
 	createdAt: string;
 	discountScope: string;
+	discountMethod: string;
+	isMultiple: boolean;
 }
 
 interface FetchAllDiscountCodeReturnValue {

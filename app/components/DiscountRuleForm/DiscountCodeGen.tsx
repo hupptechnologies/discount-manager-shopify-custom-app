@@ -85,16 +85,19 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					helpText="The name of the discount the codes will be grouped under."
 					autoComplete="off"
 					value={newRule?.title}
-					onChange={(value) =>
-						setNewRule({
-							...newRule,
-							title: value,
-						})
-					}
+					onChange={(value) => {
+						if (value.length <= 10) {
+							handleSaveBarOpen();
+							setNewRule({
+								...newRule,
+								title: value,
+							})
+						}
+					}}
 				/>
 			</BlockStack>
 			<Placeholder height="5px" />
-			{!isEdit && newRule?.selectedMethod === 'code' && <BlockStack gap="100">
+			{!isEdit && newRule?.selectedMethod === 'code' && queryType !== 'buyXgetY' && <BlockStack gap="100">
 				<RadioButton
 					label="Generate random code"
 					checked={newRule.isRandom}
@@ -118,8 +121,8 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					}
 				/>
 			</BlockStack>}
-			{!isEdit && newRule?.selectedMethod === 'code' && <Placeholder height="5px" />}
-			{newRule.isCustom && (
+			{!isEdit && newRule?.selectedMethod === 'code' && queryType !== 'buyXgetY' && <Placeholder height="5px" />}
+			{!isEdit && queryType !== 'buyXgetY' && newRule.isCustom && (
 				<Box>
 					<InlineStack align="space-between" blockAlign="center" gap="200">
 						<Text variant="bodyMd" as="h3">
@@ -147,8 +150,10 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						label
 						value={newRule.checkoutDiscountCode}
 						onChange={(value) => {
-							handleSaveBarOpen();
-							setNewRule({ ...newRule, checkoutDiscountCode: value });
+							if (value.length <= 10) {
+								handleSaveBarOpen();
+								setNewRule({ ...newRule, checkoutDiscountCode: value });
+							};
 						}}
 						helpText="Customers must enter this code at checkout."
 						autoComplete="off"
@@ -169,18 +174,22 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 					/>
 					<TextField
 						label="Code length"
-						type="integer"
+						type="number"
 						value={newRule.codeLength}
 						onChange={(value) => setNewRule({ ...newRule, codeLength: value })}
 						autoComplete="off"
+						max={10}
+						min={0}
 					/>
 					<TextField
 						label="Dicount prefix"
 						type="text"
 						value={newRule?.dicountCodePrefix}
-						onChange={(value) =>
-							setNewRule({ ...newRule, dicountCodePrefix: value })
-						}
+						onChange={(value) => {
+							if (value?.length <= 5) {
+								setNewRule({ ...newRule, dicountCodePrefix: value })
+							}
+						}}
 						autoComplete="off"
 					/>
 				</FormLayout.Group>

@@ -12,9 +12,10 @@ import type { DiscountRule } from './DiscountRuleForm';
 interface UsageLimitProps {
 	newRule: DiscountRule;
 	setNewRule: React.Dispatch<any>;
+	handleSaveBarOpen: any;
 }
 
-const UsageLimit: React.FC<UsageLimitProps> = ({ newRule, setNewRule }) => {
+const UsageLimit: React.FC<UsageLimitProps> = ({ newRule, setNewRule, handleSaveBarOpen }) => {
 	return (
 		<Card>
 			<BlockStack gap="300">
@@ -25,12 +26,13 @@ const UsageLimit: React.FC<UsageLimitProps> = ({ newRule, setNewRule }) => {
 					<Checkbox
 						label="Limit number of times this discount can be used in total"
 						checked={newRule?.totalUsageLimit}
-						onChange={() =>
+						onChange={() => {
+							handleSaveBarOpen();
 							setNewRule({
 								...newRule,
 								totalUsageLimit: !newRule.totalUsageLimit,
 							})
-						}
+						}}
 						helpText={
 							newRule?.totalUsageLimit && (
 								<Box width="30%">
@@ -50,12 +52,13 @@ const UsageLimit: React.FC<UsageLimitProps> = ({ newRule, setNewRule }) => {
 					<Checkbox
 						label="Limit to one use per customer"
 						checked={newRule?.onePerCustomer}
-						onChange={() =>
+						onChange={() => {
+							handleSaveBarOpen();
 							setNewRule({
 								...newRule,
 								onePerCustomer: !newRule.onePerCustomer,
 							})
-						}
+						}}
 					/>
 				</FormLayout.Group>
 			</BlockStack>
