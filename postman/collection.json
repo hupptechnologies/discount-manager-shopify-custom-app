@@ -60,6 +60,39 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "fetchAllProductCategories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/products?shop={{shopForDiscountApp}}&type=category",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "{{shopForDiscountApp}}"
+								},
+								{
+									"key": "type",
+									"value": "category"
+								},
+								{
+									"key": "childrenOf",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -507,236 +540,6 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "shopifyAPI",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "X-Shopify-Access-Token",
-						"value": "{{accessToken}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"discount_code\": {\n        \"price_rule_id\": 1985040089329,\n        \"code\":\"test_5\"\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://local-sparkfitness.myshopify.com/admin/api/2024-10/price_rules/1985040089329/discount_codes.json",
-					"protocol": "https",
-					"host": [
-						"local-sparkfitness",
-						"myshopify",
-						"com"
-					],
-					"path": [
-						"admin",
-						"api",
-						"2024-10",
-						"price_rules",
-						"1985040089329",
-						"discount_codes.json"
-					]
-				}
-			},
-			"response": [
-				{
-					"name": "shopifyAPI",
-					"originalRequest": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Shopify-Access-Token",
-								"value": "{{accessToken}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"discount_code\": {\n        \"price_rule_id\": 1985040089329,\n        \"code\":\"test_5\"\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://local-sparkfitness.myshopify.com/admin/api/2024-10/price_rules/1985040089329/discount_codes.json",
-							"protocol": "https",
-							"host": [
-								"local-sparkfitness",
-								"myshopify",
-								"com"
-							],
-							"path": [
-								"admin",
-								"api",
-								"2024-10",
-								"price_rules",
-								"1985040089329",
-								"discount_codes.json"
-							]
-						}
-					},
-					"status": "Created",
-					"code": 201,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Date",
-							"value": "Wed, 09 Apr 2025 12:24:16 GMT"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Transfer-Encoding",
-							"value": "chunked"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "x-sorting-hat-podid",
-							"value": "240"
-						},
-						{
-							"key": "x-sorting-hat-shopid",
-							"value": "72332771569"
-						},
-						{
-							"key": "referrer-policy",
-							"value": "origin-when-cross-origin"
-						},
-						{
-							"key": "x-frame-options",
-							"value": "DENY"
-						},
-						{
-							"key": "x-shopid",
-							"value": "72332771569"
-						},
-						{
-							"key": "x-shardid",
-							"value": "240"
-						},
-						{
-							"key": "x-stats-userid",
-							"value": ""
-						},
-						{
-							"key": "x-stats-apiclientid",
-							"value": "226219360257"
-						},
-						{
-							"key": "x-stats-apipermissionid",
-							"value": "538432602353"
-						},
-						{
-							"key": "x-shopify-api-version",
-							"value": "2024-10"
-						},
-						{
-							"key": "http_x_shopify_shop_api_call_limit",
-							"value": "1/40"
-						},
-						{
-							"key": "x-shopify-shop-api-call-limit",
-							"value": "1/40"
-						},
-						{
-							"key": "location",
-							"value": "/admin/price_rules/1985040089329/discount_codes/18500291985649"
-						},
-						{
-							"key": "strict-transport-security",
-							"value": "max-age=7889238"
-						},
-						{
-							"key": "x-request-id",
-							"value": "ff49ce4e-6767-4d41-9ff3-d4061921c321-1744201456"
-						},
-						{
-							"key": "server-timing",
-							"value": "processing;dur=76"
-						},
-						{
-							"key": "content-security-policy",
-							"value": "default-src 'self' data: blob: 'unsafe-inline' 'unsafe-eval' https://* shopify-pos://*; block-all-mixed-content; child-src 'self' https://* shopify-pos://*; connect-src 'self' wss://* https://*; frame-ancestors 'none'; img-src 'self' data: blob: https:; script-src https://cdn.shopify.com https://cdn.shopifycdn.net https://checkout.pci.shopifyinc.com https://checkout.pci.shopifyinc.com/build/75a428d/card_fields.js https://api.stripe.com https://mpsnare.iesnare.com https://appcenter.intuit.com https://www.paypal.com https://js.braintreegateway.com https://c.paypal.com https://maps.googleapis.com https://www.google-analytics.com https://v.shopify.com 'self' 'unsafe-inline' 'unsafe-eval'; upgrade-insecure-requests; report-uri /csp-report?source%5Baction%5D=create&source%5Bapp%5D=Shopify&source%5Bcontroller%5D=admin%2Fprice_rules%2Fdiscount_codes&source%5Bsection%5D=admin_api&source%5Buuid%5D=ff49ce4e-6767-4d41-9ff3-d4061921c321-1744201456; report-to shopify-csp"
-						},
-						{
-							"key": "x-content-type-options",
-							"value": "nosniff"
-						},
-						{
-							"key": "x-download-options",
-							"value": "noopen"
-						},
-						{
-							"key": "x-permitted-cross-domain-policies",
-							"value": "none"
-						},
-						{
-							"key": "x-xss-protection",
-							"value": "1; mode=block"
-						},
-						{
-							"key": "reporting-endpoints",
-							"value": "shopify-csp=\"/csp-report?source%5Baction%5D=create&source%5Bapp%5D=Shopify&source%5Bcontroller%5D=admin%2Fprice_rules%2Fdiscount_codes&source%5Bsection%5D=admin_api&source%5Buuid%5D=ff49ce4e-6767-4d41-9ff3-d4061921c321-1744201456\""
-						},
-						{
-							"key": "x-dc",
-							"value": "gcp-us-central1,gcp-us-central1,gcp-us-central1"
-						},
-						{
-							"key": "Alt-Svc",
-							"value": "h3=\":443\"; ma=86400"
-						},
-						{
-							"key": "cf-cache-status",
-							"value": "DYNAMIC"
-						},
-						{
-							"key": "Report-To",
-							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=oaqOslHVTkoNfSaS6WQiR3FfWwt1wXbJLvFfXstV7HYn61GZxLud38uNOnnOS3eoutfzScG8HfowQl0MPVT0vv6t74PCyScLagnt2aX6k2DflIhcu6b47TqbDM9UNAcJ8abpyCozPsNeYBeOlrHsDuUX\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
-						},
-						{
-							"key": "NEL",
-							"value": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}"
-						},
-						{
-							"key": "Server-Timing",
-							"value": "cfRequestDuration;dur=418.999910"
-						},
-						{
-							"key": "Shopify-Edge-Ip",
-							"value": "23.227.38.74"
-						},
-						{
-							"key": "Server",
-							"value": "cloudflare"
-						},
-						{
-							"key": "CF-RAY",
-							"value": "92d9fafe6d7a2e9c-HYD"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"discount_code\": {\n        \"id\": 18500291985649,\n        \"price_rule_id\": 1985040089329,\n        \"code\": \"test_5\",\n        \"usage_count\": 0,\n        \"created_at\": \"2025-04-09T08:24:16-04:00\",\n        \"updated_at\": \"2025-04-09T08:24:16-04:00\"\n    }\n}"
 				}
 			]
 		}
