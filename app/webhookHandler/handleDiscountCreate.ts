@@ -1,6 +1,43 @@
 import prisma from '../db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
 
+const FIND_BASIC_DISCOUNT_CODE_TYPE_QUERY = `
+query getDiscountCode($ID: ID!) {
+	codeDiscountNode(id: $ID) {
+		codeDiscount {
+			__typename
+		}
+	}
+}`;
+
+const GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY = `
+query getDiscountCode($ID: ID!) {
+	codeDiscountNode(id: $ID) {
+		codeDiscount {
+			... on DiscountCodeFreeShipping {
+				status
+				title
+				startsAt
+				endsAt
+				discountClass
+				codes(first: 1) {
+					edges {
+						node {
+							code
+						}
+					}
+				}
+				maximumShippingPrice{
+					amount
+					currencyCode
+				}
+				usageLimit
+				appliesOncePerCustomer
+			}
+		}
+	}
+}`;
+
 const GET_BASIC_DISCOUNT_CODE_QUERY = `
 query getDiscountCode($ID: ID!) {
 	codeDiscountNode(id: $ID) {
@@ -62,6 +99,10 @@ interface GraphQLResponse {
 							percentage: number;
 						};
 					};
+					maximumShippingPrice: {
+						amount: string;
+						currencyCode: string;
+					}
 				};
 			};
 		};
@@ -93,8 +134,20 @@ export const handleDiscountCreate = async (
 		if (!accessToken) {
 			throw new Error('Access token not found');
 		}
+
+		const typeData = {
+			query: FIND_BASIC_DISCOUNT_CODE_TYPE_QUERY,
+			variables: {
+				ID: payload.admin_graphql_api_id,
+			}
+		}
+
+		const getTypeOfDiscount = await getDetailUsingGraphQL(shop, accessToken, typeData);
+		const __typename = getTypeOfDiscount?.data?.data?.codeDiscountNode?.codeDiscount?.__typename || '';
+		const isShipping = __typename === 'DiscountCodeFreeShipping';
+
 		const data = {
-			query: GET_BASIC_DISCOUNT_CODE_QUERY,
+			query: isShipping ? GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY : GET_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
 				ID: payload.admin_graphql_api_id,
 			},
@@ -112,7 +165,8 @@ export const handleDiscountCreate = async (
 			codes: { edges },
 			startsAt,
 			endsAt,
-			customerGets: { value },
+			customerGets,
+			maximumShippingPrice
 		} = graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount;
 
 		await prisma.discountCode.create({
@@ -123,7 +177,7 @@ export const handleDiscountCreate = async (
 				discountId: payload.admin_graphql_api_id,
 				startDate: new Date(startsAt),
 				endDate: new Date(endsAt),
-				discountAmount: Number(value?.percentage) * 100,
+				discountAmount: isShipping ? Number(maximumShippingPrice?.amount) : Number(customerGets?.value?.percentage) * 100,
 				discountType: 'PERCENT',
 				usageLimit: usageLimit ? usageLimit : 0,
 				isActive: true,

@@ -191,7 +191,7 @@ export const handleDiscountUpdate = async (
 		} = isCustom ? graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount : graphQlResponse?.data?.data?.automaticDiscountNode?.automaticDiscount;
 
 		if (!discountClass || !title || !startsAt || !endsAt) {
-			console.error('Missing required discount data', graphQlResponse);
+			console.error('Missing required discount data', graphQlResponse?.data?.data?.codeDiscountNode, graphQlResponse?.data?.data?.automaticDiscountNode);
 			return;
 		}
 		const discountCodeData = isCustom ? graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount : graphQlResponse?.data?.data?.automaticDiscountNode?.automaticDiscount;
