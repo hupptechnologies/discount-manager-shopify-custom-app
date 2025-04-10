@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
 	fetchAllCollectionsAsync,
 	fetchAllCustomersAsync,
+	fetchAllProductCategoryAsync,
 	fetchAllProductsAsync,
 	fetchProductVariantsAsync,
 } from './index';
@@ -40,6 +41,15 @@ interface CreateDiscountState {
 	isCustomersLoading: boolean;
 	customerPageInfo: PageInfo | null;
 	totalCustomerCount: number;
+	categories: {
+		node: {
+			id: string;
+			name: string;
+			fullName: string;
+			childrenIds: string[];
+		}
+	}[];
+	isCategory: boolean;
 }
 
 const initialState: CreateDiscountState = {
@@ -56,7 +66,9 @@ const initialState: CreateDiscountState = {
 	customers: [],
 	isCustomersLoading: false,
 	customerPageInfo: null,
-	totalCustomerCount: 0
+	totalCustomerCount: 0,
+	categories: [],
+	isCategory: false
 };
 
 const createDiscountSlice = createSlice({
@@ -128,6 +140,16 @@ const createDiscountSlice = createSlice({
 			state.customers = [];
 			state.collectionPageInfo = null;
 			state.totalCustomerCount = 0;
+		});
+		builder.addCase(fetchAllProductCategoryAsync.pending, (state) => {
+			state.isCategory = true;
+		});
+		builder.addCase(fetchAllProductCategoryAsync.fulfilled, (state, { payload }) => {
+			state.isCategory = false;
+			state.categories = payload.categories;
+		});
+		builder.addCase(fetchAllProductCategoryAsync.rejected, (state) => {
+			state.isCategory = false;
 		});
 	},
 });

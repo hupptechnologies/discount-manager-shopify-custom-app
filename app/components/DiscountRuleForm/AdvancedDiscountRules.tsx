@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useAppBridge } from '@shopify/app-bridge-react';
 import {
 	BlockStack,
 	Button,
@@ -10,6 +12,10 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'app/redux/store';
+import { fetchAllProductCategoryAsync } from 'app/redux/create-discount';
+import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 import EditItemsList from './EditItemsList';
 import type { DiscountRule } from './DiscountRuleForm';
 import type { QueryType } from 'app/routes/app.create-discount';
@@ -33,6 +39,19 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	handleSearchCustomer,
 	handleCustomerCancel
 }) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const shopify = useAppBridge();
+	const { categories } = useSelector((state: RootState) => getCreateDiscountDetail(state));
+	useEffect(() => {
+		dispatch(fetchAllProductCategoryAsync({
+			shopName: shopify.config.shop || '',
+			type: 'category'
+		}));
+	}, [dispatch]);
+	const convertedCategories = categories?.length > 0 && categories.map(category => ({
+		label: category?.node?.name,
+		value: category?.node?.name
+	}));
 	return (
 		<Card>
 			<BlockStack gap="500">
@@ -104,11 +123,8 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 					<FormLayout.Group condensed>
 						{['products', 'buyXgetY'].includes(queryType as string) && (
 							<Select
-								label="Discount by Product Category"
-								options={[
-									{ label: 'Shoes', value: 'shoes' },
-									{ label: 'Electronic', value: 'electronic' },
-								]}
+								label="Discount by Category"
+								options={convertedCategories || []}
 								value={newRule.productCategory}
 								onChange={(value) => {
 									handleSaveBarOpen();

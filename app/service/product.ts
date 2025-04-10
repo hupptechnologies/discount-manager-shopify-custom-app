@@ -30,6 +30,12 @@ interface FetchAllCollectionsParams {
 	shopName: string;
 }
 
+export interface FetchAllProductCategoryParams {
+	type?: string;
+	childrenOf?: string;
+	shopName: string;
+}
+
 export const fetchAllProducts = (params: FetchAllProductsParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { after, before, query, shopName, id } = params;
@@ -66,5 +72,18 @@ export const fetchAllCollections = (params: FetchAllCollectionsParams) => {
 		url += `&before=${before}`;
 	}
 
+	return requestInstance.get(url);
+};
+
+export const fetchAllProductCategory = (params: FetchAllProductCategoryParams) => {
+	const requestInstance: AxiosInstance = backendAPI();
+	const { childrenOf, type, shopName } = params;
+	let url = `products?shop=${shopName}`;
+	if (type) {
+		url += `&type=${type}`;
+	}
+	if (childrenOf) {
+		url += `&childrenOf=${childrenOf}`;
+	}
 	return requestInstance.get(url);
 };

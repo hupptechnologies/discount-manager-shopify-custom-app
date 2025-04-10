@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosError } from 'axios';
-import { fetchAllCollections, fetchAllProducts } from 'app/service/product';
+import { FetchAllProductCategoryParams, fetchAllCollections, fetchAllProductCategory, fetchAllProducts } from 'app/service/product';
 import { fetchAllCustomers } from 'app/service/customer';
 
 interface FetchAllProductsParams {
@@ -60,6 +60,19 @@ interface FetchAllCustomerReturnValue {
 
 interface FetchProductsVariantValue {
 	variants: any[];
+}
+
+interface FetchAllProductCategoryReturnValue {
+	success: boolean;
+	message: string;
+	categories: {
+		node: {
+			id: string;
+			name: string;
+			fullName: string;
+			childrenIds: string[];
+		}
+	}[];
 }
 
 export const fetchAllProductsAsync = createAsyncThunk<
@@ -187,6 +200,40 @@ export const fetchProductVariantsAsync = createAsyncThunk<
 			}
 			return fulfillWithValue({
 				variants: [],
+			});
+		} catch (err: any) {
+			const error = err as AxiosError;
+			// eslint-disable-next-line no-console
+			console.log(error?.response?.data, 'An error occurred');
+			return rejectWithValue('An error occurred');
+		}
+	},
+);
+
+export const fetchAllProductCategoryAsync = createAsyncThunk<
+	FetchAllProductCategoryReturnValue,
+	FetchAllProductCategoryParams,
+	{ rejectValue: string }
+>(
+	'createDiscount/fetchAllProductCategory',
+	async (params, { rejectWithValue, fulfillWithValue }) => {
+		try {
+			const response = await fetchAllProductCategory(params);
+			if (response.data) {
+				const { categories, success, message } = response.data;
+				if (success) {
+					return fulfillWithValue({ categories, success, message });
+				}
+				return fulfillWithValue({
+					categories: [],
+					success: false,
+					message: ''
+				});
+			}
+			return fulfillWithValue({
+				categories: [],
+				success: false,
+				message: ''
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;
