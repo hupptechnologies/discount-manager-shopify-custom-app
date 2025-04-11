@@ -1,125 +1,7 @@
 import prisma from '../db.server';
 import { DiscountCodeBasic, DiscountCodeBxgy } from 'app/controller/discounts/getDiscountCodeById';
 import { getDetailUsingGraphQL } from 'app/service/product';
-import { GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY, GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY } from './handleDiscountCreate';
-
-const GET_BASIC_DISCOUNT_CODE_QUERY = `
-query getDiscountCode($ID: ID!) {
-	codeDiscountNode(id: $ID) {
-		codeDiscount {
-			... on DiscountCodeBasic {
-				status
-				title
-				startsAt
-				endsAt
-				discountClass
-				codes(first: 1) {
-					edges {
-						node {
-							code
-						}
-					}
-				}
-				customerGets {
-					value {
-						...on DiscountPercentage {
-							percentage
-						}
-					}
-				}
-				usageLimit
-				appliesOncePerCustomer
-			}
-		}
-	}
-}`;
-
-const GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY = `
-query getDiscountCode($ID: ID!) {
-	automaticDiscountNode(id: $ID) {
-		id
-		automaticDiscount {
-			... on DiscountAutomaticBasic {
-				status
-				title
-				startsAt
-				endsAt
-				discountClass
-				customerGets {
-					value {
-						... on DiscountPercentage {
-							percentage
-						}
-					}
-				}
-			}
-		}
-	}
-}`;
-
-const GET_BUYXGETY_DISCOUNT_CODE_QUERY = `
-query getDiscountcode($ID: ID!) {
-	codeDiscountNode(id: $ID) {
-		id
-		codeDiscount {
-			__typename
-			... on DiscountCodeBxgy {
-				status
-				title
-				startsAt
-				endsAt
-				discountClass
-				usesPerOrderLimit
-				codes(first: 1) {
-					edges {
-						node {
-							code
-						}
-					}
-				}
-				customerGets {
-					value {
-						... on DiscountOnQuantity {
-							effect {
-								... on DiscountPercentage {
-									percentage
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}`;
-
-const GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY = `
-query getDiscountcode($ID: ID!) {
-	automaticDiscountNode(id: $ID) {
-		id
-		automaticDiscount {
-			... on DiscountAutomaticBxgy {
-				status
-				title
-				startsAt
-				endsAt
-				discountClass
-				usesPerOrderLimit
-				customerGets {
-					value {
-						... on DiscountOnQuantity {
-							effect {
-								... on DiscountPercentage {
-									percentage
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}`;
+import { GET_ALL_DISCOUNT_DETAILS_QUERY } from './handleDiscountCreate';
 
 interface PayloadDiscountCreate {
 	admin_graphql_api_id: string;
@@ -171,7 +53,7 @@ export const handleDiscountUpdate = async (
 		}
 
 		const data = {
-			query: discountScope === 'SHIPPING' ? isCustom ? GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY : GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY : discountScope === 'BUYXGETY' ? isCustom ? GET_BUYXGETY_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY : isCustom ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
+			query: GET_ALL_DISCOUNT_DETAILS_QUERY,
 			variables: {
 				ID: payload.admin_graphql_api_id,
 			},
@@ -182,7 +64,7 @@ export const handleDiscountUpdate = async (
 			accessToken,
 			data,
 		);
-
+		
 		const {
 			discountClass,
 			title,

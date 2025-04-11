@@ -1,17 +1,13 @@
 import prisma from '../db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
 
-const FIND_BASIC_DISCOUNT_CODE_TYPE_QUERY = `
+const DISCOUNT_TYPE_QUERY = `
 query getDiscountCode($ID: ID!) {
 	codeDiscountNode(id: $ID) {
 		codeDiscount {
 			__typename
 		}
 	}
-}`;
-
-const FIND_AUTOMATIC_DISCOUNT_CODE_TYPE_QUERY = `
-query getDiscountCode($ID: ID!) {
 	automaticDiscountNode(id: $ID) {
 		automaticDiscount {
 			__typename
@@ -19,63 +15,19 @@ query getDiscountCode($ID: ID!) {
 	}
 }`;
 
-export const GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY = `
+export const GET_ALL_DISCOUNT_DETAILS_QUERY = `
 query getDiscountCode($ID: ID!) {
 	codeDiscountNode(id: $ID) {
 		codeDiscount {
-			... on DiscountCodeFreeShipping {
-				status
-				title
-				startsAt
-				endsAt
-				discountClass
-				codes(first: 1) {
-					edges {
-						node {
-							code
-						}
-					}
-				}
-				maximumShippingPrice{
-					amount
-					currencyCode
-				}
-				usageLimit
-				appliesOncePerCustomer
-			}
-		}
-	}
-}`;
-
-export const GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY = `
-query getDiscountCode($ID: ID!) {
-	automaticDiscountNode(id: $ID) {
-		automaticDiscount {
-			... on DiscountAutomaticFreeShipping {
-				status
-				title
-				startsAt
-				endsAt
-				discountClass
-				maximumShippingPrice{
-					amount
-					currencyCode
-				}
-			}
-		}
-	}
-}`;
-
-const GET_BASIC_DISCOUNT_CODE_QUERY = `
-query getDiscountCode($ID: ID!) {
-	codeDiscountNode(id: $ID) {
-		codeDiscount {
+			__typename
 			... on DiscountCodeBasic {
 				status
 				title
 				startsAt
 				endsAt
 				discountClass
+				appliesOncePerCustomer
+				usageLimit
 				codes(first: 1) {
 					edges {
 						node {
@@ -85,51 +37,39 @@ query getDiscountCode($ID: ID!) {
 				}
 				customerGets {
 					value {
-						...on DiscountPercentage {
+						... on DiscountPercentage {
 							percentage
 						}
 					}
 				}
-				usageLimit
-				appliesOncePerCustomer
 			}
-		}
-	}
-}`;
-
-const GET_AUTOMATIC_DISCOUNT_CODE_QUERY = `
-query getDiscountCode($ID: ID!) {
-	automaticDiscountNode(id: $ID) {
-		automaticDiscount {
-			... on DiscountAutomaticBasic {
+			... on DiscountCodeFreeShipping {
 				status
 				title
 				startsAt
 				endsAt
 				discountClass
-				customerGets {
-					value {
-						...on DiscountPercentage {
-							percentage
+				appliesOncePerCustomer
+				usageLimit
+				maximumShippingPrice {
+					amount
+					currencyCode
+				}
+				codes(first: 1) {
+					edges {
+						node {
+							code
 						}
 					}
 				}
 			}
-		}
-	}
-}`;
-
-const GET_BUYXGETY_DISCOUNT_CODE_QUERY = `
-query getDiscountcode($ID: ID!) {
-	codeDiscountNode(id: $ID) {
-		id
-		codeDiscount {
 			... on DiscountCodeBxgy {
 				status
 				title
 				startsAt
 				endsAt
 				discountClass
+				usageLimit
 				customerGets {
 					value {
 						... on DiscountOnQuantity {
@@ -141,17 +81,37 @@ query getDiscountcode($ID: ID!) {
 						}
 					}
 				}
-				usageLimit
 			}
 		}
 	}
-}`;
-
-const GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY = `
-query getDiscountcode($ID: ID!) {
 	automaticDiscountNode(id: $ID) {
-		id
 		automaticDiscount {
+			__typename
+			... on DiscountAutomaticBasic {
+				status
+				title
+				startsAt
+				endsAt
+				discountClass
+				customerGets {
+					value {
+						... on DiscountPercentage {
+							percentage
+						}
+					}
+				}
+			}
+			... on DiscountAutomaticFreeShipping {
+				status
+				title
+				startsAt
+				endsAt
+				discountClass
+				maximumShippingPrice {
+					amount
+					currencyCode
+				}
+			}
 			... on DiscountAutomaticBxgy {
 				status
 				title
@@ -215,10 +175,10 @@ interface GraphQLResponse {
 	data: {
 		data: {
 			codeDiscountNode: {
-				codeDiscount: DiscountCodeProps;
+				codeDiscount: DiscountCodeProps & { __typename: string };
 			};
 			automaticDiscountNode: {
-				automaticDiscount: DiscountCodeProps;
+				automaticDiscount: DiscountCodeProps & { __typename: string };
 			};
 		};
 	};
@@ -238,47 +198,44 @@ export const handleDiscountCreate = async (
 			},
 		});
 
-		if (existingDiscountCode) {
-			console.log('Discount code already exists:', existingDiscountCode?.code);
-			return;
-		}
+		if (existingDiscountCode) return;
 
-		const response = await prisma.session.findMany({
+		const session = await prisma.session.findFirst({
 			where: { shop },
 		});
-		const accessToken = response[0]?.accessToken;
-
-		if (!accessToken) {
-			throw new Error('Access token not found');
-		}
+		const accessToken = session?.accessToken;
+		if (!accessToken) throw new Error('Access token not found');
 
 		const typeData = {
-			query: isCustomMethod ? FIND_BASIC_DISCOUNT_CODE_TYPE_QUERY : FIND_AUTOMATIC_DISCOUNT_CODE_TYPE_QUERY,
+			query: DISCOUNT_TYPE_QUERY,
 			variables: {
 				ID: payload.admin_graphql_api_id,
 			}
-		}
+		};
 
 		const getTypeOfDiscount = await getDetailUsingGraphQL(shop, accessToken, typeData);
-		const __typename = isCustomMethod ? getTypeOfDiscount?.data?.data?.codeDiscountNode?.codeDiscount?.__typename : getTypeOfDiscount?.data?.data?.automaticDiscountNode?.automaticDiscount?.__typename
-		const isShipping = __typename === 'DiscountCodeFreeShipping';
-		const isBuyxGety = __typename === 'DiscountCodeBxgy';
+		const typename = isCustomMethod ? getTypeOfDiscount?.data?.data?.codeDiscountNode?.codeDiscount?.__typename : getTypeOfDiscount?.data?.data?.automaticDiscountNode?.automaticDiscount?.__typename;
 
-		const isAutomatic = __typename === 'DiscountAutomaticBasic';
-		const isAutomaticShipping = __typename === 'DiscountAutomaticFreeShipping';
-		const isAutomaticBuyxGety = __typename === 'DiscountAutomaticBxgy';
+		const isShipping = typename === 'DiscountCodeFreeShipping';
+		const isBuyxGety = typename === 'DiscountCodeBxgy';
+		const isAutomaticShipping = typename === 'DiscountAutomaticFreeShipping';
+		const isAutomaticBuyxGety = typename === 'DiscountAutomaticBxgy';
 
-		const data = {
-			query: isAutomaticShipping ? GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY : isAutomaticBuyxGety ? GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY : isBuyxGety ? GET_BUYXGETY_DISCOUNT_CODE_QUERY : isShipping ? GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY : isAutomatic ? GET_AUTOMATIC_DISCOUNT_CODE_QUERY : GET_BASIC_DISCOUNT_CODE_QUERY,
+		const detailsData = {
+			query: GET_ALL_DISCOUNT_DETAILS_QUERY,
 			variables: {
 				ID: payload.admin_graphql_api_id,
 			},
 		};
+
 		const graphQlResponse: GraphQLResponse = await getDetailUsingGraphQL(
 			shop,
 			accessToken,
-			data,
+			detailsData,
 		);
+
+		const node = isCustomMethod ? graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount : graphQlResponse?.data?.data?.automaticDiscountNode?.automaticDiscount;
+
 		const {
 			discountClass,
 			usageLimit,
@@ -287,8 +244,9 @@ export const handleDiscountCreate = async (
 			startsAt,
 			endsAt,
 			customerGets,
-			maximumShippingPrice
-		} = isCustomMethod ? graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount : graphQlResponse?.data?.data?.automaticDiscountNode?.automaticDiscount;
+			maximumShippingPrice,
+		} = node;
+
 		await prisma.discountCode.create({
 			data: {
 				code: isBuyxGety || isAutomaticBuyxGety || !isCustomMethod ? title : codes?.edges[0]?.node?.code,
@@ -299,10 +257,10 @@ export const handleDiscountCreate = async (
 				endDate: new Date(endsAt),
 				discountAmount: isShipping || isAutomaticShipping ? Number(maximumShippingPrice?.amount || 0) : Number(isBuyxGety || isAutomaticBuyxGety ? customerGets?.value?.effect?.percentage : customerGets?.value?.percentage) * 100,
 				discountType: 'PERCENT',
-				usageLimit: usageLimit ? usageLimit : 0,
+				usageLimit: usageLimit || 0,
 				isActive: true,
 				discountMethod: isCustomMethod ? 'CUSTOM' : 'AUTOMATIC',
-				discountScope: (isBuyxGety || isAutomaticBuyxGety) ? 'BUYXGETY' : discountClass === 'PRODUCT' ? 'PRODUCT' : discountClass === 'ORDER' ? 'ORDER' : discountClass === 'SHIPPING' ? 'SHIPPING' : 'BUYXGETY',
+				discountScope: isBuyxGety || isAutomaticBuyxGety ? 'BUYXGETY' : discountClass === 'PRODUCT' ? 'PRODUCT' : discountClass === 'ORDER' ? 'ORDER' : discountClass === 'SHIPPING' ? 'SHIPPING' : 'BUYXGETY',
 			},
 		});
 	} catch (error) {

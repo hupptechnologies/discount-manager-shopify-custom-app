@@ -1,7 +1,7 @@
 import prisma from '../../db.server';
 import type { getDiscountCodeResponse } from 'app/routes/api.discount/route';
 import { getDetailUsingGraphQL } from 'app/service/product';
-import { GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY, GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY } from 'app/webhookHandler/handleDiscountCreate';
+import { GET_ALL_DISCOUNT_DETAILS_QUERY } from 'app/webhookHandler/handleDiscountCreate';
 
 const GET_BASIC_DISCOUNT_CODE_QUERY = `
 query getDiscountCode($ID: ID!) {
@@ -637,7 +637,7 @@ export const getDiscountCodeById = async (
 		}
 
 		const data = {
-			query: discountType === 'SHIPPING' ? isMethodCustom ? GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY : GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY : discountType === 'BUYXGETY' ? isMethodCustom ? GET_BUYXGETY_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY : isMethodCustom ? GET_BASIC_DISCOUNT_CODE_QUERY: GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
+			query: discountType === 'SHIPPING' ? GET_ALL_DISCOUNT_DETAILS_QUERY : discountType === 'BUYXGETY' ? isMethodCustom ? GET_BUYXGETY_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY : isMethodCustom ? GET_BASIC_DISCOUNT_CODE_QUERY: GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
 				ID: isMethodCustom ? `gid://shopify/DiscountCodeNode/${id}` : `gid://shopify/DiscountAutomaticNode/${id}`,
 			},
