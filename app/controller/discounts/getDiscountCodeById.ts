@@ -1,6 +1,7 @@
 import prisma from '../../db.server';
 import type { getDiscountCodeResponse } from 'app/routes/api.discount/route';
 import { getDetailUsingGraphQL } from 'app/service/product';
+import { GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY, GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY } from 'app/webhookHandler/handleDiscountCreate';
 
 const GET_BASIC_DISCOUNT_CODE_QUERY = `
 query getDiscountCode($ID: ID!) {
@@ -614,6 +615,7 @@ export const getDiscountCodeById = async (
 	method: string,
 ): Promise<getDiscountCodeResponse> => {
 	try {
+		const isMethodCustom = method === 'custom';
 		if (!shop || !id || !discountType) {
 			return {
 				success: false,
@@ -635,19 +637,9 @@ export const getDiscountCodeById = async (
 		}
 
 		const data = {
-			query:
-				discountType === 'BUYXGETY'
-					? method === 'custom'
-						? GET_BUYXGETY_DISCOUNT_CODE_QUERY
-						: GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY
-					: method === 'custom'
-						? GET_BASIC_DISCOUNT_CODE_QUERY
-						: GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
+			query: discountType === 'SHIPPING' ? isMethodCustom ? GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY : GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY : discountType === 'BUYXGETY' ? isMethodCustom ? GET_BUYXGETY_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY : isMethodCustom ? GET_BASIC_DISCOUNT_CODE_QUERY: GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
-				ID:
-					method === 'custom'
-						? `gid://shopify/DiscountCodeNode/${id}`
-						: `gid://shopify/DiscountAutomaticNode/${id}`,
+				ID: isMethodCustom ? `gid://shopify/DiscountCodeNode/${id}` : `gid://shopify/DiscountAutomaticNode/${id}`,
 			},
 		};
 		const getDiscountCodeByIdFromShopify: BasicDiscountQueryResponse =
@@ -656,16 +648,10 @@ export const getDiscountCodeById = async (
 		const getCodeObj = await prisma.discountCode.findFirst({
 			where: {
 				shop,
-				discountId:
-					method === 'custom'
-						? `gid://shopify/DiscountCodeNode/${id}`
-						: `gid://shopify/DiscountAutomaticNode/${id}`,
+				discountId: isMethodCustom ? `gid://shopify/DiscountCodeNode/${id}` : `gid://shopify/DiscountAutomaticNode/${id}`,
 			},
 		});
-		const discountCode =
-			method === 'custom'
-				? getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode
-				: getDiscountCodeByIdFromShopify.data?.data?.automaticDiscountNode;
+		const discountCode = isMethodCustom ? getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode : getDiscountCodeByIdFromShopify.data?.data?.automaticDiscountNode;
 		if (
 			getDiscountCodeByIdFromShopify.data?.data?.codeDiscountNode ||
 			getDiscountCodeByIdFromShopify.data?.data?.automaticDiscountNode

@@ -54,10 +54,12 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	})) : [];
 	const [popoverActive, setPopoverActive] = useState(false);
 	const [visibleStaffIndex, setVisibleStaffIndex] = useState(5);
-	const togglePopoverActive = useCallback(
-		() => setPopoverActive((popoverActive) => !popoverActive),
-		[],
-	);
+
+	const togglePopoverActive = useCallback(() => {
+		appendCategoryClass();
+		setPopoverActive((popoverActive) => !popoverActive);
+	}, []);
+
 	const handleScrolledToBottom = useCallback(() => {
 		const totalIndexes = convertedCategories.length;
 		const interval = visibleStaffIndex + 3 < totalIndexes ? 3 : totalIndexes - visibleStaffIndex;
@@ -109,6 +111,13 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 			childrenOf,
 			type: 'category'
 		}));
+	};
+
+	const appendCategoryClass = () => {
+		const portalsContainer = document.getElementById('PolarisPortalsContainer');
+		if (portalsContainer) {
+			portalsContainer.classList.toggle('category-pane');
+		}
 	};
 
 	return (

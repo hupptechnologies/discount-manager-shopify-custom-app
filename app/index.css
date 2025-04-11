@@ -48,16 +48,16 @@
 	padding-top: 20px;
 }
 
-#PolarisPortalsContainer .Polaris-Popover__Content {
+.category-pane .Polaris-Popover__Content {
 	max-width: 35rem !important;
 }
 
-#PolarisPortalsContainer .Polaris-Popover__Pane {
+.category-pane .Polaris-Popover__Pane {
 	width: 1200px !important;
 	padding: 0;
 }
 
-.icon-category-back-arrow .Polaris-Icon {
+.category-pane .icon-category-back-arrow .Polaris-Icon {
 	margin: 5px;
 	cursor: pointer;
 }
