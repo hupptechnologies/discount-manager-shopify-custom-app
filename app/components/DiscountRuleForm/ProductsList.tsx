@@ -194,12 +194,12 @@ const ProductsList: React.FC<ProductProps> = ({
 			}));
 			const isIdAlreadyAdded = (id: string) => {
 				return (
-					newRule.customerGets.productIDs.includes(id) ||
+					newRule.customerGets.productIDs?.includes(id) ||
 					newRule.customerGets.items.some((item: any) => item.node.id === id) ||
-					newRule.customerGets.removeProductIDs.includes(id) ||
-					newRule.customerBuys.productIDs.includes(id) ||
+					newRule.customerGets.removeProductIDs?.includes(id) ||
+					newRule.customerBuys.productIDs?.includes(id) ||
 					newRule.customerBuys.items.some((item: any) => item.node.id === id) ||
-					newRule.customerBuys.removeProductIDs.includes(id)
+					newRule.customerBuys.removeProductIDs?.includes(id)
 				);
 			};
 			if (selected === 0) {

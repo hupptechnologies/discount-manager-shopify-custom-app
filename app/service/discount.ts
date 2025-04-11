@@ -103,7 +103,10 @@ export interface AdvancedRuleObject {
 	region: string;
 	condition: string;
 	customerType: 'all' | 'vip' | 'first-time';
-	productCategory: string;
+	productCategory: {
+		prevID: string;
+		currentName: string;
+	};
 	isAI: boolean;
 	isStockBased: boolean;
 }

@@ -47,6 +47,7 @@ interface CreateDiscountState {
 			name: string;
 			fullName: string;
 			childrenIds: string[];
+			parentId: string;
 		}
 	}[];
 	isCategory: boolean;

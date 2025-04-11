@@ -1,23 +1,29 @@
 import { useCallback, useState } from 'react';
+import { useAppBridge } from '@shopify/app-bridge-react';
 import {
-	Autocomplete,
 	BlockStack,
+	Box,
 	Button,
 	Card,
 	Checkbox,
+	Divider,
 	FormLayout,
 	Icon,
+	InlineStack,
+	Popover,
+	ResourceList,
 	Select,
 	Text,
 	TextField,
 } from '@shopify/polaris';
-import { SearchIcon } from '@shopify/polaris-icons';
-import { useSelector } from 'react-redux';
-import { RootState } from 'app/redux/store';
+import { SearchIcon, ChevronRightIcon, ArrowLeftIcon } from '@shopify/polaris-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from 'app/redux/store';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
-import EditItemsList from './EditItemsList';
-import type { DiscountRule } from './DiscountRuleForm';
+import { fetchAllProductCategoryAsync } from 'app/redux/create-discount';
 import type { QueryType } from 'app/routes/app.create-discount';
+import type { DiscountRule } from './DiscountRuleForm';
+import EditItemsList from './EditItemsList';
 
 export interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -38,47 +44,74 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 	handleSearchCustomer,
 	handleCustomerCancel
 }) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const shopify = useAppBridge();
 	const { categories } = useSelector((state: RootState) => getCreateDiscountDetail(state));
-	const convertedCategories = categories?.length > 0 && categories.map(category => ({
+	const convertedCategories = categories?.length > 0 ? categories.map(category => ({
+		...category,
 		label: category?.node?.name,
-		value: category?.node?.name
-	}));
-	const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-	const [options, setOptions] = useState(convertedCategories);
-	const updateText = useCallback(
-		(value: string) => {
-			setNewRule({
-				...newRule,
-				productCategory: value,
-			});
-			if (value === '') {
-				setOptions(convertedCategories);
-				return;
+		value: category?.node?.name,
+	})) : [];
+	const [popoverActive, setPopoverActive] = useState(false);
+	const [visibleStaffIndex, setVisibleStaffIndex] = useState(5);
+	const togglePopoverActive = useCallback(
+		() => setPopoverActive((popoverActive) => !popoverActive),
+		[],
+	);
+	const handleScrolledToBottom = useCallback(() => {
+		const totalIndexes = convertedCategories.length;
+		const interval = visibleStaffIndex + 3 < totalIndexes ? 3 : totalIndexes - visibleStaffIndex;
+		if (interval > 0) {
+			setVisibleStaffIndex(visibleStaffIndex + interval);
+		}
+	}, [convertedCategories.length, visibleStaffIndex]);
+
+	const handleResourceListItemClick = useCallback((item: any) => {
+		if (item?.node?.childrenIds?.length > 0) {
+			handleFetchAPI(item?.node?.id);
+		}
+		setNewRule({
+			...newRule,
+			productCategory: {
+				currentName: item?.node?.fullName,
+				prevID: item?.node?.id
 			}
-			const filterRegex = new RegExp(value, 'i');
-			const resultOptions = Array.isArray(convertedCategories)
-				? convertedCategories.filter((option) => option.label.match(filterRegex) !== null)
-			: [];
-			setOptions(resultOptions);
-		},
-		[convertedCategories],
-	);
-	const updateSelection = useCallback(
-		(selected: string[]) => {
-			const selectedValue = selected.map((selectedItem) => {
-			const matchedOption = Array.isArray(options) ? options.find((option) => {
-				return option.value.match(selectedItem);
-			}) : null;
-				return matchedOption && matchedOption.label;
-			});
-			setSelectedOptions(selected);
+		});
+	}, []);
+
+	const handlePrevCategoryList = () => {
+		if (newRule.productCategory.currentName.includes('>')) {
+			const trimCategoryId = (id: string) => id.split('-').length > 1 ? id.split('-').slice(0, -1).join('-') : id;
+			const trimmedID = trimCategoryId(newRule.productCategory.prevID);
+			const updatedCurrentName = newRule.productCategory.currentName.includes('>') ? newRule.productCategory.currentName.split('>').slice(0, -1).join('>').trim() : '';
+			handleFetchAPI(trimmedID);
 			setNewRule({
-				...newRule,
-				productCategory: selectedValue[0],
+				productCategory: {
+					currentName: updatedCurrentName,
+					prevID: trimmedID
+				}
 			});
-		},
-		[options],
-	);
+		} else {
+			handleFetchAPI('');
+			setNewRule(({
+				productCategory: {
+					currentName: '',
+					prevID: '',
+					prevFullName: ''
+				}
+			}));
+		}
+	};
+
+	const handleFetchAPI = (childrenOf: string) => {
+		dispatch(fetchAllProductCategoryAsync({
+			shopName: shopify.config.shop || '',
+			childrenOf,
+			type: 'category'
+		}));
+	};
+
+	console.log(newRule?.productCategory);
 
 	return (
 		<Card>
@@ -149,20 +182,42 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
-						{['products', 'buyXgetY'].includes(queryType as string) && (
-							<Autocomplete
-								options={options || []}
-								selected={selectedOptions}
-								onSelect={updateSelection}
-								textField={<Autocomplete.TextField
-									onChange={updateText}
-									label="Discount by Category"
-									value={newRule?.productCategory}
-									placeholder="Category"
-									autoComplete="off"
-								/>}
-							/>
-						)}
+						<div className='category-main'>
+							{['products', 'buyXgetY'].includes(queryType as string) && (
+								<Popover
+									sectioned
+									active={popoverActive}
+									activator={<TextField
+										label="Discount by Category"
+										value={newRule?.productCategory?.currentName}
+										placeholder="Category"
+										autoComplete="off"
+										onFocus={togglePopoverActive}
+									/>}
+									onClose={togglePopoverActive}
+									ariaHaspopup={false}
+								>
+									{newRule?.productCategory?.currentName && 
+										<Popover.Pane fixed>
+											<Popover.Section>
+												<InlineStack align='start' blockAlign='center'>
+													<div onClick={handlePrevCategoryList} className='icon-category-back-arrow'>
+														<Icon source={ArrowLeftIcon} tone="base" />
+													</div>
+													<Text variant="bodyMd" fontWeight="bold" as="h3">
+														{newRule?.productCategory?.currentName}
+													</Text>
+												</InlineStack>
+											</Popover.Section>
+											<Divider borderWidth='0165' />
+										</Popover.Pane>
+									}
+									<Popover.Pane onScrolledToBottom={handleScrolledToBottom}>
+										<ResourceList items={convertedCategories} renderItem={renderItem} />
+									</Popover.Pane>
+								</Popover>
+							)}
+						</div>
 						{['order', 'shipping'].includes(queryType as string) && (
 							<TextField
 								label="Geo-Based Discount"
@@ -226,6 +281,30 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 			</BlockStack>
 		</Card>
 	);
+	function renderItem(item: any, index: string) {
+		return (
+			<ResourceList.Item
+				id={index}
+				onClick={() => handleResourceListItemClick(item)}
+			>
+				<InlineStack align="space-between" blockAlign="center" gap="200">
+					<Box>
+						<Text variant="bodyMd" as="h3">
+							{item?.label}
+						</Text>
+					</Box>
+					{item?.node?.childrenIds?.length > 0 && 
+						<Box>
+							<InlineStack align="center" blockAlign="center" gap="200">
+								<Icon source={ChevronRightIcon} tone="base" />
+							</InlineStack>
+						</Box>
+					}
+				</InlineStack>
+			</ResourceList.Item>
+		);
+	};
 };
+
 
 export default AdvanceDiscountRules;

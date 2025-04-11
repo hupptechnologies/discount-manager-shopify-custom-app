@@ -12,6 +12,7 @@ query GetAllCategories {
 					name
 					fullName
 					childrenIds
+					parentId
 				}
 			}
 		}
@@ -28,7 +29,8 @@ interface GraphqlResponse {
 							id: string;
 							name: string;
 							fullName: string;
-							childrenIds: string;
+							childrenIds: string[];
+							parentId: string;
 						};
 					}[];
 				};

@@ -46,7 +46,10 @@ export interface DiscountRule {
 	discount: string;
 	advanceDiscountType: 'stackable' | 'exclusive';
 	quantity: string;
-	productCategory: string;
+	productCategory: {
+		prevID: string;
+		currentName: string;
+	};
 	region: string;
 	searchOne: string;
 	searchTwo: string;
@@ -144,7 +147,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		discount: '',
 		advanceDiscountType: 'stackable',
 		quantity: '',
-		productCategory: '',
+		productCategory: {
+			currentName: '',
+			prevID: ''
+		},
 		region: '',
 		customerType: 'all',
 		isStockBased: false,
@@ -345,7 +351,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				region: advancedRule?.region ?? '',
 				condition: advancedRule?.condition ?? '',
 				customerType: advancedRule?.customerType ?? 'all',
-				productCategory: advancedRule?.productCategory ?? '',
+				productCategory: {
+					currentName: advancedRule?.productCategory.currentName ?? '',
+					prevID: advancedRule?.productCategory.prevID ?? '',
+				},
 				isAI: advancedRule?.isAI ?? false,
 				isStockBased: advancedRule?.isStockBased ?? false,
 				selectedMethod: isCustomMethod ? 'code' : 'automatic',
@@ -357,7 +366,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				}
 			});
 		}
-	}, [getDiscountCode, discountScope, advancedRule, run]);
+	}, [run]);
 
 	const handleSearchTypeChange = (type: string) => {
 		setNewRule((prev) => ({ ...prev, searchType: type }));
@@ -424,7 +433,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			discount: '',
 			advanceDiscountType: 'stackable',
 			quantity: '',
-			productCategory: '',
+			productCategory: {
+				currentName: '',
+				prevID: ''
+			},
 			region: '',
 			customerType: 'vip',
 			isStockBased: false,

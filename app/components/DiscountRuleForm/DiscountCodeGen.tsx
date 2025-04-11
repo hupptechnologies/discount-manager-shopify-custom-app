@@ -122,7 +122,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 				/>
 			</BlockStack>}
 			{!isEdit && newRule?.selectedMethod === 'code' && queryType !== 'buyXgetY' && <Placeholder height="5px" />}
-			{!isEdit && queryType !== 'buyXgetY' && newRule.isCustom && (
+			{queryType !== 'buyXgetY' && newRule.isCustom && newRule?.selectedMethod === 'code' && (
 				<Box>
 					<InlineStack align="space-between" blockAlign="center" gap="200">
 						<Text variant="bodyMd" as="h3">

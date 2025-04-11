@@ -71,6 +71,7 @@ interface FetchAllProductCategoryReturnValue {
 			name: string;
 			fullName: string;
 			childrenIds: string[];
+			parentId: string;
 		}
 	}[];
 }
