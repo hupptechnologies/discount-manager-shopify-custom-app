@@ -141,7 +141,7 @@ query getDiscountcode($ID: ID!) {
 						}
 					}
 				}
-				usesPerOrderLimit
+				usageLimit
 			}
 		}
 	}
@@ -287,8 +287,7 @@ export const handleDiscountCreate = async (
 			startsAt,
 			endsAt,
 			customerGets,
-			maximumShippingPrice,
-			usesPerOrderLimit
+			maximumShippingPrice
 		} = isCustomMethod ? graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount : graphQlResponse?.data?.data?.automaticDiscountNode?.automaticDiscount;
 		await prisma.discountCode.create({
 			data: {
@@ -300,10 +299,10 @@ export const handleDiscountCreate = async (
 				endDate: new Date(endsAt),
 				discountAmount: isShipping || isAutomaticShipping ? Number(maximumShippingPrice?.amount || 0) : Number(isBuyxGety || isAutomaticBuyxGety ? customerGets?.value?.effect?.percentage : customerGets?.value?.percentage) * 100,
 				discountType: 'PERCENT',
-				usageLimit: isBuyxGety || isAutomaticBuyxGety ? usesPerOrderLimit : usageLimit ? usageLimit : 0,
+				usageLimit: usageLimit ? usageLimit : 0,
 				isActive: true,
 				discountMethod: isCustomMethod ? 'CUSTOM' : 'AUTOMATIC',
-				discountScope: discountClass === 'PRODUCT' ? 'PRODUCT' : discountClass === 'ORDER' ? 'ORDER' : discountClass === 'SHIPPING' ? 'SHIPPING' : 'BUYXGETY',
+				discountScope: (isBuyxGety || isAutomaticBuyxGety) ? 'BUYXGETY' : discountClass === 'PRODUCT' ? 'PRODUCT' : discountClass === 'ORDER' ? 'ORDER' : discountClass === 'SHIPPING' ? 'SHIPPING' : 'BUYXGETY',
 			},
 		});
 	} catch (error) {

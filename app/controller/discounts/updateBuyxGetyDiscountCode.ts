@@ -39,7 +39,7 @@ interface DiscountCodeBxgyInput {
 	endsAt: string;
 	startsAt: string;
 	title: string;
-	usesPerOrderLimit: string;
+	usageLimit: number;
 	customerBuys: {
 		items: {
 			collections: {
@@ -74,7 +74,7 @@ interface DiscountCodeAutomaticBxgyInput {
 	endsAt: string;
 	startsAt: string;
 	title: string;
-	usesPerOrderLimit: string;
+	usageLimit: number;
 	customerBuys: {
 		items: {
 			collections: {
@@ -205,11 +205,12 @@ export const updateBuyXGetYDiscountCode = async (
 				variables: {
 					id: findDiscountExist.discountId,
 					bxgyCodeDiscount: {
-						code,
 						endsAt,
 						startsAt,
 						title,
-						usesPerOrderLimit: String(usageLimit),
+						...(Number(usageLimit) > 0 && {
+							usageLimit: Number(usageLimit),
+						}),
 						customerBuys: {
 							items: {
 								...((customerBuys.collectionIDs.length > 0 ||
@@ -285,7 +286,9 @@ export const updateBuyXGetYDiscountCode = async (
 						endsAt,
 						startsAt,
 						title,
-						usesPerOrderLimit: String(usageLimit),
+						...(Number(usageLimit) > 0 && {
+							usageLimit: Number(usageLimit),
+						}),
 						customerBuys: {
 							items: {
 								...((customerBuys.collectionIDs.length > 0 ||

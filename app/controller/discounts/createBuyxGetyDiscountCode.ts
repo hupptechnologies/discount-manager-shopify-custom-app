@@ -45,7 +45,7 @@ mutation discountCodeBxgyCreate($bxgyCodeDiscount: DiscountCodeBxgyInput!) {
 						}
 					}
 					appliesOncePerCustomer
-					usesPerOrderLimit
+					usageLimit
 				}
 			}
 		}
@@ -90,7 +90,7 @@ mutation CreateBxgyDiscount($automaticBxgyDiscount: DiscountAutomaticBxgyInput!)
 							}
 						}
 					}
-					usesPerOrderLimit
+					usageLimit
 				}
 			}
 		}
@@ -141,7 +141,7 @@ interface CreateBxgyDiscountResponse {
 						};
 						customerSelection: { all: boolean };
 						appliesOncePerCustomer: boolean;
-						usesPerOrderLimit: number;
+						usageLimit: number;
 					};
 				};
 				userErrors: { field: string; code: string; message: string }[];
@@ -183,7 +183,7 @@ interface CreateBxgyDiscountResponse {
 						};
 						customerSelection: { all: boolean };
 						appliesOncePerCustomer: boolean;
-						usesPerOrderLimit: number;
+						usageLimit: number;
 					};
 				};
 				userErrors: { field: string; code: string; message: string }[];
@@ -266,11 +266,10 @@ export const createBuyXGetYDiscountCode = async (
 			query: CREATE_BUYXGETY_DISCOUNT_QUERY,
 			variables: {
 				bxgyCodeDiscount: {
-					code,
 					endsAt,
 					startsAt,
 					title,
-					usesPerOrderLimit: usageLimit,
+					usageLimit: String(usageLimit),
 					customerBuys: {
 						items: {
 							...(customerBuys.collectionIDs.length > 0 && {
@@ -344,7 +343,7 @@ export const createBuyXGetYDiscountCode = async (
 					title,
 					endsAt,
 					startsAt,
-					usesPerOrderLimit: String(usageLimit),
+					usageLimit: String(usageLimit),
 					customerBuys: {
 						items: {
 							...(customerBuys.collectionIDs.length > 0 && {
