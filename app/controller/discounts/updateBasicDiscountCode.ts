@@ -299,7 +299,7 @@ export const updateBasicDiscountCode = async (
 			await prisma.discountCode.update({
 				where: { shop, id },
 				data: {
-					code: code,
+					code: isCustom ? code: title,
 					title: title,
 					shop,
 					discountId: findDiscountExist?.discountId,

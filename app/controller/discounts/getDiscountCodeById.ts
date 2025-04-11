@@ -419,6 +419,10 @@ export interface DiscountCodeBxgy {
 			};
 		}[];
 	};
+	maximumShippingPrice: {
+		amount: string;
+		currencyCode: string;
+	};
 	customerBuys: {
 		value: {
 			quantity: number;
@@ -526,6 +530,10 @@ export interface DiscountCodeBasic {
 				code: string;
 			};
 		}[];
+	};
+	maximumShippingPrice: {
+		amount: string;
+		currencyCode: string;
 	};
 	customerSelection: {
 		customers: {
@@ -667,7 +675,7 @@ export const getDiscountCodeById = async (
 				discountCode: [discountCode],
 				discountScope: getCodeObj?.discountScope || '',
 				advancedRule: getCodeObj?.advancedRule as object | null,
-				isMultiple: getCodeObj?.isMultiple, 
+				isMultiple: getCodeObj?.isMultiple || false, 
 				message: 'Fetch discount code successfully',
 				method: method,
 			};

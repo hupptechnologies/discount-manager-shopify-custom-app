@@ -168,7 +168,6 @@ export const updateBuyXGetYDiscountCode = async (
 ): Promise<UpdateBuyXGetYDiscountCodeResponse> => {
 	const {
 		title,
-		code,
 		startsAt,
 		endsAt,
 		usageLimit,
@@ -176,6 +175,7 @@ export const updateBuyXGetYDiscountCode = async (
 		customerGets,
 		advancedRule,
 	} = dataPayload;
+	const code = title;
 
 	try {
 		if (!shop || !id) {

@@ -308,7 +308,7 @@ export const createDiscountCode = async (
 		if (discountCodeData) {
 			await prisma.discountCode.create({
 				data: {
-					code: codes[0],
+					code: method === 'custom' ? codes[0] : title,
 					title,
 					shop,
 					discountId: discountCodeData?.id,
