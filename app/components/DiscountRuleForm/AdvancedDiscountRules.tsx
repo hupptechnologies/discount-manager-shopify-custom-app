@@ -111,8 +111,6 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 		}));
 	};
 
-	console.log(newRule?.productCategory);
-
 	return (
 		<Card>
 			<BlockStack gap="500">
@@ -182,42 +180,40 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group condensed>
-						<div className='category-main'>
-							{['products', 'buyXgetY'].includes(queryType as string) && (
-								<Popover
-									sectioned
-									active={popoverActive}
-									activator={<TextField
-										label="Discount by Category"
-										value={newRule?.productCategory?.currentName}
-										placeholder="Category"
-										autoComplete="off"
-										onFocus={togglePopoverActive}
-									/>}
-									onClose={togglePopoverActive}
-									ariaHaspopup={false}
-								>
-									{newRule?.productCategory?.currentName && 
-										<Popover.Pane fixed>
-											<Popover.Section>
-												<InlineStack align='start' blockAlign='center'>
-													<div onClick={handlePrevCategoryList} className='icon-category-back-arrow'>
-														<Icon source={ArrowLeftIcon} tone="base" />
-													</div>
-													<Text variant="bodyMd" fontWeight="bold" as="h3">
-														{newRule?.productCategory?.currentName}
-													</Text>
-												</InlineStack>
-											</Popover.Section>
-											<Divider borderWidth='0165' />
-										</Popover.Pane>
-									}
-									<Popover.Pane onScrolledToBottom={handleScrolledToBottom}>
-										<ResourceList items={convertedCategories} renderItem={renderItem} />
+						{['products', 'buyXgetY'].includes(queryType as string) && (
+							<Popover
+								sectioned
+								active={popoverActive}
+								activator={<TextField
+									label="Discount by Category"
+									value={newRule?.productCategory?.currentName}
+									placeholder="Category"
+									autoComplete="off"
+									onFocus={togglePopoverActive}
+								/>}
+								onClose={togglePopoverActive}
+								ariaHaspopup={false}
+							>
+								{newRule?.productCategory?.currentName && 
+									<Popover.Pane fixed>
+										<Popover.Section>
+											<InlineStack align='start' blockAlign='center'>
+												<div onClick={handlePrevCategoryList} className='icon-category-back-arrow'>
+													<Icon source={ArrowLeftIcon} tone="base" />
+												</div>
+												<Text variant="bodyMd" fontWeight="bold" as="h3">
+													{newRule?.productCategory?.currentName}
+												</Text>
+											</InlineStack>
+										</Popover.Section>
+										<Divider borderWidth='0165' />
 									</Popover.Pane>
-								</Popover>
-							)}
-						</div>
+								}
+								<Popover.Pane onScrolledToBottom={handleScrolledToBottom}>
+									<ResourceList items={convertedCategories} renderItem={renderItem} />
+								</Popover.Pane>
+							</Popover>
+						)}
 						{['order', 'shipping'].includes(queryType as string) && (
 							<TextField
 								label="Geo-Based Discount"

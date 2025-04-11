@@ -1,6 +1,7 @@
 import prisma from '../db.server';
 import { DiscountCodeBasic, DiscountCodeBxgy } from 'app/controller/discounts/getDiscountCodeById';
 import { getDetailUsingGraphQL } from 'app/service/product';
+import { GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY, GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY } from './handleDiscountCreate';
 
 const GET_BASIC_DISCOUNT_CODE_QUERY = `
 query getDiscountCode($ID: ID!) {
@@ -170,7 +171,7 @@ export const handleDiscountUpdate = async (
 		}
 
 		const data = {
-			query: discountScope === 'BUYXGETY' ? isCustom ? GET_BUYXGETY_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY : isCustom ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
+			query: discountScope === 'SHIPPING' ? isCustom ? GET_BASIC_DISCOUNT_CODE_SHIPPING_QUERY : GET_AUTOMATIC_DISCOUNT_CODE_SHIPPING_QUERY : discountScope === 'BUYXGETY' ? isCustom ? GET_BUYXGETY_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BUYXGETY_DISCOUNT_CODE_QUERY : isCustom ? GET_BASIC_DISCOUNT_CODE_QUERY : GET_AUTOMATIC_BASIC_DISCOUNT_CODE_QUERY,
 			variables: {
 				ID: payload.admin_graphql_api_id,
 			},
@@ -188,6 +189,7 @@ export const handleDiscountUpdate = async (
 			startsAt,
 			endsAt,
 			customerGets,
+			maximumShippingPrice,
 		} = isCustom ? graphQlResponse?.data?.data?.codeDiscountNode?.codeDiscount : graphQlResponse?.data?.data?.automaticDiscountNode?.automaticDiscount;
 
 		if (!discountClass || !title || !startsAt || !endsAt) {
@@ -214,7 +216,7 @@ export const handleDiscountUpdate = async (
 				discountId: payload.admin_graphql_api_id,
 				startDate: new Date(startsAt),
 				endDate: new Date(endsAt),
-				discountAmount: discountAmount,
+				discountAmount: discountScope == 'SHIPPING' ? Number(maximumShippingPrice?.amount) : discountAmount,
 				discountType: 'PERCENT',
 				usageLimit: isCustom ? usageLimit : usesPerOrderLimit,
 				isActive: true,
