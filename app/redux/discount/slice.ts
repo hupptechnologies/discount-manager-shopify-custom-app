@@ -326,6 +326,12 @@ const discountSlice = createSlice({
 
 export const { handleUpdateDiscountCodeId, handleResetGetDiscountCode } = discountSlice.actions;
 
+/**
+	* Selector to get the `discount` slice from the Redux state.
+	* 
+	* @param {object} state - The Redux state.
+	* @returns {discountState} The `discount` slice.
+*/
 export const getAllDiscountCodeDetail = (state: { discount: discountState }) => state.discount;
 
 export default discountSlice.reducer;

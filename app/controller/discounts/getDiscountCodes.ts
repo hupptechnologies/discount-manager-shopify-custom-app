@@ -27,6 +27,29 @@ interface DiscountStats {
 	};
 }
 
+interface GetDiscountCodeResponse {
+	success: boolean;
+	message: string;
+	discountCodes: any;
+	discountStats: any;
+	pagination: { totalCount: number; totalPages: number; currentPage: number };
+}
+
+/**
+	* Fetches discount statistics for the last 7 days, including total counts and daily data for active, used, and expired discount codes.
+	* 
+	* This function retrieves the following:
+	* - Total active discount codes (those that are active and have not expired).
+	* - Total used discount codes (those that have been used at least once).
+	* - Total expired discount codes (those whose `endDate` is in the past).
+	* 
+	* Additionally, it provides daily breakdowns of:
+	* - The count of active discount codes created in the last 7 days.
+	* - The count of used discount codes created in the last 7 days.
+	* - The count of expired discount codes created in the last 7 days.
+	*
+	* @returns {Promise<DiscountStats>} An object containing the discount statistics, including total counts and daily data for each discount category.
+*/
 const getDiscountStats = async (): Promise<DiscountStats> => {
 	const activeDiscountsCount = await prisma.discountCode.count({
 		where: { isActive: true, endDate: { gt: new Date() } },
@@ -99,8 +122,8 @@ const getDiscountStats = async (): Promise<DiscountStats> => {
 	* @param {number} usedCountGreaterThan - Filters discount codes with a usage count greater than this value (default is 0).
 	* @param {string} [searchQuery] - A search query to filter discount codes by title, code, or other fields (optional).
 	* @param {'asc' | 'desc'} [orderByCreatedAt] - Order the results by creation date, either ascending ('asc') or descending ('desc') (optional).
+	* * @returns {Promise<GetDiscountCodeResponse>} - A promise that resolves with the required discount code details.
 */
-
 export const getDiscountCodes = async (
 	shop: string,
 	page: number = 1,
@@ -109,13 +132,7 @@ export const getDiscountCodes = async (
 	usedCountGreaterThan: number = 0,
 	searchQuery?: string,
 	orderByCreatedAt?: 'asc' | 'desc',
-): Promise<{
-	success: boolean;
-	message: string;
-	discountCodes: any;
-	discountStats: any;
-	pagination: { totalCount: number; totalPages: number; currentPage: number };
-}> => {
+): Promise<GetDiscountCodeResponse> => {
 	try {
 		const where: any = {
 			shop,

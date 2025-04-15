@@ -20,6 +20,16 @@ interface LoaderResponse {
 	totalCount: number;
 }
 
+/**
+	* Loader function to handle GET requests for the `api.customers` API route fetching customers.
+	*
+	* This API route handles a GET request to retrieve a list of customers.
+	* It is typically used to fetch customer data from Shopify or from the app's own database,
+	* depending on the implementation.
+	*
+	* @param {Request} request - The incoming HTTP request.
+	* @returns {Promise<Response>} - A response containing the list of customers.
+*/
 export const loader = async ({
 	request,
 }: {

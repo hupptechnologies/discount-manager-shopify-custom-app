@@ -9,7 +9,6 @@ interface DateRange {
 	* Generates a list of time strings in 30-minute intervals from 1:00 AM to 12:30 PM.
 	* Example: ['1:00 AM', '1:30 AM', ..., '12:30 PM']
 */
-
 export const generateTimeList = (): string[] => {
 	const timeList: string[] = [];
 	let hour = 1;
@@ -29,7 +28,6 @@ export const generateTimeList = (): string[] => {
 /**
 	* Formats a JS Date object into 'YYYY-MM-DD' format.
 */
-
 export const getYearMonthDay = (date: any): string => {
 	const year = date?.getFullYear();
 	const month = (date?.getMonth() + 1).toString().padStart(2, '0');
@@ -40,7 +38,6 @@ export const getYearMonthDay = (date: any): string => {
 /**
 	* Formats a date string into 'YYYY-MM-DD' format (without time).
 */
-
 export const formatDateWithTime = (dateString: string): string => {
 	const date = new Date(dateString);
 	const year = date?.getFullYear();
@@ -53,7 +50,6 @@ export const formatDateWithTime = (dateString: string): string => {
 	* Combines a date and time string into an ISO timestamp in 'Asia/Kolkata' timezone.
 	* Example input: ('2024-04-15', '4:30 PM') => '2024-04-15T11:00:00.000Z'
 */
-
 export const formatDateWithTimeZone = (
 	dateString: any,
 	timeString: string,

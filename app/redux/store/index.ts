@@ -8,6 +8,15 @@ interface FetchAppEmbedStatusReturnValue {
 	appEmbedID: string;
 };
 
+/**
+	* Redux async thunk to fetch the App Embed Block status from the server.
+	*
+	* This thunk calls an API to retrieve whether the theme app embed block 
+	* is enabled or not for the current Shopify store.
+	*
+	* @param {FetchAppEmbedStatusParams} params - Parameters containing the shop or necessary identifiers.
+	* @returns {Promise<FetchAppEmbedStatusReturnValue>} - Returns a promise with the app embed block status (true/false).
+*/
 export const fetchAppEmbedStatusAsync = createAsyncThunk<
 	FetchAppEmbedStatusReturnValue,
 	FetchAppEmbedStatusParams

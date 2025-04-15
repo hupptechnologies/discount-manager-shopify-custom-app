@@ -155,6 +155,12 @@ const createDiscountSlice = createSlice({
 	},
 });
 
+/**
+	* Selector to get the `createDiscount` slice from the Redux state.
+	* 
+	* @param {object} state - The Redux state.
+	* @returns {CreateDiscountState} The `createDiscount` slice.
+*/
 export const getCreateDiscountDetail = (state: {
 	createDiscount: CreateDiscountState;
 }) => state.createDiscount;

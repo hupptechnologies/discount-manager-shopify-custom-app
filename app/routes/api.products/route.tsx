@@ -31,6 +31,16 @@ export interface FetchCategoryResponse {
 	categories: object | null;
 }
 
+/**
+	* Loader function to handle GET requests for products, including variants and categories.
+	*
+	* This function processes incoming GET requests to retrieve product-related data such as
+	* product listings, their associated variants, and category information.
+	* The response is typically used to populate product selection options in the app.
+	*
+	* @param {Request} request - The incoming HTTP request.
+	* @returns {Promise<Response>} - A response containing product, variant, and category data.
+*/
 export const loader = async ({
 	request,
 }: {

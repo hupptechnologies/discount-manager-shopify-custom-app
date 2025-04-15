@@ -36,6 +36,16 @@ interface LoaderResponse {
 	};
 }
 
+/**
+	* Loader function to handle GET requests for discount code details.
+	*
+	* This function retrieves discount code data from either Shopify or the app's database
+	* based on the request parameters. It is used to fetch details required for viewing or editing
+	* a specific discount in the app.
+	*
+	* @param {Request} request - The incoming GET request.
+	* @returns {Promise<Response>} - A response containing the discount details.
+*/
 export const loader = async ({
 	request,
 }: {
@@ -84,6 +94,18 @@ export const loader = async ({
 	return json<LoaderResponse>(fetchDiscountCodes);
 };
 
+/**
+	* Action handler for managing discount codes (create, update, delete).
+	*
+	* This function processes POST, PUT, or DELETE requests related to discount codes.
+	* Depending on the request method and payload, it will either:
+	* - Create a new discount code,
+	* - Update an existing one, or
+	* - Delete a discount code from Shopify and/or the app's database.
+	*
+	* @param {Request} request - The incoming HTTP request.
+	* @returns {Promise<Response>} - A response indicating success or failure.
+*/
 export const action = async ({
 	request,
 }: {

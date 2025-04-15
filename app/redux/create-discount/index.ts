@@ -76,6 +76,15 @@ interface FetchAllProductCategoryReturnValue {
 	}[];
 }
 
+/**
+	* Redux async thunk to fetch all products from the Shopify store.
+	* 
+	* This function calls the backend service to retrieve all product data, 
+	* which can be used when creating or managing discounts.
+	* 
+	* @param params - Parameters required for the fetch request (e.g., shop domain, filters).
+	* @returns A fulfilled value containing the list of products, or a rejected value on failure.
+*/
 export const fetchAllProductsAsync = createAsyncThunk<
 	FetchAllProductReturnValue,
 	FetchAllProductsParams,
@@ -111,6 +120,15 @@ export const fetchAllProductsAsync = createAsyncThunk<
 	},
 );
 
+/**
+	* Redux async thunk to fetch all product collections from the Shopify store.
+	* 
+	* This function retrieves collection data needed for creating or managing discounts.
+	* It's useful for associating discounts with specific collections.
+	* 
+	* @param params - Parameters including shop domain and any necessary filters.
+	* @returns A fulfilled value with collections list or a rejected value if the request fails.
+*/
 export const fetchAllCollectionsAsync = createAsyncThunk<
 	FetchAllCollectionReturnValue,
 	FetchAllCollectionsParams,
@@ -146,6 +164,15 @@ export const fetchAllCollectionsAsync = createAsyncThunk<
 	},
 );
 
+/**
+	* Redux async thunk to fetch all customers from the Shopify store.
+	* 
+	* This is used to retrieve customer data, typically for creating customer-specific discounts
+	* or filtering based on customer groups.
+	* 
+	* @param params - Includes shop domain and any optional filters.
+	* @returns A fulfilled value with the customer list or a rejected value on failure.
+*/
 export const fetchAllCustomersAsync = createAsyncThunk<
 	FetchAllCustomerReturnValue,
 	FetchAllCollectionsParams,
@@ -181,6 +208,14 @@ export const fetchAllCustomersAsync = createAsyncThunk<
 	},
 );
 
+/**
+	* Redux async thunk to fetch all variants of a specific product by product ID.
+	*
+	* Useful when creating product-specific discounts where variant-level selection is required.
+	*
+	* @param params - Includes the product ID and shop domain.
+	* @returns A fulfilled value with the list of product variants or a rejected value on failure.
+*/
 export const fetchProductVariantsAsync = createAsyncThunk<
 	FetchProductsVariantValue,
 	FetchProductVariantParams,
@@ -211,6 +246,14 @@ export const fetchProductVariantsAsync = createAsyncThunk<
 	},
 );
 
+/**
+	* Redux async thunk to fetch all product categories (including subcategories) from the store.
+	*
+	* This is useful when applying category-based filters or assigning discounts to specific categories.
+	*
+	* @param params - Contains the shop domain and optional parent category ID.
+	* @returns A fulfilled value with category data or a rejected value on failure.
+*/
 export const fetchAllProductCategoryAsync = createAsyncThunk<
 	FetchAllProductCategoryReturnValue,
 	FetchAllProductCategoryParams,

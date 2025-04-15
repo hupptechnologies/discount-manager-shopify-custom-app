@@ -20,6 +20,18 @@ interface LoaderResponse {
 	totalCount: number;
 }
 
+/**
+	* Loader function to handle GET requests for the `api.collection` API route.
+	* 
+	* This function is triggered on a page load or fetch request in Remix,
+	* and it processes incoming GET requests. Typically used to fetch
+	* collection data from the Shopify store or our backend service.
+	* 
+	* @param {Request} request - The incoming HTTP request.
+	* 
+	* @returns {Promise<Response>} - A promise that resolves with a response containing
+	* collection data or an error.
+*/
 export const loader = async ({
 	request,
 }: {

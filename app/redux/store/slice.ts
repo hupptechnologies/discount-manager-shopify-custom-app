@@ -44,6 +44,12 @@ const storeSlice = createSlice({
 	},
 });
 
+/**
+	* Selector to get the `store` slice from the Redux state.
+	* 
+	* @param {object} state - The Redux state.
+	* @returns {discountState} The `store` slice.
+*/
 export const getAllStoreDetail = (state: { store: discountState }) => state.store;
 
 export default storeSlice.reducer;

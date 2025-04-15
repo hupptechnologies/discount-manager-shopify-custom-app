@@ -35,7 +35,7 @@ Create your .env file with default keys:
 cp .env.example .env
 ```
 ```shell
-echo "SHOPIFY_API_KEY=\nSHOPIFY_API_SECRET=\nSCOPES=\nHOST=\nDATABASE_URL=" > .env
+echo "SHOPIFY_API_KEY=\nSHOPIFY_API_SECRET=\nSCOPES=\nSHOP_CUSTOM_DOMAIN=\nDATABASE_URL=" > .env
 ```
 
 ### Local Development
