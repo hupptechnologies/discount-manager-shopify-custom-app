@@ -1,7 +1,7 @@
 import prisma from '../../db.server';
 import type { getDiscountCodeResponse } from 'app/routes/api.discount/route';
 import { getDetailUsingGraphQL } from 'app/service/product';
-import { GET_ALL_DISCOUNT_DETAILS_QUERY } from 'app/webhookHandler/handleDiscountCreate';
+import { GET_ALL_DISCOUNT_DETAILS_QUERY } from 'app/graphqlQuery/discount';
 
 export interface DiscountCodeBxgy {
 	__typename: 'DiscountCodeBxgy';

@@ -1,32 +1,6 @@
 import prisma from '../../db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
-
-const UPDATE_BASIC_DISCOUNT_CODE_QUERY = `
-mutation discountCodeBasicUpdate($id: ID!, $basicCodeDiscount: DiscountCodeBasicInput!) {
-	discountCodeBasicUpdate(id: $id, basicCodeDiscount: $basicCodeDiscount) {
-		codeDiscountNode {
-			id
-		}
-		userErrors {
-			field
-			code
-			message
-		}
-	}
-}`;
-
-const UPDATE_BASIC_AUTOMATIC_DISCOUNT_CODE_QUERY = `
-mutation discountAutomaticBasicUpdate($automaticBasicDiscount: DiscountAutomaticBasicInput!, $id: ID!) {
-	discountAutomaticBasicUpdate(automaticBasicDiscount: $automaticBasicDiscount, id: $id) {
-		automaticDiscountNode {
-			id
-		}
-		userErrors {
-			field
-			message
-		}
-	}
-}`;
+import { UPDATE_BASIC_DISCOUNT_CODE_QUERY, UPDATE_BASIC_AUTOMATIC_DISCOUNT_CODE_QUERY } from 'app/graphqlQuery/mutationDiscount';
 
 type DiscountCodeItems =
 	| { all: boolean }

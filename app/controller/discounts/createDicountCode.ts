@@ -2,68 +2,7 @@ import prisma from '../../db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
 import { DiscountCodeCustomerSelection } from './updateBasicDiscountCode';
 import { createBulkDiscountCode } from './createBulkDiscountCode';
-
-const CREATE_BASIC_DISCOUNT_CODE_QUERY = `
-mutation CreateDiscountCode($basicCodeDiscount: DiscountCodeBasicInput!) {
-	discountCodeBasicCreate(basicCodeDiscount: $basicCodeDiscount) {
-		codeDiscountNode {
-			id
-			codeDiscount {
-				... on DiscountCodeBasic {
-					title
-					startsAt
-					endsAt
-					customerSelection {
-						... on DiscountCustomers {
-							customers {
-								id
-							}
-						}
-					}
-					customerGets {
-						value {
-							... on DiscountPercentage {
-								percentage
-							}
-						}
-					}
-				}
-			}
-		}
-		userErrors {
-			field
-			message
-		}
-	}
-}`;
-
-const CREATE_AUTOMATIC_BASIC_DISCOUNTCODE_QUERY = `
-mutation discountAutomaticBasicCreate($automaticBasicDiscount: DiscountAutomaticBasicInput!) {
-	discountAutomaticBasicCreate(automaticBasicDiscount: $automaticBasicDiscount) {
-		automaticDiscountNode {
-			id
-			automaticDiscount {
-				... on DiscountAutomaticBasic {
-					title
-					startsAt
-					endsAt
-					customerGets {
-						value {
-							... on DiscountPercentage {
-								percentage
-							}
-						}
-					}
-				}
-			}
-		}
-		userErrors {
-			field
-			code
-			message
-		}
-	}
-}`;
+import { CREATE_BASIC_DISCOUNT_CODE_QUERY, CREATE_AUTOMATIC_BASIC_DISCOUNTCODE_QUERY } from 'app/graphqlQuery/mutationDiscount';
 
 type DiscountCodeItems =
 	| { all: boolean }

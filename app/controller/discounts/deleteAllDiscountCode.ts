@@ -1,34 +1,11 @@
 import prisma from 'app/db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
+import { DELETE_DISCOUNT_CODE_QUERY, DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY } from 'app/graphqlQuery/mutationDiscount';
 
 interface DeleteResponse {
 	success: boolean;
 	message: string;
 }
-
-const DELETE_DISCOUNT_CODE_QUERY = `
-mutation DeleteDiscountCode($id: ID!) {
-	discountCodeDelete(id: $id) {
-		deletedCodeDiscountId
-		userErrors {
-			field
-			code
-			message
-		}
-	}
-}`;
-
-const DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY = `
-mutation DeleteDiscountCode($id: ID!) {
-	discountAutomaticDelete(id: $id) {
-		deletedAutomaticDiscountId
-		userErrors {
-			field
-			code
-			message
-		}
-	}
-}`;
 
 /**
 	* Deletes all discount codes (both basic and automated) created by the app from both the app's database and the Shopify store.

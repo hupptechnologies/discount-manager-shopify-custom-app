@@ -1,105 +1,6 @@
 import prisma from 'app/db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
-
-const CREATE_BUYXGETY_DISCOUNT_QUERY = `
-mutation discountCodeBxgyCreate($bxgyCodeDiscount: DiscountCodeBxgyInput!) {
-	discountCodeBxgyCreate(bxgyCodeDiscount: $bxgyCodeDiscount) {
-		codeDiscountNode {
-			id
-			codeDiscount {
-				... on DiscountCodeBxgy {
-					title
-					codes(first: 10) {
-						nodes {
-							code
-						}
-					}
-					startsAt
-					endsAt
-					customerBuys {
-						value {
-							... on DiscountQuantity {
-								quantity
-							}
-						}
-					}
-					customerGets {
-						appliesOnOneTimePurchase
-						appliesOnSubscription
-						value {
-							... on DiscountOnQuantity {
-								effect {
-									... on DiscountPercentage {
-										percentage
-									}
-								}
-								quantity {
-									quantity
-								}
-							}
-						}
-					}
-					customerSelection {
-						... on DiscountCustomerAll {
-							allCustomers
-						}
-					}
-					appliesOncePerCustomer
-					usageLimit
-				}
-			}
-		}
-		userErrors {
-			field
-			code
-			message
-		}
-	}
-}`;
-
-const CREATE_BUYXGETY_AUTOMATIC_DISCOUNT_CODE_QUERY = `
-mutation CreateBxgyDiscount($automaticBxgyDiscount: DiscountAutomaticBxgyInput!) {
-	discountAutomaticBxgyCreate(automaticBxgyDiscount: $automaticBxgyDiscount) {
-		automaticDiscountNode {
-			id
-			automaticDiscount {
-				... on DiscountAutomaticBxgy {
-					title
-					startsAt
-					endsAt
-					customerBuys {
-						value {
-							... on DiscountQuantity {
-								quantity
-							}
-						}
-					}
-					customerGets {
-						appliesOnSubscription
-						appliesOnOneTimePurchase
-						value {
-							... on DiscountOnQuantity {
-								effect {
-									... on DiscountPercentage {
-										percentage
-									}
-								}
-								quantity {
-									quantity
-								}
-							}
-						}
-					}
-					usageLimit
-				}
-			}
-		}
-		userErrors {
-			field
-			message
-		}
-	}
-}`;
+import { CREATE_BUYXGETY_DISCOUNT_QUERY, CREATE_BUYXGETY_AUTOMATIC_DISCOUNT_CODE_QUERY } from 'app/graphqlQuery/mutationDiscount';
 
 interface CreateBxgyDiscountResponse {
 	data: {
@@ -192,7 +93,6 @@ interface CreateBxgyDiscountResponse {
 		errors?: Array<{ message: string }>;
 	};
 }
-
 interface CreateBuyxGetYDiscountCodeInput {
 	title: string;
 	code: string;

@@ -1,34 +1,11 @@
 import prisma from 'app/db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
+import { DELETE_DISCOUNT_CODE_QUERY, DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY } from 'app/graphqlQuery/mutationDiscount';
 
 interface DeleteResponse {
 	success: boolean;
 	message: string;
 }
-
-export const DELETE_DISCOUNT_CODE_QUERY = `
-mutation DeleteDiscountCode($id: ID!) {
-	discountCodeDelete(id: $id) {
-		deletedCodeDiscountId
-		userErrors {
-			field
-			code
-			message
-		}
-	}
-}`;
-
-export const DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY = `
-mutation DeleteDiscountCode($id: ID!) {
-	discountAutomaticDelete(id: $id) {
-		deletedAutomaticDiscountId
-		userErrors {
-			field
-			code
-			message
-		}
-	}
-}`;
 
 interface DeleteDiscountCodeInput {
 	id: number;

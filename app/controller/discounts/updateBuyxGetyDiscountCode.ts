@@ -1,38 +1,5 @@
 import { getDetailUsingGraphQL } from 'app/service/product';
-
-const UPDATE_BUY_X_GET_Y_DISCOUNT_CODE_QUERY = `
-mutation discountCodeBxgyUpdate($id: ID!, $bxgyCodeDiscount: DiscountCodeBxgyInput!) {
-	discountCodeBxgyUpdate(id: $id, bxgyCodeDiscount: $bxgyCodeDiscount) {
-		codeDiscountNode {
-			id
-		}
-		userErrors {
-			field
-			code
-			message
-		}
-	}
-}`;
-
-const UPDATE_BUY_X_GET_Y_AUTOMATIC_DISCOUNT_CODE_QUERY = `
-mutation UpdateBxgyDiscount($id: ID!, $automaticBxgyDiscount: DiscountAutomaticBxgyInput!) {
-	discountAutomaticBxgyUpdate(id: $id, automaticBxgyDiscount: $automaticBxgyDiscount) {
-		automaticDiscountNode {
-			id
-			automaticDiscount {
-				... on DiscountAutomaticBxgy {
-					title
-					startsAt
-					endsAt
-				}
-			}
-		}
-		userErrors {
-			field
-			message
-		}
-	}
-}`;
+import { UPDATE_BUY_X_GET_Y_DISCOUNT_CODE_QUERY, UPDATE_BUY_X_GET_Y_AUTOMATIC_DISCOUNT_CODE_QUERY } from 'app/graphqlQuery/mutationDiscount';
 
 interface DiscountCodeBxgyInput {
 	code: string;

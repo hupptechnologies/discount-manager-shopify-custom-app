@@ -1,16 +1,6 @@
 import prisma from 'app/db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
-
-const GET_BASIC_DISCOUNT_CODE_USAGE_COUNT_QUERY = `
-query getDiscountCode($ID: ID!) {
-	codeDiscountNode(id: $ID) {
-		codeDiscount {
-			... on DiscountCodeBasic {
-				asyncUsageCount
-			}
-		}
-	}
-}`;
+import { GET_BASIC_DISCOUNT_CODE_USAGE_COUNT_QUERY } from 'app/graphqlQuery/discount';
 
 interface DiscountStats {
 	activeDiscount: {

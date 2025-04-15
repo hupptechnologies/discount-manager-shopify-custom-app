@@ -1,18 +1,5 @@
 import { getDetailUsingGraphQL } from "app/service/product";
-
-const DELETE_BULK_REDEEM_DISCOUNT_CODES_QUERY = `
-mutation discountCodeRedeemCodeBulkDelete($discountId: ID!, $ids: [ID!]) {
-	discountCodeRedeemCodeBulkDelete(discountId: $discountId, ids: $ids) {
-		job {
-			id
-		}
-		userErrors {
-			code
-			field
-			message
-		}
-	}
-}`;
+import { DELETE_BULK_REDEEM_DISCOUNT_CODES_QUERY } from "app/graphqlQuery/mutationDiscount";
 
 interface DataPayload {
 	discountId: string;

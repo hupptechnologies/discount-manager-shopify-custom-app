@@ -1,23 +1,7 @@
 import prisma from "app/db.server";
 import { getDetailUsingGraphQL } from "app/service/product";
 import { createBulkDiscountCodes } from "app/service/store";
-
-const GET_DISCOUNT_CODES_QUERY = `
-query GetDiscountCodes($id: ID!) {
-	codeDiscountNode(id: $id) {
-		codeDiscount {
-			... on DiscountCodeBasic {
-				codes(first: 100) {
-					edges {
-						node {
-							code
-						}
-					}
-				}
-			}
-		}
-	}
-}`;
+import { GET_DISCOUNT_CODES_QUERY } from "app/graphqlQuery/discount";
 
 interface DataPayload {
 	discountId: string;
