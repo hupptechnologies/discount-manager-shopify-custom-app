@@ -3,7 +3,7 @@ import { getDetailUsingGraphQL } from 'app/service/product';
 import {
 	DELETE_AUTOMATIC_DISCOUNT_CODE_QUERY,
 	DELETE_DISCOUNT_CODE_QUERY,
-} from 'app/controller/discounts/deleteDiscountCode';
+} from 'app/graphqlQuery/mutationDiscount';
 
 interface PayloadDiscountDelete {
 	admin_graphql_api_id: string;

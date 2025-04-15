@@ -1,7 +1,7 @@
 import prisma from '../db.server';
 import { DiscountCodeBasic, DiscountCodeBxgy } from 'app/controller/discounts/getDiscountCodeById';
 import { getDetailUsingGraphQL } from 'app/service/product';
-import { GET_ALL_DISCOUNT_DETAILS_QUERY } from './handleDiscountCreate';
+import { GET_ALL_DISCOUNT_DETAILS_QUERY } from 'app/graphqlQuery/discount';
 
 interface PayloadDiscountCreate {
 	admin_graphql_api_id: string;
