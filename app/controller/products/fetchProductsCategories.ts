@@ -1,23 +1,7 @@
 import prisma from "app/db.server";
 import { FetchCategoryResponse } from "app/routes/api.products/route";
 import { getDetailUsingGraphQL } from "app/service/product";
-
-const  GET_CATEGORIES_QUERY = (childrenOf: string) => `
-query GetAllCategories {
-	taxonomy {
-		categories(first: 250${childrenOf ? `, childrenOf: "${childrenOf}"` : ''}) {
-			edges {
-				node {
-					id
-					name
-					fullName
-					childrenIds
-					parentId
-				}
-			}
-		}
-	}
-}`;
+import { GET_CATEGORIES_QUERY } from "app/graphqlQuery/product";
 
 interface GraphqlResponse {
 	data: {

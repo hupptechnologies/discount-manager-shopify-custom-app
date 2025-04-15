@@ -1,48 +1,7 @@
 import prisma from '../../db.server';
 import type { ProductVariant } from 'app/routes/api.products/route';
 import { getDetailUsingGraphQL } from '../../service/product';
-
-const PRODUCT_VARIANTS_QUERY = `
-	query GetProductVariants($first: Int, $last: Int,  $after: String, $before: String, $query: String) {
-		productVariants(first: $first, last: $last, after: $after, before: $before, query: $query) {
-			pageInfo {
-				endCursor
-				hasNextPage
-				hasPreviousPage
-				startCursor
-			}
-			edges {
-				node {
-					id
-					title
-					price
-					inventoryQuantity
-					product {
-						title
-						variantsCount {
-							count
-						}
-						featuredMedia {
-							preview {
-								image {
-									url
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-`;
-
-const PRODUCT_VARIANTS_COUNT_QUERY = `
-	query ProductVariantsCount {
-		productVariantsCount {
-			count
-		}
-	}
-`;
+import { PRODUCT_VARIANTS_QUERY, PRODUCT_VARIANTS_COUNT_QUERY } from 'app/graphqlQuery/product';
 
 interface PageInfo {
 	endCursor: string | null;

@@ -1,27 +1,6 @@
 import prisma from '../../db.server';
 import { getDetailUsingGraphQL } from 'app/service/product';
-
-const PRODUCT_VARIANT_QUERY = `
-query GetProduct($ID: ID!) {
-	product(id: $ID) {
-		variantsCount{
-			count
-		}
-		variants(first: 10) {
-			edges{
-				node {
-					id
-					title
-					price
-					inventoryQuantity
-					image {
-						url
-					}
-				}
-			}
-		}
-	}
-}`;
+import { PRODUCT_VARIANT_BY_ID_QUERY } from 'app/graphqlQuery/product';
 
 interface ProductVariant {
 	id: string;
@@ -76,7 +55,7 @@ export const fetchProductVariants = async (
 			throw new Error('Access token not found');
 		}
 		const data = {
-			query: PRODUCT_VARIANT_QUERY,
+			query: PRODUCT_VARIANT_BY_ID_QUERY,
 			variables: {
 				ID: id,
 			},

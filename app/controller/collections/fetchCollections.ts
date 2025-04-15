@@ -1,39 +1,7 @@
 import prisma from '../../db.server';
 import type { Collection } from 'app/routes/api.collections/route';
 import { getDetailUsingGraphQL } from 'app/service/product';
-
-const GET_COLLECTIONS_QUERY = `
-	query GetCollections($first: Int, $last: Int, $after: String, $before: String, $query: String) {
-		collections(first: $first, last: $last, after: $after, before: $before, query: $query) {
-			pageInfo {
-				endCursor
-				startCursor
-				hasNextPage
-				hasPreviousPage
-			}
-			edges {
-				node {
-					id
-					image {
-						url
-					}
-					title
-					productsCount {
-						count
-					}
-				}
-			}
-		}
-	}
-`;
-
-const COLLECTION_COUNT_QUERY = `
-	query CollectionsCount {
-		collectionsCount {
-			count
-		}
-	}
-`;
+import { COLLECTION_COUNT_QUERY, GET_COLLECTIONS_QUERY } from 'app/graphqlQuery/collection';
 
 interface PageInfo {
 	endCursor: string | null;
