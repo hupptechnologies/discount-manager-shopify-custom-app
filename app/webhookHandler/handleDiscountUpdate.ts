@@ -26,6 +26,22 @@ interface GraphQLResponse {
 	};
 }
 
+/**
+	* Handles the update of a discount code via webhook from Shopify.
+	* 
+	* This function is triggered when an admin updates the details of a discount 
+	* code on Shopify. It processes the incoming webhook payload containing the 
+	* updated discount code information and updates the corresponding data in 
+	* our app's database, ensuring that the latest details are reflected in the 
+	* discount code stored in our system.
+	* 
+	* @param {PayloadDiscountCreate} payload - The payload containing the updated details of the discount code.
+	* @param {string} shop - The Shopify store's domain (e.g., 'my-shop.myshopify.com').
+	* 
+	* @returns {Promise<void>} 
+	* - A promise that resolves when the discount code has been successfully updated in the database.
+*/
+
 export const handleDiscountUpdate = async (
 	payload: PayloadDiscountCreate,
 	shop: string,

@@ -1,5 +1,23 @@
 import prisma from 'app/db.server';
 
+/**
+ * Handles the creation of an order via webhook from Shopify.
+ * 
+ * This function is triggered when a customer creates an order on Shopify.
+ * If a discount code is applied to the order, the function checks the 
+ * `discount_codes` array in the webhook payload to find the applied 
+ * discount codes. For each code, it checks if the code exists in our 
+ * app's database. If a match is found, it increments the usage count 
+ * of that discount code, ensuring that the application of the discount 
+ * is accurately tracked.
+ * 
+ * @param {string} shop - The Shopify store's domain (e.g., 'my-shop.myshopify.com').
+ * @param {any[]} discount_codes - An array of discount codes applied to the order.
+ * 
+ * @returns {Promise<void>} 
+ * - A promise that resolves when the discount code usage count is updated in the database.
+*/
+
 export const handleOrderCreate = async (
 	shop: string,
 	discount_codes: any[],

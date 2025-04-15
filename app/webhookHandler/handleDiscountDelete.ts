@@ -9,6 +9,18 @@ interface PayloadDiscountDelete {
 	admin_graphql_api_id: string;
 }
 
+/**
+	* Handles the deletion of a discount code via webhook from Shopify.
+	* 
+	* This function is triggered when an admin deletes a discount code on Shopify.
+	* It processes the incoming webhook payload containing the discount code ID
+	* and deletes the corresponding discount code data from our app's database.
+	* This ensures that the discount code is removed from our app's admin interface.
+	* 
+	* @param {PayloadDiscountDelete} payload - The payload containing the discount code ID to be deleted.
+	* @param {string} shop - The Shopify store's domain (e.g., 'my-shop.myshopify.com').
+*/
+
 export const handleDiscountDelete = async (
 	payload: PayloadDiscountDelete,
 	shop: string,

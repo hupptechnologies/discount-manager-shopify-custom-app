@@ -190,6 +190,21 @@ interface GraphQLResponse {
 	};
 }
 
+/**
+	* Handles the creation of a discount code via webhook from Shopify.
+	* 
+	* This function is triggered when an admin creates a discount code on Shopify.
+	* It processes the incoming webhook payload containing discount code details
+	* and saves the information to our app's database. The newly created discount code 
+	* will then be displayed in the discount code table on the app's admin interface.
+	* 
+	* @param {PayloadDiscountCreate} payload - The payload containing the discount code details from Shopify.
+	* @param {string} shop - The Shopify store's domain (e.g., 'my-shop.myshopify.com').
+	* 
+	* @returns {Promise<void>} 
+	* - A promise that resolves when the discount code has been successfully saved to the database.
+*/
+
 export const handleDiscountCreate = async (
 	payload: PayloadDiscountCreate,
 	shop: string,
