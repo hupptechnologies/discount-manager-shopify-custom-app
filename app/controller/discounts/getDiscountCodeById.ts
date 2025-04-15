@@ -608,6 +608,24 @@ interface BasicDiscountQueryResponse {
 	};
 }
 
+/**
+	* Fetches the details of a discount code by its ID from the Shopify store.
+	* 
+	* This function is used when an admin clicks on the "Update" button for any discount code in the app’s admin interface. 
+	* It retrieves the required fields of the discount code based on the specified parameters, 
+	* such as the discount's title, status, start date, and discount details.
+	* The function supports fetching details for **basic** and **automated** discount codes, 
+	* including various discount types such as **order discounts**, **product discounts**, **shipping discounts**, 
+	* **buyXGetY discounts**, and **bulk discount codes**.
+	* 
+	* @param {number} id - The unique identifier of the discount code to retrieve.
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {string} discountType - The type of the discount code (e.g., 'order', 'product', 'buyXGetY', 'shipping', etc.).
+	* @param {string} method - The method used for the discount (e.g., 'basic', 'automated', etc.).
+	* 
+	* @returns {Promise<getDiscountCodeResponse>} - A promise that resolves with the required discount code details.
+*/
+
 export const getDiscountCodeById = async (
 	id: number,
 	shop: string,

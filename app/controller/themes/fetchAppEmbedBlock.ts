@@ -40,6 +40,18 @@ interface AppEmbedBlockResponse {
 	appEmbedID: string;
 }
 
+/**
+	* Fetches the status of the app embed block for a Shopify store.
+	* 
+	* This function checks whether the app embed block is enabled or disabled for a 
+	* specific Shopify store. The status is returned as a boolean, where `true` 
+	* indicates that the app embed block is enabled, and `false` indicates it is disabled.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* 
+	* @returns {Promise<AppEmbedBlockResponse>} - A promise that resolves to the app embed block status.
+*/
+
 export const fetchAppEmbedBlock = async (shop: string): Promise<AppEmbedBlockResponse> => {
 	try {
 		const response = await prisma.session.findMany({

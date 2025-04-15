@@ -39,6 +39,18 @@ interface GraphqlResponse {
 	};
 };
 
+/**
+	* Fetches all categories, including subcategories, from a Shopify store.
+	* 
+	* This function retrieves all available categories in a Shopify store, including nested subcategories.
+	* It uses the provided `childrenOf` parameter to fetch categories and subcategories for a specific parent category.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {string} childrenOf - The ID or handle of the parent category to fetch subcategories for.
+	* 
+	* @returns {Promise<FetchCategoryResponse>} - A promise that resolves to an object containing the categories and their subcategories for the given shop.
+*/
+
 export const fetchAllCategories = async (shop: string, childrenOf: string): Promise<FetchCategoryResponse> => {
 	try {
 		const response = await prisma.session.findMany({

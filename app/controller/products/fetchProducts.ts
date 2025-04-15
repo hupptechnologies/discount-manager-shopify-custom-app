@@ -98,6 +98,21 @@ interface FetchProductsResponse {
 	totalCount: number;
 }
 
+/**
+	* Fetches products and their variants from Shopify.
+	* 
+	* This function fetches a list of products along with their variants from a specified Shopify store. 
+	* It supports pagination through the `after` and `before` parameters, and can filter the results using a `query` string.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {string | null} [after] - The cursor to fetch products after a specific product (for pagination).
+	* @param {string | null} [before] - The cursor to fetch products before a specific product (for pagination).
+	* @param {string} [query] - Optional query string to filter the products (e.g., search for products by title).
+	* 
+	* @returns {Promise<FetchProductsResponse>} - A promise that resolves to an object containing the list of products
+	*                                             and their variants, based on the provided parameters.
+*/
+
 export const fetchProducts = async (
 	shop: string,
 	after?: string | null,

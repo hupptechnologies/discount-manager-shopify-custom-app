@@ -146,6 +146,22 @@ interface CreateDiscountCodeInput {
 	advancedRule: object | null;
 }
 
+/**
+	* Creates a basic and automated discount code for Shopify store.
+	* 
+	* This function creates a discount code based on the provided `dataPayload`, which defines the
+	* details of the discount, such as eligible products, orders, or shipping discounts. The discount
+	* code is created according to the specified `type` (e.g., product discount, order discount, shipping discount)
+	* and `method` (e.g., automatic or manual application).
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {CreateDiscountCodeInput} dataPayload - The data payload containing the details for the discount code (e.g., which products or orders are eligible, the amount or percentage off, etc.).
+	* @param {string} type - The type of discount (e.g., "product", "order", "shipping").
+	* @param {string} method - The method of applying the discount (e.g., "automatic" or "custom").
+	* 
+	* @returns {Promise<{ success: boolean; message: string }>} - A promise that resolves with an object containing the success status and a message.
+*/
+
 export const createDiscountCode = async (
 	shop: string,
 	dataPayload: CreateDiscountCodeInput,

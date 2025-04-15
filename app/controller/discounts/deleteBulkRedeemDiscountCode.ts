@@ -19,6 +19,22 @@ interface DataPayload {
 	ids: string[];
 }
 
+/**
+	* Deletes multiple basic discount codes (bulk redeem codes) that were created previously, one by one.
+	* 
+	* This function takes a list of **discount IDs** and their corresponding **bulk redeem IDs**, 
+	* and deletes those specific discount codes from the Shopify store.
+	* 
+	* - The `discountID` is the ID of the specific discount code.
+	* - The `bulkRedeemIDs` is an array of IDs associated with multiple redeemable discount codes for the specific discount.
+	* 
+	* The function processes each ID in the payload to ensure that all related discount codes are removed from the Shopify store 
+	* as well as from the app's database.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {DataPayload} dataPayload - The payload containing the `discountID` and an array of `bulkRedeemIDs` we called `ids` to be deleted.
+*/
+
 export const deleteBulkRedeemDiscountCode = async (shop: string, dataPayload: DataPayload) => {
 	const { discountId, ids } = dataPayload;
 	try {

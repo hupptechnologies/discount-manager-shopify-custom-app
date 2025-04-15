@@ -82,6 +82,25 @@ const getDiscountStats = async (): Promise<DiscountStats> => {
 	return discountSummary;
 };
 
+/**
+	* Retrieves a paginated list of discount codes from our database, 
+	* with optional filters for status, usage count, search query, and ordering.
+	* 
+	* This function fetches discount code data from our app's database, allowing 
+	* admins to view the details of all created discount codes. It supports filtering 
+	* by status (active, pending, expired), usage count (discount codes with more than 
+	* a certain number of uses), search query, and ordering by creation date (ascending or descending). 
+	* It also returns pagination details so that the result can be split into pages.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {number} page - The page number to fetch (default is 1).
+	* @param {number} pageSize - The number of discount codes to fetch per page (default is 10).
+	* @param {'active' | 'pending' | 'expired'} [status] - The status of the discount codes to filter by (optional).
+	* @param {number} usedCountGreaterThan - Filters discount codes with a usage count greater than this value (default is 0).
+	* @param {string} [searchQuery] - A search query to filter discount codes by title, code, or other fields (optional).
+	* @param {'asc' | 'desc'} [orderByCreatedAt] - Order the results by creation date, either ascending ('asc') or descending ('desc') (optional).
+*/
+
 export const getDiscountCodes = async (
 	shop: string,
 	page: number = 1,

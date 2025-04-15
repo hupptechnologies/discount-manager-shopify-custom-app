@@ -50,6 +50,18 @@ export interface FetchProductVariantsResult {
 	message?: string;
 }
 
+/**
+	* Fetches all variants for a specific product in a Shopify store.
+	* 
+	* This function retrieves all variants associated with a given product ID from a Shopify store.
+	* The product variants include different options like sizes, colors, prices, and inventory data.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {string} id - The unique ID of the product for which variants should be fetched.
+	* 
+	* @returns {Promise<FetchProductVariantsResult>} - A promise that resolves to an object containing all variants for the specified product.
+*/
+
 export const fetchProductVariants = async (
 	shop: string,
 	id: string,

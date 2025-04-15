@@ -80,6 +80,19 @@ interface FetchCollectionResponse {
 	totalCount: number;
 }
 
+/**
+	* Fetches collections from Shopify.
+	* 
+	* This function fetches collections from the Shopify API based on provided parameters. 
+	* It supports pagination through `after` and `before` parameters and allows filtering using a `query` string.
+	* 
+	* @param {string} shop - The shop's domain (e.g., 'my-shop.myshopify.com').
+	* @param {string | null} [after] - The cursor to fetch results after a specific collection (for pagination).
+	* @param {string | null} [before] - The cursor to fetch results before a specific collection (for pagination).
+	* @param {string} [query] - The optional query string for filtering collections.
+	* @returns {Promise<FetchCollectionResponse>} - A promise that resolves to the fetched collections data.
+*/
+
 export const fetchCollections = async (
 	shop: string,
 	after?: string | null,

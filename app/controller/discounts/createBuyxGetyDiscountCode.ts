@@ -218,6 +218,22 @@ interface CreateBuyxGetYDiscountCodeInput {
 	advancedRule: object | null;
 }
 
+/**
+	* Creates an automated Buy X Get Y discount code for a Shopify store.
+	* 
+	* This function creates a Buy X Get Y type discount code, where customers can get a discount
+	* on purchasing certain items. The function uses the provided `dataPayload` to define the details
+	* of the discount, such as the eligible products, quantities, and the type of discount. It also uses
+	* `type` and `method` to determine how the discount should be applied.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {CreateBuyxGetYDiscountCodeInput} dataPayload - The data payload containing the details for the Buy X Get Y discount code (e.g., which items are eligible for the discount, quantities, etc.).
+	* @param {string} type - The type of the Buy X Get Y discount (e.g., percentage, fixed value, etc.).
+	* @param {string} method - The method of applying the discount (e.g., automatic or manual).
+	* 
+	* @returns {Promise<{ success: boolean; message: string }>} - A promise that resolves with an object containing the success status and a message.
+*/
+
 export const createBuyXGetYDiscountCode = async (
 	shop: string,
 	dataPayload: CreateBuyxGetYDiscountCodeInput,

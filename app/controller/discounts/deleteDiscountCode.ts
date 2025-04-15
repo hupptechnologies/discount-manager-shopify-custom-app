@@ -36,6 +36,22 @@ interface DeleteDiscountCodeInput {
 	discountId: string;
 }
 
+/**
+	* Deletes a single discount code (either basic or automated) from the Shopify store and the app's database.
+	* 
+	* This function allows you to delete one discount code at a time, whether it's a basic discount or an automated discount code.
+	* The function will process the deletion of the provided discount code based on the `discountID` passed in the payload.
+	* 
+	* - The `discountID` refers to the unique identifier of the discount code that you want to delete.
+	* 
+	* The function ensures that the specified discount code is removed both from the Shopify store and from the app’s database.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {DeleteDiscountCodeInput} dataPayload - The payload containing the `discountID` of the discount code to be deleted.
+	* 
+	* @returns {Promise<DeleteResponse>} - A promise that resolves with the status of the deletion process.
+*/
+
 export const deleteDiscountCode = async (
 	shop: string,
 	dataPayload: DeleteDiscountCodeInput,

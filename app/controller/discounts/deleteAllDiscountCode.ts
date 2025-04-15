@@ -30,6 +30,21 @@ mutation DeleteDiscountCode($id: ID!) {
 	}
 }`;
 
+/**
+	* Deletes all discount codes (both basic and automated) created by the app from both the app's database and the Shopify store.
+	* 
+	* This function performs a two-step process:
+	* 1. It deletes all **basic** and **automated** discount codes created by the app in the app's database.
+	* 2. It removes the corresponding discount codes from the Shopify store.
+	* 
+	* The function will handle different types of discount codes, ensuring that both basic discount codes (such as percentage, fixed amount) 
+	* and automated discount codes (such as "Buy X Get Y" or other automatic discount rules) are fully removed.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* 
+	* @returns {Promise<DeleteResponse>} - A promise that resolves with an object containing the status of the deletion process.
+*/
+
 export const deleteAllDiscountCodes = async (
 	shop: string,
 ): Promise<DeleteResponse> => {

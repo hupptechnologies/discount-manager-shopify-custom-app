@@ -118,6 +118,22 @@ interface CreateDiscountCodeInput {
 	advancedRule: object | null;
 }
 
+/**
+	* Updates a basic or automated discount code in both Shopify and our app's database.
+	* 
+	* This function is used to update the details of an existing discount code. It handles 
+	* updates for different discount types such as order, product, and shipping discounts. 
+	* The updated details are reflected both in Shopify and in our app's database to ensure 
+	* consistency across platforms.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {CreateDiscountCodeInput} dataPayload - The updated discount code details to be applied.
+	* @param {number} id - The ID of the discount code to update.
+	* 
+	* @returns {Promise<UpdateBasicDiscountCodeResponse>} 
+	* - A promise that resolves with the response of the update operation, including success status and any relevant messages.
+*/
+
 export const updateBasicDiscountCode = async (
 	shop: string,
 	dataPayload: CreateDiscountCodeInput,

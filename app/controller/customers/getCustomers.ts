@@ -84,6 +84,21 @@ interface GraphQLResponse {
 	};
 }
 
+/**
+	* Fetches a list of customers from a Shopify store.
+	* 
+	* This function retrieves a list of customers from the specified Shopify store. 
+	* You can paginate through customers using the `after` and `before` parameters, 
+	* and filter the results using a search query.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {string | null} [after] - The cursor for fetching results after a specific customer. Used for pagination.
+	* @param {string | null} [before] - The cursor for fetching results before a specific customer. Used for pagination.
+	* @param {string} [query] - An optional search query to filter customers by specific criteria (e.g., name, email).
+	* 
+	* @returns {Promise<FetchCustomersProps>} - A promise that resolves to a list of customers with their details.
+*/
+
 export const fetchCustomers = async (
 	shop: string,
 	after?: string | null,

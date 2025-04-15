@@ -24,6 +24,17 @@ interface DataPayload {
 	codes: string[];
 }
 
+/**
+	* Creates multiple discount codes in bulk for a Shopify store.
+	* 
+	* This function generates multiple discount codes in bulk and applies them to a Shopify store.
+	* The discount codes are created based on the provided data payload, which includes details
+	* about the discount types, values, and other settings.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {DataPayload} dataPayload - The data payload that includes details for creating the discount codes.
+*/
+
 export const createBulkDiscountCode = async (shop: string, dataPayload: DataPayload) => {
 	try {
 		const response = await prisma.session.findMany({

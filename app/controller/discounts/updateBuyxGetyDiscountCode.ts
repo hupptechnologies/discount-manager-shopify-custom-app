@@ -161,6 +161,21 @@ interface CreateBuyxGetYDiscountCodeInput {
 	advancedRule: object | null;
 }
 
+/**
+	* Updates a Buy X Get Y discount code in both Shopify and our app's database.
+	* 
+	* This function is used to update an existing Buy X Get Y type discount code. It handles 
+	* the update operation for both basic and automated Buy X Get Y discount codes in Shopify 
+	* and ensures that the updated details are reflected in our app's database as well.
+	* 
+	* @param {string} shop - The domain of the Shopify store (e.g., 'my-shop.myshopify.com').
+	* @param {CreateBuyxGetYDiscountCodeInput} dataPayload - The updated Buy X Get Y discount code details to be applied.
+	* @param {number} id - The ID of the Buy X Get Y discount code to update.
+	* 
+	* @returns {Promise<UpdateBuyXGetYDiscountCodeResponse>} 
+	* - A promise that resolves with the response of the update operation, including success status and any relevant messages.
+*/
+
 export const updateBuyXGetYDiscountCode = async (
 	shop: string,
 	dataPayload: CreateBuyxGetYDiscountCodeInput,
