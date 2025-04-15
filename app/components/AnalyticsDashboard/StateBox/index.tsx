@@ -16,6 +16,11 @@ interface IndexStateBoxProps {
 	handleOpen: any;
 }
 
+/**
+	* IndexStateBox component displays a summary of discount statistics 
+	* and triggers an action when interacted with.
+	* @param handleOpen - Callback to handle opening modals or dialogs.
+*/
 const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 	const { discountStats } = useSelector((state: RootState) =>
 		getAllDiscountCodeDetail(state),

@@ -10,6 +10,12 @@ interface StatBoxProps {
 	data?: number[];
 }
 
+/**
+	* Props for the StatBox component.
+	* @property title - The title or label for the statistic (e.g. "Active Discounts").
+	* @property value - The numeric value or main stat to display.
+	* @property data - An optional array of numbers representing chart or trend data.
+*/
 export const StatBox: React.FC<StatBoxProps> = ({
 	title,
 	value,

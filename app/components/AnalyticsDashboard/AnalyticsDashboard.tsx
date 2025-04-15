@@ -10,6 +10,13 @@ interface AnalyticsDashboardProps {
 	handleOpen: any;
 }
 
+/**
+	* AnalyticsDashboard component.
+	* Displays the overall analytics dashboard with discount stats and actions.
+	*
+	* @param handleOpen - Function to trigger a modal or drawer open event.
+*/
+
 const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 	handleOpen,
 }) => {

@@ -214,6 +214,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						newRule.customerBuys?.items?.length > 0 && (
 							<FormLayout.Group>
 								<EditItemsList
+									handleCustomerCancel={() => {}}
 									handleCancelProduct={handleCustomerBuyCancelProduct}
 									handleCancelCollection={handleCustomerBuyCancelCollection}
 									handleVariantListOpen={handleVariantListOpen}
@@ -310,6 +311,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						newRule?.customerGets?.items?.length > 0 && (
 							<FormLayout.Group>
 								<EditItemsList
+									handleCustomerCancel={() => {}}
 									handleCancelCollection={handleCustomerGetCancelCollection}
 									handleCancelProduct={handleCustomerGetCancelProduct}
 									handleVariantListOpen={handleVariantListOpen}

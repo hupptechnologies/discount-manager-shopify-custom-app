@@ -43,6 +43,12 @@ interface DeleteDataList {
 	discountId: string;
 }
 
+/**
+	* AnalyticsTable component.
+	* Renders a table to display analytics or discount data with update loading state handling.
+	*
+	* @param setIsLoadingUpdate - Callback to toggle loading state during update operations.
+*/
 const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 	setIsLoadingUpdate,
 }) => {

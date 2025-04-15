@@ -109,7 +109,6 @@ export interface DiscountRule {
 	shippingRate: string;
 	isShippingRate: boolean;
 }
-
 interface DiscountRuleFormProps {
 	queryType: QueryType;
 }
