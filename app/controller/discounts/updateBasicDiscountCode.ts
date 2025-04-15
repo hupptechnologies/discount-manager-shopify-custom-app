@@ -171,50 +171,67 @@ export const updateBasicDiscountCode = async (
 						endsAt: endsAt,
 						appliesOncePerCustomer: appliesOncePerCustomer,
 						usageLimit: usageLimit,
-						customerSelection: {
-							...((customers.customerIDs?.length > 0 || customers.removeCustomersIDs.length > 0) && {
-								customers: {
-									...((customers.customerIDs?.length > 0 && isCustom) && {
-										add: customers.customerIDs
+						...(findDiscountExist?.discountScope !== 'SHIPPING' && {
+							customerSelection: {
+								...((customers.customerIDs?.length > 0 || customers.removeCustomersIDs.length > 0) && {
+									customers: {
+										...((customers.customerIDs?.length > 0 && isCustom) && {
+											add: customers.customerIDs
+										}),
+										...((customers.removeCustomersIDs?.length > 0 && isCustom) && {
+											remove: customers.removeCustomersIDs
+										}),
+									},
+								}),
+								...((customers.customerIDs?.length == 0 && customers.removeCustomersIDs.length == 0) && {
+									all: true
+								}),
+							},
+						}),
+						...(findDiscountExist?.discountScope !== 'SHIPPING' && {
+							customerGets: {
+								value: {
+									percentage: Number(customerGets.percentage) / 100,
+								},
+								items: {
+									...((customerGets.collectionIDs.length > 0 ||
+										customerGets.removeCollectionIDs.length > 0) && {
+										collections: {
+											...(customerGets.collectionIDs.length > 0 && {
+												add: customerGets.collectionIDs,
+											}),
+											...(customerGets.removeCollectionIDs.length > 0 && {
+												remove: customerGets.removeCollectionIDs,
+											}),
+										},
 									}),
-									...((customers.removeCustomersIDs?.length > 0 && isCustom) && {
-										remove: customers.removeCustomersIDs
+									...((customerGets.productIDs.length > 0 ||
+										customerGets.removeProductIDs.length > 0) && {
+										products: {
+											...(customerGets.productIDs.length > 0 && {
+												productVariantsToAdd: customerGets.productIDs,
+											}),
+											...(customerGets.removeProductIDs.length > 0 && {
+												productVariantsToRemove: customerGets.removeProductIDs,
+											}),
+										},
 									}),
 								},
-							}),
-							...((customers.customerIDs?.length == 0 && customers.removeCustomersIDs.length == 0) && {
-								all: true
-							}),
-						},
-						customerGets: {
-							value: {
-								percentage: Number(customerGets.percentage) / 100,
 							},
-							items: {
-								...((customerGets.collectionIDs.length > 0 ||
-									customerGets.removeCollectionIDs.length > 0) && {
-									collections: {
-										...(customerGets.collectionIDs.length > 0 && {
-											add: customerGets.collectionIDs,
-										}),
-										...(customerGets.removeCollectionIDs.length > 0 && {
-											remove: customerGets.removeCollectionIDs,
-										}),
-									},
-								}),
-								...((customerGets.productIDs.length > 0 ||
-									customerGets.removeProductIDs.length > 0) && {
-									products: {
-										...(customerGets.productIDs.length > 0 && {
-											productVariantsToAdd: customerGets.productIDs,
-										}),
-										...(customerGets.removeProductIDs.length > 0 && {
-											productVariantsToRemove: customerGets.removeProductIDs,
-										}),
-									},
-								}),
-							},
-						},
+						}),
+						...(findDiscountExist?.discountScope === 'SHIPPING' && {
+							customerGets: {
+								value: {
+									discountAmount: {
+										amount: Number(customerGets.percentage) / 100,
+										appliesOnEachItem: false
+									}
+								},
+								items: {
+									all: true
+								}
+							}
+						})
 					} as DiscountCodeBasicInput,
 				},
 			};

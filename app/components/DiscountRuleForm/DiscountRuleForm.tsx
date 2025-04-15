@@ -106,6 +106,8 @@ export interface DiscountRule {
 		removeCustomersIDs: string[];
 	};
 	customerSearch: string;
+	shippingRate: string;
+	isShippingRate: boolean;
 }
 
 interface DiscountRuleFormProps {
@@ -206,7 +208,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			customerIDs: [],
 			removeCustomersIDs: []
 		},
-		customerSearch: ''
+		customerSearch: '',
+		shippingRate: '',
+		isShippingRate: false
 	});
 
 	useEffect(() => {
@@ -214,12 +218,12 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 			const ifExist = ['PRODUCT', 'ORDER', 'SHIPPING'].includes(discountScope);
 			const isCustomMethod = method === 'custom';
 			const productVariantsExistForGet =
-				getDiscountCode[0]?.codeDiscount?.customerGets?.items.productVariants
+				getDiscountCode[0]?.codeDiscount?.customerGets?.items?.productVariants
 					?.edges?.length > 0 ||
 				getDiscountCode[0]?.automaticDiscount?.customerGets?.items
 					.productVariants?.edges?.length > 0;
 			const productVariantsExistForBuy =
-				getDiscountCode[0]?.codeDiscount?.customerBuys?.items.productVariants
+				getDiscountCode[0]?.codeDiscount?.customerBuys?.items?.productVariants
 					?.edges?.length > 0 ||
 				getDiscountCode[0]?.automaticDiscount?.customerBuys?.items
 					.productVariants?.edges?.length;
@@ -282,25 +286,21 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				checkoutDiscountCode: isCustomMethod
 					? getDiscountCode[0]?.codeDiscount?.codes?.edges[0]?.node?.code
 					: getDiscountCode[0]?.automaticDiscount?.title || '',
+				discountType: isCustomMethod ? (getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage || getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect?.percentage) ? 'per' : 'fixed' : (getDiscountCode[0]?.automaticDiscount?.customerGets?.value?.percentage || getDiscountCode[0]?.automaticDiscount?.customerGets?.value?.effect?.percentage) ? 'per' : 'fixed',
 				customerGets: {
 					...newRule.customerGets,
 					percentage: isCustomMethod
-						? String(
+						? String((getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage || getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect?.percentage) ?
 								Math.round(
-									(ifExist
-										? getDiscountCode[0]?.codeDiscount?.customerGets?.value
-												?.percentage
-										: getDiscountCode[0]?.codeDiscount?.customerGets?.value
-												?.effect?.percentage) * 100,
-								),
+									(ifExist ? getDiscountCode[0]?.codeDiscount?.customerGets?.value?.percentage : getDiscountCode[0]?.codeDiscount?.customerGets?.value?.effect?.percentage) * 100,
+								) :
+								ifExist && getDiscountCode[0]?.codeDiscount?.customerGets?.value?.amount?.amount
 							)
 						: String(
 								Math.round(
 									(ifExist
-										? getDiscountCode[0]?.automaticDiscount?.customerGets?.value
-												?.percentage
-										: getDiscountCode[0]?.automaticDiscount?.customerGets?.value
-												?.effect?.percentage) * 100,
+										? getDiscountCode[0]?.automaticDiscount?.customerGets?.value?.percentage
+										: getDiscountCode[0]?.automaticDiscount?.customerGets?.value?.effect?.percentage) * 100,
 								),
 							),
 					quantity: isCustomMethod
@@ -363,7 +363,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					items: getDiscountCode[0]?.codeDiscount?.customerSelection?.customers,
 					customerIDs: getDiscountCode[0]?.codeDiscount?.customerSelection?.customers?.length > 0 ? getDiscountCode[0]?.codeDiscount?.customerSelection?.customers?.map(item=>item?.id) : [],
 					removeCustomersIDs: []
-				}
+				},
+				shippingRate: discountScope === 'SHIPPING' ? getDiscountCode[0]?.codeDiscount?.maximumShippingPrice?.amount : '',
+				isShippingRate: discountScope === 'SHIPPING'
 			});
 		}
 	}, [run]);
@@ -492,7 +494,9 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 				customerIDs: [],
 				removeCustomersIDs: []
 			},
-			customerSearch: ''
+			customerSearch: '',
+			shippingRate: '',
+			isShippingRate: false
 		});
 		setIsEdit(false);
 	};
@@ -867,6 +871,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 	const handleCloseBulkCode = () => {
 		shopify.modal.hide('bulk-codes-modal');
 	};
+
+	console.log(newRule?.shippingRate, newRule?.isShippingRate);
 
 	return (
 		<Layout>

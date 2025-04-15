@@ -82,6 +82,10 @@ export interface GetDiscountCodeList {
 					quantity: string;
 				};
 				percentage: number;
+				amount: {
+					amount: string;
+					currencyCode: string;
+				}
 			};
 			items: {
 				productVariants: {
@@ -105,6 +109,10 @@ export interface GetDiscountCodeList {
 				};
 			};
 		};
+		maximumShippingPrice: {
+			amount: string;
+			currencyCode: string;
+		}
 	};
 	automaticDiscount: {
 		title: string;

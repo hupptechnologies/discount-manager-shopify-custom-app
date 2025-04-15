@@ -40,6 +40,12 @@ query getDiscountCode($ID: ID!) {
 						... on DiscountPercentage {
 							percentage
 						}
+						... on DiscountAmount {
+							amount {
+								amount
+								currencyCode
+							}
+						}
 					}
 				}
 			}

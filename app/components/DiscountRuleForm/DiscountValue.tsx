@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Modal, TitleBar } from '@shopify/app-bridge-react';
 import {
 	BlockStack,
+	Box,
 	Button,
 	Card,
+	Checkbox,
 	FormLayout,
 	Icon,
 	Select,
@@ -88,41 +90,43 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 						<Text variant="headingMd" fontWeight="semibold" as="h6">
 							Discount value
 						</Text>
-						<FormLayout.Group condensed>
-							<Select
-								label=""
-								options={[
-									{ label: 'Percentage', value: 'per' },
-									{ label: 'Fixed amount', value: 'fixed' },
-								]}
-								value={newRule.discountType}
-								onChange={(value) => {
-									handleSaveBarOpen();
-									setNewRule({
-										...newRule,
-										discountType: value as 'per' | 'fixed',
-									});
-								}}
-							/>
-							<TextField
-								label=""
-								value={newRule?.customerGets?.percentage}
-								onChange={(value) => {
-									handleSaveBarOpen();
-									setNewRule({
-										...newRule,
-										customerGets: {
-											...newRule.customerGets,
-											percentage: Number(value),
-										},
-									});
-								}}
-								autoComplete="off"
-								prefix={newRule.discountType === 'fixed' ? '$' : ''}
-								suffix={newRule.discountType === 'per' ? '%' : ''}
-								placeholder="10"
-							/>
-						</FormLayout.Group>
+						{queryType !== 'shipping' && 
+							<FormLayout.Group condensed>
+								<Select
+									label=""
+									options={[
+										{ label: 'Percentage', value: 'per' },
+										{ label: 'Fixed amount', value: 'fixed' },
+									]}
+									value={newRule.discountType}
+									onChange={(value) => {
+										handleSaveBarOpen();
+										setNewRule({
+											...newRule,
+											discountType: value as 'per' | 'fixed',
+										});
+									}}
+								/>
+								<TextField
+									label=""
+									value={newRule?.customerGets?.percentage}
+									onChange={(value) => {
+										handleSaveBarOpen();
+										setNewRule({
+											...newRule,
+											customerGets: {
+												...newRule.customerGets,
+												percentage: Number(value),
+											},
+										});
+									}}
+									autoComplete="off"
+									prefix={newRule.discountType === 'fixed' ? '$' : ''}
+									suffix={newRule.discountType === 'per' ? '%' : ''}
+									placeholder="10"
+								/>
+							</FormLayout.Group>
+						}
 						<FormLayout.Group condensed>
 							{queryType === 'products' && (
 								<Select
@@ -179,6 +183,37 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 								}}
 							/>
 						</FormLayout.Group>
+						{queryType === 'shipping' &&
+							<FormLayout.Group>
+								<Checkbox
+									label="Exclude shipping rates over a certain amount"
+									checked={newRule?.isShippingRate}
+									onChange={() => {
+										handleSaveBarOpen();
+										setNewRule({
+											...newRule,
+											isShippingRate: !newRule.isShippingRate,
+										})
+									}}
+									helpText={
+										newRule?.isShippingRate && (
+											<Box width="30%">
+												<TextField
+													label=""
+													value={newRule?.shippingRate}
+													type="integer"
+													onChange={(value) =>
+														setNewRule({ ...newRule, shippingRate: value })
+													}
+													prefix='$'
+													autoComplete="off"
+												/>
+											</Box>
+										)
+									}
+								/>
+							</FormLayout.Group>
+						}
 						{queryType === 'products' && (
 							<FormLayout.Group>
 								<TextField
@@ -197,19 +232,18 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 								</Button>
 							</FormLayout.Group>
 						)}
-						{queryType === 'products' &&
-							newRule?.customerGets?.items?.length > 0 && (
-								<FormLayout.Group>
-									<EditItemsList
-										handleCustomerCancel={() => {}}
-										handleCancelCollection={handleCustomerGetCancelCollection}
-										handleCancelProduct={handleCustomerGetCancelProduct}
-										handleVariantListOpen={handleVariantListOpen}
-										type={newRule?.getItemFrom}
-										items={newRule?.customerGets?.items}
-									/>
-								</FormLayout.Group>
-							)}
+						{queryType === 'products' && newRule?.customerGets?.items?.length > 0 && (
+							<FormLayout.Group>
+								<EditItemsList
+									handleCustomerCancel={() => {}}
+									handleCancelCollection={handleCustomerGetCancelCollection}
+									handleCancelProduct={handleCustomerGetCancelProduct}
+									handleVariantListOpen={handleVariantListOpen}
+									type={newRule?.getItemFrom}
+									items={newRule?.customerGets?.items}
+								/>
+							</FormLayout.Group>
+						)}
 					</FormLayout>
 				</BlockStack>
 			</Card>
