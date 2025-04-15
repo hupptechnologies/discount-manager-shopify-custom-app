@@ -114,20 +114,11 @@ interface DiscountRuleFormProps {
 	queryType: QueryType;
 }
 
-export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
-	queryType,
-}) => {
+export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType }) => {
 	const { debounce } = pkg;
 	const shopify = useAppBridge();
 	const dispatch = useDispatch<AppDispatch>();
-	const {
-		getDiscountCode,
-		discountScope,
-		updateDiscountCodeId,
-		advancedRule,
-		method,
-		isMultiple
-	} = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
+	const { getDiscountCode, discountScope, updateDiscountCodeId, advancedRule, method, isMultiple } = useSelector((state: RootState) => getAllDiscountCodeDetail(state));
 	const navigate = useNavigate();
 	const [activeButtonIndex, setActiveButtonIndex] = useState(0);
 	const [rules, setRules] = useState<DiscountRule[]>([]);
@@ -212,6 +203,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		shippingRate: '',
 		isShippingRate: false
 	});
+
+	const isUsageLimitComponentShow = isEdit && method === 'auto' && discountScope === 'PRODUCT';
 
 	useEffect(() => {
 		if (getDiscountCode?.length > 0) {
@@ -872,8 +865,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 		shopify.modal.hide('bulk-codes-modal');
 	};
 
-	console.log(newRule?.shippingRate, newRule?.isShippingRate);
-
 	return (
 		<Layout>
 			<Layout.Section>
@@ -934,8 +925,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({
 					handleSearchCustomer={handleSearchCustomer}
 					handleCustomerCancel={handleCustomerCancel}
 				/>
-				<Placeholder height="5px" />
-				<UsageLimit handleSaveBarOpen={handleSaveBarOpen} newRule={newRule} setNewRule={setNewRule} />
+				{!isUsageLimitComponentShow && <Placeholder height="5px" />}
+				{!isUsageLimitComponentShow && <UsageLimit handleSaveBarOpen={handleSaveBarOpen} newRule={newRule} setNewRule={setNewRule} />}
 				<Placeholder height="5px" />
 				<ActiveDates handleSaveBarOpen={handleSaveBarOpen} newRule={newRule} setNewRule={setNewRule} />
 			</Layout.Section>

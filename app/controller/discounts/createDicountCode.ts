@@ -217,10 +217,10 @@ export const createDiscountCode = async (
 					customerSelection: {
 						...((customers.customerIDs?.length > 0 || customers.removeCustomersIDs.length > 0) && {
 							customers: {
-								...((customers.customerIDs?.length > 0 && type === 'custom') && {
+								...((customers.customerIDs?.length > 0 && method === 'custom') && {
 									add: customers.customerIDs
 								}),
-								...((customers.removeCustomersIDs?.length > 0 && type === 'custom') && {
+								...((customers.removeCustomersIDs?.length > 0 && method === 'custom') && {
 									remove: customers.removeCustomersIDs
 								}),
 							},
@@ -230,9 +230,17 @@ export const createDiscountCode = async (
 						}),
 					},
 					customerGets: {
-						value: {
-							percentage: Number(customerGets.percentage) / 100,
-						},
+						...(type !== 'shipping' && {
+							value: {
+								percentage: Number(customerGets.percentage) / 100,
+							},
+						}),
+						...(type === 'shipping' && {
+							discountAmount: {
+								amount: Number(customerGets.percentage) / 100,
+								appliesOnEachItem: false
+							}
+						}),
 						items: {} as DiscountCodeItems,
 					},
 					usageLimit,

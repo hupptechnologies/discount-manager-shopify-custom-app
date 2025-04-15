@@ -40,10 +40,46 @@ query getDiscountCode($ID: ID!) {
 						... on DiscountPercentage {
 							percentage
 						}
-						... on DiscountAmount {
-							amount {
-								amount
-								currencyCode
+					}
+					items {
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										id
+										title
+										product {
+											id
+											title
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										id
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
 							}
 						}
 					}
@@ -86,6 +122,48 @@ query getDiscountCode($ID: ID!) {
 							}
 						}
 					}
+					items {
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										id
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
+							}
+						}
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										id
+										title
+										product {
+											id
+											title
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -103,6 +181,48 @@ query getDiscountCode($ID: ID!) {
 					value {
 						... on DiscountPercentage {
 							percentage
+						}
+					}
+					items {
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										id
+										title
+										product {
+											id
+											title
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										id
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -131,6 +251,48 @@ query getDiscountCode($ID: ID!) {
 							effect {
 								... on DiscountPercentage {
 									percentage
+								}
+							}
+						}
+					}
+					items {
+						... on DiscountCollections {
+							collections(first: 10) {
+								edges {
+									node {
+										id
+										title
+										productsCount {
+											count
+										}
+										image {
+											url
+										}
+									}
+								}
+							}
+						}
+						... on DiscountProducts {
+							productVariants(first: 10) {
+								edges {
+									node {
+										id
+										title
+										product {
+											id
+											title
+											variantsCount {
+												count
+											}
+											featuredMedia {
+												preview {
+													image {
+														url
+													}
+												}
+											}
+										}
+									}
 								}
 							}
 						}
