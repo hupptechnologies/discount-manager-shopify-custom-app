@@ -51,3 +51,7 @@ npm run dev
 ```shell
 pnpm run dev
 ```
+
+## 📽 Watch Demo Video
+
+[![Watch the demo](https://tinyurl.com/4p4c3dwk)](https://jmp.sh/s/CDFrxkoQ46213qBw1moA)
