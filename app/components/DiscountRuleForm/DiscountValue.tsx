@@ -203,7 +203,14 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 													value={newRule?.shippingRate}
 													type="integer"
 													onChange={(value) =>
-														setNewRule({ ...newRule, shippingRate: value })
+														setNewRule({
+															...newRule,
+															customerGets: {
+																...newRule.customerGets,
+																percentage: Number(value),
+															},
+															shippingRate: value
+														})
 													}
 													prefix='$'
 													autoComplete="off"

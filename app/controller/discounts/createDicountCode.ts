@@ -169,17 +169,17 @@ export const createDiscountCode = async (
 						}),
 					},
 					customerGets: {
-						...(type !== 'shipping' && {
-							value: {
+						value: {
+							...(type !== 'shipping' && {
 								percentage: Number(customerGets.percentage) / 100,
-							},
-						}),
-						...(type === 'shipping' && {
-							discountAmount: {
-								amount: Number(customerGets.percentage) / 100,
-								appliesOnEachItem: false
-							}
-						}),
+							}),
+							...(type === 'shipping' && {
+								discountAmount: {
+									amount: Number(customerGets.percentage) / 100,
+									appliesOnEachItem: false
+								}
+							})
+						},
 						items: {} as DiscountCodeItems,
 					},
 					usageLimit,

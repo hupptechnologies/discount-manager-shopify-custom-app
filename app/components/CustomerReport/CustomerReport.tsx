@@ -2,9 +2,9 @@ import { BlockStack, Box, Button, InlineStack, Layout, Text } from "@shopify/pol
 import CustomerTable from "./CustomersTable";
 
 const CustomerReport = () => {
-    return (
-        <Layout>
-            <Layout.Section>
+	return (
+		<Layout>
+			<Layout.Section>
 				<Box padding="200">
 					<BlockStack gap="100">
 						<InlineStack align="space-between" blockAlign="center" gap="100">
@@ -24,8 +24,8 @@ const CustomerReport = () => {
 			<Layout.Section>
 				<CustomerTable />
 			</Layout.Section>
-        </Layout>
-    )
+		</Layout>
+	)
 };
 
 export default CustomerReport;

@@ -87,7 +87,6 @@ mutation CreateBxgyDiscount($automaticBxgyDiscount: DiscountAutomaticBxgyInput!)
 							}
 						}
 					}
-					usageLimit
 				}
 			}
 		}

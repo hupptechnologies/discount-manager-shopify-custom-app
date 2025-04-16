@@ -84,7 +84,6 @@ interface CreateBxgyDiscountResponse {
 						};
 						customerSelection: { all: boolean };
 						appliesOncePerCustomer: boolean;
-						usageLimit: number;
 					};
 				};
 				userErrors: { field: string; code: string; message: string }[];
@@ -185,7 +184,8 @@ export const createBuyXGetYDiscountCode = async (
 					endsAt,
 					startsAt,
 					title,
-					usageLimit: String(usageLimit),
+					code: title,
+					usageLimit: usageLimit,
 					customerBuys: {
 						items: {
 							...(customerBuys.collectionIDs.length > 0 && {
@@ -259,7 +259,6 @@ export const createBuyXGetYDiscountCode = async (
 					title,
 					endsAt,
 					startsAt,
-					usageLimit: String(usageLimit),
 					customerBuys: {
 						items: {
 							...(customerBuys.collectionIDs.length > 0 && {
@@ -341,7 +340,6 @@ export const createBuyXGetYDiscountCode = async (
 				? responseBuyxGetY.data?.data?.discountCodeBxgyCreate?.codeDiscountNode
 				: responseBuyxGetY.data?.data?.discountAutomaticBxgyCreate
 						?.automaticDiscountNode;
-
 		if (discountCodeData) {
 			await prisma.discountCode.create({
 				data: {
