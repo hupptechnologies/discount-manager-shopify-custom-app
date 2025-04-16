@@ -50,6 +50,10 @@ const shopify = shopifyApp({
 			deliveryMethod: DeliveryMethod.Http,
 			callbackUrl: '/webhooks/app/orders/create',
 		},
+		CUSTOMERS_CREATE: {
+			deliveryMethod: DeliveryMethod.Http,
+			callbackUrl: '/webhooks/app/customers/create',
+		},
 	},
 });
 
