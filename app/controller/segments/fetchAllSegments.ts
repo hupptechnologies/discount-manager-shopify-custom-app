@@ -3,10 +3,18 @@ import { GET_SEGMENTS_QUERY, GET_SEGMENT_CUSTOMER_COUNT_QUERY } from "app/graphq
 import { FetchSegmentResponse, Segment } from "app/routes/api.segments/route";
 import { getDetailUsingGraphQL } from "app/service/product";
 
+export interface PageInfo {
+	endCursor: string;
+	hasNextPage: string;
+	hasPreviousPage: string;
+	startCursor: string;
+};
+
 interface GraphqlResponse {
 	data: {
 		data: {
 			segments: {
+				pageInfo: PageInfo | null;
 				edges: Segment[]
 			}
 		}
@@ -42,6 +50,7 @@ export const fetchAllSegment = async (shop: string): Promise<FetchSegmentRespons
 		}
 		const getSegments: GraphqlResponse = await getDetailUsingGraphQL(shop, accessToken, data);
 		const segments = getSegments?.data?.data?.segments?.edges || [];
+		const pageInfo = getSegments?.data?.data?.segments?.pageInfo || null;
 		const segmentsWithCounts = await Promise.all(
 			segments.map(async (item) => {
 				const datas = { query: GET_SEGMENT_CUSTOMER_COUNT_QUERY, variables: { segmentId: item?.node?.id } };
@@ -51,10 +60,10 @@ export const fetchAllSegment = async (shop: string): Promise<FetchSegmentRespons
 					percentage: (customerCount?.data?.data?.customerSegmentMembers?.totalCount / count) * 100 || 0,
 				};
 			})
-		  );		
-		return { success: true, message: 'Fetch all segments successfuly', segments: segmentsWithCounts || [] };
+		);
+		return { success: true, message: 'Fetch all segments successfuly', segments: segmentsWithCounts || [], pageInfo };
 	} catch (error) {
 		console.error(error, 'Error fetching segments');
-		return { success: true, message: '', segments: [] };
+		return { success: true, message: '', segments: [], pageInfo: null };
 	}
 }

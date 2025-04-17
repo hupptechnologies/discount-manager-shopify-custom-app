@@ -1,5 +1,6 @@
 import { json } from '@remix-run/node';
-import { fetchAllSegment } from 'app/controller/segments/fetchAllSegments';
+import { PageInfo, fetchAllSegment } from 'app/controller/segments/fetchAllSegments';
+import { CustomerInput, fetchCustomerBySegmentId } from 'app/controller/segments/fetchCustomerBySegmentId';
 
 interface SegmentInput {
 	id: string;
@@ -18,17 +19,24 @@ export interface FetchSegmentResponse {
 	success: boolean;
 	message: string;
 	segments: SegmentInput[];
+	pageInfo: PageInfo | null;
+}
+
+export interface CustomerBySegmentIdResponse {
+	success: boolean;
+	message: string;
+	segmentCustomers: CustomerInput[];
+	pageInfo: PageInfo | null;
 }
 
 /**
-	* Loader function to handle GET requests for segments.
+	* Handles GET requests to retrieve customer segments or customers within a segment.
 	*
-	* This function processes incoming GET requests to retrieve customer - related segments such as
-	* query and name information.
-	* The response is typically used to customer segment options in the app.
+	* - If `segmentId` is provided in the query params, it fetches customers in that segment using `fetchCustomerBySegmentId`.
+	* - If no `segmentId` is provided, it fetches all available segments using `fetchAllSegment`.
 	*
 	* @param {Request} request - The incoming HTTP request.
-	* @returns {Promise<Response>} - A response containing segment data.
+	* @returns {Promise<Response>} - A JSON response with segment list or customer data.
 */
 export const loader = async ({
 	request,
@@ -37,6 +45,11 @@ export const loader = async ({
 }): Promise<Response> => {
 	const url = new URL(request.url);
 	const shop = url.searchParams.get('shop') ?? '';
-    const response = await fetchAllSegment(shop);
-    return json<FetchSegmentResponse>(response);
+	const segmentId = url.searchParams.get('segmentId');
+	if (segmentId) {
+		const response = await fetchCustomerBySegmentId(shop, segmentId);
+		return json<CustomerBySegmentIdResponse>(response);
+	}
+	const response = await fetchAllSegment(shop);
+	return json<FetchSegmentResponse>(response);
 };
