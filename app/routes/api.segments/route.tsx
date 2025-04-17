@@ -1,20 +1,23 @@
 import { json } from '@remix-run/node';
 import { fetchAllSegment } from 'app/controller/segments/fetchAllSegments';
 
+interface SegmentInput {
+	id: string;
+	query: string;
+	name: string;
+	creationDate: string;
+	lastEditDate: string;
+	percentage: number;
+}
+
 export interface Segment {
-	node: {
-		id: string;
-		query: string;
-		name: string;
-		creationDate: string;
-		lastEditDate: string;
-	}
+	node: SegmentInput
 };
 
 export interface FetchSegmentResponse {
 	success: boolean;
 	message: string;
-	segments: Segment[];
+	segments: SegmentInput[];
 }
 
 /**
