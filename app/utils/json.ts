@@ -176,35 +176,23 @@ export const generateDiscountCodes = (numberOfCodes: number, codeLength: number,
 
 export const customersList = [
 	{
-	  id: '1020',
-	  name: 'Jaydon Stanton',
-	  lastOrderDate: 'Jul 20 at 4:34pm',
-	  lastOrderAmount: '$969.44',
-	  status: 'Paid',
-	  discountsUsed: 3,
+		id: '1020',
+		name: "Customers who haven't purchased",
+		lastEditDate: 'Jul 20 at 4:34pm'
 	},
 	{
-	  id: '1019',
-	  name: 'Ruben Westerfelt',
-	  lastOrderDate: 'Jul 20 at 3:46pm',
-	  lastOrderAmount: '$701.19',
-	  status: 'Partially paid',
-	  discountsUsed: 1,
+		id: '1019',
+		name: 'Customers who have purchased more than once',
+		lastEditDate: 'Jul 20 at 4:34pm'
 	},
 	{
-	  id: '1018',
-	  name: 'Leo Carder',
-	  lastOrderDate: 'Jul 20 at 3.44pm',
-	  lastOrderAmount: '$798.24',
-	  status: 'Paid',
-	  discountsUsed: 2,
+		id: '1018',
+		name: 'Abandoned checkouts in the last 30 days',
+		lastEditDate: 'Jul 20 at 4:34pm'
 	},
 	{
 		id: '1017',
-		name: 'Joje kelvin',
-		lastOrderDate: 'Jan 20 at 5:46pm',
-		lastOrderAmount: '$645.20',
-		status: 'Partially paid',
-		discountsUsed: 5,
-	  },
+		name: "email_subscription_status = 'SUBSCRIBED'",
+		lastEditDate: 'Jul 20 at 4:34pm'
+	},
 ];

@@ -5,33 +5,18 @@ import {
 	useSetIndexFiltersMode,
 	useIndexResourceState,
 	Text,
-	Badge,
 	useBreakpoints,
 } from '@shopify/polaris';
-import type { IndexFiltersProps, TabProps } from '@shopify/polaris';
+import type { IndexFiltersProps } from '@shopify/polaris';
 import { customersList } from 'app/utils/json';
 import { useState, useCallback } from 'react';
 
-const CustomerTable = () => {
+const CustomerSegmentTable = () => {
 	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-	const [itemStrings, setItemStrings] = useState([
-		'All',
-		'Paid',
-		'Unpaid',
-	]);
 
-	const tabs: TabProps[] = itemStrings.map((item, index) => ({
-		content: item,
-		index,
-		onAction: () => {},
-		id: `${item}-${index}`,
-		isLocked: index === 0
-	}));
 	const [selected, setSelected] = useState(0);
 	const onCreateNewView = async (value: string) => {
 		await sleep(500);
-		setItemStrings([...itemStrings, value]);
-		setSelected(itemStrings.length);
 		return true;
 	};
 	const sortOptions: IndexFiltersProps['sortOptions'] = [
@@ -115,7 +100,7 @@ const CustomerTable = () => {
 
 	const rowMarkup = customers.map(
 		(
-			{ id, name, lastOrderAmount, lastOrderDate, status, discountsUsed },
+			{ id, name, lastEditDate },
 			index,
 		) => (
 			<IndexTable.Row
@@ -126,18 +111,14 @@ const CustomerTable = () => {
 			>
 				<IndexTable.Cell>
 					<Text variant="bodyMd" fontWeight="bold" as="span">
-						{id}
+						{name}
 					</Text>
 				</IndexTable.Cell>
-				<IndexTable.Cell>{name}</IndexTable.Cell>
-				<IndexTable.Cell>{lastOrderDate}</IndexTable.Cell>
-				<IndexTable.Cell>{lastOrderAmount}</IndexTable.Cell>
+				<IndexTable.Cell>15%</IndexTable.Cell>
+				<IndexTable.Cell>{lastEditDate}</IndexTable.Cell>
 				<IndexTable.Cell>
-					<Badge tone={status === 'Paid' ? 'success' : 'info'}>
-						{status}
-					</Badge>
+					App
 				</IndexTable.Cell>
-				<IndexTable.Cell>{discountsUsed}</IndexTable.Cell>
 			</IndexTable.Row>
 		),
 	);
@@ -157,7 +138,7 @@ const CustomerTable = () => {
 					disabled: false,
 					loading: false,
 				}}
-				tabs={tabs}
+				tabs={[]}
 				selected={selected}
 				onSelect={setSelected}
 				canCreateNewView={false}
@@ -177,15 +158,13 @@ const CustomerTable = () => {
 				}
 				onSelectionChange={handleSelectionChange}
 				headings={[
-					{ title: 'ID' },
-					{ title: 'Customer name' },
-					{ title: 'Last order date' },
-					{ title: 'Last order amount' },
-					{ title: 'status' },
-					{ title: 'Discount used' },
+					{ title: 'Name' },
+					{ title: '% of customers' },
+					{ title: 'Last activity' },
+					{ title: 'Author' }
 				]}
 				pagination={{
-					label: '1 of 2 total 20 customers'
+					label: 'total segments 10'
 				}}
 			>
 				{rowMarkup}
@@ -215,4 +194,4 @@ const CustomerTable = () => {
 	}
 };
 
-export default CustomerTable;
+export default CustomerSegmentTable;

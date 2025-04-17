@@ -32,7 +32,7 @@ export default function App () {
 						Home
 					</NavLink>
 					<NavLink to="/app/manage-discount">Manage Discounts</NavLink>
-					<NavLink to="/app/customer-reports">Customer Reports</NavLink>
+					<NavLink to="/app/customer-segments">Customer segments</NavLink>
 				</NavMenu>
 				<Outlet />
 			</Provider>
