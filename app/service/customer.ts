@@ -13,6 +13,12 @@ export interface FetchAllSegmentsParams {
 	callback?: (success: boolean) => void;
 }
 
+export interface FetchSegmentCustomersParams {
+	segmentId: string;
+	shopName: string;
+	callback?: (success: boolean) => void;
+}
+
 /**
 	* This service fetches all customer data from Shopify based on the provided filters 
 	* such as search query and pagination options (before and after).
@@ -55,4 +61,19 @@ export const fetchAllSegments = (params: FetchAllSegmentsParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
 	const { shopName } = params;
 	return requestInstance.get(`segments?shop=${shopName}`);
+};
+
+/**
+	* Fetches customers from a specific segment by calling the backend API.
+	*
+	* This service sends a GET request to the backend endpoint `segments`,
+	* passing the `shop` and `segmentId` as query parameters.
+	*
+	* @param {FetchSegmentCustomersParams} params - Contains the shop name and segment ID
+	* @returns {Promise<AxiosResponse>} - The response with customer data from the backend
+*/
+export const getCustomerBySegmentId = (params: FetchSegmentCustomersParams) => {
+	const requestInstance: AxiosInstance = backendAPI();
+	const { shopName, segmentId } = params;
+	return requestInstance.get(`segments?shop=${shopName}&segmentId=${segmentId}`);
 };

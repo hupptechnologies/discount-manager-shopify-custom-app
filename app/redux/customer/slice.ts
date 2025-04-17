@@ -1,5 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchAllSegmentsAsync } from './index';
+import { fetchAllSegmentsAsync, getCustomerBySegmentIdAsync } from './index';
+import { PageInfo } from 'app/controller/segments/fetchAllSegments';
+
+export interface CustomerInput {
+	id: string;
+	displayName: string;
+	defaultEmailAddress: {
+		marketingState: string;
+	};
+	defaultAddress: {
+		city: string;
+		province: string;
+		country: string;
+	};
+	amountSpent: {
+		amount: string;
+		currencyCode: string;
+	}
+	numberOfOrders: string;
+}
 
 export interface SegmentFields {
 	id: string;
@@ -13,11 +32,17 @@ export interface SegmentFields {
 interface customerState {
 	isLoading: boolean;
 	segments: SegmentFields[];
+	segmentCustomers: CustomerInput[];
+	isSegmentCustomerLoading: boolean;
+	pageInfo: PageInfo | null;
 }
 
 const initialState: customerState = {
 	isLoading: false,
-	segments: []
+	segments: [],
+	segmentCustomers: [],
+	isSegmentCustomerLoading: false,
+	pageInfo: null
 };
 
 const customerSlice = createSlice({
@@ -31,10 +56,25 @@ const customerSlice = createSlice({
 		builder.addCase(fetchAllSegmentsAsync.fulfilled, (state, { payload }) => {
 			state.isLoading = false;
 			state.segments = payload.segments;
+			state.pageInfo = payload.pageInfo;
 		});
 		builder.addCase(fetchAllSegmentsAsync.rejected, (state) => {
 			state.isLoading = false;
 			state.segments = [];
+			state.pageInfo = null;
+		});
+		builder.addCase(getCustomerBySegmentIdAsync.pending, (state) => {
+			state.isSegmentCustomerLoading = true;
+		});
+		builder.addCase(getCustomerBySegmentIdAsync.fulfilled, (state, { payload }) => {
+			state.isSegmentCustomerLoading = false;
+			state.segmentCustomers = payload.segmentCustomers;
+			state.pageInfo = payload.pageInfo;
+		});
+		builder.addCase(getCustomerBySegmentIdAsync.rejected, (state) => {
+			state.isSegmentCustomerLoading = false;
+			state.segmentCustomers = [];
+			state.pageInfo = null;
 		});
 	},
 });

@@ -1,7 +1,7 @@
 export const GET_SEGMENTS_QUERY = `
 query getSegments {
 	segments(first: 100, reverse: true) {
-		pageInfo{
+		pageInfo {
 			endCursor
 			hasNextPage
 			hasPreviousPage
@@ -28,11 +28,8 @@ query getSegmentCustomerCount($segmentId: ID!) {
 
 export const GET_SEGMENT_CUSTOMERS_QUERY = `
 query getSegmentCustomers($segmentId: ID!, $first: Int = 1000) {
-	customerSegmentMembers(
-		first: $first
-		segmentId: $segmentId
-	) {
-		pageInfo{
+	customerSegmentMembers(first: $first, segmentId: $segmentId) {
+		pageInfo {
 			endCursor
 			hasNextPage
 			hasPreviousPage

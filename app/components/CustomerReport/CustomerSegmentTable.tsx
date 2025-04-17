@@ -116,7 +116,7 @@ const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({ segments, i
 				key={id}
 				selected={selectedResources.includes(id)}
 				position={index}
-				onClick={() => handleNavigate(`/app/customers/${id}`)}
+				onClick={() => handleNavigate(`/app/customers/${id.split('/').pop()}`)}
 			>
 				<IndexTable.Cell>
 					<Text variant="bodyMd" fontWeight="bold" as="span">

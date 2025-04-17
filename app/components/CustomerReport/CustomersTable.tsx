@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useAppBridge } from '@shopify/app-bridge-react';
 import {
 	IndexTable,
 	LegacyCard,
@@ -6,12 +7,18 @@ import {
 	useSetIndexFiltersMode,
 	useIndexResourceState,
 	Text,
-	useBreakpoints,
+	Badge
 } from '@shopify/polaris';
 import type { IndexFiltersProps } from '@shopify/polaris';
-import { customersList } from 'app/utils/json';
+import { CustomerInput } from 'app/redux/customer/slice';
 
-const CustomersTable = () => {
+interface CustomersTableProps {
+	loading: boolean;
+	segmentCustomers: CustomerInput[];
+}
+
+const CustomersTable: React.FC<CustomersTableProps> = ({ loading, segmentCustomers }) => {
+
 	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 	const [selected, setSelected] = useState(0);
@@ -88,7 +95,7 @@ const CustomersTable = () => {
 		});
 	}
 
-	const customers = customersList;
+	const customers = segmentCustomers;
 
 	const resourceName = {
 		singular: 'customer',
@@ -96,11 +103,11 @@ const CustomersTable = () => {
 	};
 
 	const { selectedResources, allResourcesSelected, handleSelectionChange } =
-		useIndexResourceState(customers);
+		useIndexResourceState(customers as any);
 
 	const rowMarkup = customers.map(
 		(
-			{ id, name, lastEditDate },
+			{ id, displayName, numberOfOrders, defaultAddress, defaultEmailAddress, amountSpent },
 			index,
 		) => (
 			<IndexTable.Row
@@ -111,13 +118,16 @@ const CustomersTable = () => {
 			>
 				<IndexTable.Cell>
 					<Text variant="bodyMd" fontWeight="bold" as="span">
-						{name}
+						{displayName}
 					</Text>
 				</IndexTable.Cell>
-				<IndexTable.Cell>15%</IndexTable.Cell>
-				<IndexTable.Cell>{lastEditDate}</IndexTable.Cell>
 				<IndexTable.Cell>
-					App
+					<Badge tone={defaultEmailAddress?.marketingState === 'SUBSCRIBED' ? 'success' : 'new'}>{defaultEmailAddress?.marketingState}</Badge>
+				</IndexTable.Cell>
+				<IndexTable.Cell>{`${defaultAddress?.city} ${defaultAddress?.province}, ${defaultAddress?.country}`}</IndexTable.Cell>
+				<IndexTable.Cell>{numberOfOrders}</IndexTable.Cell>
+				<IndexTable.Cell>
+					{amountSpent?.currencyCode} {amountSpent?.amount}
 				</IndexTable.Cell>
 			</IndexTable.Row>
 		),
@@ -148,9 +158,9 @@ const CustomersTable = () => {
 				onClearAll={handleFiltersClearAll}
 				mode={mode}
 				setMode={setMode}
+				loading={loading}
 			/>
 			<IndexTable
-				condensed={useBreakpoints().smDown}
 				resourceName={resourceName}
 				itemCount={customers.length}
 				selectedItemsCount={
@@ -158,10 +168,11 @@ const CustomersTable = () => {
 				}
 				onSelectionChange={handleSelectionChange}
 				headings={[
-					{ title: 'Name' },
-					{ title: '% of customers' },
-					{ title: 'Last activity' },
-					{ title: 'Author' }
+					{ title: 'Customer name' },
+					{ title: 'Email subscription' },
+					{ title: 'Location' },
+					{ title: 'Orders' },
+					{ title: 'Amount spent' }
 				]}
 				pagination={{
 					label: 'Total customers 10'
