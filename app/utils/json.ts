@@ -173,3 +173,38 @@ export const generateDiscountCodes = (numberOfCodes: number, codeLength: number,
 	}
 	return codes;
 };
+
+export const customersList = [
+	{
+	  id: '1020',
+	  name: 'Jaydon Stanton',
+	  lastOrderDate: 'Jul 20 at 4:34pm',
+	  lastOrderAmount: '$969.44',
+	  status: 'Paid',
+	  discountsUsed: 3,
+	},
+	{
+	  id: '1019',
+	  name: 'Ruben Westerfelt',
+	  lastOrderDate: 'Jul 20 at 3:46pm',
+	  lastOrderAmount: '$701.19',
+	  status: 'Partially paid',
+	  discountsUsed: 1,
+	},
+	{
+	  id: '1018',
+	  name: 'Leo Carder',
+	  lastOrderDate: 'Jul 20 at 3.44pm',
+	  lastOrderAmount: '$798.24',
+	  status: 'Paid',
+	  discountsUsed: 2,
+	},
+	{
+		id: '1017',
+		name: 'Joje kelvin',
+		lastOrderDate: 'Jan 20 at 5:46pm',
+		lastOrderAmount: '$645.20',
+		status: 'Partially paid',
+		discountsUsed: 5,
+	  },
+];

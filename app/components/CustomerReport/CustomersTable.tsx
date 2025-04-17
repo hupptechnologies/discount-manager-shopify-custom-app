@@ -1,88 +1,31 @@
 import {
-	TextField,
 	IndexTable,
 	LegacyCard,
 	IndexFilters,
 	useSetIndexFiltersMode,
 	useIndexResourceState,
 	Text,
-	ChoiceList,
-	RangeSlider,
 	Badge,
 	useBreakpoints,
 } from '@shopify/polaris';
 import type { IndexFiltersProps, TabProps } from '@shopify/polaris';
+import { customersList } from 'app/utils/json';
 import { useState, useCallback } from 'react';
 
 const CustomerTable = () => {
 	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 	const [itemStrings, setItemStrings] = useState([
 		'All',
+		'Paid',
 		'Unpaid',
-		'Open',
-		'Closed',
-		'Local delivery',
-		'Local pickup',
 	]);
-	const deleteView = (index: number) => {
-		const newItemStrings = [...itemStrings];
-		newItemStrings.splice(index, 1);
-		setItemStrings(newItemStrings);
-		setSelected(0);
-	};
-
-	const duplicateView = async (name: string) => {
-		setItemStrings([...itemStrings, name]);
-		setSelected(itemStrings.length);
-		await sleep(1);
-		return true;
-	};
 
 	const tabs: TabProps[] = itemStrings.map((item, index) => ({
 		content: item,
 		index,
 		onAction: () => {},
 		id: `${item}-${index}`,
-		isLocked: index === 0,
-		actions:
-			index === 0
-				? []
-				: [
-						{
-							type: 'rename',
-							onAction: () => {},
-							onPrimaryAction: async (value: string): Promise<boolean> => {
-								const newItemsStrings = tabs.map((item, idx) => {
-									if (idx === index) {
-										return value;
-									}
-									return item.content;
-								});
-								await sleep(1);
-								setItemStrings(newItemsStrings);
-								return true;
-							},
-						},
-						{
-							type: 'duplicate',
-							onPrimaryAction: async (value: string): Promise<boolean> => {
-								await sleep(1);
-								duplicateView(value);
-								return true;
-							},
-						},
-						{
-							type: 'edit',
-						},
-						{
-							type: 'delete',
-							onPrimaryAction: async () => {
-								await sleep(1);
-								deleteView(index);
-								return true;
-							},
-						},
-					],
+		isLocked: index === 0
 	}));
 	const [selected, setSelected] = useState(0);
 	const onCreateNewView = async (value: string) => {
@@ -92,38 +35,13 @@ const CustomerTable = () => {
 		return true;
 	};
 	const sortOptions: IndexFiltersProps['sortOptions'] = [
-		{ label: 'Order', value: 'order asc', directionLabel: 'Ascending' },
-		{ label: 'Order', value: 'order desc', directionLabel: 'Descending' },
 		{ label: 'Customer', value: 'customer asc', directionLabel: 'A-Z' },
-		{ label: 'Customer', value: 'customer desc', directionLabel: 'Z-A' },
-		{ label: 'Date', value: 'date asc', directionLabel: 'A-Z' },
-		{ label: 'Date', value: 'date desc', directionLabel: 'Z-A' },
-		{ label: 'Total', value: 'total asc', directionLabel: 'Ascending' },
-		{ label: 'Total', value: 'total desc', directionLabel: 'Descending' },
+		{ label: 'Customer', value: 'customer desc', directionLabel: 'Z-A' }
 	];
-	const [sortSelected, setSortSelected] = useState(['order asc']);
+	const [sortSelected, setSortSelected] = useState(['customer asc']);
 	const { mode, setMode } = useSetIndexFiltersMode();
 	const onHandleCancel = () => {};
 
-	const onHandleSave = async () => {
-		await sleep(1);
-		return true;
-	};
-
-	const primaryAction: IndexFiltersProps['primaryAction'] =
-		selected === 0
-			? {
-					type: 'save-as',
-					onAction: onCreateNewView,
-					disabled: false,
-					loading: false,
-				}
-			: {
-					type: 'save',
-					onAction: onHandleSave,
-					disabled: false,
-					loading: false,
-				};
 	const [accountStatus, setAccountStatus] = useState<string[] | undefined>(
 		undefined,
 	);
@@ -133,18 +51,6 @@ const CustomerTable = () => {
 	const [taggedWith, setTaggedWith] = useState('');
 	const [queryValue, setQueryValue] = useState('');
 
-	const handleAccountStatusChange = useCallback(
-		(value: string[]) => setAccountStatus(value),
-		[],
-	);
-	const handleMoneySpentChange = useCallback(
-		(value: [number, number]) => setMoneySpent(value),
-		[],
-	);
-	const handleTaggedWithChange = useCallback(
-		(value: string) => setTaggedWith(value),
-		[],
-	);
 	const handleFiltersQueryChange = useCallback(
 		(value: string) => setQueryValue(value),
 		[],
@@ -170,60 +76,6 @@ const CustomerTable = () => {
 		handleQueryValueRemove,
 		handleTaggedWithRemove,
 	]);
-
-	const filters = [
-		{
-			key: 'accountStatus',
-			label: 'Account status',
-			filter: (
-				<ChoiceList
-					title="Account status"
-					titleHidden
-					choices={[
-						{ label: 'Enabled', value: 'enabled' },
-						{ label: 'Not invited', value: 'not invited' },
-						{ label: 'Invited', value: 'invited' },
-						{ label: 'Declined', value: 'declined' },
-					]}
-					selected={accountStatus || []}
-					onChange={handleAccountStatusChange}
-					allowMultiple
-				/>
-			),
-			shortcut: true,
-		},
-		{
-			key: 'taggedWith',
-			label: 'Tagged with',
-			filter: (
-				<TextField
-					label="Tagged with"
-					value={taggedWith}
-					onChange={handleTaggedWithChange}
-					autoComplete="off"
-					labelHidden
-				/>
-			),
-			shortcut: true,
-		},
-		{
-			key: 'moneySpent',
-			label: 'Money spent',
-			filter: (
-				<RangeSlider
-					label="Money spent is between"
-					labelHidden
-					value={moneySpent || [0, 500]}
-					prefix="$"
-					output
-					min={0}
-					max={2000}
-					step={1}
-					onChange={handleMoneySpentChange}
-				/>
-			),
-		},
-	];
 
 	const appliedFilters: IndexFiltersProps['appliedFilters'] = [];
 	if (accountStatus && !isEmpty(accountStatus)) {
@@ -251,58 +103,19 @@ const CustomerTable = () => {
 		});
 	}
 
-	const orders = [
-		{
-			id: '1020',
-			order: (
-				<Text as="span" variant="bodyMd" fontWeight="semibold">
-					#1020
-				</Text>
-			),
-			date: 'Jul 20 at 4:34pm',
-			customer: 'Jaydon Stanton',
-			total: '$969.44',
-			paymentStatus: <Badge progress="complete">Paid</Badge>,
-			fulfillmentStatus: <Badge progress="incomplete">Unfulfilled</Badge>,
-		},
-		{
-			id: '1019',
-			order: (
-				<Text as="span" variant="bodyMd" fontWeight="semibold">
-					#1019
-				</Text>
-			),
-			date: 'Jul 20 at 3:46pm',
-			customer: 'Ruben Westerfelt',
-			total: '$701.19',
-			paymentStatus: <Badge progress="partiallyComplete">Partially paid</Badge>,
-			fulfillmentStatus: <Badge progress="incomplete">Unfulfilled</Badge>,
-		},
-		{
-			id: '1018',
-			order: (
-				<Text as="span" variant="bodyMd" fontWeight="semibold">
-					#1018
-				</Text>
-			),
-			date: 'Jul 20 at 3.44pm',
-			customer: 'Leo Carder',
-			total: '$798.24',
-			paymentStatus: <Badge progress="complete">Paid</Badge>,
-			fulfillmentStatus: <Badge progress="incomplete">Unfulfilled</Badge>,
-		},
-	];
+	const customers = customersList;
+
 	const resourceName = {
-		singular: 'order',
-		plural: 'orders',
+		singular: 'customer',
+		plural: 'customers',
 	};
 
 	const { selectedResources, allResourcesSelected, handleSelectionChange } =
-		useIndexResourceState(orders);
+		useIndexResourceState(customers);
 
-	const rowMarkup = orders.map(
+	const rowMarkup = customers.map(
 		(
-			{ id, order, date, customer, total, paymentStatus, fulfillmentStatus },
+			{ id, name, lastOrderAmount, lastOrderDate, status, discountsUsed },
 			index,
 		) => (
 			<IndexTable.Row
@@ -313,18 +126,18 @@ const CustomerTable = () => {
 			>
 				<IndexTable.Cell>
 					<Text variant="bodyMd" fontWeight="bold" as="span">
-						{order}
+						{id}
 					</Text>
 				</IndexTable.Cell>
-				<IndexTable.Cell>{date}</IndexTable.Cell>
-				<IndexTable.Cell>{customer}</IndexTable.Cell>
+				<IndexTable.Cell>{name}</IndexTable.Cell>
+				<IndexTable.Cell>{lastOrderDate}</IndexTable.Cell>
+				<IndexTable.Cell>{lastOrderAmount}</IndexTable.Cell>
 				<IndexTable.Cell>
-					<Text as="span" alignment="end" numeric>
-						{total}
-					</Text>
+					<Badge tone={status === 'Paid' ? 'success' : 'info'}>
+						{status}
+					</Badge>
 				</IndexTable.Cell>
-				<IndexTable.Cell>{paymentStatus}</IndexTable.Cell>
-				<IndexTable.Cell>{fulfillmentStatus}</IndexTable.Cell>
+				<IndexTable.Cell>{discountsUsed}</IndexTable.Cell>
 			</IndexTable.Row>
 		),
 	);
@@ -339,7 +152,6 @@ const CustomerTable = () => {
 				onQueryChange={handleFiltersQueryChange}
 				onQueryClear={() => setQueryValue('')}
 				onSort={setSortSelected}
-				primaryAction={primaryAction}
 				cancelAction={{
 					onAction: onHandleCancel,
 					disabled: false,
@@ -348,10 +160,10 @@ const CustomerTable = () => {
 				tabs={tabs}
 				selected={selected}
 				onSelect={setSelected}
-				canCreateNewView
+				canCreateNewView={false}
 				onCreateNewView={onCreateNewView}
-				filters={filters}
-				appliedFilters={appliedFilters}
+				filters={[]}
+				appliedFilters={[]}
 				onClearAll={handleFiltersClearAll}
 				mode={mode}
 				setMode={setMode}
@@ -359,19 +171,22 @@ const CustomerTable = () => {
 			<IndexTable
 				condensed={useBreakpoints().smDown}
 				resourceName={resourceName}
-				itemCount={orders.length}
+				itemCount={customers.length}
 				selectedItemsCount={
 					allResourcesSelected ? 'All' : selectedResources.length
 				}
 				onSelectionChange={handleSelectionChange}
 				headings={[
-					{ title: 'Order' },
-					{ title: 'Date' },
-					{ title: 'Customer' },
-					{ title: 'Total', alignment: 'end' },
-					{ title: 'Payment status' },
-					{ title: 'Fulfillment status' },
+					{ title: 'ID' },
+					{ title: 'Customer name' },
+					{ title: 'Last order date' },
+					{ title: 'Last order amount' },
+					{ title: 'status' },
+					{ title: 'Discount used' },
 				]}
+				pagination={{
+					label: '1 of 2 total 20 customers'
+				}}
 			>
 				{rowMarkup}
 			</IndexTable>
