@@ -10,9 +10,14 @@ import {
 	useBreakpoints,
 } from '@shopify/polaris';
 import type { IndexFiltersProps } from '@shopify/polaris';
-import { customersSegmentList } from 'app/utils/json';
+import { SegmentFields } from 'app/redux/customer/slice';
 
-const CustomerSegmentTable = () => {
+interface CustomerSegmentTableProps {
+	segments: SegmentFields[];
+	isLoading: boolean;
+}
+
+const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({ segments, isLoading }) => {
 	const navigate = useNavigate();
 	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -99,11 +104,11 @@ const CustomerSegmentTable = () => {
 	};
 
 	const { selectedResources, allResourcesSelected, handleSelectionChange } =
-		useIndexResourceState(customersSegmentList);
+		useIndexResourceState(segments as any);
 
-	const rowMarkup = customersSegmentList.map(
+	const rowMarkup = segments.map(
 		(
-			{ id, name, lastEditDate },
+			{ id, name, lastEditDate, percentage },
 			index,
 		) => (
 			<IndexTable.Row
@@ -118,7 +123,7 @@ const CustomerSegmentTable = () => {
 						{name}
 					</Text>
 				</IndexTable.Cell>
-				<IndexTable.Cell>15%</IndexTable.Cell>
+				<IndexTable.Cell>{percentage}%</IndexTable.Cell>
 				<IndexTable.Cell>{lastEditDate}</IndexTable.Cell>
 				<IndexTable.Cell>
 					App
@@ -156,7 +161,7 @@ const CustomerSegmentTable = () => {
 			<IndexTable
 				condensed={useBreakpoints().smDown}
 				resourceName={resourceName}
-				itemCount={customersSegmentList.length}
+				itemCount={segments.length}
 				selectedItemsCount={
 					allResourcesSelected ? 'All' : selectedResources.length
 				}
@@ -170,6 +175,7 @@ const CustomerSegmentTable = () => {
 				pagination={{
 					label: 'total segments 10'
 				}}
+				loading={isLoading}
 			>
 				{rowMarkup}
 			</IndexTable>

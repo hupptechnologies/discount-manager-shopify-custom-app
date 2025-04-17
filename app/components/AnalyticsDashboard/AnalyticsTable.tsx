@@ -353,10 +353,10 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				appliedFilters={[]}
 				onClearAll={handleQueryValueRemove}
 				mode={mode}
-				loading={isLoading || isDeleteDiscountCode}
 				setMode={setMode}
 			/>
 			<IndexTable
+				loading={isLoading || isDeleteDiscountCode}
 				resourceName={resourceName}
 				itemCount={discountCodes.length}
 				selectedItemsCount={

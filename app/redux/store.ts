@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import createDiscountSilce from './create-discount/slice';
 import discountSilce from './discount/slice';
 import storeSlice from './store/slice';
+import customerSlice from './customer/slice';
 
 /**
 	* Configures the Redux store for the application.
@@ -23,7 +24,8 @@ const store = configureStore({
 	reducer: {
 		createDiscount: createDiscountSilce,
 		discount: discountSilce,
-		store: storeSlice
+		store: storeSlice,
+		customer: customerSlice,
 	},
 	devTools: process.env.NODE_ENV !== 'production',
 });
