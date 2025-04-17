@@ -174,7 +174,7 @@ export const generateDiscountCodes = (numberOfCodes: number, codeLength: number,
 	return codes;
 };
 
-export const customersList = [
+export const customersSegmentList = [
 	{
 		id: '1020',
 		name: "Customers who haven't purchased",
@@ -193,6 +193,29 @@ export const customersList = [
 	{
 		id: '1017',
 		name: "email_subscription_status = 'SUBSCRIBED'",
+		lastEditDate: 'Jul 20 at 4:34pm'
+	},
+];
+
+export const customersList = [
+	{
+		id: '1020',
+		name: "Test one",
+		lastEditDate: 'Jul 20 at 4:34pm'
+	},
+	{
+		id: '1019',
+		name: 'Test two',
+		lastEditDate: 'Jul 20 at 4:34pm'
+	},
+	{
+		id: '1018',
+		name: 'Test three',
+		lastEditDate: 'Jul 20 at 4:34pm'
+	},
+	{
+		id: '1017',
+		name: "Test four",
 		lastEditDate: 'Jul 20 at 4:34pm'
 	},
 ];

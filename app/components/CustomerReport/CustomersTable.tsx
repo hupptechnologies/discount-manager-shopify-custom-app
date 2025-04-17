@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { useNavigate } from '@remix-run/react';
 import {
 	IndexTable,
 	LegacyCard,
@@ -10,10 +9,9 @@ import {
 	useBreakpoints,
 } from '@shopify/polaris';
 import type { IndexFiltersProps } from '@shopify/polaris';
-import { customersSegmentList } from 'app/utils/json';
+import { customersList } from 'app/utils/json';
 
-const CustomerSegmentTable = () => {
-	const navigate = useNavigate();
+const CustomersTable = () => {
 	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 	const [selected, setSelected] = useState(0);
@@ -63,9 +61,6 @@ const CustomerSegmentTable = () => {
 		handleQueryValueRemove,
 		handleTaggedWithRemove,
 	]);
-	const handleNavigate = (url: string) => {
-		navigate(url);
-	};
 
 	const appliedFilters: IndexFiltersProps['appliedFilters'] = [];
 	if (accountStatus && !isEmpty(accountStatus)) {
@@ -93,15 +88,17 @@ const CustomerSegmentTable = () => {
 		});
 	}
 
+	const customers = customersList;
+
 	const resourceName = {
-		singular: 'segment',
-		plural: 'segments',
+		singular: 'customer',
+		plural: 'customers',
 	};
 
 	const { selectedResources, allResourcesSelected, handleSelectionChange } =
-		useIndexResourceState(customersSegmentList);
+		useIndexResourceState(customers);
 
-	const rowMarkup = customersSegmentList.map(
+	const rowMarkup = customers.map(
 		(
 			{ id, name, lastEditDate },
 			index,
@@ -111,7 +108,6 @@ const CustomerSegmentTable = () => {
 				key={id}
 				selected={selectedResources.includes(id)}
 				position={index}
-				onClick={() => handleNavigate(`/app/customers/${id}`)}
 			>
 				<IndexTable.Cell>
 					<Text variant="bodyMd" fontWeight="bold" as="span">
@@ -156,7 +152,7 @@ const CustomerSegmentTable = () => {
 			<IndexTable
 				condensed={useBreakpoints().smDown}
 				resourceName={resourceName}
-				itemCount={customersSegmentList.length}
+				itemCount={customers.length}
 				selectedItemsCount={
 					allResourcesSelected ? 'All' : selectedResources.length
 				}
@@ -168,7 +164,7 @@ const CustomerSegmentTable = () => {
 					{ title: 'Author' }
 				]}
 				pagination={{
-					label: 'total segments 10'
+					label: 'Total customers 10'
 				}}
 			>
 				{rowMarkup}
@@ -198,4 +194,4 @@ const CustomerSegmentTable = () => {
 	}
 };
 
-export default CustomerSegmentTable;
+export default CustomersTable;

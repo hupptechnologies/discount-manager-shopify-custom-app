@@ -12,7 +12,7 @@ export default function CustomerSegmentsPage () {
 
 	return (
 		<Page>
-            <CustomerReport />
+			<CustomerReport />
 			<Modal id="create-segment-modal">
 				<CreateSegment />
 				<TitleBar title="Add segment rule">
