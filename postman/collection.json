@@ -542,6 +542,35 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "segments",
+			"item": [
+				{
+					"name": "fetchAllSegments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL_DISCOUNT_APP}}/api/segments?shop={{shopForDiscountApp}}",
+							"host": [
+								"{{BASE_URL_DISCOUNT_APP}}"
+							],
+							"path": [
+								"api",
+								"segments"
+							],
+							"query": [
+								{
+									"key": "shop",
+									"value": "{{shopForDiscountApp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
