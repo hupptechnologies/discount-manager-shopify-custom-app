@@ -10,101 +10,84 @@ import {
 	useBreakpoints,
 } from '@shopify/polaris';
 import type { IndexFiltersProps } from '@shopify/polaris';
-import { SegmentFields } from 'app/redux/customer/slice';
+import { useDispatch } from 'react-redux';
+import { SegmentFields, handleSetSegmentName } from 'app/redux/customer/slice';
+import { fetchAllSegmentsAsync } from 'app/redux/customer';
+import type { AppDispatch } from 'app/redux/store';
+import type { PageInfo } from 'app/controller/segments/fetchAllSegments';
 
 interface CustomerSegmentTableProps {
 	segments: SegmentFields[];
-	isLoading: boolean;
+	totalCount: number;
+	pageInfo: PageInfo | null;
+	cursor: string | undefined;
+	prevCursor: string | undefined;
+	setQueryValue: any;
+	queryValue: string;
 }
 
-const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({ segments, isLoading }) => {
+const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({
+	segments,
+	totalCount,
+	pageInfo,
+	cursor,
+	prevCursor,
+	setQueryValue,
+	queryValue
+}) => {
 	const navigate = useNavigate();
-	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
+	const dispatch = useDispatch<AppDispatch>();
+	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [selected, setSelected] = useState(0);
-	const onCreateNewView = async (value: string) => {
-		await sleep(500);
-		return true;
-	};
 	const sortOptions: IndexFiltersProps['sortOptions'] = [
 		{ label: 'Customer', value: 'customer asc', directionLabel: 'A-Z' },
 		{ label: 'Customer', value: 'customer desc', directionLabel: 'Z-A' }
 	];
 	const [sortSelected, setSortSelected] = useState(['customer asc']);
 	const { mode, setMode } = useSetIndexFiltersMode();
-	const onHandleCancel = () => {};
-
-	const [accountStatus, setAccountStatus] = useState<string[] | undefined>(
-		undefined,
-	);
-	const [moneySpent, setMoneySpent] = useState<[number, number] | undefined>(
-		undefined,
-	);
-	const [taggedWith, setTaggedWith] = useState('');
-	const [queryValue, setQueryValue] = useState('');
 
 	const handleFiltersQueryChange = useCallback(
 		(value: string) => setQueryValue(value),
 		[],
 	);
-	const handleAccountStatusRemove = useCallback(
-		() => setAccountStatus(undefined),
-		[],
-	);
-	const handleMoneySpentRemove = useCallback(
-		() => setMoneySpent(undefined),
-		[],
-	);
-	const handleTaggedWithRemove = useCallback(() => setTaggedWith(''), []);
 	const handleQueryValueRemove = useCallback(() => setQueryValue(''), []);
-	const handleFiltersClearAll = useCallback(() => {
-		handleAccountStatusRemove();
-		handleMoneySpentRemove();
-		handleTaggedWithRemove();
-		handleQueryValueRemove();
-	}, [
-		handleAccountStatusRemove,
-		handleMoneySpentRemove,
-		handleQueryValueRemove,
-		handleTaggedWithRemove,
-	]);
+	
+	const loadMoreNext = () => {
+		if (pageInfo?.hasNextPage) {
+			dispatch(
+				fetchAllSegmentsAsync({
+					shopName: shopify.config.shop || '',
+					query: queryValue,
+					after: cursor,
+				}),
+			);
+			setCurrentPage((prevPage) => prevPage + 1);
+		}
+	};
+
+	const loadMorePrevious = () => {
+		if (pageInfo?.hasPreviousPage) {
+			dispatch(
+				fetchAllSegmentsAsync({
+					shopName: shopify.config.shop || '',
+					query: queryValue,
+					before: prevCursor,
+				}),
+			);
+			setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+		}
+	};
+
 	const handleNavigate = (url: string) => {
 		navigate(url);
 	};
-
-	const appliedFilters: IndexFiltersProps['appliedFilters'] = [];
-	if (accountStatus && !isEmpty(accountStatus)) {
-		const key = 'accountStatus';
-		appliedFilters.push({
-			key,
-			label: disambiguateLabel(key, accountStatus),
-			onRemove: handleAccountStatusRemove,
-		});
-	}
-	if (moneySpent) {
-		const key = 'moneySpent';
-		appliedFilters.push({
-			key,
-			label: disambiguateLabel(key, moneySpent),
-			onRemove: handleMoneySpentRemove,
-		});
-	}
-	if (!isEmpty(taggedWith)) {
-		const key = 'taggedWith';
-		appliedFilters.push({
-			key,
-			label: disambiguateLabel(key, taggedWith),
-			onRemove: handleTaggedWithRemove,
-		});
-	}
 
 	const resourceName = {
 		singular: 'segment',
 		plural: 'segments',
 	};
 
-	const { selectedResources, allResourcesSelected, handleSelectionChange } =
-		useIndexResourceState(segments as any);
+	const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(segments as any);
 
 	const rowMarkup = segments.map(
 		(
@@ -116,7 +99,10 @@ const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({ segments, i
 				key={id}
 				selected={selectedResources.includes(id)}
 				position={index}
-				onClick={() => handleNavigate(`/app/customers/${id.split('/').pop()}`)}
+				onClick={() => {
+					dispatch(handleSetSegmentName({ name }))
+					handleNavigate(`/app/customers/${id.split('/').pop()}`);
+				}}
 			>
 				<IndexTable.Cell>
 					<Text variant="bodyMd" fontWeight="bold" as="span">
@@ -140,10 +126,10 @@ const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({ segments, i
 				queryValue={queryValue}
 				queryPlaceholder="Searching in all"
 				onQueryChange={handleFiltersQueryChange}
-				onQueryClear={() => setQueryValue('')}
+				onQueryClear={handleQueryValueRemove}
 				onSort={setSortSelected}
 				cancelAction={{
-					onAction: onHandleCancel,
+					onAction: handleQueryValueRemove,
 					disabled: false,
 					loading: false,
 				}}
@@ -151,10 +137,9 @@ const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({ segments, i
 				selected={selected}
 				onSelect={setSelected}
 				canCreateNewView={false}
-				onCreateNewView={onCreateNewView}
 				filters={[]}
 				appliedFilters={[]}
-				onClearAll={handleFiltersClearAll}
+				onClearAll={handleQueryValueRemove}
 				mode={mode}
 				setMode={setMode}
 			/>
@@ -173,35 +158,17 @@ const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({ segments, i
 					{ title: 'Author' }
 				]}
 				pagination={{
-					label: 'total segments 10'
+					hasPrevious: pageInfo?.hasPreviousPage,
+					hasNext: pageInfo?.hasNextPage,
+					onPrevious: () => loadMorePrevious(),
+					onNext: () => loadMoreNext(),
+					label: `Showing ${segments?.length} to ${currentPage} of ${totalCount} segments`,
 				}}
-				loading={isLoading}
 			>
 				{rowMarkup}
 			</IndexTable>
 		</LegacyCard>
 	);
-
-	function disambiguateLabel(key: string, value: string | any[]): string {
-		switch (key) {
-			case 'moneySpent':
-				return `Money spent is between $${value[0]} and $${value[1]}`;
-			case 'taggedWith':
-				return `Tagged with ${value}`;
-			case 'accountStatus':
-				return (value as string[]).map((val) => `Customer ${val}`).join(', ');
-			default:
-				return value as string;
-		}
-	}
-
-	function isEmpty(value: string | string[]): boolean {
-		if (Array.isArray(value)) {
-			return value.length === 0;
-		} else {
-			return value === '' || value == null;
-		}
-	}
 };
 
 export default CustomerSegmentTable;

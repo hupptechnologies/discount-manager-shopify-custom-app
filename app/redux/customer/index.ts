@@ -2,12 +2,12 @@ import { AxiosError } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchAllSegments, getCustomerBySegmentId } from '../../service/customer';
 import type { FetchAllSegmentsParams, FetchSegmentCustomersParams } from '../../service/customer'
-import { SegmentFields } from './slice';
+import type { SegmentFields } from './slice';
 
 interface PageInfo {
 	endCursor: string;
-	hasNextPage: string;
-	hasPreviousPage: string;
+	hasNextPage: boolean;
+	hasPreviousPage: boolean;
 	startCursor: string;
 };
 
@@ -16,6 +16,7 @@ interface FetchAllSegmentReturnValue {
 	success: boolean;
 	message: string;
 	pageInfo: PageInfo | null;
+	totalCount: number;
 }
 
 interface FetchSegmentCustomersReturnValue {
@@ -23,6 +24,7 @@ interface FetchSegmentCustomersReturnValue {
 	success: boolean;
 	message: string;
 	pageInfo: PageInfo | null;
+	totalCount: number;
 }
 
 /**
@@ -44,17 +46,18 @@ export const fetchAllSegmentsAsync = createAsyncThunk<
 		try {
 			const response = await fetchAllSegments(params);
 			if (response.data) {
-				const { segments, success, message, pageInfo } = response.data;
+				const { segments, success, message, pageInfo, totalCount } = response.data;
 				if (success && params?.callback) {
 					params.callback(success);
 				}
-				return fulfillWithValue({ segments, message, success, pageInfo });
+				return fulfillWithValue({ segments, message, success, pageInfo, totalCount });
 			}
 			return fulfillWithValue({
 				segments: [],
 				message: '',
 				success: false,
-				pageInfo: null
+				pageInfo: null,
+				totalCount: 0
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;
@@ -89,17 +92,18 @@ export const getCustomerBySegmentIdAsync = createAsyncThunk<
 		try {
 			const response = await getCustomerBySegmentId(params);
 			if (response.data) {
-				const { segmentCustomers, success, message, pageInfo } = response.data;
+				const { segmentCustomers, success, message, pageInfo, totalCount } = response.data;
 				if (success && params?.callback) {
 					params.callback(success);
 				}
-				return fulfillWithValue({ segmentCustomers, message, success, pageInfo });
+				return fulfillWithValue({ segmentCustomers, message, success, pageInfo, totalCount });
 			}
 			return fulfillWithValue({
 				segmentCustomers: [],
 				message: '',
 				success: false,
-				pageInfo: null
+				pageInfo: null,
+				totalCount: 0
 			});
 		} catch (err: any) {
 			const error = err as AxiosError;

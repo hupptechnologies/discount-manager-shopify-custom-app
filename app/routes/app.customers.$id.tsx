@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import { Layout, Page } from "@shopify/polaris";
-import CustomersTable from "app/components/CustomerReport/CustomersTable";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "app/redux/store";
 import { useAppBridge } from "@shopify/app-bridge-react";
+import { Layout, Page, Spinner } from "@shopify/polaris";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "app/redux/store";
 import { getAllCustomerDetail } from "app/redux/customer/slice";
 import { getCustomerBySegmentIdAsync } from "app/redux/customer";
+import CustomersTable from "app/components/CustomerReport/CustomersTable";
 
 export default function ManageCustomer(){
 	const dispatch = useDispatch<AppDispatch>();
 	const shopify = useAppBridge();
-	const { isSegmentCustomerLoading, segmentCustomers } = useSelector((state: RootState) => getAllCustomerDetail(state));
+	const { isSegmentCustomerLoading, segmentCustomers, totalCustomerCount, segmentName, customerPageInfo } = useSelector((state: RootState) => getAllCustomerDetail(state));
 	const [segmentId, setSegmentId] = useState<string | null>(null);
+	const [queryValue, setQueryValue] = useState('');
+	const [cursor, setCursor] = useState<string | undefined>(undefined);
+	const [prevCursor, setPrevCursor] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
 		const path = window.location.pathname;
@@ -29,13 +32,32 @@ export default function ManageCustomer(){
 		}
 	}, [segmentId]);
 
+	useEffect(() => {
+		if (customerPageInfo) {
+			setCursor(customerPageInfo.endCursor);
+			setPrevCursor(customerPageInfo.startCursor);
+		}
+	}, [customerPageInfo]);
+
 	return (
-		<Page title="Customers who have purchased at least once" backAction={{ content: 'Settings', url: '/app/customer-segments' }}>
+		<Page title={segmentName} backAction={{ content: 'Settings', url: '/app/customer-segments' }}>
 			<Layout>
 				<Layout.Section>
-					<CustomersTable segmentCustomers={segmentCustomers} loading={isSegmentCustomerLoading} />
+					<CustomersTable
+						segmentCustomers={segmentCustomers}
+						totalCount={totalCustomerCount}
+						pageInfo={customerPageInfo}
+						cursor={cursor}
+						prevCursor={prevCursor}
+						segmentId={segmentId}
+					/>
 				</Layout.Section>
 			</Layout>
+			{isSegmentCustomerLoading &&
+				<div className="spinner-container">
+					<Spinner size="large" />
+				</div>
+			}
 		</Page>
 	)
 };

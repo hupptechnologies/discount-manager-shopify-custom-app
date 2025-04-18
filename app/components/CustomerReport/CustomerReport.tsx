@@ -1,22 +1,42 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppBridge } from "@shopify/app-bridge-react";
+import pkg from 'lodash';
 import { BlockStack, Box, Button, InlineStack, Layout, Text } from "@shopify/polaris";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "app/redux/store";
 import { fetchAllSegmentsAsync } from "app/redux/customer";
-import CustomerSegmentTable from "./CustomerSegmentTable";
 import { getAllCustomerDetail } from "app/redux/customer/slice";
+import type { AppDispatch, RootState } from "app/redux/store";
+import CustomerSegmentTable from "./CustomerSegmentTable";
 
 const CustomerReport = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const shopify = useAppBridge();
-	const { segments, isLoading } = useSelector((state: RootState) => getAllCustomerDetail(state));
+	const { debounce } = pkg;
+	const { segments, totalSegmentCount, pageInfo } = useSelector((state: RootState) => getAllCustomerDetail(state));
+	const [queryValue, setQueryValue] = useState('');
+	const [cursor, setCursor] = useState<string | undefined>(undefined);
+	const [prevCursor, setPrevCursor] = useState<string | undefined>(undefined);
+
+	const debouncedHandleFetch = useCallback(
+		debounce((queryValue) => {
+			dispatch(fetchAllSegmentsAsync({
+				shopName: shopify.config.shop || '',
+				query: queryValue
+			}));
+		}, 300),
+		[],
+	);
 
 	useEffect(() => {
-		dispatch(fetchAllSegmentsAsync({
-			shopName: shopify.config.shop || ''
-		}))
-	}, []);
+		debouncedHandleFetch(queryValue)
+	}, [queryValue]);
+
+	useEffect(() => {
+		if (pageInfo) {
+			setCursor(pageInfo.endCursor);
+			setPrevCursor(pageInfo.startCursor);
+		}
+	}, [pageInfo]);
 
 	const handleOpen = () => {
 		shopify.modal.show('create-segment-modal');
@@ -44,7 +64,12 @@ const CustomerReport = () => {
 			<Layout.Section>
 				<CustomerSegmentTable
 					segments={segments?.length > 0 ? segments : []}
-					isLoading={isLoading}
+					totalCount={totalSegmentCount}
+					cursor={cursor}
+					prevCursor={prevCursor}
+					pageInfo={pageInfo}
+					queryValue={queryValue}
+					setQueryValue={setQueryValue}
 				/>
 			</Layout.Section>
 		</Layout>

@@ -5,8 +5,8 @@ import { getDetailUsingGraphQL } from "app/service/product";
 
 export interface PageInfo {
 	endCursor: string;
-	hasNextPage: string;
-	hasPreviousPage: string;
+	hasNextPage: boolean;
+	hasPreviousPage: boolean;
 	startCursor: string;
 };
 

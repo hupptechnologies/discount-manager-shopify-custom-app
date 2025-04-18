@@ -1,111 +1,70 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useAppBridge } from '@shopify/app-bridge-react';
+import { useState } from 'react';
 import {
 	IndexTable,
 	LegacyCard,
-	IndexFilters,
-	useSetIndexFiltersMode,
 	useIndexResourceState,
 	Text,
 	Badge
 } from '@shopify/polaris';
-import type { IndexFiltersProps } from '@shopify/polaris';
-import { CustomerInput } from 'app/redux/customer/slice';
+import { useDispatch } from 'react-redux';
+import { getCustomerBySegmentIdAsync } from 'app/redux/customer';
+import type { AppDispatch } from 'app/redux/store';
+import type { CustomerInput } from 'app/redux/customer/slice';
+import type { PageInfo } from 'app/controller/segments/fetchAllSegments';
 
 interface CustomersTableProps {
-	loading: boolean;
 	segmentCustomers: CustomerInput[];
+	totalCount: number;
+	pageInfo: PageInfo | null;
+	cursor: string | undefined;
+	prevCursor: string | undefined;
+	segmentId: string | null;
 }
 
-const CustomersTable: React.FC<CustomersTableProps> = ({ loading, segmentCustomers }) => {
-
-	const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-	const [selected, setSelected] = useState(0);
-	const onCreateNewView = async (value: string) => {
-		await sleep(500);
-		return true;
-	};
-	const sortOptions: IndexFiltersProps['sortOptions'] = [
-		{ label: 'Customer', value: 'customer asc', directionLabel: 'A-Z' },
-		{ label: 'Customer', value: 'customer desc', directionLabel: 'Z-A' }
-	];
-	const [sortSelected, setSortSelected] = useState(['customer asc']);
-	const { mode, setMode } = useSetIndexFiltersMode();
-	const onHandleCancel = () => {};
-
-	const [accountStatus, setAccountStatus] = useState<string[] | undefined>(
-		undefined,
-	);
-	const [moneySpent, setMoneySpent] = useState<[number, number] | undefined>(
-		undefined,
-	);
-	const [taggedWith, setTaggedWith] = useState('');
-	const [queryValue, setQueryValue] = useState('');
-
-	const handleFiltersQueryChange = useCallback(
-		(value: string) => setQueryValue(value),
-		[],
-	);
-	const handleAccountStatusRemove = useCallback(
-		() => setAccountStatus(undefined),
-		[],
-	);
-	const handleMoneySpentRemove = useCallback(
-		() => setMoneySpent(undefined),
-		[],
-	);
-	const handleTaggedWithRemove = useCallback(() => setTaggedWith(''), []);
-	const handleQueryValueRemove = useCallback(() => setQueryValue(''), []);
-	const handleFiltersClearAll = useCallback(() => {
-		handleAccountStatusRemove();
-		handleMoneySpentRemove();
-		handleTaggedWithRemove();
-		handleQueryValueRemove();
-	}, [
-		handleAccountStatusRemove,
-		handleMoneySpentRemove,
-		handleQueryValueRemove,
-		handleTaggedWithRemove,
-	]);
-
-	const appliedFilters: IndexFiltersProps['appliedFilters'] = [];
-	if (accountStatus && !isEmpty(accountStatus)) {
-		const key = 'accountStatus';
-		appliedFilters.push({
-			key,
-			label: disambiguateLabel(key, accountStatus),
-			onRemove: handleAccountStatusRemove,
-		});
-	}
-	if (moneySpent) {
-		const key = 'moneySpent';
-		appliedFilters.push({
-			key,
-			label: disambiguateLabel(key, moneySpent),
-			onRemove: handleMoneySpentRemove,
-		});
-	}
-	if (!isEmpty(taggedWith)) {
-		const key = 'taggedWith';
-		appliedFilters.push({
-			key,
-			label: disambiguateLabel(key, taggedWith),
-			onRemove: handleTaggedWithRemove,
-		});
-	}
-
-	const customers = segmentCustomers;
-
+const CustomersTable: React.FC<CustomersTableProps> = ({
+	segmentCustomers,
+	totalCount,
+	pageInfo,
+	cursor,
+	prevCursor,
+	segmentId
+}) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(segmentCustomers as any);	
+	
 	const resourceName = {
 		singular: 'customer',
 		plural: 'customers',
 	};
 
-	const { selectedResources, allResourcesSelected, handleSelectionChange } =
-		useIndexResourceState(customers as any);
+	const loadMoreNext = () => {
+		if (pageInfo?.hasNextPage) {
+			dispatch(
+				getCustomerBySegmentIdAsync({
+					shopName: shopify.config.shop || '',
+					after: cursor,
+					segmentId: `gid://shopify/Segment/${segmentId}`
+				}),
+			);
+			setCurrentPage((prevPage) => prevPage + 1);
+		}
+	};
 
-	const rowMarkup = customers.map(
+	const loadMorePrevious = () => {
+		if (pageInfo?.hasPreviousPage) {
+			dispatch(
+				getCustomerBySegmentIdAsync({
+					shopName: shopify.config.shop || '',
+					before: prevCursor,
+					segmentId: `gid://shopify/Segment/${segmentId}`
+				}),
+			);
+			setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+		}
+	};
+
+	const rowMarkup = segmentCustomers.map(
 		(
 			{ id, displayName, numberOfOrders, defaultAddress, defaultEmailAddress, amountSpent },
 			index,
@@ -124,7 +83,7 @@ const CustomersTable: React.FC<CustomersTableProps> = ({ loading, segmentCustome
 				<IndexTable.Cell>
 					<Badge tone={defaultEmailAddress?.marketingState === 'SUBSCRIBED' ? 'success' : 'new'}>{defaultEmailAddress?.marketingState}</Badge>
 				</IndexTable.Cell>
-				<IndexTable.Cell>{`${defaultAddress?.city} ${defaultAddress?.province}, ${defaultAddress?.country}`}</IndexTable.Cell>
+				<IndexTable.Cell>{defaultAddress ? `${defaultAddress?.city} ${defaultAddress?.province}, ${defaultAddress?.country}` : 'Not found'}</IndexTable.Cell>
 				<IndexTable.Cell>{numberOfOrders}</IndexTable.Cell>
 				<IndexTable.Cell>
 					{amountSpent?.currencyCode} {amountSpent?.amount}
@@ -135,34 +94,9 @@ const CustomersTable: React.FC<CustomersTableProps> = ({ loading, segmentCustome
 
 	return (
 		<LegacyCard>
-			<IndexFilters
-				sortOptions={sortOptions}
-				sortSelected={sortSelected}
-				queryValue={queryValue}
-				queryPlaceholder="Searching in all"
-				onQueryChange={handleFiltersQueryChange}
-				onQueryClear={() => setQueryValue('')}
-				onSort={setSortSelected}
-				cancelAction={{
-					onAction: onHandleCancel,
-					disabled: false,
-					loading: false,
-				}}
-				tabs={[]}
-				selected={selected}
-				onSelect={setSelected}
-				canCreateNewView={false}
-				onCreateNewView={onCreateNewView}
-				filters={[]}
-				appliedFilters={[]}
-				onClearAll={handleFiltersClearAll}
-				mode={mode}
-				setMode={setMode}
-				loading={loading}
-			/>
 			<IndexTable
 				resourceName={resourceName}
-				itemCount={customers.length}
+				itemCount={segmentCustomers?.length}
 				selectedItemsCount={
 					allResourcesSelected ? 'All' : selectedResources.length
 				}
@@ -175,34 +109,17 @@ const CustomersTable: React.FC<CustomersTableProps> = ({ loading, segmentCustome
 					{ title: 'Amount spent' }
 				]}
 				pagination={{
-					label: 'Total customers 10'
+					hasPrevious: pageInfo?.hasPreviousPage,
+					hasNext: pageInfo?.hasNextPage,
+					onPrevious: () => loadMorePrevious(),
+					onNext: () => loadMoreNext(),
+					label: `Showing ${segmentCustomers?.length} to ${currentPage} of ${totalCount} customers`,
 				}}
 			>
 				{rowMarkup}
 			</IndexTable>
 		</LegacyCard>
 	);
-
-	function disambiguateLabel(key: string, value: string | any[]): string {
-		switch (key) {
-			case 'moneySpent':
-				return `Money spent is between $${value[0]} and $${value[1]}`;
-			case 'taggedWith':
-				return `Tagged with ${value}`;
-			case 'accountStatus':
-				return (value as string[]).map((val) => `Customer ${val}`).join(', ');
-			default:
-				return value as string;
-		}
-	}
-
-	function isEmpty(value: string | string[]): boolean {
-		if (Array.isArray(value)) {
-			return value.length === 0;
-		} else {
-			return value === '' || value == null;
-		}
-	}
 };
 
 export default CustomersTable;

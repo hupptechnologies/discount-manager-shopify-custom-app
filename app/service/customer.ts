@@ -9,11 +9,16 @@ interface FetchAllCustomersParams {
 }
 
 export interface FetchAllSegmentsParams {
+	after?: string;
+	before?: string;
+	query?: string;
 	shopName: string;
 	callback?: (success: boolean) => void;
 }
 
 export interface FetchSegmentCustomersParams {
+	after?: string;
+	before?: string;
 	segmentId: string;
 	shopName: string;
 	callback?: (success: boolean) => void;
@@ -59,8 +64,18 @@ export const fetchAllCustomers = (params: FetchAllCustomersParams) => {
 */
 export const fetchAllSegments = (params: FetchAllSegmentsParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { shopName } = params;
-	return requestInstance.get(`segments?shop=${shopName}`);
+	const { query, after, before, shopName } = params;
+	let url = `segments?shop=${shopName}`;
+	if (query) {
+		url += `&query=${query}`;
+	}
+	if (after) {
+		url += `&after=${after}`;
+	}
+	if (before) {
+		url += `&before=${before}`;
+	}
+	return requestInstance.get(url);
 };
 
 /**
@@ -74,6 +89,13 @@ export const fetchAllSegments = (params: FetchAllSegmentsParams) => {
 */
 export const getCustomerBySegmentId = (params: FetchSegmentCustomersParams) => {
 	const requestInstance: AxiosInstance = backendAPI();
-	const { shopName, segmentId } = params;
-	return requestInstance.get(`segments?shop=${shopName}&segmentId=${segmentId}`);
+	const { after, before, shopName, segmentId } = params;
+	let url = `segments?shop=${shopName}&segmentId=${segmentId}`;
+	if (after) {
+		url += `&after=${after}`;
+	}
+	if (before) {
+		url += `&before=${before}`;
+	}
+	return requestInstance.get(url);
 };

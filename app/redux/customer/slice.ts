@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchAllSegmentsAsync, getCustomerBySegmentIdAsync } from './index';
-import { PageInfo } from 'app/controller/segments/fetchAllSegments';
+import type { PageInfo } from 'app/controller/segments/fetchAllSegments';
 
 export interface CustomerInput {
 	id: string;
@@ -35,6 +35,10 @@ interface customerState {
 	segmentCustomers: CustomerInput[];
 	isSegmentCustomerLoading: boolean;
 	pageInfo: PageInfo | null;
+	customerPageInfo: PageInfo | null;
+	totalSegmentCount: number;
+	totalCustomerCount: number;
+	segmentName: string;
 }
 
 const initialState: customerState = {
@@ -42,13 +46,21 @@ const initialState: customerState = {
 	segments: [],
 	segmentCustomers: [],
 	isSegmentCustomerLoading: false,
-	pageInfo: null
+	pageInfo: null,
+	customerPageInfo: null,
+	totalSegmentCount: 0,
+	totalCustomerCount: 0,
+	segmentName: ''
 };
 
 const customerSlice = createSlice({
 	name: 'customer',
 	initialState,
-	reducers: {},
+	reducers: {
+		handleSetSegmentName: (state, { payload }) => {
+			state.segmentName = payload?.name;
+		}
+	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchAllSegmentsAsync.pending, (state) => {
 			state.isLoading = true;
@@ -57,11 +69,13 @@ const customerSlice = createSlice({
 			state.isLoading = false;
 			state.segments = payload.segments;
 			state.pageInfo = payload.pageInfo;
+			state.totalSegmentCount = payload.totalCount;
 		});
 		builder.addCase(fetchAllSegmentsAsync.rejected, (state) => {
 			state.isLoading = false;
 			state.segments = [];
 			state.pageInfo = null;
+			state.totalSegmentCount = 0;
 		});
 		builder.addCase(getCustomerBySegmentIdAsync.pending, (state) => {
 			state.isSegmentCustomerLoading = true;
@@ -69,12 +83,14 @@ const customerSlice = createSlice({
 		builder.addCase(getCustomerBySegmentIdAsync.fulfilled, (state, { payload }) => {
 			state.isSegmentCustomerLoading = false;
 			state.segmentCustomers = payload.segmentCustomers;
-			state.pageInfo = payload.pageInfo;
+			state.customerPageInfo = payload.pageInfo;
+			state.totalCustomerCount = payload.totalCount;
 		});
 		builder.addCase(getCustomerBySegmentIdAsync.rejected, (state) => {
 			state.isSegmentCustomerLoading = false;
 			state.segmentCustomers = [];
-			state.pageInfo = null;
+			state.customerPageInfo = null;
+			state.totalCustomerCount = 0;
 		});
 	},
 });
@@ -87,4 +103,5 @@ const customerSlice = createSlice({
 */
 export const getAllCustomerDetail = (state: { customer: customerState }) => state.customer;
 
+export const { handleSetSegmentName } = customerSlice.actions;
 export default customerSlice.reducer;

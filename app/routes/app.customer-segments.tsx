@@ -1,10 +1,14 @@
 import { Modal, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
-import { Page } from '@shopify/polaris';
+import { Page, Spinner } from '@shopify/polaris';
+import { useSelector } from 'react-redux';
+import { RootState } from 'app/redux/store';
+import { getAllCustomerDetail } from 'app/redux/customer/slice';
 import CreateSegment from 'app/components/CustomerReport/CreateSegment';
 import CustomerReport from 'app/components/CustomerReport/CustomerReport';
 
 export default function CustomerSegmentsPage () {
 	const shopify = useAppBridge();
+	const { isLoading } = useSelector((state: RootState) => getAllCustomerDetail(state));
 
 	const handleClose = () => {
 		shopify.modal.hide('create-segment-modal');
@@ -20,6 +24,11 @@ export default function CustomerSegmentsPage () {
 					<button onClick={handleClose}>Cancel</button>
 				</TitleBar>
 			</Modal>
+			{isLoading &&
+				<div className="spinner-container">
+					<Spinner size="large" />
+				</div>
+			}
 		</Page>
 	);
 }
