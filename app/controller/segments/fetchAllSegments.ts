@@ -31,7 +31,12 @@ interface GraphqlResponse {
 	* @returns A Promise resolving to the list of customer segments (FetchSegmentResponse).
 */
 
-export const fetchAllSegment = async (shop: string): Promise<FetchSegmentResponse> => {
+export const fetchAllSegment = async (
+	shop: string,
+	after?: string | null,
+	before?: string | null,
+	query?: string
+): Promise<FetchSegmentResponse> => {
 	try {
 		const response = await prisma.session.findMany({
 			where: { shop },
@@ -46,7 +51,8 @@ export const fetchAllSegment = async (shop: string): Promise<FetchSegmentRespons
 		const count = getCustomerCount?.data?.data?.customersCount?.count || 0;
 
 		const data = {
-			query: GET_SEGMENTS_QUERY 
+			query: GET_SEGMENTS_QUERY,
+			variables: after ? { first: 5, after, query } : before ? { last: 5, before, query } : { first: 5, query },
 		}
 		const getSegments: GraphqlResponse = await getDetailUsingGraphQL(shop, accessToken, data);
 		const segments = getSegments?.data?.data?.segments?.edges || [];

@@ -43,7 +43,13 @@ interface GraphqlResponse {
 	* @param segmentId - Shopify segment ID
 	* @returns Promise with customer data for the segment
 */
-export const fetchCustomerBySegmentId = async (shop: string, segmentId: string): Promise<CustomerBySegmentIdResponse> => {
+export const fetchCustomerBySegmentId = async (
+	shop: string,
+	segmentId: string,
+	after?: string | null,
+	before?: string | null,
+	query?: string
+): Promise<CustomerBySegmentIdResponse> => {
 	try {
 		const response = await prisma.session.findMany({
 			where: { shop },
@@ -56,9 +62,7 @@ export const fetchCustomerBySegmentId = async (shop: string, segmentId: string):
 
 		const data = {
 			query: GET_SEGMENT_CUSTOMERS_QUERY,
-			variables: {
-				segmentId
-			}
+			variables: after ? { first: 5, after, query, segmentId } : before ? { last: 5, before, query, segmentId } : { first: 5, query, segmentId },
 		}
 		const getSegmentCustomers: GraphqlResponse = await getDetailUsingGraphQL(shop, accessToken, data);
 		const segmentCustomers = getSegmentCustomers?.data?.data?.customerSegmentMembers?.edges?.map(item=> item?.node) || [];

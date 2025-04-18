@@ -45,11 +45,14 @@ export const loader = async ({
 }): Promise<Response> => {
 	const url = new URL(request.url);
 	const shop = url.searchParams.get('shop') ?? '';
+	const after = url.searchParams.get('after') ?? null;
+	const before = url.searchParams.get('before') ?? null;
+	const query = url.searchParams.get('query') ?? '';
 	const segmentId = url.searchParams.get('segmentId');
 	if (segmentId) {
-		const response = await fetchCustomerBySegmentId(shop, segmentId);
+		const response = await fetchCustomerBySegmentId(shop, segmentId, after, before, query);
 		return json<CustomerBySegmentIdResponse>(response);
 	}
-	const response = await fetchAllSegment(shop);
+	const response = await fetchAllSegment(shop, after, before, query);
 	return json<FetchSegmentResponse>(response);
 };
