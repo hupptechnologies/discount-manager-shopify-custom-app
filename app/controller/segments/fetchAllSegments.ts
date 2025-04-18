@@ -1,5 +1,5 @@
 import { CUSTOMERS_COUNT_QUERY } from "app/graphqlQuery/customer";
-import { GET_SEGMENTS_QUERY, GET_SEGMENT_CUSTOMER_COUNT_QUERY } from "app/graphqlQuery/segment";
+import { GET_SEGMENTS_COUNT_QUERY, GET_SEGMENTS_QUERY, GET_SEGMENT_CUSTOMER_COUNT_QUERY } from "app/graphqlQuery/segment";
 import { FetchSegmentResponse, Segment } from "app/routes/api.segments/route";
 import { getDetailUsingGraphQL } from "app/service/product";
 
@@ -47,6 +47,9 @@ export const fetchAllSegment = async (
 			throw new Error('Access token not found');
 		}
 
+		const getSegmentsCount = await getDetailUsingGraphQL(shop, accessToken, { query: GET_SEGMENTS_COUNT_QUERY });
+		const totalCount = getSegmentsCount?.data?.data?.segmentsCount?.count || 0;
+
 		const getCustomerCount = await getDetailUsingGraphQL(shop, accessToken, { query: CUSTOMERS_COUNT_QUERY });
 		const count = getCustomerCount?.data?.data?.customersCount?.count || 0;
 
@@ -67,9 +70,9 @@ export const fetchAllSegment = async (
 				};
 			})
 		);
-		return { success: true, message: 'Fetch all segments successfuly', segments: segmentsWithCounts || [], pageInfo };
+		return { success: true, message: 'Fetch all segments successfuly', segments: segmentsWithCounts || [], pageInfo, totalCount };
 	} catch (error) {
 		console.error(error, 'Error fetching segments');
-		return { success: true, message: '', segments: [], pageInfo: null };
+		return { success: true, message: '', segments: [], pageInfo: null, totalCount: 0 };
 	}
 }

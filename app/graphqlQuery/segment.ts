@@ -21,14 +21,14 @@ query getSegments ($first: Int, $last: Int,  $after: String, $before: String, $q
 
 export const GET_SEGMENT_CUSTOMER_COUNT_QUERY = `
 query getSegmentCustomerCount ($segmentId: ID!) {
-	customerSegmentMembers (segmentId: $segmentId) {
+	customerSegmentMembers (first: 1000, segmentId: $segmentId) {
 		totalCount
 	}
 }`;
 
 export const GET_SEGMENT_CUSTOMERS_QUERY = `
-query getSegmentCustomers ($segmentId: ID!, $first: Int, $last: Int,  $after: String, $before: String, $query: String) {
-	customerSegmentMembers (first: $first, last: $last, after: $after, before: $before, query: $query, segmentId: $segmentId) {
+query getSegmentCustomers ($segmentId: ID!, $first: Int, $last: Int,  $after: String, $before: String) {
+	customerSegmentMembers (first: $first, last: $last, after: $after, before: $before, segmentId: $segmentId) {
 		pageInfo {
 			endCursor
 			hasNextPage
@@ -54,5 +54,13 @@ query getSegmentCustomers ($segmentId: ID!, $first: Int, $last: Int,  $after: St
 				numberOfOrders
 			}
 		}
+	}
+}`;
+
+export const GET_SEGMENTS_COUNT_QUERY = `
+query getSegmentsCount { 
+	segmentsCount {
+		count
+		precision
 	}
 }`;

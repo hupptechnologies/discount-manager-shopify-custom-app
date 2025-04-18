@@ -20,6 +20,7 @@ export interface FetchSegmentResponse {
 	message: string;
 	segments: SegmentInput[];
 	pageInfo: PageInfo | null;
+	totalCount: number;
 }
 
 export interface CustomerBySegmentIdResponse {
@@ -27,6 +28,7 @@ export interface CustomerBySegmentIdResponse {
 	message: string;
 	segmentCustomers: CustomerInput[];
 	pageInfo: PageInfo | null;
+	totalCount: number;
 }
 
 /**
@@ -50,7 +52,7 @@ export const loader = async ({
 	const query = url.searchParams.get('query') ?? '';
 	const segmentId = url.searchParams.get('segmentId');
 	if (segmentId) {
-		const response = await fetchCustomerBySegmentId(shop, segmentId, after, before, query);
+		const response = await fetchCustomerBySegmentId(shop, segmentId, after, before);
 		return json<CustomerBySegmentIdResponse>(response);
 	}
 	const response = await fetchAllSegment(shop, after, before, query);
