@@ -1,16 +1,19 @@
 import { useState } from 'react';
+import { Modal, TitleBar } from '@shopify/app-bridge-react';
 import {
 	IndexTable,
 	LegacyCard,
 	useIndexResourceState,
 	Text,
-	Badge
+	Badge,
+	Layout
 } from '@shopify/polaris';
 import { useDispatch } from 'react-redux';
 import { getCustomerBySegmentIdAsync } from 'app/redux/customer';
 import type { AppDispatch } from 'app/redux/store';
 import type { CustomerInput } from 'app/redux/customer/slice';
 import type { PageInfo } from 'app/controller/segments/fetchAllSegments';
+import Placeholder from '../Placeholder';
 
 interface CustomersTableProps {
 	segmentCustomers: CustomerInput[];
@@ -38,6 +41,14 @@ const CustomersTable: React.FC<CustomersTableProps> = ({
 		plural: 'customers',
 	};
 
+	const promotedBulkActions = [
+		{
+			content: 'Delete customer',
+			destructive: true,
+			onAction: () => handleOpen(),
+		},
+	];
+
 	const loadMoreNext = () => {
 		if (pageInfo?.hasNextPage) {
 			dispatch(
@@ -64,6 +75,14 @@ const CustomersTable: React.FC<CustomersTableProps> = ({
 		}
 	};
 
+	const handleOpen = () => {
+		shopify.modal.show('customer-confirmation-modal');
+	};
+
+	const handleClose = () => {
+		shopify.modal.hide('customer-confirmation-modal');
+	};
+
 	const rowMarkup = segmentCustomers.map(
 		(
 			{ id, displayName, numberOfOrders, defaultAddress, defaultEmailAddress, amountSpent },
@@ -84,9 +103,9 @@ const CustomersTable: React.FC<CustomersTableProps> = ({
 					<Badge tone={defaultEmailAddress?.marketingState === 'SUBSCRIBED' ? 'success' : 'new'}>{defaultEmailAddress?.marketingState}</Badge>
 				</IndexTable.Cell>
 				<IndexTable.Cell>{defaultAddress ? `${defaultAddress?.city} ${defaultAddress?.province}, ${defaultAddress?.country}` : 'Not found'}</IndexTable.Cell>
-				<IndexTable.Cell>{numberOfOrders}</IndexTable.Cell>
+				<IndexTable.Cell>{numberOfOrders} orders</IndexTable.Cell>
 				<IndexTable.Cell>
-					{amountSpent?.currencyCode} {amountSpent?.amount}
+					₹{amountSpent?.amount}
 				</IndexTable.Cell>
 			</IndexTable.Row>
 		),
@@ -115,9 +134,24 @@ const CustomersTable: React.FC<CustomersTableProps> = ({
 					onNext: () => loadMoreNext(),
 					label: `Showing ${segmentCustomers?.length} to ${currentPage} of ${totalCount} customers`,
 				}}
+				promotedBulkActions={promotedBulkActions}
 			>
 				{rowMarkup}
 			</IndexTable>
+			<Modal id="customer-confirmation-modal">
+				<Layout.Section>
+					<Text as="p" tone="subdued" truncate>
+						Are you sure you want to delete this customer?
+					</Text>
+				</Layout.Section>
+				<Placeholder height="5px" />
+				<TitleBar title='Delete customer'>
+					<button variant="primary" tone="critical">
+						Delete
+					</button>
+					<button onClick={handleClose}>Cancel</button>
+				</TitleBar>
+			</Modal>
 		</LegacyCard>
 	);
 };
