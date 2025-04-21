@@ -1,5 +1,4 @@
 import {
-	BlockStack,
 	Box,
 	ButtonGroup,
 	Card,
@@ -16,6 +15,7 @@ import type { QueryType } from 'app/routes/app.create-discount';
 import PrimaryButton from '../PolarisUI/CustomButton';
 import CustomText from '../PolarisUI/CustomText';
 import CustomTextField from '../PolarisUI/CustomTextField';
+import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 import { generateDiscountCode } from 'app/utils/json';
 
 interface DiscountCodeGenProps {
@@ -58,7 +58,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 				<CustomText as="p">{queryType} discount</CustomText>
 			</InlineStack>
 			<Placeholder height="5px" />
-			<BlockStack gap="200">
+			<CustomBlockStack gap="200">
 				{!isEdit && (
 					<CustomText variant="bodyMd" as="h3">
 						Method
@@ -93,32 +93,34 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						}
 					}}
 				/>
-			</BlockStack>
+			</CustomBlockStack>
 			<Placeholder height="5px" />
-			{!isEdit && newRule?.selectedMethod === 'code' && queryType !== 'buyXgetY' && <BlockStack gap="100">
-				<RadioButton
-					label="Generate random code"
-					checked={newRule.isRandom}
-					onChange={() =>
-						setNewRule({
-							...newRule,
-							isRandom: !newRule.isRandom,
-							isCustom: false,
-						})
-					}
-				/>
-				<RadioButton
-					label="Provide custom code"
-					checked={newRule.isCustom}
-					onChange={() =>
-						setNewRule({
-							...newRule,
-							isCustom: !newRule.isCustom,
-							isRandom: false,
-						})
-					}
-				/>
-			</BlockStack>}
+			{!isEdit && newRule?.selectedMethod === 'code' && queryType !== 'buyXgetY' &&
+				<CustomBlockStack gap="100">
+					<RadioButton
+						label="Generate random code"
+						checked={newRule.isRandom}
+						onChange={() =>
+							setNewRule({
+								...newRule,
+								isRandom: !newRule.isRandom,
+								isCustom: false,
+							})
+						}
+					/>
+					<RadioButton
+						label="Provide custom code"
+						checked={newRule.isCustom}
+						onChange={() =>
+							setNewRule({
+								...newRule,
+								isCustom: !newRule.isCustom,
+								isRandom: false,
+							})
+						}
+					/>
+				</CustomBlockStack>
+			}
 			{!isEdit && newRule?.selectedMethod === 'code' && queryType !== 'buyXgetY' && <Placeholder height="5px" />}
 			{queryType !== 'buyXgetY' && newRule.isCustom && newRule?.selectedMethod === 'code' && (
 				<Box>

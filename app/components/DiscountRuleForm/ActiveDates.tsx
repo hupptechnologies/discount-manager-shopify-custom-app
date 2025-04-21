@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-	BlockStack,
 	Card,
 	Checkbox,
 	FormLayout,
@@ -11,6 +10,7 @@ import type { DiscountRule } from './DiscountRuleForm';
 import PopoverPicker from './PopoverPicker';
 import CustomText from '../PolarisUI/CustomText';
 import CustomTextField from '../PolarisUI/CustomTextField';
+import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 import { getYearMonthDay } from 'app/utils/json';
 
 interface ActiveDatesProps {
@@ -27,7 +27,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule, handleSa
 
 	return (
 		<Card>
-			<BlockStack gap="300">
+			<CustomBlockStack gap="300">
 				<CustomText variant="bodyLg" fontWeight="medium" as="h3">
 					Active dates
 				</CustomText>
@@ -165,7 +165,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule, handleSa
 						/>
 					</FormLayout.Group>
 				)}
-			</BlockStack>
+			</CustomBlockStack>
 		</Card>
 	);
 };

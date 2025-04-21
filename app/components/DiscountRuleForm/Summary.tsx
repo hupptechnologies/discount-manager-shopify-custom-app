@@ -1,5 +1,4 @@
 import {
-	BlockStack,
 	Box,
 	Card,
 	InlineStack,
@@ -8,6 +7,7 @@ import {
 import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
 import CustomText from '../PolarisUI/CustomText';
+import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 import { formatDateRange, isToday } from 'app/utils/json';
 
 interface DiscountRuleFormProps {
@@ -45,7 +45,7 @@ const Summary: React.FC<DiscountRuleFormProps> = ({ queryType, newRule }) => {
 						: 'No discount code yet'}
 				</CustomText>
 			</InlineStack>
-			<BlockStack gap="400">
+			<CustomBlockStack gap="400">
 				<CustomText variant="headingSm" as="p">
 					{newRule?.selectedMethod === 'code' ? 'Code' : 'Automatic'}
 				</CustomText>
@@ -126,7 +126,7 @@ const Summary: React.FC<DiscountRuleFormProps> = ({ queryType, newRule }) => {
 						</List.Item>
 					</List>
 				</Box>
-			</BlockStack>
+			</CustomBlockStack>
 		</Card>
 	);
 };

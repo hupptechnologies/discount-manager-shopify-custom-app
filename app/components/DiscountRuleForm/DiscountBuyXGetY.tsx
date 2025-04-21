@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Modal, TitleBar } from '@shopify/app-bridge-react';
 import {
-	BlockStack,
 	Box,
 	Card,
 	Divider,
@@ -22,6 +21,7 @@ import EditVariantList from './EditVariantList';
 import PrimaryButton from '../PolarisUI/CustomButton';
 import CustomText from '../PolarisUI/CustomText';
 import CustomTextField from '../PolarisUI/CustomTextField';
+import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 
 interface DiscountBuyXGetYProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -95,7 +95,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 					<CustomText variant="headingMd" fontWeight="semibold" as="h6">
 						Customer {newRule?.isMinPurchaseAmount ? 'spends' : 'buys'}
 					</CustomText>
-					<BlockStack gap="100">
+					<CustomBlockStack gap="100">
 						<RadioButton
 							label="Minimum quantity of items"
 							checked={newRule.isMinQuantityItem}
@@ -118,7 +118,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 								})
 							}
 						/>
-					</BlockStack>
+					</CustomBlockStack>
 					<FormLayout.Group condensed>
 						<CustomTextField
 							label={newRule?.isMinPurchaseAmount ? 'Amount' : 'Quantity'}
@@ -216,7 +216,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							</FormLayout.Group>
 						)}
 					<Divider borderColor="border" />
-					<BlockStack gap="300">
+					<CustomBlockStack gap="300">
 						<CustomText variant="headingMd" fontWeight="semibold" as="h6">
 							Customer gets
 						</CustomText>
@@ -224,7 +224,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							Customers must add the quantity of items specified below to their
 							cart.
 						</CustomText>
-					</BlockStack>
+					</CustomBlockStack>
 					<FormLayout.Group condensed>
 						<CustomTextField
 							label="Quantity"
@@ -307,7 +307,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 					<CustomText variant="bodyMd" fontWeight="bold" as="h4">
 						At a discounted value
 					</CustomText>
-					<BlockStack gap="100">
+					<CustomBlockStack gap="100">
 						<RadioButton
 							label="Percentage"
 							checked={newRule.isPercentage}
@@ -356,7 +356,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							}
 							helpText={
 								newRule.isAmountOfEach && (
-									<BlockStack gap="100">
+									<CustomBlockStack gap="100">
 										<Box width="30%">
 											<CustomTextField
 												label=""
@@ -375,7 +375,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 											For multiple quantities, the discount amount will be taken
 											off each Y item.
 										</CustomText>
-									</BlockStack>
+									</CustomBlockStack>
 								)
 							}
 						/>
@@ -391,7 +391,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 								})
 							}
 						/>
-					</BlockStack>
+					</CustomBlockStack>
 				</FormLayout>
 			</Card>
 			<Modal id="variant-list">

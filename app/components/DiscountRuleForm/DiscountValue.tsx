@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Modal, TitleBar } from '@shopify/app-bridge-react';
 import {
-	BlockStack,
 	Box,
 	Card,
 	Checkbox,
@@ -21,6 +20,7 @@ import EditVariantList from './EditVariantList';
 import PrimaryButton from '../PolarisUI/CustomButton';
 import CustomText from '../PolarisUI/CustomText';
 import CustomTextField from '../PolarisUI/CustomTextField';
+import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -85,7 +85,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 	return (
 		<>
 			<Card>
-				<BlockStack>
+				<CustomBlockStack>
 					<FormLayout>
 						<CustomText variant="headingMd" fontWeight="semibold" as="h6">
 							Discount value
@@ -251,7 +251,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 							</FormLayout.Group>
 						)}
 					</FormLayout>
-				</BlockStack>
+				</CustomBlockStack>
 			</Card>
 			<Modal id="variant-list">
 				<EditVariantList

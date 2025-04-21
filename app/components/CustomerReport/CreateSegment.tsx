@@ -1,11 +1,12 @@
-import { BlockStack, Box } from '@shopify/polaris';
+import { Box } from '@shopify/polaris';
 import CustomTextField from '../PolarisUI/CustomTextField';
+import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 
 const CreateSegment = () => {
 	return (
-		<BlockStack gap="400">
+		<CustomBlockStack gap="400">
 			<Box padding="400">
-				<BlockStack gap="400">
+				<CustomBlockStack gap="400">
 					<CustomTextField
 						label="Segment Name"
 						value=''
@@ -19,9 +20,9 @@ const CreateSegment = () => {
 						autoComplete="off"
 						helpText={`Example: totalSpent > 100 AND tags CONTAINS 'VIP'`}
 					/>
-				</BlockStack>
+				</CustomBlockStack>
 			</Box>
-		</BlockStack>
+		</CustomBlockStack>
 	);
 };
 

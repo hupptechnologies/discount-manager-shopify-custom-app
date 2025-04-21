@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppBridge } from '@shopify/app-bridge-react';
-import { Badge, BlockStack, Card, InlineStack, Layout, List, Page } from '@shopify/polaris';
+import { Badge, Card, InlineStack, Layout, List, Page } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
 import { ComposeIcon } from '@shopify/polaris-icons';
 import { AppDispatch, RootState } from 'app/redux/store';
@@ -8,6 +8,7 @@ import { fetchAppEmbedStatusAsync } from 'app/redux/store/index';
 import { getAllStoreDetail } from 'app/redux/store/slice';
 import CustomButton from 'app/components/PolarisUI/CustomButton';
 import CustomText from 'app/components/PolarisUI/CustomText';
+import CustomBlockStack from 'app/components/PolarisUI/CustomBlockStack';
 
 export default function Index () {
 	const { appEmbedID, appEmbedStatus, isAppEmbedLoading } = useSelector((state: RootState) => getAllStoreDetail(state));
@@ -27,12 +28,12 @@ export default function Index () {
 
 	return (
 		<Page>
-			<BlockStack gap="500">
+			<CustomBlockStack gap="500">
 				<Layout>
 					<Layout.Section>
 						<Card>
-							<BlockStack gap="500">
-								<BlockStack gap="200">
+							<CustomBlockStack gap="500">
+								<CustomBlockStack gap="200">
 									<InlineStack align='space-between' blockAlign='center'>
 										<CustomText as="h2" variant="headingMd">
 											Welcome to Smart Discount Manager 🎉  <Badge tone={appEmbedStatus ? 'success' : 'critical'} size='small'>{appEmbedStatus ? 'Active' : 'Inactive'}</Badge>
@@ -47,9 +48,8 @@ export default function Index () {
 										applies discount rules based on customer behavior, order
 										history, stock levels, and real-time analytics.
 									</CustomText>
-								</BlockStack>
-
-								<BlockStack gap="200">
+								</CustomBlockStack>
+								<CustomBlockStack gap="200">
 									<CustomText as="h3" variant="headingMd">
 										App Features
 									</CustomText>
@@ -72,12 +72,12 @@ export default function Index () {
 											Track discount performance with analytics.
 										</List.Item>
 									</List>
-								</BlockStack>
-							</BlockStack>
+								</CustomBlockStack>
+							</CustomBlockStack>
 						</Card>
 					</Layout.Section>
 				</Layout>
-			</BlockStack>
+			</CustomBlockStack>
 		</Page>
 	);
 }

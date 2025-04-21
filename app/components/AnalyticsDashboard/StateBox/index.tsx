@@ -1,7 +1,6 @@
 import {
 	Layout,
 	Grid,
-	BlockStack,
 	Box,
 	InlineStack
 } from '@shopify/polaris';
@@ -11,6 +10,7 @@ import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import { StatBox } from './StateBox';
 import PrimaryButton from 'app/components/PolarisUI/CustomButton';
 import CustomText from 'app/components/PolarisUI/CustomText';
+import CustomBlockStack from 'app/components/PolarisUI/CustomBlockStack';
 
 interface IndexStateBoxProps {
 	handleOpen: any;
@@ -30,7 +30,7 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 		<>
 			<Layout.Section>
 				<Box padding="200">
-					<BlockStack gap="100">
+					<CustomBlockStack gap="100">
 						<InlineStack align="space-between" blockAlign="center" gap="100">
 							<CustomText
 								as="h6"
@@ -49,7 +49,7 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 							tone="subdued"
 							children={'Shows the most recent discount code statistics and trends.'}
 						/>
-					</BlockStack>
+					</CustomBlockStack>
 				</Box>
 			</Layout.Section>
 			<Layout.Section>

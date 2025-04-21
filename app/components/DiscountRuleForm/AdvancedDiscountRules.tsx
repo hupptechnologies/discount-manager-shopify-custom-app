@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useAppBridge } from '@shopify/app-bridge-react';
 import {
-	BlockStack,
 	Box,
 	Card,
 	Checkbox,
@@ -24,6 +23,7 @@ import EditItemsList from './EditItemsList';
 import PrimaryButton from '../PolarisUI/CustomButton';
 import CustomText from '../PolarisUI/CustomText';
 import CustomTextField from '../PolarisUI/CustomTextField';
+import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 
 export interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -122,7 +122,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 
 	return (
 		<Card>
-			<BlockStack gap="500">
+			<CustomBlockStack gap="500">
 				<FormLayout>
 					<CustomText variant="headingMd" fontWeight="semibold" as="h6">
 						Advance discount rules
@@ -287,7 +287,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 						</FormLayout.Group>
 					)}
 				</FormLayout>
-			</BlockStack>
+			</CustomBlockStack>
 		</Card>
 	);
 	function renderItem(item: any, index: string) {

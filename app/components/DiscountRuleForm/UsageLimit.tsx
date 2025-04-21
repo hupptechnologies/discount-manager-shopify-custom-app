@@ -1,5 +1,4 @@
 import {
-	BlockStack,
 	Box,
 	Card,
 	Checkbox,
@@ -8,6 +7,7 @@ import {
 import type { DiscountRule } from './DiscountRuleForm';
 import CustomText from '../PolarisUI/CustomText';
 import CustomTextField from '../PolarisUI/CustomTextField';
+import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 
 interface UsageLimitProps {
 	newRule: DiscountRule;
@@ -18,7 +18,7 @@ interface UsageLimitProps {
 const UsageLimit: React.FC<UsageLimitProps> = ({ newRule, setNewRule, handleSaveBarOpen }) => {
 	return (
 		<Card>
-			<BlockStack gap="300">
+			<CustomBlockStack gap="300">
 				<CustomText variant="bodyLg" fontWeight="medium" as="h3">
 					Maximum discount uses
 				</CustomText>
@@ -61,7 +61,7 @@ const UsageLimit: React.FC<UsageLimitProps> = ({ newRule, setNewRule, handleSave
 						}}
 					/>
 				</FormLayout.Group>
-			</BlockStack>
+			</CustomBlockStack>
 		</Card>
 	);
 };
