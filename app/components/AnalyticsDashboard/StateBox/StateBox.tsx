@@ -2,8 +2,8 @@ import React from 'react';
 import { Card, Box } from '@shopify/polaris';
 import { SparkLineChart } from '@shopify/polaris-viz';
 import { ArrowUpIcon, ArrowDownIcon } from '@shopify/polaris-icons';
+import { CustomText } from 'app/components/PolarisUI';
 import styles from './StatBox.module.css';
-import CustomText from 'app/components/PolarisUI/CustomText';
 
 interface StatBoxProps {
 	title: string;

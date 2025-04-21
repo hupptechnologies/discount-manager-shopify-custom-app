@@ -9,9 +9,7 @@ import {
 } from '@shopify/polaris';
 import { XIcon } from '@shopify/polaris-icons';
 import type { ItemsList } from 'app/redux/discount/slice';
-import PrimaryButton from '../PolarisUI/CustomButton';
-import CustomText from '../PolarisUI/CustomText';
-
+import { PrimaryButton, CustomText } from '../PolarisUI';
 export interface EditItemsListProps {
 	type: string;
 	items: ItemsList[];

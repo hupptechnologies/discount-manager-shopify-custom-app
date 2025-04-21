@@ -13,10 +13,9 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from 'app/redux/store';
 import type { DiscountRule } from './DiscountRuleForm';
+import { CustomText, CustomSpinner } from '../PolarisUI';
 import { fetchAllProductsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
-import CustomText from '../PolarisUI/CustomText';
-import CustomSpinner from '../PolarisUI/CustomSpinner';
 
 interface Product {
 	id: string;

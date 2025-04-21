@@ -5,9 +5,7 @@ import {
 	FormLayout
 } from '@shopify/polaris';
 import type { DiscountRule } from './DiscountRuleForm';
-import CustomText from '../PolarisUI/CustomText';
-import CustomTextField from '../PolarisUI/CustomTextField';
-import CustomBlockStack from '../PolarisUI/CustomBlockStack';
+import { CustomText, CustomTextField, CustomBlockStack } from '../PolarisUI';
 
 interface UsageLimitProps {
 	newRule: DiscountRule;

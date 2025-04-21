@@ -16,7 +16,7 @@ import {
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from 'app/redux/store';
 import { handleResetGetDiscountCode } from 'app/redux/discount/slice';
-import CustomText from './PolarisUI/CustomText';
+import { CustomText } from './PolarisUI';
 
 const DiscountTypeList = () => {
 	const dispatch = useDispatch<AppDispatch>();

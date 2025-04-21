@@ -13,7 +13,7 @@ import type { ResourceListProps } from '@shopify/polaris';
 import { useDispatch } from 'react-redux';
 import { deleteBulkRedeemDiscountCodeAsync } from 'app/redux/discount';
 import type { AppDispatch } from 'app/redux/store';
-import CustomText from '../PolarisUI/CustomText';
+import { CustomText } from '../PolarisUI';
 
 export interface CodeList {
 	node: {

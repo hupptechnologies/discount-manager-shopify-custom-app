@@ -6,8 +6,7 @@ import {
 } from '@shopify/polaris';
 import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
-import CustomText from '../PolarisUI/CustomText';
-import CustomBlockStack from '../PolarisUI/CustomBlockStack';
+import { CustomText, CustomBlockStack } from '../PolarisUI';
 import { formatDateRange, isToday } from 'app/utils/json';
 
 interface DiscountRuleFormProps {

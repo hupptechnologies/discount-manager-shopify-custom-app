@@ -7,10 +7,8 @@ import {
 } from '@shopify/polaris';
 import { CalendarIcon, ClockIcon } from '@shopify/polaris-icons';
 import type { DiscountRule } from './DiscountRuleForm';
+import { CustomText, CustomTextField, CustomBlockStack } from '../PolarisUI';
 import PopoverPicker from './PopoverPicker';
-import CustomText from '../PolarisUI/CustomText';
-import CustomTextField from '../PolarisUI/CustomTextField';
-import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 import { getYearMonthDay } from 'app/utils/json';
 
 interface ActiveDatesProps {

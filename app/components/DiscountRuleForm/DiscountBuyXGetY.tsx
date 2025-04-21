@@ -16,12 +16,9 @@ import { fetchProductVariantsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 import type { DiscountRule } from './DiscountRuleForm';
 import type { QueryType } from 'app/routes/app.create-discount';
+import { PrimaryButton, CustomText, CustomTextField, CustomBlockStack } from '../PolarisUI';
 import EditItemsList from './EditItemsList';
 import EditVariantList from './EditVariantList';
-import PrimaryButton from '../PolarisUI/CustomButton';
-import CustomText from '../PolarisUI/CustomText';
-import CustomTextField from '../PolarisUI/CustomTextField';
-import CustomBlockStack from '../PolarisUI/CustomBlockStack';
 
 interface DiscountBuyXGetYProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;

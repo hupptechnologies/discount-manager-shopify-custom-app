@@ -12,10 +12,7 @@ import Placeholder from '../Placeholder';
 import type { DiscountRule } from './DiscountRuleForm';
 import type { CodeList } from './BulkCodeList';
 import type { QueryType } from 'app/routes/app.create-discount';
-import PrimaryButton from '../PolarisUI/CustomButton';
-import CustomText from '../PolarisUI/CustomText';
-import CustomTextField from '../PolarisUI/CustomTextField';
-import CustomBlockStack from '../PolarisUI/CustomBlockStack';
+import { PrimaryButton, CustomText, CustomTextField, CustomBlockStack } from '../PolarisUI';
 import { generateDiscountCode } from 'app/utils/json';
 
 interface DiscountCodeGenProps {
