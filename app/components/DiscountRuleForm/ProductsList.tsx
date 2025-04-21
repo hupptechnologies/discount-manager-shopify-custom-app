@@ -9,14 +9,14 @@ import {
 	type IndexTableRowProps,
 	type IndexTableProps,
 	Filters,
-	Spinner,
 } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from 'app/redux/store';
 import type { DiscountRule } from './DiscountRuleForm';
 import { fetchAllProductsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
-import CustomText from '../shopify/CustomText';
+import CustomText from '../PolarisUI/CustomText';
+import CustomSpinner from '../PolarisUI/CustomSpinner';
 
 interface Product {
 	id: string;
@@ -391,11 +391,7 @@ const ProductsList: React.FC<ProductProps> = ({
 			>
 				{rowMarkup}
 			</IndexTable>
-			{newRule?.searchOne === '' && newRule?.searchTwo === '' && isLoading && (
-				<div className="spinner-container">
-					<Spinner size="large" />
-				</div>
-			)}
+			{newRule?.searchOne === '' && newRule?.searchTwo === '' && isLoading && <CustomSpinner />}
 		</Scrollable>
 	);
 };

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useAppBridge } from "@shopify/app-bridge-react";
-import { Layout, Page, Spinner } from "@shopify/polaris";
+import { Layout, Page } from "@shopify/polaris";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "app/redux/store";
 import { getAllCustomerDetail } from "app/redux/customer/slice";
 import { getCustomerBySegmentIdAsync } from "app/redux/customer";
 import CustomersTable from "app/components/CustomerReport/CustomersTable";
+import CustomSpinner from "app/components/PolarisUI/CustomSpinner";
 
 export default function ManageCustomer(){
 	const dispatch = useDispatch<AppDispatch>();
@@ -53,11 +54,7 @@ export default function ManageCustomer(){
 					/>
 				</Layout.Section>
 			</Layout>
-			{isSegmentCustomerLoading &&
-				<div className="spinner-container">
-					<Spinner size="large" />
-				</div>
-			}
+			{isSegmentCustomerLoading && <CustomSpinner />}
 		</Page>
 	)
 };

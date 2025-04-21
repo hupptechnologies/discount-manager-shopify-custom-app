@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useAppBridge } from '@shopify/app-bridge-react';
-import { Page, Spinner } from '@shopify/polaris';
+import { Page } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { DiscountRuleForm } from 'app/components/DiscountRuleForm/DiscountRuleForm';
 import { fetchAllProductCategoryAsync } from 'app/redux/create-discount';
 import Placeholder from 'app/components/Placeholder';
+import CustomSpinner from 'app/components/PolarisUI/CustomSpinner';
 
 export type QueryType = 'order' | 'products' | 'shipping' | 'buyXgetY' | null;
 
@@ -36,11 +37,7 @@ export default function CreateDiscountPage () {
 		>
 			{queryType && <DiscountRuleForm queryType={queryType} />}
 			<Placeholder height="5px" />
-			{(isCategory || isLoading) && 
-				<div className="spinner-container">
-					<Spinner size="large" />
-				</div>
-			}
+			{(isCategory || isLoading) && <CustomSpinner />}
 		</Page>
 	);
 }
