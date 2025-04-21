@@ -59,8 +59,7 @@ const CollectionList: React.FC<CollectionProps> = ({
 		plural: 'collections',
 	};
 
-	const rowsCollection: Collection[] =
-		collections?.length > 0 ? collections : [];
+	const rowsCollection: Collection[] = collections?.length > 0 ? collections : [];
 
 	useEffect(() => {
 		dispatch(

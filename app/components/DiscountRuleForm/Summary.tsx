@@ -104,7 +104,7 @@ const Summary: React.FC<DiscountRuleFormProps> = ({ queryType, newRule }) => {
 							discount type
 						</List.Item>
 						<List.Item>
-							{newRule?.productCategory === 'shoes' ? 'Shoes' : 'Electronic'}{' '}
+							{newRule?.productCategory?.currentName === 'shoes' ? 'Shoes' : 'Electronic'}{' '}
 							product category
 						</List.Item>
 						{queryType === 'order' && (

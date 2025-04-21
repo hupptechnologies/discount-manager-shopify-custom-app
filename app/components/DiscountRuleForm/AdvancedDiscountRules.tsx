@@ -3,7 +3,6 @@ import { useAppBridge } from '@shopify/app-bridge-react';
 import {
 	BlockStack,
 	Box,
-	Button,
 	Card,
 	Checkbox,
 	Divider,
@@ -24,6 +23,7 @@ import { fetchAllProductCategoryAsync } from 'app/redux/create-discount';
 import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
 import EditItemsList from './EditItemsList';
+import PrimaryButton from '../Button';
 
 export interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -265,9 +265,11 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 									prefix={<Icon source={SearchIcon} />}
 									placeholder='Search Customer'
 								/>
-								<Button onClick={() => handleOpen('customer', '')} variant="secondary">
-									Browse
-								</Button>
+								<PrimaryButton
+									onClick={() => handleOpen('customer', '')}
+									variant="secondary"
+									children={'Browse'}
+								/>
 							</FormLayout.Group>
 						)}
 					{queryType === 'order' && newRule?.selectedMethod === 'code' && newRule?.customers?.items?.length > 0 && (

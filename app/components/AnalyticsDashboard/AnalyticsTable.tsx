@@ -13,7 +13,6 @@ import {
 	type IndexFiltersProps,
 	type TabProps,
 	ButtonGroup,
-	Button,
 	Layout,
 	Tooltip,
 } from '@shopify/polaris';
@@ -31,6 +30,7 @@ import {
 	getDiscountCodeByIdAsync,
 } from 'app/redux/discount';
 import Placeholder from '../Placeholder';
+import PrimaryButton from '../Button';
 import { formatDateWithTime } from 'app/utils/json';
 
 interface AnalyticsTableProps {
@@ -298,7 +298,7 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					<IndexTable.Cell>
 						<ButtonGroup noWrap gap="tight">
 							<Tooltip content="Edit discount" dismissOnMouseOut>
-								<Button
+								<PrimaryButton
 									onClick={(e: any) =>
 										handleEdit(
 											e,
@@ -308,18 +308,18 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 											discountId.includes('DiscountCodeNode') as boolean,
 										)
 									}
-									variant="secondary"
+									variant='secondary'
 									icon={EditIcon}
-									tone="success"
-								></Button>
+									tone='success'
+								/>
 							</Tooltip>
 							<Tooltip content="Delete discount" dismissOnMouseOut>
-								<Button
+								<PrimaryButton
 									onClick={(e: any) => handleOpen(e, { id, code, discountId })}
-									variant="secondary"
+									variant='secondary'
 									icon={DeleteIcon}
-									tone="critical"
-								></Button>
+									tone='critical'
+								/>
 							</Tooltip>
 						</ButtonGroup>
 					</IndexTable.Cell>

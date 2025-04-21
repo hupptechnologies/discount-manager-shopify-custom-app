@@ -35,7 +35,7 @@ const CustomersTable: React.FC<CustomersTableProps> = ({
 	const dispatch = useDispatch<AppDispatch>();
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const { selectedResources, allResourcesSelected, handleSelectionChange } = useIndexResourceState(segmentCustomers as any);	
-	
+
 	const resourceName = {
 		singular: 'customer',
 		plural: 'customers',

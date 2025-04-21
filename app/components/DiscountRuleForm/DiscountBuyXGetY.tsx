@@ -3,7 +3,6 @@ import { Modal, TitleBar } from '@shopify/app-bridge-react';
 import {
 	BlockStack,
 	Box,
-	Button,
 	Card,
 	Divider,
 	FormLayout,
@@ -22,6 +21,7 @@ import type { DiscountRule } from './DiscountRuleForm';
 import type { QueryType } from 'app/routes/app.create-discount';
 import EditItemsList from './EditItemsList';
 import EditVariantList from './EditVariantList';
+import PrimaryButton from '../Button';
 
 interface DiscountBuyXGetYProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -196,19 +196,11 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							prefix={<Icon source={SearchIcon} />}
 							placeholder={`Search ${newRule.buyItemFrom === 'collection' ? 'collection' : 'product'}`}
 						/>
-						<Button
-							onClick={() =>
-								handleOpen(
-									'buy',
-									newRule.buyItemFrom === 'collection'
-										? 'collection'
-										: 'product',
-								)
-							}
+						<PrimaryButton
+							onClick={() => handleOpen('buy', newRule.buyItemFrom === 'collection' ? 'collection' : 'product')}
 							variant="secondary"
-						>
-							Browse
-						</Button>
+							children={'Browse'}
+						/>
 					</FormLayout.Group>
 					{queryType === 'buyXgetY' &&
 						newRule.customerBuys?.items?.length > 0 && (
@@ -293,19 +285,11 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							prefix={<Icon source={SearchIcon} />}
 							placeholder={`Search ${newRule.getItemFrom === 'collection' ? 'collection' : 'product'}`}
 						/>
-						<Button
-							onClick={() =>
-								handleOpen(
-									'get',
-									newRule.getItemFrom === 'collection'
-										? 'collection'
-										: 'product',
-								)
-							}
-							variant="secondary"
-						>
-							Browse
-						</Button>
+						<PrimaryButton
+							onClick={handleOpen('get', newRule.getItemFrom === 'collection' ? 'collection' : 'product')}
+							variant='secondary'
+							children={'Browse'}
+						/>
 					</FormLayout.Group>
 					{queryType === 'buyXgetY' &&
 						newRule?.customerGets?.items?.length > 0 && (

@@ -6,11 +6,11 @@ import {
 	Thumbnail,
 	Icon,
 	InlineStack,
-	Box,
-	Button,
+	Box
 } from '@shopify/polaris';
 import { XIcon } from '@shopify/polaris-icons';
 import type { ItemsList } from 'app/redux/discount/slice';
+import PrimaryButton from '../Button';
 
 export interface EditItemsListProps {
 	type: string;
@@ -97,14 +97,11 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 											<Box>
 												<InlineStack align="space-between" blockAlign="center">
 													{count > 1 &&
-														<Button
+														<PrimaryButton
 															variant="plain"
-															onClick={() =>
-																handleVariantListOpen(id, variantId, title, url)
-															}
-														>
-															Edit
-														</Button>
+															onClick={() => handleVariantListOpen(id, variantId, title, url)}
+															children={'Edit'}
+														/>
 													}
 													&nbsp;&nbsp;&nbsp;
 													<div

@@ -4,13 +4,13 @@ import {
 	Text,
 	BlockStack,
 	Box,
-	InlineStack,
-	Button,
+	InlineStack
 } from '@shopify/polaris';
 import { useSelector } from 'react-redux';
 import type { RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import { StatBox } from './StateBox';
+import PrimaryButton from 'app/components/Button';
 
 interface IndexStateBoxProps {
 	handleOpen: any;
@@ -35,9 +35,11 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 							<Text as="h6" variant="headingMd">
 								Analytics Overview
 							</Text>
-							<Button variant="primary" onClick={handleOpen}>
-								Create discount
-							</Button>
+							<PrimaryButton
+								variant='primary'
+								onClick={handleOpen}
+								children={'Create discount'}
+							/>
 						</InlineStack>
 						<Text as="p" variant="bodySm" tone="subdued">
 							Shows the most recent discount code statistics and trends.

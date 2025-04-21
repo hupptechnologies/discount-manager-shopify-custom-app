@@ -1,7 +1,6 @@
 import {
 	BlockStack,
 	Box,
-	Button,
 	ButtonGroup,
 	Card,
 	FormLayout,
@@ -17,6 +16,7 @@ import type { DiscountRule } from './DiscountRuleForm';
 import type { CodeList } from './BulkCodeList';
 import type { QueryType } from 'app/routes/app.create-discount';
 import { generateDiscountCode } from 'app/utils/json';
+import PrimaryButton from '../Button';
 
 interface DiscountCodeGenProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -66,18 +66,16 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 				)}
 				{!isEdit && (
 					<ButtonGroup variant="segmented">
-						<Button
+						<PrimaryButton
 							variant={activeButtonIndex === 0 ? 'primary' : 'secondary'}
 							onClick={() => handleButtonClick(0)}
-						>
-							Discount code
-						</Button>
-						<Button
+							children={'Discount code'}
+						/>
+						<PrimaryButton
 							variant={activeButtonIndex === 1 ? 'primary' : 'secondary'}
 							onClick={() => handleButtonClick(1)}
-						>
-							Automatic discount
-						</Button>
+							children={'Automatic discount'}
+						/>
 					</ButtonGroup>
 				)}
 				<TextField
@@ -201,9 +199,11 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 								label="Generated Codes"
 								options={generateList}
 							/>
-							<Button onClick={handleGenerateCodeList} variant='secondary'>
-								Generate codes
-							</Button>
+							<PrimaryButton
+								onClick={handleGenerateCodeList}
+								variant='secondary'
+								children={'Generate codes'}
+							/>
 					</FormLayout.Group>
 				</div>
 			)}

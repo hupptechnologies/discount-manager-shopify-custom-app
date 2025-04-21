@@ -3,7 +3,6 @@ import { Modal, TitleBar } from '@shopify/app-bridge-react';
 import {
 	BlockStack,
 	Box,
-	Button,
 	Card,
 	Checkbox,
 	FormLayout,
@@ -13,14 +12,15 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
-import EditItemsList from './EditItemsList';
-import EditVariantList from './EditVariantList';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { fetchProductVariantsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
 import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
+import EditItemsList from './EditItemsList';
+import EditVariantList from './EditVariantList';
+import PrimaryButton from '../Button';
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -231,12 +231,11 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 									prefix={<Icon source={SearchIcon} />}
 									placeholder={`Search ${newRule.getItemFrom === 'collection' ? 'collection' : 'product'}`}
 								/>
-								<Button
+								<PrimaryButton
 									onClick={() => handleOpen('none', newRule.getItemFrom)}
 									variant="secondary"
-								>
-									Browse
-								</Button>
+									children={'Browse'}
+								/>
 							</FormLayout.Group>
 						)}
 						{queryType === 'products' && newRule?.customerGets?.items?.length > 0 && (

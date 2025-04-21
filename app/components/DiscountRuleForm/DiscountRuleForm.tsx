@@ -758,34 +758,33 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 	const handleCustomerGetCancelCollection = (collectionId: string) => {
 		handleSaveBarOpen();
 		setNewRule((prevState) => {
-		  const updatedCollectionIDs = prevState.customerGets.collectionIDs.filter(
-			(id) => id !== collectionId
-		  );
-	  
-		  const updatedItems = prevState.customerGets.items.filter(
-			(item: any) => item.node?.id !== collectionId
-		  );
-	  
-		  const newRemoveCollectionIDs = prevState.customerGets.removeCollectionIDs.includes(collectionId)
-			? []
-			: [collectionId];
-	  
-		  if (newRemoveCollectionIDs.length > 0) {
-			return {
-			  ...prevState,
-			  customerGets: {
-				...prevState.customerGets,
-				collectionIDs: updatedCollectionIDs,
-				items: updatedItems,
-				removeCollectionIDs: [
-				  ...prevState.customerGets.removeCollectionIDs,
-				  ...newRemoveCollectionIDs,
-				],
-			  },
-			};
-		  }
-	  
-		  return prevState;
+			const updatedCollectionIDs = prevState.customerGets.collectionIDs.filter(
+				(id) => id !== collectionId
+			);
+
+			const updatedItems = prevState.customerGets.items.filter(
+				(item: any) => item.node?.id !== collectionId
+			);
+
+			const newRemoveCollectionIDs = prevState.customerGets.removeCollectionIDs.includes(collectionId)
+				? []
+				: [collectionId];
+
+			if (newRemoveCollectionIDs.length > 0) {
+				return {
+					...prevState,
+					customerGets: {
+						...prevState.customerGets,
+						collectionIDs: updatedCollectionIDs,
+						items: updatedItems,
+						removeCollectionIDs: [
+							...prevState.customerGets.removeCollectionIDs,
+							...newRemoveCollectionIDs,
+						],
+					},
+				};
+			}
+			return prevState;
 		});
 	};
 
@@ -801,7 +800,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 			const newRemoveCollectionIDs = prevState.customerBuys.removeCollectionIDs.includes(collectionId)
 				? []
 				: [collectionId];
-	  
+
 			if (newRemoveCollectionIDs.length > 0) {
 				return {
 					...prevState,
@@ -816,7 +815,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 					},
 				};
 			}
-		  	return prevState;
+			return prevState;
 		});
 	};
 
@@ -832,7 +831,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 			const newRemoveCustomerIDs = prevState.customers.removeCustomersIDs.includes(customerIDs)
 				? []
 				: [customerIDs];
-	  
+
 			if (newRemoveCustomerIDs.length > 0) {
 				return {
 					...prevState,
@@ -847,7 +846,7 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 					},
 				};
 			}
-		  	return prevState;
+			return prevState;
 		});
 	};
 
