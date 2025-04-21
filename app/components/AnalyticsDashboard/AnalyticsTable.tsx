@@ -12,7 +12,6 @@ import {
 	type IndexFiltersProps,
 	type TabProps,
 	ButtonGroup,
-	Layout,
 	Tooltip,
 } from '@shopify/polaris';
 import { EditIcon, DeleteIcon } from '@shopify/polaris-icons';
@@ -28,9 +27,8 @@ import {
 	fetchAllDiscountCodesAsync,
 	getDiscountCodeByIdAsync,
 } from 'app/redux/discount';
+import { CustomLayoutSection, CustomText, PrimaryButton } from '../PolarisUI';
 import Placeholder from '../Placeholder';
-import PrimaryButton from '../PolarisUI/CustomButton';
-import CustomText from '../PolarisUI/CustomText';
 import { formatDateWithTime } from 'app/utils/json';
 
 interface AnalyticsTableProps {
@@ -393,11 +391,11 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 				{rowMarkup}
 			</IndexTable>
 			<Modal id="delete-comfirmation-modal">
-				<Layout.Section>
+				<CustomLayoutSection>
 					<CustomText tone="subdued" truncate as='p'>
 						Are you sure you want to delete <b>{deleteData.code}</b> discount code? this will remove all related data.
 					</CustomText>
-				</Layout.Section>
+				</CustomLayoutSection>
 				<Placeholder height="5px" />
 				<TitleBar title="Delete Confirmation">
 					<button onClick={handleDelete} variant="primary" tone="critical">

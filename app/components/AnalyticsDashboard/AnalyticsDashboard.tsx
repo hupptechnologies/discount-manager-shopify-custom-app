@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Layout } from '@shopify/polaris';
 import { useSelector } from 'react-redux';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import type { RootState } from 'app/redux/store';
+import { CustomLayout, CustomLayoutSection, CustomSpinner } from '../PolarisUI';
 import IndexStateBox from './StateBox';
 import AnalyticsTable from './AnalyticsTable';
-import CustomSpinner from '../PolarisUI/CustomSpinner';
 
 interface AnalyticsDashboardProps {
 	handleOpen: any;
@@ -26,13 +25,13 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 		(state: RootState) => getAllDiscountCodeDetail(state),
 	);
 	return (
-		<Layout>
+		<CustomLayout>
 			<IndexStateBox handleOpen={handleOpen} />
-			<Layout.Section>
+			<CustomLayoutSection>
 				<AnalyticsTable setIsLoadingUpdate={setIsLoadingUpdate} />
-			</Layout.Section>
+			</CustomLayoutSection>
 			{(isGetDiscountCodeById || isLoadingUpdate || isDeleteAllDiscountCode) && <CustomSpinner />}
-		</Layout>
+		</CustomLayout>
 	);
 };
 

@@ -1,5 +1,4 @@
 import {
-	Layout,
 	Grid,
 	Box,
 	InlineStack
@@ -7,10 +6,8 @@ import {
 import { useSelector } from 'react-redux';
 import type { RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
+import { CustomLayoutSection, CustomText, PrimaryButton, CustomBlockStack } from 'app/components/PolarisUI';
 import { StatBox } from './StateBox';
-import PrimaryButton from 'app/components/PolarisUI/CustomButton';
-import CustomText from 'app/components/PolarisUI/CustomText';
-import CustomBlockStack from 'app/components/PolarisUI/CustomBlockStack';
 
 interface IndexStateBoxProps {
 	handleOpen: any;
@@ -28,7 +25,7 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 
 	return (
 		<>
-			<Layout.Section>
+			<CustomLayoutSection>
 				<Box padding="200">
 					<CustomBlockStack gap="100">
 						<InlineStack align="space-between" blockAlign="center" gap="100">
@@ -51,8 +48,8 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 						/>
 					</CustomBlockStack>
 				</Box>
-			</Layout.Section>
-			<Layout.Section>
+			</CustomLayoutSection>
+			<CustomLayoutSection>
 				<Grid>
 					<Grid.Cell columnSpan={{ xs: 6, lg: 4 }}>
 						<StatBox
@@ -76,7 +73,7 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 						/>
 					</Grid.Cell>
 				</Grid>
-			</Layout.Section>
+			</CustomLayoutSection>
 		</>
 	);
 };

@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useAppBridge } from '@shopify/app-bridge-react';
-import { Badge, Card, InlineStack, Layout, List, Page } from '@shopify/polaris';
+import { Badge, Card, InlineStack, List, Page } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
 import { ComposeIcon } from '@shopify/polaris-icons';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { fetchAppEmbedStatusAsync } from 'app/redux/store/index';
 import { getAllStoreDetail } from 'app/redux/store/slice';
-import CustomButton from 'app/components/PolarisUI/CustomButton';
-import CustomText from 'app/components/PolarisUI/CustomText';
-import CustomBlockStack from 'app/components/PolarisUI/CustomBlockStack';
+import { CustomLayout, CustomLayoutSection, PrimaryButton, CustomText, CustomBlockStack } from 'app/components/PolarisUI';
 
 export default function Index () {
 	const { appEmbedID, appEmbedStatus, isAppEmbedLoading } = useSelector((state: RootState) => getAllStoreDetail(state));
@@ -29,8 +27,8 @@ export default function Index () {
 	return (
 		<Page>
 			<CustomBlockStack gap="500">
-				<Layout>
-					<Layout.Section>
+				<CustomLayout>
+					<CustomLayoutSection>
 						<Card>
 							<CustomBlockStack gap="500">
 								<CustomBlockStack gap="200">
@@ -38,9 +36,9 @@ export default function Index () {
 										<CustomText as="h2" variant="headingMd">
 											Welcome to Smart Discount Manager 🎉  <Badge tone={appEmbedStatus ? 'success' : 'critical'} size='small'>{appEmbedStatus ? 'Active' : 'Inactive'}</Badge>
 										</CustomText>
-										<CustomButton loading={isAppEmbedLoading} disabled={appEmbedStatus} variant='primary' icon={ComposeIcon} onClick={() => window.parent.location.href = deepLink}>
+										<PrimaryButton loading={isAppEmbedLoading} disabled={appEmbedStatus} variant='primary' icon={ComposeIcon} onClick={() => window.parent.location.href = deepLink}>
 											App Embed
-										</CustomButton>
+										</PrimaryButton>
 									</InlineStack>
 									<CustomText variant="bodyMd" as="p">
 										The Smart Discount Manager Shopify app helps merchants
@@ -75,8 +73,8 @@ export default function Index () {
 								</CustomBlockStack>
 							</CustomBlockStack>
 						</Card>
-					</Layout.Section>
-				</Layout>
+					</CustomLayoutSection>
+				</CustomLayout>
 			</CustomBlockStack>
 		</Page>
 	);

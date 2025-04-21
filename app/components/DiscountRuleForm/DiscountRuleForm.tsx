@@ -6,9 +6,8 @@ import {
 	TitleBar,
 	useAppBridge,
 } from '@shopify/app-bridge-react';
-import { Layout } from '@shopify/polaris';
-import pkg from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
+import pkg from 'lodash';
 import {
 	createBuyXGetYDiscountCodeAsync,
 	createDiscountCodeAsync,
@@ -16,11 +15,9 @@ import {
 	updateDiscountCodeAsync,
 } from 'app/redux/discount';
 import type { AppDispatch, RootState } from 'app/redux/store';
-import {
-	getAllDiscountCodeDetail,
-	type ItemsList,
-} from 'app/redux/discount/slice';
+import { getAllDiscountCodeDetail, type ItemsList } from 'app/redux/discount/slice';
 import type { QueryType } from 'app/routes/app.create-discount';
+import { CustomLayout, CustomLayoutSection } from '../PolarisUI/CustomLayout';
 import AdvanceDiscountRules from './AdvancedDiscountRules';
 import DiscountCodeGen from './DiscountCodeGen';
 import DiscountValue from './DiscountValue';
@@ -864,8 +861,8 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 	};
 
 	return (
-		<Layout>
-			<Layout.Section>
+		<CustomLayout>
+			<CustomLayoutSection>
 				<DiscountCodeGen
 					heading={
 						['buyXgetY'].includes(queryType as string)
@@ -927,10 +924,10 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 				{!isUsageLimitComponentShow && <UsageLimit handleSaveBarOpen={handleSaveBarOpen} newRule={newRule} setNewRule={setNewRule} />}
 				<Placeholder height="5px" />
 				<ActiveDates handleSaveBarOpen={handleSaveBarOpen} newRule={newRule} setNewRule={setNewRule} />
-			</Layout.Section>
-			<Layout.Section variant="oneThird">
+			</CustomLayoutSection>
+			<CustomLayoutSection variant="oneThird">
 				<Summary newRule={newRule} queryType={queryType} />
-			</Layout.Section>
+			</CustomLayoutSection>
 			{(queryType === 'buyXgetY' || queryType === 'products') && <Modal id="product-collection-modal">
 				{newRule?.buyItemFrom === 'collection' && selected === 1 && (
 					<CollectionList
@@ -1006,6 +1003,6 @@ export const DiscountRuleForm: React.FC<DiscountRuleFormProps> = ({ queryType })
 				<button variant="primary" onClick={handleSave}></button>
 				<button onClick={handleDiscard}></button>
 			</SaveBar>
-		</Layout>
+		</CustomLayout>
 	);
 };
