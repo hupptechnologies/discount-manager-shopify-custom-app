@@ -8,8 +8,7 @@ import {
 	FormLayout,
 	Icon,
 	RadioButton,
-	Select,
-	TextField,
+	Select
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,6 +21,7 @@ import EditItemsList from './EditItemsList';
 import EditVariantList from './EditVariantList';
 import PrimaryButton from '../PolarisUI/CustomButton';
 import CustomText from '../PolarisUI/CustomText';
+import CustomTextField from '../PolarisUI/CustomTextField';
 
 interface DiscountBuyXGetYProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -120,7 +120,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						/>
 					</BlockStack>
 					<FormLayout.Group condensed>
-						<TextField
+						<CustomTextField
 							label={newRule?.isMinPurchaseAmount ? 'Amount' : 'Quantity'}
 							type="text"
 							min={0}
@@ -188,7 +188,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group>
-						<TextField
+						<CustomTextField
 							label=""
 							value={newRule.searchOne}
 							onChange={handleSearchOneChange}
@@ -226,7 +226,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						</CustomText>
 					</BlockStack>
 					<FormLayout.Group condensed>
-						<TextField
+						<CustomTextField
 							label="Quantity"
 							type="text"
 							min={0}
@@ -277,7 +277,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						/>
 					</FormLayout.Group>
 					<FormLayout.Group>
-						<TextField
+						<CustomTextField
 							label=""
 							value={newRule.searchTwo}
 							onChange={handleSearchTwoChange}
@@ -322,7 +322,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 							helpText={
 								newRule.isPercentage && (
 									<Box width="30%">
-										<TextField
+										<CustomTextField
 											label=""
 											type="text"
 											min={0}
@@ -358,7 +358,7 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 								newRule.isAmountOfEach && (
 									<BlockStack gap="100">
 										<Box width="30%">
-											<TextField
+											<CustomTextField
 												label=""
 												type="text"
 												min={0}

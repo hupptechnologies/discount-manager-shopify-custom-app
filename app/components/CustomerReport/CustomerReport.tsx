@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import pkg from 'lodash';
-import { BlockStack, Box, Button, InlineStack, Layout } from "@shopify/polaris";
+import { BlockStack, Box, InlineStack, Layout } from "@shopify/polaris";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllSegmentsAsync } from "app/redux/customer";
 import { getAllCustomerDetail } from "app/redux/customer/slice";
 import type { AppDispatch, RootState } from "app/redux/store";
 import CustomerSegmentTable from "./CustomerSegmentTable";
 import CustomText from "../PolarisUI/CustomText";
+import CustomButton from "../PolarisUI/CustomButton";
 
 const CustomerReport = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -52,9 +53,9 @@ const CustomerReport = () => {
 							<CustomText as="h6" variant="headingMd">
 								Customer Segment Overview
 							</CustomText>
-							<Button onClick={handleOpen} variant="primary">
+							<CustomButton onClick={handleOpen} variant="primary">
 								Create segment
-							</Button>
+							</CustomButton>
 						</InlineStack>
 						<CustomText as="p" variant="bodySm" tone="subdued">
 							Shows the most recent customer segment statistics and trends.

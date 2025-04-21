@@ -3,11 +3,11 @@ import {
 	Box,
 	Card,
 	Checkbox,
-	FormLayout,
-	TextField,
+	FormLayout
 } from '@shopify/polaris';
 import type { DiscountRule } from './DiscountRuleForm';
 import CustomText from '../PolarisUI/CustomText';
+import CustomTextField from '../PolarisUI/CustomTextField';
 
 interface UsageLimitProps {
 	newRule: DiscountRule;
@@ -36,7 +36,7 @@ const UsageLimit: React.FC<UsageLimitProps> = ({ newRule, setNewRule, handleSave
 						helpText={
 							newRule?.totalUsageLimit && (
 								<Box width="30%">
-									<TextField
+									<CustomTextField
 										label=""
 										value={newRule?.totalLimitValue}
 										type="integer"

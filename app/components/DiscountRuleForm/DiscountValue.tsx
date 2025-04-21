@@ -7,8 +7,7 @@ import {
 	Checkbox,
 	FormLayout,
 	Icon,
-	Select,
-	TextField,
+	Select
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,6 +20,7 @@ import EditItemsList from './EditItemsList';
 import EditVariantList from './EditVariantList';
 import PrimaryButton from '../PolarisUI/CustomButton';
 import CustomText from '../PolarisUI/CustomText';
+import CustomTextField from '../PolarisUI/CustomTextField';
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -107,7 +107,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 										});
 									}}
 								/>
-								<TextField
+								<CustomTextField
 									label=""
 									value={newRule?.customerGets?.percentage}
 									onChange={(value) => {
@@ -198,7 +198,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 									helpText={
 										newRule?.isShippingRate && (
 											<Box width="30%">
-												<TextField
+												<CustomTextField
 													label=""
 													value={newRule?.shippingRate}
 													type="integer"
@@ -223,7 +223,7 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 						}
 						{queryType === 'products' && (
 							<FormLayout.Group>
-								<TextField
+								<CustomTextField
 									label=""
 									value={newRule.searchOne}
 									onChange={handleSearchChange}

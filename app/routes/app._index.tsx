@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useAppBridge } from '@shopify/app-bridge-react';
-import { Badge, BlockStack, Button, Card, InlineStack, Layout, List, Page, Text } from '@shopify/polaris';
+import { Badge, BlockStack, Card, InlineStack, Layout, List, Page } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
 import { ComposeIcon } from '@shopify/polaris-icons';
 import { AppDispatch, RootState } from 'app/redux/store';
 import { fetchAppEmbedStatusAsync } from 'app/redux/store/index';
 import { getAllStoreDetail } from 'app/redux/store/slice';
+import CustomButton from 'app/components/PolarisUI/CustomButton';
+import CustomText from 'app/components/PolarisUI/CustomText';
 
 export default function Index () {
 	const { appEmbedID, appEmbedStatus, isAppEmbedLoading } = useSelector((state: RootState) => getAllStoreDetail(state));
@@ -32,29 +34,29 @@ export default function Index () {
 							<BlockStack gap="500">
 								<BlockStack gap="200">
 									<InlineStack align='space-between' blockAlign='center'>
-										<Text as="h2" variant="headingMd">
+										<CustomText as="h2" variant="headingMd">
 											Welcome to Smart Discount Manager 🎉  <Badge tone={appEmbedStatus ? 'success' : 'critical'} size='small'>{appEmbedStatus ? 'Active' : 'Inactive'}</Badge>
-										</Text>
-										<Button loading={isAppEmbedLoading} disabled={appEmbedStatus} variant='primary' icon={ComposeIcon} onClick={() => window.parent.location.href = deepLink}>
+										</CustomText>
+										<CustomButton loading={isAppEmbedLoading} disabled={appEmbedStatus} variant='primary' icon={ComposeIcon} onClick={() => window.parent.location.href = deepLink}>
 											App Embed
-										</Button>
+										</CustomButton>
 									</InlineStack>
-									<Text variant="bodyMd" as="p">
+									<CustomText variant="bodyMd" as="p">
 										The Smart Discount Manager Shopify app helps merchants
 										automate discounts using AI-driven insights. It dynamically
 										applies discount rules based on customer behavior, order
 										history, stock levels, and real-time analytics.
-									</Text>
+									</CustomText>
 								</BlockStack>
 
 								<BlockStack gap="200">
-									<Text as="h3" variant="headingMd">
+									<CustomText as="h3" variant="headingMd">
 										App Features
-									</Text>
-									<Text as="p" variant="bodyMd">
+									</CustomText>
+									<CustomText as="p" variant="bodyMd">
 										This Shopify app provides the following features for
 										merchants:
-									</Text>
+									</CustomText>
 									<List>
 										<List.Item>
 											Create advanced discount rules based on real-time

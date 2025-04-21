@@ -4,13 +4,13 @@ import {
 	Card,
 	Checkbox,
 	FormLayout,
-	TextField,
 	Icon,
 } from '@shopify/polaris';
 import { CalendarIcon, ClockIcon } from '@shopify/polaris-icons';
 import type { DiscountRule } from './DiscountRuleForm';
 import PopoverPicker from './PopoverPicker';
 import CustomText from '../PolarisUI/CustomText';
+import CustomTextField from '../PolarisUI/CustomTextField';
 import { getYearMonthDay } from 'app/utils/json';
 
 interface ActiveDatesProps {
@@ -34,7 +34,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule, handleSa
 				<FormLayout.Group>
 					<PopoverPicker
 						activator={
-							<TextField
+							<CustomTextField
 								label="Start date"
 								value={
 									getYearMonthDay(newRule?.selectedStartDates?.start) || ''
@@ -67,7 +67,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule, handleSa
 					/>
 					<PopoverPicker
 						activator={
-							<TextField
+							<CustomTextField
 								label="Start time (EDT)"
 								value={newRule.selectedStartTime || ''}
 								onChange={(value) =>
@@ -106,7 +106,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule, handleSa
 					<FormLayout.Group>
 						<PopoverPicker
 							activator={
-								<TextField
+								<CustomTextField
 									label="End date"
 									value={
 										getYearMonthDay(newRule?.selectedEndDates?.start) || ''
@@ -138,7 +138,7 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule, handleSa
 						/>
 						<PopoverPicker
 							activator={
-								<TextField
+								<CustomTextField
 									label="End time (EDT)"
 									value={newRule?.selectedEndTime}
 									onChange={(value) =>

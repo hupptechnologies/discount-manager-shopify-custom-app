@@ -7,8 +7,7 @@ import {
 	InlineStack,
 	Link,
 	RadioButton,
-	Select,
-	TextField,
+	Select
 } from '@shopify/polaris';
 import Placeholder from '../Placeholder';
 import type { DiscountRule } from './DiscountRuleForm';
@@ -16,6 +15,7 @@ import type { CodeList } from './BulkCodeList';
 import type { QueryType } from 'app/routes/app.create-discount';
 import PrimaryButton from '../PolarisUI/CustomButton';
 import CustomText from '../PolarisUI/CustomText';
+import CustomTextField from '../PolarisUI/CustomTextField';
 import { generateDiscountCode } from 'app/utils/json';
 
 interface DiscountCodeGenProps {
@@ -78,7 +78,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						/>
 					</ButtonGroup>
 				)}
-				<TextField
+				<CustomTextField
 					label="Title"
 					helpText="The name of the discount the codes will be grouped under."
 					autoComplete="off"
@@ -144,7 +144,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 							</Link>
 						}
 					</InlineStack>
-					<TextField
+					<CustomTextField
 						label
 						value={newRule.checkoutDiscountCode}
 						onChange={(value) => {
@@ -161,7 +161,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 			)}
 			{newRule.isRandom && (
 				<FormLayout.Group condensed>
-					<TextField
+					<CustomTextField
 						label="Number of codes to generate"
 						type="integer"
 						value={newRule.noOfCodeCount}
@@ -170,7 +170,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						}
 						autoComplete="off"
 					/>
-					<TextField
+					<CustomTextField
 						label="Code length"
 						type="number"
 						value={newRule.codeLength}
@@ -179,7 +179,7 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 						max={10}
 						min={0}
 					/>
-					<TextField
+					<CustomTextField
 						label="Dicount prefix"
 						type="text"
 						value={newRule?.dicountCodePrefix}

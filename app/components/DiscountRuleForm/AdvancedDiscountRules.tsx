@@ -11,8 +11,7 @@ import {
 	InlineStack,
 	Popover,
 	ResourceList,
-	Select,
-	TextField,
+	Select
 } from '@shopify/polaris';
 import { SearchIcon, ChevronRightIcon, ArrowLeftIcon } from '@shopify/polaris-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +23,7 @@ import type { DiscountRule } from './DiscountRuleForm';
 import EditItemsList from './EditItemsList';
 import PrimaryButton from '../PolarisUI/CustomButton';
 import CustomText from '../PolarisUI/CustomText';
+import CustomTextField from '../PolarisUI/CustomTextField';
 
 export interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -128,7 +128,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 						Advance discount rules
 					</CustomText>
 					<FormLayout.Group condensed>
-						<TextField
+						<CustomTextField
 							label="Discount Condition"
 							value={newRule.condition}
 							onChange={(value) => {
@@ -139,7 +139,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 							autoComplete="off"
 						/>
 						{['products', 'buyXgetY'].includes(queryType as string) && (
-							<TextField
+							<CustomTextField
 								label="Quantity-Based Discount"
 								type="integer"
 								min={0}
@@ -193,13 +193,15 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 							<Popover
 								sectioned
 								active={popoverActive}
-								activator={<TextField
-									label="Discount by Category"
-									value={newRule?.productCategory?.currentName}
-									placeholder="Category"
-									autoComplete="off"
-									onFocus={togglePopoverActive}
-								/>}
+								activator={
+									<CustomTextField
+										label="Discount by Category"
+										value={newRule?.productCategory?.currentName}
+										placeholder="Category"
+										autoComplete="off"
+										onFocus={togglePopoverActive}
+									/>
+								}
 								onClose={togglePopoverActive}
 								ariaHaspopup={false}
 							>
@@ -224,7 +226,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 							</Popover>
 						)}
 						{['order', 'shipping'].includes(queryType as string) && (
-							<TextField
+							<CustomTextField
 								label="Geo-Based Discount"
 								value={newRule.region}
 								onChange={(value) => setNewRule({ ...newRule, region: value })}
@@ -257,7 +259,7 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 					/>
 					{newRule.customerType === 'vip' && newRule?.selectedMethod === 'code' && (
 							<FormLayout.Group>
-								<TextField
+								<CustomTextField
 									label=""
 									autoComplete="off"
 									value={newRule?.customerSearch}
