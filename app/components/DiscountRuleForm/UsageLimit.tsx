@@ -4,10 +4,10 @@ import {
 	Card,
 	Checkbox,
 	FormLayout,
-	Text,
 	TextField,
 } from '@shopify/polaris';
 import type { DiscountRule } from './DiscountRuleForm';
+import CustomText from '../shopify/CustomText';
 
 interface UsageLimitProps {
 	newRule: DiscountRule;
@@ -19,9 +19,9 @@ const UsageLimit: React.FC<UsageLimitProps> = ({ newRule, setNewRule, handleSave
 	return (
 		<Card>
 			<BlockStack gap="300">
-				<Text variant="bodyLg" fontWeight="medium" as="h3">
+				<CustomText variant="bodyLg" fontWeight="medium" as="h3">
 					Maximum discount uses
-				</Text>
+				</CustomText>
 				<FormLayout.Group>
 					<Checkbox
 						label="Limit number of times this discount can be used in total"

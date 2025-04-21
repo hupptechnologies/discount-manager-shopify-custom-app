@@ -8,7 +8,6 @@ import {
 	FormLayout,
 	Icon,
 	Select,
-	Text,
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
@@ -21,6 +20,7 @@ import type { DiscountRule } from './DiscountRuleForm';
 import EditItemsList from './EditItemsList';
 import EditVariantList from './EditVariantList';
 import PrimaryButton from '../Button';
+import CustomText from '../shopify/CustomText';
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -87,9 +87,9 @@ const DiscountValue: React.FC<DiscountValueProps> = ({
 			<Card>
 				<BlockStack>
 					<FormLayout>
-						<Text variant="headingMd" fontWeight="semibold" as="h6">
+						<CustomText variant="headingMd" fontWeight="semibold" as="h6">
 							Discount value
-						</Text>
+						</CustomText>
 						{queryType !== 'shipping' && 
 							<FormLayout.Group condensed>
 								<Select

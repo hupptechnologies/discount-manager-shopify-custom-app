@@ -3,7 +3,6 @@ import {
 	ResourceItem,
 	Box,
 	ResourceList,
-	Text,
 	Icon,
 	InlineStack,
 	Badge,
@@ -17,6 +16,7 @@ import {
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from 'app/redux/store';
 import { handleResetGetDiscountCode } from 'app/redux/discount/slice';
+import CustomText from './shopify/CustomText';
 
 const DiscountTypeList = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -70,9 +70,9 @@ const DiscountTypeList = () => {
 					>
 						<InlineStack align="space-between" blockAlign="center" gap="200">
 							<Box>
-								<Text variant="bodyMd" fontWeight="bold" as="h3">
+								<CustomText variant="bodyMd" fontWeight="bold" as="h3">
 									{title}
-								</Text>
+								</CustomText>
 								<div>{description}</div>
 							</Box>
 							<Box>

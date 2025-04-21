@@ -3,13 +3,13 @@ import {
 	type ResourceListProps,
 	ResourceList,
 	ResourceItem,
-	Text,
 	InlineStack,
 	Thumbnail,
 	Scrollable,
 } from '@shopify/polaris';
 import type { VariantItem } from 'app/redux/create-discount/slice';
 import type { DiscountRule } from './DiscountRuleForm';
+import CustomText from '../shopify/CustomText';
 
 interface EditVariantListProps {
 	variants: VariantItem[];
@@ -90,11 +90,11 @@ const EditVariantList: React.FC<EditVariantListProps> = ({
 											'https://cdn.shopify.com/s/files/1/0723/3277/1569/files/images_4e34079b-8a8a-4e98-89a2-6c53923e2264.jpg?v=1738837951'
 										}
 									/>
-									<Text fontWeight="bold" as="span">
+									<CustomText fontWeight="bold" as="span">
 										{title}
-									</Text>
-									<Text as="p">{inventoryQuantity} available</Text>
-									<Text as="p">{price}</Text>
+									</CustomText>
+									<CustomText as="p">{inventoryQuantity} available</CustomText>
+									<CustomText as="p">{price}</CustomText>
 								</InlineStack>
 							</div>
 						</ResourceItem>

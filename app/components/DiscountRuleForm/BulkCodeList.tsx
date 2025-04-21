@@ -4,7 +4,6 @@ import { useNavigate } from '@remix-run/react';
 import {
 	ResourceList,
 	ResourceItem,
-	Text,
 	InlineStack,
 	Box,
 	EmptyState,
@@ -14,6 +13,7 @@ import type { ResourceListProps } from '@shopify/polaris';
 import type { AppDispatch } from 'app/redux/store';
 import { useDispatch } from 'react-redux';
 import { deleteBulkRedeemDiscountCodeAsync } from 'app/redux/discount';
+import CustomText from '../shopify/CustomText';
 
 export interface CodeList {
 	node: {
@@ -100,10 +100,10 @@ const BulkCodeList: React.FC<BulkCodeListProps> = ({ items, discountId }) => {
 			>
 				<InlineStack gap="200" align="start" blockAlign="center">
 					<Box>
-						<Text fontWeight="bold" as="span">
+						<CustomText fontWeight="bold" as="span">
 							{code}
-						</Text>
-						<Text as="p">{asyncUsageCount} / 5 used</Text>
+						</CustomText>
+						<CustomText as="p">{asyncUsageCount} / 5 used</CustomText>
 					</Box>
 				</InlineStack>
 			</ResourceItem>

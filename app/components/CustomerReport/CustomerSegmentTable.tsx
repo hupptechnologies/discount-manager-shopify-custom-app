@@ -7,7 +7,6 @@ import {
 	IndexFilters,
 	useSetIndexFiltersMode,
 	useIndexResourceState,
-	Text,
 	useBreakpoints,
 	Layout,
 } from '@shopify/polaris';
@@ -18,6 +17,7 @@ import { fetchAllSegmentsAsync } from 'app/redux/customer';
 import type { AppDispatch, RootState } from 'app/redux/store';
 import type { PageInfo } from 'app/controller/segments/fetchAllSegments';
 import Placeholder from '../Placeholder';
+import CustomText from '../shopify/CustomText';
 
 interface CustomerSegmentTableProps {
 	segments: SegmentFields[];
@@ -125,9 +125,9 @@ const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({
 				}}
 			>
 				<IndexTable.Cell>
-					<Text variant="bodyMd" fontWeight="bold" as="span">
+					<CustomText variant="bodyMd" fontWeight="bold" as="span">
 						{name}
-					</Text>
+					</CustomText>
 				</IndexTable.Cell>
 				<IndexTable.Cell>{percentage}%</IndexTable.Cell>
 				<IndexTable.Cell>{lastEditDate}</IndexTable.Cell>
@@ -192,12 +192,12 @@ const CustomerSegmentTable: React.FC<CustomerSegmentTableProps> = ({
 			</IndexTable>
 			<Modal id="confirmation-modal">
 				<Layout.Section>
-					<Text as="p" tone="subdued" truncate>
+					<CustomText as="p" tone="subdued" truncate>
 						Are you sure you want to delete the segment Customers who have purchased at least once?
-					</Text>
-					<Text as="p" tone="subdued" truncate>
+					</CustomText>
+					<CustomText as="p" tone="subdued" truncate>
 						No customer profiles will be deleted, only the segment will be removed.
-					</Text>
+					</CustomText>
 				</Layout.Section>
 				<Placeholder height="5px" />
 				<TitleBar title={confirmationTitle + '?'}>

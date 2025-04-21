@@ -3,12 +3,12 @@ import {
 	Box,
 	Card,
 	InlineStack,
-	List,
-	Text,
+	List
 } from '@shopify/polaris';
 import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
 import { formatDateRange, isToday } from 'app/utils/json';
+import CustomText from '../shopify/CustomText';
 
 interface DiscountRuleFormProps {
 	queryType: QueryType;
@@ -39,28 +39,28 @@ const Summary: React.FC<DiscountRuleFormProps> = ({ queryType, newRule }) => {
 	return (
 		<Card>
 			<InlineStack gap="400">
-				<Text variant="bodyMd" as="h6">
+				<CustomText variant="bodyMd" as="h6">
 					{newRule?.checkoutDiscountCode
 						? newRule?.checkoutDiscountCode
 						: 'No discount code yet'}
-				</Text>
+				</CustomText>
 			</InlineStack>
 			<BlockStack gap="400">
-				<Text variant="headingSm" as="p">
+				<CustomText variant="headingSm" as="p">
 					{newRule?.selectedMethod === 'code' ? 'Code' : 'Automatic'}
-				</Text>
+				</CustomText>
 				<Box>
-					<Text variant="headingSm" as="p">
+					<CustomText variant="headingSm" as="p">
 						Type
-					</Text>
-					<Text as="p" variant="bodyMd">
+					</CustomText>
+					<CustomText as="p" variant="bodyMd">
 						{queryType && typeList[queryType]}
-					</Text>
+					</CustomText>
 				</Box>
 				<Box>
-					<Text variant="headingSm" as="p">
+					<CustomText variant="headingSm" as="p">
 						Details
-					</Text>
+					</CustomText>
 					<List>
 						<List.Item>For Online Store</List.Item>
 						<List.Item>
@@ -90,9 +90,9 @@ const Summary: React.FC<DiscountRuleFormProps> = ({ queryType, newRule }) => {
 					</List>
 				</Box>
 				<Box>
-					<Text variant="headingSm" as="p">
+					<CustomText variant="headingSm" as="p">
 						Advanced Details
-					</Text>
+					</CustomText>
 					<List>
 						{Number(newRule?.quantity) > 0 && (
 							<List.Item>{newRule?.quantity} quantity</List.Item>

@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useAppBridge } from '@shopify/app-bridge-react';
 import {
-	Text,
 	useIndexResourceState,
 	IndexTable,
 	Thumbnail,
@@ -17,6 +16,7 @@ import type { AppDispatch, RootState } from 'app/redux/store';
 import type { DiscountRule } from './DiscountRuleForm';
 import { fetchAllProductsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
+import CustomText from '../shopify/CustomText';
 
 interface Product {
 	id: string;
@@ -301,9 +301,9 @@ const ProductsList: React.FC<ProductProps> = ({
 								alt="index"
 								source={products[0]?.image as string}
 							/>
-							<Text as="span" fontWeight="semibold">
+							<CustomText as="span" fontWeight="semibold">
 								{title}
-							</Text>
+							</CustomText>
 						</InlineStack>
 					</IndexTable.Cell>
 					<IndexTable.Cell />
@@ -320,19 +320,19 @@ const ProductsList: React.FC<ProductProps> = ({
 							disabled={disabled}
 						>
 							<IndexTable.Cell scope="row">
-								<Text variant="bodyMd" as="span">
+								<CustomText variant="bodyMd" as="span">
 									{variant}
-								</Text>
+								</CustomText>
 							</IndexTable.Cell>
 							<IndexTable.Cell>
-								<Text as="span" numeric>
+								<CustomText as="span" numeric>
 									{price}
-								</Text>
+								</CustomText>
 							</IndexTable.Cell>
 							<IndexTable.Cell>
-								<Text as="span" alignment="end" numeric>
+								<CustomText as="span" alignment="end" numeric>
 									{quantity}
-								</Text>
+								</CustomText>
 							</IndexTable.Cell>
 						</IndexTable.Row>
 					),

@@ -1,7 +1,6 @@
 import {
 	Layout,
 	Grid,
-	Text,
 	BlockStack,
 	Box,
 	InlineStack
@@ -11,6 +10,7 @@ import type { RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import { StatBox } from './StateBox';
 import PrimaryButton from 'app/components/Button';
+import CustomText from 'app/components/shopify/CustomText';
 
 interface IndexStateBoxProps {
 	handleOpen: any;
@@ -32,18 +32,23 @@ const IndexStateBox: React.FC<IndexStateBoxProps> = ({ handleOpen }) => {
 				<Box padding="200">
 					<BlockStack gap="100">
 						<InlineStack align="space-between" blockAlign="center" gap="100">
-							<Text as="h6" variant="headingMd">
-								Analytics Overview
-							</Text>
+							<CustomText
+								as="h6"
+								variant="headingMd"
+								children={'Analytics Overview'}
+							/>
 							<PrimaryButton
 								variant='primary'
 								onClick={handleOpen}
 								children={'Create discount'}
 							/>
 						</InlineStack>
-						<Text as="p" variant="bodySm" tone="subdued">
-							Shows the most recent discount code statistics and trends.
-						</Text>
+						<CustomText
+							as="p"
+							variant="bodySm"
+							tone="subdued"
+							children={'Shows the most recent discount code statistics and trends.'}
+						/>
 					</BlockStack>
 				</Box>
 			</Layout.Section>

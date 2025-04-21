@@ -2,7 +2,6 @@ import {
 	Card,
 	ResourceList,
 	ResourceItem,
-	Text,
 	Thumbnail,
 	Icon,
 	InlineStack,
@@ -11,6 +10,7 @@ import {
 import { XIcon } from '@shopify/polaris-icons';
 import type { ItemsList } from 'app/redux/discount/slice';
 import PrimaryButton from '../Button';
+import CustomText from '../shopify/CustomText';
 
 export interface EditItemsListProps {
 	type: string;
@@ -78,11 +78,11 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 								>
 									<InlineStack align="space-between" blockAlign="center">
 										<Box>
-											<Text variant="bodyMd" fontWeight="bold" as="h3">
+											<CustomText variant="bodyMd" fontWeight="bold" as="h3">
 												{title}
-											</Text>
+											</CustomText>
 											{type === 'product' && (
-												<Text as="p" tone="subdued">
+												<CustomText as="p" tone="subdued">
 													(
 													{Array.isArray(variantId) && variantId.length > 0
 														? variantId.length
@@ -90,7 +90,7 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 															? 0
 															: 1}{' '}
 													of {count} variants selected)
-												</Text>
+												</CustomText>
 											)}
 										</Box>
 										{type === 'product' && (
@@ -139,13 +139,13 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 								>
 									<InlineStack align="space-between" blockAlign="center">
 										<Box>
-											<Text variant="bodyMd" fontWeight="bold" as="h3">
+											<CustomText variant="bodyMd" fontWeight="bold" as="h3">
 												{title}
-											</Text>
+											</CustomText>
 											{type === 'collection' && (
-												<Text as="p" tone="subdued">
+												<CustomText as="p" tone="subdued">
 													{count} products
-												</Text>
+												</CustomText>
 											)}
 										</Box>
 										<div onClick={() => handleCancelCollection(id)} className="edit-item-cancel-icon">
@@ -177,12 +177,12 @@ const EditItemsList: React.FC<EditItemsListProps> = ({
 								>
 									<InlineStack align="space-between" blockAlign="center">
 										<Box>
-											<Text variant="bodyMd" fontWeight="bold" as="h3">
+											<CustomText variant="bodyMd" fontWeight="bold" as="h3">
 												{displayName}
-											</Text>
-											<Text as="p" tone="subdued">
+											</CustomText>
+											<CustomText as="p" tone="subdued">
 												{email}
-											</Text>
+											</CustomText>
 										</Box>
 										<div onClick={() => handleCustomerCancel(id)} className="edit-item-cancel-icon">
 											<Icon source={XIcon} tone="subdued" />

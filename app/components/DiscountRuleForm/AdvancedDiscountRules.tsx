@@ -12,7 +12,6 @@ import {
 	Popover,
 	ResourceList,
 	Select,
-	Text,
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon, ChevronRightIcon, ArrowLeftIcon } from '@shopify/polaris-icons';
@@ -24,6 +23,7 @@ import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
 import EditItemsList from './EditItemsList';
 import PrimaryButton from '../Button';
+import CustomText from '../shopify/CustomText';
 
 export interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -124,9 +124,9 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 		<Card>
 			<BlockStack gap="500">
 				<FormLayout>
-					<Text variant="headingMd" fontWeight="semibold" as="h6">
+					<CustomText variant="headingMd" fontWeight="semibold" as="h6">
 						Advance discount rules
-					</Text>
+					</CustomText>
 					<FormLayout.Group condensed>
 						<TextField
 							label="Discount Condition"
@@ -210,9 +210,9 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 												<div onClick={handlePrevCategoryList} className='icon-category-back-arrow'>
 													<Icon source={ArrowLeftIcon} tone="base" />
 												</div>
-												<Text variant="bodyMd" fontWeight="bold" as="h3">
+												<CustomText variant="bodyMd" fontWeight="bold" as="h3">
 													{newRule?.productCategory?.currentName}
-												</Text>
+												</CustomText>
 											</InlineStack>
 										</Popover.Section>
 										<Divider borderWidth='0165' />
@@ -296,9 +296,9 @@ const AdvanceDiscountRules: React.FC<AdvanceDiscountRuleProps> = ({
 			>
 				<InlineStack align="space-between" blockAlign="center" gap="200">
 					<Box>
-						<Text variant="bodyMd" as="h3">
+						<CustomText variant="bodyMd" as="h3">
 							{item?.label}
-						</Text>
+						</CustomText>
 					</Box>
 					{item?.node?.childrenIds?.length > 0 && 
 						<Box>

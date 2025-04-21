@@ -4,7 +4,6 @@ import {
 	Card,
 	Checkbox,
 	FormLayout,
-	Text,
 	TextField,
 	Icon,
 } from '@shopify/polaris';
@@ -12,6 +11,7 @@ import { CalendarIcon, ClockIcon } from '@shopify/polaris-icons';
 import type { DiscountRule } from './DiscountRuleForm';
 import PopoverPicker from './PopoverPicker';
 import { getYearMonthDay } from 'app/utils/json';
+import CustomText from '../shopify/CustomText';
 
 interface ActiveDatesProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -28,9 +28,9 @@ const ActiveDates: React.FC<ActiveDatesProps> = ({ setNewRule, newRule, handleSa
 	return (
 		<Card>
 			<BlockStack gap="300">
-				<Text variant="bodyLg" fontWeight="medium" as="h3">
+				<CustomText variant="bodyLg" fontWeight="medium" as="h3">
 					Active dates
-				</Text>
+				</CustomText>
 				<FormLayout.Group>
 					<PopoverPicker
 						activator={

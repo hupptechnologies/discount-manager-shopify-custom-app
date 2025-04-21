@@ -7,7 +7,6 @@ import {
 	ResourceItem,
 	ResourceList,
 	Scrollable,
-	Text,
 	Thumbnail,
 	type ResourceListProps,
 } from '@shopify/polaris';
@@ -16,6 +15,7 @@ import type { AppDispatch, RootState } from 'app/redux/store';
 import type { DiscountRule } from './DiscountRuleForm';
 import { fetchAllCollectionsAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
+import CustomText from '../shopify/CustomText';
 
 interface Collection {
 	id: string;
@@ -207,10 +207,10 @@ const CollectionList: React.FC<CollectionProps> = ({
 							<InlineStack gap="200" align="start" blockAlign="center">
 								<Thumbnail size="small" alt="" source={image} />
 								<Box>
-									<Text fontWeight="bold" as="span">
+									<CustomText fontWeight="bold" as="span">
 										{title}
-									</Text>
-									<Text as="p">{productCount} products</Text>
+									</CustomText>
+									<CustomText as="p">{productCount} products</CustomText>
 								</Box>
 							</InlineStack>
 						</ResourceItem>

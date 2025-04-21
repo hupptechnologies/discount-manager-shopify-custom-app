@@ -1,8 +1,9 @@
 import React from 'react';
-import { Card, Text, Box } from '@shopify/polaris';
+import { Card, Box } from '@shopify/polaris';
 import { SparkLineChart } from '@shopify/polaris-viz';
 import { ArrowUpIcon, ArrowDownIcon } from '@shopify/polaris-icons';
 import styles from './StatBox.module.css';
+import CustomText from 'app/components/shopify/CustomText';
 
 interface StatBoxProps {
 	title: string;
@@ -33,13 +34,18 @@ export const StatBox: React.FC<StatBoxProps> = ({
 				<div className={styles.statBoxContainer}>
 					<div className={styles.statBoxLeft}>
 						<div className={styles.statBoxPositionContainer}>
-							<Text as="p" variant="headingSm">
-								{title}
-							</Text>
+							<CustomText
+								as="p"
+								variant="headingSm"
+								children={title}
+							/>
 						</div>
-						<Text as="h2" variant="headingLg" fontWeight="bold">
-							{value}
-						</Text>
+						<CustomText
+							as="h2"
+							variant="headingLg"
+							fontWeight="bold"
+							children={value}
+						/>
 						<div className={styles.statBoxFlex}>
 							{percentageChange ? (
 								percentageChange > 0 ? (
@@ -54,21 +60,16 @@ export const StatBox: React.FC<StatBoxProps> = ({
 									/>
 								)
 							) : null}
-							<Text as="p" variant="bodySm" tone="subdued">
-								<span
-									style={
-										percentageChange
-											? {
-													color: percentageChange > 0 ? 'green' : 'red',
-												}
-											: undefined
-									}
-								>
-									{percentageChange !== null
-										? `${Math.abs(percentageChange)}%`
-										: '-'}
-								</span>
-							</Text>
+							<CustomText
+								as="p"
+								variant="bodySm"
+								tone="subdued"
+								children={
+									<span style={percentageChange ? { color: percentageChange > 0 ? 'green' : 'red'} : undefined}>
+										{percentageChange !== null ? `${Math.abs(percentageChange)}%` : '-'}
+									</span>
+								}
+							/>
 						</div>
 					</div>
 					{hasData ? (

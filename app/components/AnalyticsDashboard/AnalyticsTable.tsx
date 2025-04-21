@@ -8,7 +8,6 @@ import {
 	IndexFilters,
 	useSetIndexFiltersMode,
 	useIndexResourceState,
-	Text,
 	Badge,
 	type IndexFiltersProps,
 	type TabProps,
@@ -32,6 +31,7 @@ import {
 import Placeholder from '../Placeholder';
 import PrimaryButton from '../Button';
 import { formatDateWithTime } from 'app/utils/json';
+import CustomText from '../shopify/CustomText';
 
 interface AnalyticsTableProps {
 	setIsLoadingUpdate: any;
@@ -256,17 +256,22 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 					position={index}
 				>
 					<IndexTable.Cell>
-						<Text variant="bodyMd" fontWeight="bold" as="span">
-							{code}
-						</Text>
+						<CustomText
+							variant="bodyMd"
+							fontWeight="bold"
+							as="span"
+							children={code}
+						/>
 					</IndexTable.Cell>
 					<IndexTable.Cell>{discountAmount}%</IndexTable.Cell>
 					<IndexTable.Cell>{discountMethod}</IndexTable.Cell>
 					<IndexTable.Cell>{discountScope}</IndexTable.Cell>
 					<IndexTable.Cell>
-						<Text as="span" alignment="start">
-							{asyncUsageCount}
-						</Text>
+						<CustomText
+							alignment="start"
+							as="span"
+							children={asyncUsageCount}
+						/>
 					</IndexTable.Cell>
 					<IndexTable.Cell>
 						<Badge
@@ -389,10 +394,9 @@ const AnalyticsTable: React.FC<AnalyticsTableProps> = ({
 			</IndexTable>
 			<Modal id="delete-comfirmation-modal">
 				<Layout.Section>
-					<Text as="p" tone="subdued" truncate>
-						Are you sure you want to delete <b>{deleteData.code}</b> discount
-						code? this will remove all related data.
-					</Text>
+					<CustomText tone="subdued" truncate as='p'>
+						Are you sure you want to delete <b>{deleteData.code}</b> discount code? this will remove all related data.
+					</CustomText>
 				</Layout.Section>
 				<Placeholder height="5px" />
 				<TitleBar title="Delete Confirmation">

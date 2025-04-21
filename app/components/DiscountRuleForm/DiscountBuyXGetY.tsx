@@ -9,7 +9,6 @@ import {
 	Icon,
 	RadioButton,
 	Select,
-	Text,
 	TextField,
 } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
@@ -22,6 +21,7 @@ import type { QueryType } from 'app/routes/app.create-discount';
 import EditItemsList from './EditItemsList';
 import EditVariantList from './EditVariantList';
 import PrimaryButton from '../Button';
+import CustomText from '../shopify/CustomText';
 
 interface DiscountBuyXGetYProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -92,9 +92,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 		<>
 			<Card>
 				<FormLayout>
-					<Text variant="headingMd" fontWeight="semibold" as="h6">
+					<CustomText variant="headingMd" fontWeight="semibold" as="h6">
 						Customer {newRule?.isMinPurchaseAmount ? 'spends' : 'buys'}
-					</Text>
+					</CustomText>
 					<BlockStack gap="100">
 						<RadioButton
 							label="Minimum quantity of items"
@@ -217,13 +217,13 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 						)}
 					<Divider borderColor="border" />
 					<BlockStack gap="300">
-						<Text variant="headingMd" fontWeight="semibold" as="h6">
+						<CustomText variant="headingMd" fontWeight="semibold" as="h6">
 							Customer gets
-						</Text>
-						<Text as="p" tone="subdued">
+						</CustomText>
+						<CustomText as="p" tone="subdued">
 							Customers must add the quantity of items specified below to their
 							cart.
-						</Text>
+						</CustomText>
 					</BlockStack>
 					<FormLayout.Group condensed>
 						<TextField
@@ -304,9 +304,9 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 								/>
 							</FormLayout.Group>
 						)}
-					<Text variant="bodyMd" fontWeight="bold" as="h4">
+					<CustomText variant="bodyMd" fontWeight="bold" as="h4">
 						At a discounted value
-					</Text>
+					</CustomText>
 					<BlockStack gap="100">
 						<RadioButton
 							label="Percentage"
@@ -371,10 +371,10 @@ const DiscountBuyXGetY: React.FC<DiscountBuyXGetYProps> = ({
 												prefix="$"
 											/>
 										</Box>
-										<Text as="p" tone="subdued">
+										<CustomText as="p" tone="subdued">
 											For multiple quantities, the discount amount will be taken
 											off each Y item.
-										</Text>
+										</CustomText>
 									</BlockStack>
 								)
 							}

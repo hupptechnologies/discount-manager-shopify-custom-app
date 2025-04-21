@@ -8,7 +8,6 @@ import {
 	Link,
 	RadioButton,
 	Select,
-	Text,
 	TextField,
 } from '@shopify/polaris';
 import Placeholder from '../Placeholder';
@@ -17,6 +16,7 @@ import type { CodeList } from './BulkCodeList';
 import type { QueryType } from 'app/routes/app.create-discount';
 import { generateDiscountCode } from 'app/utils/json';
 import PrimaryButton from '../Button';
+import CustomText from '../shopify/CustomText';
 
 interface DiscountCodeGenProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;
@@ -52,17 +52,17 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 	return (
 		<Card>
 			<InlineStack align="space-between" gap="200" blockAlign="center">
-				<Text variant="headingMd" fontWeight="semibold" as="h6">
+				<CustomText variant="headingMd" fontWeight="semibold" as="h6">
 					{heading}
-				</Text>
-				<Text as="p">{queryType} discount</Text>
+				</CustomText>
+				<CustomText as="p">{queryType} discount</CustomText>
 			</InlineStack>
 			<Placeholder height="5px" />
 			<BlockStack gap="200">
 				{!isEdit && (
-					<Text variant="bodyMd" as="h3">
+					<CustomText variant="bodyMd" as="h3">
 						Method
-					</Text>
+					</CustomText>
 				)}
 				{!isEdit && (
 					<ButtonGroup variant="segmented">
@@ -123,9 +123,9 @@ const DiscountCodeGen: React.FC<DiscountCodeGenProps> = ({
 			{queryType !== 'buyXgetY' && newRule.isCustom && newRule?.selectedMethod === 'code' && (
 				<Box>
 					<InlineStack align="space-between" blockAlign="center" gap="200">
-						<Text variant="bodyMd" as="h3">
+						<CustomText variant="bodyMd" as="h3">
 							Discount code
-						</Text>
+						</CustomText>
 						{(codesList?.length > 0 && isMultiple) ?
 							<Link removeUnderline onClick={handleOpenBulkCode}>
 								Views all codes

@@ -4,7 +4,6 @@ import {
 	IndexTable,
 	LegacyCard,
 	useIndexResourceState,
-	Text,
 	Badge,
 	Layout
 } from '@shopify/polaris';
@@ -14,6 +13,7 @@ import type { AppDispatch } from 'app/redux/store';
 import type { CustomerInput } from 'app/redux/customer/slice';
 import type { PageInfo } from 'app/controller/segments/fetchAllSegments';
 import Placeholder from '../Placeholder';
+import CustomText from '../shopify/CustomText';
 
 interface CustomersTableProps {
 	segmentCustomers: CustomerInput[];
@@ -95,9 +95,9 @@ const CustomersTable: React.FC<CustomersTableProps> = ({
 				position={index}
 			>
 				<IndexTable.Cell>
-					<Text variant="bodyMd" fontWeight="bold" as="span">
+					<CustomText variant="bodyMd" fontWeight="bold" as="span">
 						{displayName}
-					</Text>
+					</CustomText>
 				</IndexTable.Cell>
 				<IndexTable.Cell>
 					<Badge tone={defaultEmailAddress?.marketingState === 'SUBSCRIBED' ? 'success' : 'new'}>{defaultEmailAddress?.marketingState}</Badge>
@@ -140,9 +140,9 @@ const CustomersTable: React.FC<CustomersTableProps> = ({
 			</IndexTable>
 			<Modal id="customer-confirmation-modal">
 				<Layout.Section>
-					<Text as="p" tone="subdued" truncate>
+					<CustomText as="p" tone="subdued" truncate>
 						Are you sure you want to delete this customer?
-					</Text>
+					</CustomText>
 				</Layout.Section>
 				<Placeholder height="5px" />
 				<TitleBar title='Delete customer'>
