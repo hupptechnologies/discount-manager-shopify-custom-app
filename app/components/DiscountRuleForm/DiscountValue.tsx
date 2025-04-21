@@ -19,7 +19,7 @@ import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
 import EditItemsList from './EditItemsList';
 import EditVariantList from './EditVariantList';
-import PrimaryButton from '../Button';
+import PrimaryButton from '../shopify/CustomButton';
 import CustomText from '../shopify/CustomText';
 
 interface DiscountValueProps {

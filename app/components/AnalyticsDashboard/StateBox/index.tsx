@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import type { RootState } from 'app/redux/store';
 import { getAllDiscountCodeDetail } from 'app/redux/discount/slice';
 import { StatBox } from './StateBox';
-import PrimaryButton from 'app/components/Button';
+import PrimaryButton from 'app/components/shopify/CustomButton';
 import CustomText from 'app/components/shopify/CustomText';
 
 interface IndexStateBoxProps {

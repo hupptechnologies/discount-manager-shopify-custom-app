@@ -3,7 +3,7 @@ import { Button, ButtonProps } from '@shopify/polaris';
 
 type PrimaryButtonProps = React.PropsWithChildren<ButtonProps>;
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({ children, ...rest }) => {
+const CustomButton: React.FC<PrimaryButtonProps> = ({ children, ...rest }) => {
 	return (
 		<Button {...rest}>
 			{children}
@@ -11,4 +11,4 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({ children, ...rest }) => {
 	);
 };
 
-export default PrimaryButton;
+export default CustomButton;

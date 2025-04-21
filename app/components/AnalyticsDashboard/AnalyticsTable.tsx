@@ -29,7 +29,7 @@ import {
 	getDiscountCodeByIdAsync,
 } from 'app/redux/discount';
 import Placeholder from '../Placeholder';
-import PrimaryButton from '../Button';
+import PrimaryButton from '../shopify/CustomButton';
 import { formatDateWithTime } from 'app/utils/json';
 import CustomText from '../shopify/CustomText';
 

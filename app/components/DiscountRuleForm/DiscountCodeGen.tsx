@@ -15,7 +15,7 @@ import type { DiscountRule } from './DiscountRuleForm';
 import type { CodeList } from './BulkCodeList';
 import type { QueryType } from 'app/routes/app.create-discount';
 import { generateDiscountCode } from 'app/utils/json';
-import PrimaryButton from '../Button';
+import PrimaryButton from '../shopify/CustomButton';
 import CustomText from '../shopify/CustomText';
 
 interface DiscountCodeGenProps {

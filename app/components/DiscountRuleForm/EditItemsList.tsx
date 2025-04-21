@@ -9,7 +9,7 @@ import {
 } from '@shopify/polaris';
 import { XIcon } from '@shopify/polaris-icons';
 import type { ItemsList } from 'app/redux/discount/slice';
-import PrimaryButton from '../Button';
+import PrimaryButton from '../shopify/CustomButton';
 import CustomText from '../shopify/CustomText';
 
 export interface EditItemsListProps {

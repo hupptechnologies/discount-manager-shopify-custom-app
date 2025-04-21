@@ -22,7 +22,7 @@ import { fetchAllProductCategoryAsync } from 'app/redux/create-discount';
 import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
 import EditItemsList from './EditItemsList';
-import PrimaryButton from '../Button';
+import PrimaryButton from '../shopify/CustomButton';
 import CustomText from '../shopify/CustomText';
 
 export interface AdvanceDiscountRuleProps {
