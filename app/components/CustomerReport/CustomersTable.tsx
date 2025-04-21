@@ -13,7 +13,7 @@ import type { AppDispatch } from 'app/redux/store';
 import type { CustomerInput } from 'app/redux/customer/slice';
 import type { PageInfo } from 'app/controller/segments/fetchAllSegments';
 import Placeholder from '../Placeholder';
-import CustomText from '../shopify/CustomText';
+import CustomText from '../PolarisUI/CustomText';
 
 interface CustomersTableProps {
 	segmentCustomers: CustomerInput[];

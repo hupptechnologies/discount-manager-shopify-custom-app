@@ -7,7 +7,7 @@ import { fetchAllSegmentsAsync } from "app/redux/customer";
 import { getAllCustomerDetail } from "app/redux/customer/slice";
 import type { AppDispatch, RootState } from "app/redux/store";
 import CustomerSegmentTable from "./CustomerSegmentTable";
-import CustomText from "../shopify/CustomText";
+import CustomText from "../PolarisUI/CustomText";
 
 const CustomerReport = () => {
 	const dispatch = useDispatch<AppDispatch>();

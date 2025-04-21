@@ -5,8 +5,8 @@ import { useDispatch } from 'react-redux';
 import { fetchAllProductCategoryAsync } from 'app/redux/create-discount';
 import type { AppDispatch } from 'app/redux/store';
 import type { QueryType } from './app.create-discount';
-import Placeholder from 'app/components/Placeholder';
 import { DiscountRuleForm } from 'app/components/DiscountRuleForm/DiscountRuleForm';
+import Placeholder from 'app/components/Placeholder';
 
 export default function UpdateDiscountPage () {
 	const dispatch = useDispatch<AppDispatch>();

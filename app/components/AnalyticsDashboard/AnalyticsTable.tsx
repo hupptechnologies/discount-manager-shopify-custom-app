@@ -29,9 +29,9 @@ import {
 	getDiscountCodeByIdAsync,
 } from 'app/redux/discount';
 import Placeholder from '../Placeholder';
-import PrimaryButton from '../shopify/CustomButton';
+import PrimaryButton from '../PolarisUI/CustomButton';
+import CustomText from '../PolarisUI/CustomText';
 import { formatDateWithTime } from 'app/utils/json';
-import CustomText from '../shopify/CustomText';
 
 interface AnalyticsTableProps {
 	setIsLoadingUpdate: any;

@@ -17,7 +17,7 @@ import { fetchAllSegmentsAsync } from 'app/redux/customer';
 import type { AppDispatch, RootState } from 'app/redux/store';
 import type { PageInfo } from 'app/controller/segments/fetchAllSegments';
 import Placeholder from '../Placeholder';
-import CustomText from '../shopify/CustomText';
+import CustomText from '../PolarisUI/CustomText';
 
 interface CustomerSegmentTableProps {
 	segments: SegmentFields[];
