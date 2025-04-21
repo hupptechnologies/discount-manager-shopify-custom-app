@@ -14,9 +14,9 @@ import Placeholder from '../Placeholder';
 import type { DiscountRule } from './DiscountRuleForm';
 import type { CodeList } from './BulkCodeList';
 import type { QueryType } from 'app/routes/app.create-discount';
+import PrimaryButton from '../PolarisUI/CustomButton';
+import CustomText from '../PolarisUI/CustomText';
 import { generateDiscountCode } from 'app/utils/json';
-import PrimaryButton from '../shopify/CustomButton';
-import CustomText from '../shopify/CustomText';
 
 interface DiscountCodeGenProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;

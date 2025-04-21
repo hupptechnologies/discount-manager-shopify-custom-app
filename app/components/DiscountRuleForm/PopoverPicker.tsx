@@ -1,6 +1,6 @@
+import { useCallback, useState } from 'react';
 import { DatePicker, Popover, ResourceList } from '@shopify/polaris';
 import { generateTimeList } from 'app/utils/json';
-import { useCallback, useState } from 'react';
 
 interface PopoverProps {
 	popoverActive: boolean;

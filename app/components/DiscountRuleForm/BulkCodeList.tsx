@@ -10,10 +10,10 @@ import {
 } from '@shopify/polaris';
 import { DeleteIcon } from '@shopify/polaris-icons';
 import type { ResourceListProps } from '@shopify/polaris';
-import type { AppDispatch } from 'app/redux/store';
 import { useDispatch } from 'react-redux';
 import { deleteBulkRedeemDiscountCodeAsync } from 'app/redux/discount';
-import CustomText from '../shopify/CustomText';
+import type { AppDispatch } from 'app/redux/store';
+import CustomText from '../PolarisUI/CustomText';
 
 export interface CodeList {
 	node: {

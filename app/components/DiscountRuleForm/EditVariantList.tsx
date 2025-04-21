@@ -9,7 +9,7 @@ import {
 } from '@shopify/polaris';
 import type { VariantItem } from 'app/redux/create-discount/slice';
 import type { DiscountRule } from './DiscountRuleForm';
-import CustomText from '../shopify/CustomText';
+import CustomText from '../PolarisUI/CustomText';
 
 interface EditVariantListProps {
 	variants: VariantItem[];

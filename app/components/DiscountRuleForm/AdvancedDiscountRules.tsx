@@ -22,8 +22,8 @@ import { fetchAllProductCategoryAsync } from 'app/redux/create-discount';
 import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
 import EditItemsList from './EditItemsList';
-import PrimaryButton from '../shopify/CustomButton';
-import CustomText from '../shopify/CustomText';
+import PrimaryButton from '../PolarisUI/CustomButton';
+import CustomText from '../PolarisUI/CustomText';
 
 export interface AdvanceDiscountRuleProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;

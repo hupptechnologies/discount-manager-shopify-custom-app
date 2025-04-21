@@ -15,7 +15,7 @@ import type { AppDispatch, RootState } from 'app/redux/store';
 import type { DiscountRule } from './DiscountRuleForm';
 import { fetchAllCustomersAsync } from 'app/redux/create-discount';
 import { getCreateDiscountDetail } from 'app/redux/create-discount/slice';
-import CustomText from '../shopify/CustomText';
+import CustomText from '../PolarisUI/CustomText';
 
 interface Customer {
 	id: string;

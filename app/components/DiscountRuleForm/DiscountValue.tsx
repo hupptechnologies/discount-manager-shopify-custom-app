@@ -19,8 +19,8 @@ import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
 import EditItemsList from './EditItemsList';
 import EditVariantList from './EditVariantList';
-import PrimaryButton from '../shopify/CustomButton';
-import CustomText from '../shopify/CustomText';
+import PrimaryButton from '../PolarisUI/CustomButton';
+import CustomText from '../PolarisUI/CustomText';
 
 interface DiscountValueProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;

@@ -7,8 +7,8 @@ import {
 } from '@shopify/polaris';
 import type { QueryType } from 'app/routes/app.create-discount';
 import type { DiscountRule } from './DiscountRuleForm';
+import CustomText from '../PolarisUI/CustomText';
 import { formatDateRange, isToday } from 'app/utils/json';
-import CustomText from '../shopify/CustomText';
 
 interface DiscountRuleFormProps {
 	queryType: QueryType;

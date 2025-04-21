@@ -10,8 +10,8 @@ import {
 import { CalendarIcon, ClockIcon } from '@shopify/polaris-icons';
 import type { DiscountRule } from './DiscountRuleForm';
 import PopoverPicker from './PopoverPicker';
+import CustomText from '../PolarisUI/CustomText';
 import { getYearMonthDay } from 'app/utils/json';
-import CustomText from '../shopify/CustomText';
 
 interface ActiveDatesProps {
 	setNewRule: React.Dispatch<React.SetStateAction<any>>;

@@ -7,7 +7,7 @@ import {
 	TextField,
 } from '@shopify/polaris';
 import type { DiscountRule } from './DiscountRuleForm';
-import CustomText from '../shopify/CustomText';
+import CustomText from '../PolarisUI/CustomText';
 
 interface UsageLimitProps {
 	newRule: DiscountRule;
